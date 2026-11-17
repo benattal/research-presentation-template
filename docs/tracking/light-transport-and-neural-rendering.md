@@ -9,6 +9,24 @@ the time-of-flight slides have landed. Resume: when the remaining section
 agents report, capture the whole deck and start the review cycles (plan
 todo 12) with the brief in the session scratchpad (`review-brief.md`).
 
+## 2026-11-17 16:45 — assets in the bucket; review cycle 2 running
+
+User direction (2026-11-17): "Please commit and push intermittently, and make
+sure assets are uploaded to R2. Do the same after each round of vetting, and
+once you finish too".
+
+- Done: rclone installed (winget). Pushed this lecture's `public/` (55 files)
+  and `assets/` (89 files), and the four workshop presentations' assets
+  (diffusion, filtering, tracking, image-manipulation, from the
+  vision-workshop branch), each verified by `rclone check` with 0
+  differences; wrote the prefix README. Commits on guest-lecture through
+  2826d8d; framework commits cherry-picked to main (a69d264).
+- Cycle 1: content reviews (two), a layout and text vetting pass, and a UI
+  pass; fixes applied by section; feedback recorded in
+  docs/style/slide-review.md.
+- Next: cycle 2 reports (content ×2, layout/text/UI), fixes, commit, push,
+  assets push.
+
 ## 2026-11-17 20:10 — sections in progress; framework additions landed
 
 User directions (2026-11-17), quoted:
