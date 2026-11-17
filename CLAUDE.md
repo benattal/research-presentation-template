@@ -94,8 +94,20 @@ example with the project's presentations.
 
 ## This branch
 
-`main`: the template. `presentations/example/` demonstrates the format and is
-the target of the template's own checks and captures.
+`guest-lecture`: one presentation, `presentations/guest-lecture/`, for a
+research guest lecture. It is presented locally with no server. The user
+(2026-11-17): "Please create a new branch called "guest-lecture" that I will
+be working from -- and which should just be hosted locally/with no
+associated server." So:
+
+- present with `npm run dev` (the branch's only presentation, so no id is
+  needed), or from a static build (`npm run build`, then `npm run preview`
+  or any static file host);
+- do not use the live gateway (`npm run serve`, `npm start`), add
+  deployment configuration, or use layouts that need the server (`poll`,
+  `pollResults`, `numericPoll`);
+- the lecture's media go in `presentations/guest-lecture/public/` and the
+  bucket (`npm run assets -- push guest-lecture`).
 
 ## Project model
 

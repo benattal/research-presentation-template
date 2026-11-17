@@ -3,8 +3,4 @@
  * Core layouts (core/client/layouts/index.js) are available without being
  * listed here; a name may not repeat a core one.
  */
-import BigNumberSlide from './BigNumberSlide/BigNumberSlide.jsx';
-
-export default {
-  bigNumber: BigNumberSlide,
-};
+export default {};
