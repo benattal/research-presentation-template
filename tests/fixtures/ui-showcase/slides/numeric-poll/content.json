@@ -1,0 +1,6 @@
+{
+  "layout": "numericPoll",
+  "title": "How many?",
+  "subtitle": "Enter a number",
+  "pollId": "fixture-numbers"
+}

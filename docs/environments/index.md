@@ -16,6 +16,7 @@ npm install
 npm run assets -- pull --all    # media for every presentation on the branch
 npm run check                   # every presentation loads and has its assets
 npm test
+npm run test:ui                 # needs the browser below
 ```
 
 One `npm install` at the repository root installs everything; presentations

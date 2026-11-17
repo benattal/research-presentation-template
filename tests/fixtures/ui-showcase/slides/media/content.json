@@ -1,0 +1,22 @@
+{
+  "layout": "media",
+  "title": "Four panels",
+  "media": [
+    {
+      "type": "image",
+      "src": "/slides/media/panel-1.svg"
+    },
+    {
+      "type": "image",
+      "src": "/slides/media/panel-2.svg"
+    },
+    {
+      "type": "image",
+      "src": "/slides/media/panel-3.svg"
+    },
+    {
+      "type": "image",
+      "src": "/slides/media/panel-4.svg"
+    }
+  ]
+}

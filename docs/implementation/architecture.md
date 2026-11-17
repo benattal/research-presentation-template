@@ -96,7 +96,6 @@ whose manifest sets `"servedAtRoot": true`, or lists every presentation.
 
 ## Tests
 
-`tests/` runs on Node's built-in test runner (`npm test`): the presentation
-model, slide positions, the poll state and live API, and repository
-structure (agent files in sync, every document reachable, presentations
-without build files). Rendering is tested by capture, not by unit tests.
+`tests/` runs on Node's built-in test runner: `npm test` covers the pure
+modules and repository structure, and `npm run test:ui` drives every view,
+core layout, and live feature in a browser. See [testing](testing.md).

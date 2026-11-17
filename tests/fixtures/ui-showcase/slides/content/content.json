@@ -1,0 +1,17 @@
+{
+  "layout": "content",
+  "sectionLabel": "Structure",
+  "title": "Bullets and media",
+  "bullets": [
+    "First point",
+    "Second point",
+    "Third point"
+  ],
+  "media": [
+    {
+      "type": "image",
+      "src": "/slides/media/panel-1.svg"
+    }
+  ],
+  "footnote": "A footnote"
+}

@@ -1,0 +1,61 @@
+{
+  "layout": "illustratedPoints",
+  "title": "Illustrated points",
+  "buildSteps": [
+    {},
+    {},
+    {}
+  ],
+  "points": [
+    {
+      "text": "Compare **images**",
+      "visual": {
+        "type": "imageCompare",
+        "fakeImg": "/slides/illustrated/fake.svg",
+        "realImg": "/slides/illustrated/real.svg"
+      }
+    },
+    {
+      "text": "Compare chats",
+      "visual": {
+        "type": "chatCompare",
+        "bad": {
+          "messages": [
+            {
+              "role": "user",
+              "text": "Do it for me"
+            }
+          ]
+        },
+        "good": {
+          "messages": [
+            {
+              "role": "user",
+              "text": "Explain it"
+            },
+            {
+              "role": "ai",
+              "text": "Sure"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "text": "A conversation",
+      "visual": {
+        "type": "chatConversation",
+        "messages": [
+          {
+            "role": "user",
+            "text": "Hi"
+          },
+          {
+            "role": "ai",
+            "text": "Hello"
+          }
+        ]
+      }
+    }
+  ]
+}
