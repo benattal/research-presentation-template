@@ -4,7 +4,7 @@
   "mode": "iterate",
   "direction": "forward",
   "title": "Multiple bounces",
-  "subtitle": "Each bounce of light, one at a time",
+  "subtitle": "One bounce of light at a time",
   "buildSteps": [
     {},
     {},

@@ -59,6 +59,9 @@ as the fix.
   (which I can explain) is better", "Some lines of text are far too long",
   "you should try not make more than one point per bullet". Explanations go
   in the notes.
+- **The simplest natural wording.** ""each bounce of light, one at a time"
+  can just be "one bounce of light at a time"". Prefer the shortest phrase
+  that reads naturally; no restated subject or appended clause.
 - **A summary gives the talk's takeaways.** "The final summary slide looks
   too disorganzed. The bullets aren't really the key takeaways here
   either. Again, too low level." and "The subtitle for summary is also bad,
