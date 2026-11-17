@@ -2,7 +2,7 @@
   "layout": "tofQuadrature",
   "sectionLabel": "Neural rendering",
   "title": "Phasor quadrature",
-  "subtitle": "The time-of-flight measurement is a sum of phasors along the ray",
+  "subtitle": "Volume rendering of a phasor",
   "frequencyMHz": 30,
   "recipe": "$\\hat C = \\sum_i T_i\\,\\alpha_i\\,a_i, \\quad \\alpha_i = 1 - e^{-\\sigma_i\\delta_i}, \\quad T_i = \\prod_{j<i}(1-\\alpha_j)$",
   "fourierLabel": "$m = \\int h(\\tau)\\, e^{\\mathrm{j} 2\\pi f \\tau}\\, d\\tau$, a Fourier coefficient of the transient $h$",

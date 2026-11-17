@@ -2,7 +2,7 @@
   "layout": "figureRows",
   "sectionLabel": "Neural rendering",
   "title": "Scene and measurement fields",
-  "subtitle": "A network can represent the scene or the measurement",
+  "subtitle": "Representing the scene or the measurement",
   "rows": [
     {
       "figures": [

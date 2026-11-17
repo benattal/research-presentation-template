@@ -2,7 +2,7 @@
   "layout": "figureRows",
   "sectionLabel": "Neural rendering",
   "title": "Flash Cache",
-  "subtitle": "Flash Cache reduces the bias of radiance caches",
+  "subtitle": "Reducing the bias of radiance caches",
   "rows": [
     {
       "weight": 1,

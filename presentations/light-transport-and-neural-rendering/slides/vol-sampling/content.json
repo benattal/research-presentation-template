@@ -2,7 +2,7 @@
   "layout": "quadratureExplorer",
   "sectionLabel": "Volume rendering",
   "title": "Sampling",
-  "subtitle": "With the same number of samples, the error depends on where they are",
+  "subtitle": "The placement of samples along a ray",
   "surfaceWidth": 0.015,
   "coreDensity": 30,
   "compareSamplers": true,

@@ -2,7 +2,7 @@
   "layout": "phasorToF",
   "sectionLabel": "Neural rendering",
   "title": "Continuous-wave time of flight",
-  "subtitle": "A continuous-wave camera measures path length as a phase",
+  "subtitle": "Distance from the phase of modulated light",
   "buildSteps": [
     {
       "frequencyMHz": 30,

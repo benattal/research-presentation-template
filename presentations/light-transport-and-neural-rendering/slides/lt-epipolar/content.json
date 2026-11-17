@@ -2,7 +2,7 @@
   "layout": "figures",
   "sectionLabel": "Operator light transport",
   "title": "Epipolar imaging",
-  "subtitle": "Epipolar probing separates direct and indirect light at video rate",
+  "subtitle": "Separating direct and indirect light at video rate",
   "figures": [
     {
       "type": "image",

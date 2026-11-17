@@ -2,7 +2,7 @@
   "layout": "figureRows",
   "sectionLabel": "Neural rendering",
   "title": "Applications",
-  "subtitle": "NeRF's approach extends to time of flight, lidar, and structured light",
+  "subtitle": "The same approach for time of flight, lidar, and structured light",
   "rows": [
     {
       "figures": [

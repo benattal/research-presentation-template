@@ -2,7 +2,7 @@
   "layout": "figures",
   "sectionLabel": "Operator light transport",
   "title": "Primal-dual coding",
-  "subtitle": "Projector and camera masks are coded in lockstep in one exposure",
+  "subtitle": "Probing light transport in a single exposure",
   "figures": [
     {
       "type": "image",

@@ -2,7 +2,7 @@
   "layout": "iteration",
   "sectionLabel": "Neumann series",
   "title": "Iteration",
-  "subtitle": "Only matrix–vector products are needed to sum the series",
+  "subtitle": "Summing the series with matrix–vector products",
   "size": 1000000,
   "weight": 0.45,
   "window": 12,

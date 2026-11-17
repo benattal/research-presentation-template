@@ -2,7 +2,7 @@
   "layout": "projectorQuadrature",
   "sectionLabel": "Neural rendering",
   "title": "Structured light",
-  "subtitle": "The projected pattern lights each sample of the camera ray",
+  "subtitle": "Volume rendering with a projected pattern",
   "equation": "$I = \\sum_i T_i\\,\\alpha_i\\,a_i\\,\\dfrac{\\htmlClass{term-emission}{P(\\mathbf{x}_i)}}{\\|\\mathbf{x}_i - \\mathbf{x}_p\\|^2}$",
   "stripes": 10,
   "pixelFloorX": 2.6,

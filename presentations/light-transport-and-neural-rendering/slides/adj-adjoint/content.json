@@ -2,7 +2,7 @@
   "layout": "adjointSolves",
   "sectionLabel": "Adjoint light transport ⚡",
   "title": "Adjoint method",
-  "subtitle": "All parameter derivatives are computed with one transposed solve",
+  "subtitle": "All derivatives from one transposed solve",
   "lines": [
     {
       "tex": "\\partial_\\theta m = \\langle \\htmlClass{term-adjoint}{q},\\, (I - A)^{-1} (\\partial_\\theta A)\\, x \\rangle",
@@ -21,6 +21,14 @@
       "label": "one dot product per parameter"
     }
   ],
-  "diagram": { "adjointStep": 2, "dotStep": 3 },
-  "buildSteps": [{}, {}, {}, {}]
+  "diagram": {
+    "adjointStep": 2,
+    "dotStep": 3
+  },
+  "buildSteps": [
+    {},
+    {},
+    {},
+    {}
+  ]
 }

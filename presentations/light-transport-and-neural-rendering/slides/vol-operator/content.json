@@ -2,7 +2,7 @@
   "layout": "operatorForm",
   "sectionLabel": "Volume rendering",
   "title": "Operator form",
-  "subtitle": "A medium's transport splits into terms along rays and over directions",
+  "subtitle": "Transport along rays and scattering over directions",
   "stencils": [
     {
       "operator": "D",

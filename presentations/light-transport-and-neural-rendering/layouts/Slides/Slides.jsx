@@ -47,9 +47,9 @@ export function SectionTitle({ slide }) {
         {slide.subtitle && <p><Text>{slide.subtitle}</Text></p>}
       </div>
       <div className="section-title-visual">
-        {slide.render && <RoomStill kind={slide.render} width={600} height={360} className="section-title-render" />}
+        {slide.render && <RoomStill kind={slide.render} width={520} height={312} className="section-title-render" />}
         {slide.image && <img className="section-title-render section-title-image" src={slide.image.src} alt={slide.image.alt ?? ''} />}
-        {slide.series && <SeriesPlot width={600} height={360} />}
+        {slide.series && <SeriesPlot width={520} height={312} />}
       </div>
     </div>
   );

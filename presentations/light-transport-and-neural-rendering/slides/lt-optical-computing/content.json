@@ -2,7 +2,7 @@
   "layout": "opticalComputing",
   "sectionLabel": "Operator light transport",
   "title": "Optical computing",
-  "subtitle": "Power iteration with photographs estimates the dominant eigenvector",
+  "subtitle": "Power iteration with photographs",
   "equations": [
     "$\\mathbf{T}\\,v_1 = \\lambda_1 v_1$",
     "$p \\leftarrow \\dfrac{\\mathbf{T}p}{\\lVert \\mathbf{T}p \\rVert}$"

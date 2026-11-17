@@ -2,7 +2,7 @@
   "layout": "emissionAbsorption",
   "sectionLabel": "Volume rendering",
   "title": "Emission–absorption model",
-  "subtitle": "Without scattering, the integral is the one NeRF uses",
+  "subtitle": "The model behind NeRF: emission and absorption only",
   "surfaceWidth": 0.12,
   "coreDensity": 0.8,
   "pixel": 8,

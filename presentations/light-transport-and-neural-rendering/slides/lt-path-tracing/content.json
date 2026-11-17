@@ -2,11 +2,19 @@
   "layout": "pathTracing",
   "sectionLabel": "Operator light transport",
   "title": "Path tracing",
-  "subtitle": "Path tracing estimates the sum over bounces with random walks",
+  "subtitle": "Estimating the sum over bounces with random walks",
   "buildSteps": [
-    { "paths": 1 },
-    { "paths": 16 },
-    { "paths": 256 },
-    { "paths": 4096 }
+    {
+      "paths": 1
+    },
+    {
+      "paths": 16
+    },
+    {
+      "paths": 256
+    },
+    {
+      "paths": 4096
+    }
   ]
 }

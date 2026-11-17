@@ -2,7 +2,7 @@
   "layout": "transientQuadrature",
   "sectionLabel": "Neural rendering",
   "title": "Transient quadrature",
-  "subtitle": "A lidar pixel records when the light from each depth arrives",
+  "subtitle": "Volume rendering of a transient",
   "equation": "$h(\\tau) = \\sum_i T_i^2\\,\\alpha_i\\,\\dfrac{a_i}{t_i^2}\\;\\htmlClass{term-operator}{g\\!\\left(\\tau - \\dfrac{2t_i}{c}\\right)}$",
   "buildSteps": [
     {

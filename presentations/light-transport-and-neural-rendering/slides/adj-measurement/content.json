@@ -3,7 +3,7 @@
   "sectionLabel": "Adjoint light transport",
   "view": "measurement",
   "title": "Measurement",
-  "subtitle": "What a pixel measures",
+  "subtitle": "Describing the measurement at a camera pixel",
   "buildSteps": [
     {}
   ]

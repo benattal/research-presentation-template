@@ -2,7 +2,7 @@
   "layout": "quadratureExplorer",
   "sectionLabel": "Volume rendering",
   "title": "Quadrature",
-  "subtitle": "Piecewise-constant quadrature of the integral is alpha compositing",
+  "subtitle": "Alpha compositing as a quadrature of the integral",
   "surfaceWidth": 0.012,
   "coreDensity": 30,
   "equations": [

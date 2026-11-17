@@ -2,7 +2,7 @@
   "layout": "inverseOperator",
   "sectionLabel": "Volume rendering",
   "title": "Inverse operator",
-  "subtitle": "Only local derivatives are needed to recover the sources",
+  "subtitle": "Recovering the sources is a local computation",
   "equations": [
     {
       "label": "integral form: integrals, Monte Carlo",
@@ -20,7 +20,7 @@
       "step": 1
     },
     {
-      "label": "NeRF fits $Q$ to the camera's $L(0)$",
+      "label": "NeRF: $Q$ fit to the camera's $L(0)$",
       "equation": "$$L(0) = \\int_0^d T\\,Q\\,dt$$",
       "step": 2
     }

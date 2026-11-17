@@ -2,11 +2,19 @@
   "layout": "radianceCache",
   "sectionLabel": "Neural rendering",
   "title": "Radiance caching",
-  "subtitle": "Every bounce after the first is replaced by a cache $\\hat{x}$",
+  "subtitle": "A NeRF for the bounces after the first",
   "buildSteps": [
-    { "caption": "cache" },
-    { "caption": "one bounce" },
-    { "caption": "solve" },
-    { "caption": "bias" }
+    {
+      "caption": "cache"
+    },
+    {
+      "caption": "one bounce"
+    },
+    {
+      "caption": "solve"
+    },
+    {
+      "caption": "bias"
+    }
   ]
 }
