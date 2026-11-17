@@ -18,5 +18,11 @@
       "type": "image",
       "src": "/slides/media/panel-4.svg"
     }
+  ],
+  "credits": [
+    {
+      "source": "doe2020",
+      "what": "Fig. 1"
+    }
   ]
 }

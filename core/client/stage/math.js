@@ -1,0 +1,60 @@
+import katex from 'katex';
+
+/**
+ * Math in slide text: `$…$` is inline math and `$$…$$` display math,
+ * rendered by KaTeX; `\$` is a literal dollar sign. This module owns the
+ * KaTeX options, so the browser and `npm run check` render alike.
+ *
+ * `\htmlClass{name}{…}` is allowed, so a layout or theme can color terms
+ * (`\htmlClass{term-emission}{e}`) with CSS instead of hard-coded colors.
+ */
+const OPTIONS = {
+  throwOnError: true,
+  strict: 'ignore',
+  trust: (context) => context.command === '\\htmlClass',
+};
+
+const MATH = /(?<!\\)\$\$([\s\S]+?)(?<!\\)\$\$|(?<!\\)\$((?:\\.|[^$\\])+?)(?<!\\)\$/g;
+
+/**
+ * Split text into segments: `{ text }` for plain text (with `\$`
+ * unescaped) and `{ math, display }` for formulas, in order.
+ */
+export function splitMath(text) {
+  const segments = [];
+  let last = 0;
+  for (const match of text.matchAll(MATH)) {
+    if (match.index > last) segments.push({ text: text.slice(last, match.index).replaceAll('\\$', '$') });
+    segments.push(match[1] !== undefined ? { math: match[1], display: true } : { math: match[2], display: false });
+    last = match.index + match[0].length;
+  }
+  if (last < text.length) segments.push({ text: text.slice(last).replaceAll('\\$', '$') });
+  return segments;
+}
+
+/** KaTeX HTML for one formula. Throws on malformed math. */
+export function renderMath(source, display = false) {
+  return katex.renderToString(source, { ...OPTIONS, displayMode: display });
+}
+
+/**
+ * Every malformed formula in any string inside `value` (a slide's content,
+ * walked recursively), as messages prefixed with `where`.
+ */
+export function mathProblems(value, where) {
+  if (typeof value === 'string') {
+    return splitMath(value)
+      .filter((segment) => segment.math !== undefined)
+      .flatMap((segment) => {
+        try {
+          renderMath(segment.math, segment.display);
+          return [];
+        } catch (error) {
+          return [`${where}: the formula "${segment.math}" does not render (${error.message.replace(/^KaTeX parse error: /, '')}).`];
+        }
+      });
+  }
+  if (Array.isArray(value)) return value.flatMap((item) => mathProblems(item, where));
+  if (value && typeof value === 'object') return Object.values(value).flatMap((item) => mathProblems(item, where));
+  return [];
+}

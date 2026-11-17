@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useChoicePoll } from '../../live/polls.js';
 import LiveStatus from '../../live/LiveStatus.jsx';
 import './PollResultsSlide.css';
+import Text from '../../stage/Text.jsx';
 
 const BAR_COLORS = [
   'var(--accent)',
@@ -25,7 +26,7 @@ export default function PollResultsSlide({ slide }) {
   return (
     <div className="slide--poll-results">
       <motion.h2 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
-        {slide.title}
+        <Text>{slide.title}</Text>
       </motion.h2>
 
       {slide.question && (
@@ -35,7 +36,7 @@ export default function PollResultsSlide({ slide }) {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.4 }}
         >
-          {slide.question}
+          <Text>{slide.question}</Text>
         </motion.p>
       )}
 

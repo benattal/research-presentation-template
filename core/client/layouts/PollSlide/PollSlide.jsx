@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useChoicePoll } from '../../live/polls.js';
 import LiveStatus from '../../live/LiveStatus.jsx';
 import './PollSlide.css';
+import Text from '../../stage/Text.jsx';
 
 /**
  * A multiple-choice question the audience votes on from their own devices
@@ -16,7 +17,7 @@ export default function PollSlide({ slide }) {
   return (
     <div className="slide--poll">
       <motion.h2 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
-        {slide.title}
+        <Text>{slide.title}</Text>
       </motion.h2>
 
       <motion.p

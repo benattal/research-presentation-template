@@ -4,7 +4,9 @@ Layouts every presentation can use, registered in
 `core/client/layouts/index.js`. Each takes the common slide fields
 (`sectionLabel`, `footnote`, `transition`, `buildSteps`) from
 [the presentation format](presentations.md) as well as the fields below. A
-media item is `{ type: "image" | "gif" | "video", src, alt? }`.
+media item is `{ type: "image" | "gif" | "video", src, alt? }`. Text fields
+render math written as `$…$` and `$$…$$`, and color terms with
+`\htmlClass` ([math in text](presentations.md#math-in-text)).
 
 ## Structure
 
@@ -12,13 +14,14 @@ media item is `{ type: "image" | "gif" | "video", src, alt? }`.
 |---|---|---|
 | `title` | `title`, `subtitle`?, `background`? (image path) | title and closing slides |
 | `outline` | `activeSection` (a section id) | lists every section; earlier ones show as done, the active one highlighted |
-| `content` | `title`, `bullets`?, `media`? | bullet list with an optional row of media |
+| `content` | `title`, `subtitle`?, `bullets`?, `media`? | the title with its subtitle line (the slide's point, [slide style](../style/slides.md)), a bullet list, and an optional row of media |
 | `progressiveBuild` | `title`, `buildSteps`: `[{ label, description?, media? }]`, `className`? | step k shows the first k + 1 entries |
 | `diagram` | `title`, `description`?, `media`? (each with `caption`?), `example`? `{ positive, negative }` | an explanation beside figures |
 | `media` | `title`, `media` (up to four) | 2×2 grid; videos get controls |
 | `illustratedPoints` | `title`, `points`: `[{ text, visual }]`, `buildSteps` | each point appears with an illustration; `visual.type` is `imageCompare` (`fakeImg`, `realImg`), `chatCompare` (`bad`, `good`, each `{ messages }`), `chatConversation` (`messages`), or `image` (`src`); `**bold**` works in `text` |
 | `discussion` | `title`, `prompts` | numbered discussion prompts |
 | `colabLink` | `title`, `description`, `colabUrl`?, `steps`? `[{ text, url? }]`, `imageSrc`?, `note`? | button and QR code for a notebook; without `colabUrl` the button reads "Link Coming Soon" |
+| `credits` | `title`, `subtitle`? | every source the presentation cites (`credits` on its slides, text from `sources.json`), in order of first use, in three columns |
 | `presentationLinks` | `title`, `subtitle`?, `qrCode`? `{ url, label? }`, `links`: `[{ href, title, description?, icon? }]` | a menu of other presentations, for a landing presentation served at the gateway root; `href` is relative (`"../filtering/"`) |
 
 ## Live audience
@@ -41,4 +44,7 @@ presenter resets the current slide's poll with **C**.
 Layouts used by one presentation live in that presentation's `layouts/` and
 are listed in its `layouts/index.js`; their fields are documented in the
 component's docstring. [The presentation format](presentations.md#custom-layouts)
-explains how to write one.
+explains how to write one. A custom layout renders its heading with
+`SlideTitle` (`@core/stage/SlideTitle.jsx`, taking `title` and an optional
+`subtitle`), so its header matches the core `content` layout's, and passes
+other text fields through `Text` (`@core/stage/Text.jsx`).

@@ -1,11 +1,14 @@
 /**
  * The audience view in local mode: keyboard, buttons, dots, the overview,
- * swipes, focus handling, position persistence, and the toolbar.
+ * swipes, focus handling, position persistence, and the toolbar; and its
+ * layout at every window size, where the stage and the bars share the
+ * window without overlapping.
  */
 import assert from 'node:assert/strict';
 import { after, before, beforeEach, describe, it } from 'node:test';
 import {
-  SHOWCASE_SLIDES, counter, counterText, fixture, goToSlide, launchBrowser, newContext, newPage, slideNumber, startLocal,
+  SHOWCASE_SLIDES, counter, counterText, fixture, goToSlide, launchBrowser, longDeck, newContext, newPage, slideNumber,
+  startLocal,
 } from './harness.mjs';
 
 const FIRST = SHOWCASE_SLIDES[0];
@@ -161,5 +164,142 @@ describe('audience view', { timeout: 180000 }, () => {
     assert.equal(await width(), 0);
     await goToSlide(page, LAST);
     await page.waitForFunction(() => document.querySelector('.progress-bar').getBoundingClientRect().width > 1270);
+  });
+});
+
+/** Monitors, projectors, a laptop, a portrait tablet, and a phone held both ways. */
+const WINDOW_SIZES = [
+  [1920, 1080], [2560, 1440], [1440, 900], [1366, 768], [1280, 720], [1024, 768], [800, 1200], [390, 844], [844, 390],
+];
+
+/** Window pixels by which boxes may overlap, stick out, or miss the center before it counts. */
+const TOLERANCE_PX = 1;
+
+/**
+ * True once the stage has the largest size at which it fits between the
+ * progress bar and the navigation bar (or the bottom of the window, while
+ * the bar is hidden). Runs in the page.
+ */
+function stageFitsTheFreeSpace() {
+  const stage = document.querySelector('.slide-stage')?.getBoundingClientRect();
+  if (!stage) return false;
+  const top = document.querySelector('.progress-bar').getBoundingClientRect().bottom;
+  const bar = document.querySelector('.navigation');
+  const bottom = bar && bar.getClientRects().length > 0 ? bar.getBoundingClientRect().top : window.innerHeight;
+  const scale = Math.min(window.innerWidth / 1280, (bottom - top) / 720);
+  return Math.abs(stage.width - 1280 * scale) <= 1 && Math.abs(stage.height - 720 * scale) <= 1;
+}
+
+/** The boxes of the stage and the chrome in window pixels, null for what is not displayed. Runs in the page. */
+function measureLayout() {
+  const box = (element) => {
+    if (!element || element.getClientRects().length === 0) return null;
+    const { left, top, right, bottom } = element.getBoundingClientRect();
+    return { left, top, right, bottom };
+  };
+  const find = (selector) => box(document.querySelector(selector));
+  return {
+    width: window.innerWidth,
+    height: window.innerHeight,
+    stage: find('.slide-stage'),
+    progress: find('.progress-bar'),
+    bar: find('.navigation'),
+    controls: find('.nav-controls'),
+    toolbar: find('.toolbar-buttons'),
+    dots: find('.nav-dots'),
+    activeDot: find('.nav-dot--active'),
+    chrome: [...document.querySelectorAll('.toolbar-btn, .nav-btn, .nav-dots, .nav-slide-counter')]
+      .map((element) => ({ name: element.className, box: box(element) }))
+      .filter((entry) => entry.box),
+  };
+}
+
+function overlaps(a, b) {
+  return Math.min(a.right, b.right) - Math.max(a.left, b.left) > TOLERANCE_PX
+    && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > TOLERANCE_PX;
+}
+
+function inside(inner, outer) {
+  return inner.left >= outer.left - TOLERANCE_PX && inner.top >= outer.top - TOLERANCE_PX
+    && inner.right <= outer.right + TOLERANCE_PX && inner.bottom <= outer.bottom + TOLERANCE_PX;
+}
+
+/** Resize the window, then check the stage and the chrome at that size. */
+async function checkLayoutAt(page, [width, height]) {
+  const size = `${width}×${height}`;
+  await page.setViewportSize({ width, height });
+  const fits = await page.waitForFunction(stageFitsTheFreeSpace, null, { timeout: 3000 }).then(() => true, () => false);
+  const layout = await page.evaluate(measureLayout);
+  const windowBox = { left: 0, top: 0, right: width, bottom: height };
+
+  assert.ok(fits, `${size}: the stage fills the space between the bars (stage ${JSON.stringify(layout.stage)})`);
+  assert.ok(inside(layout.stage, windowBox), `${size}: the stage is inside the window`);
+  for (const [name, chrome] of [['progress bar', layout.progress], ['navigation bar', layout.bar], ['toolbar', layout.toolbar]]) {
+    assert.ok(!overlaps(layout.stage, chrome), `${size}: the stage clears the ${name}`);
+  }
+  const offset = (layout.controls.left + layout.controls.right) / 2 - width / 2;
+  assert.ok(Math.abs(offset) <= TOLERANCE_PX, `${size}: the navigation controls are ${offset.toFixed(1)}px off center`);
+  for (const { name, box } of layout.chrome) {
+    assert.ok(inside(box, windowBox), `${size}: .${name} is inside the window (${JSON.stringify(box)})`);
+  }
+  if (layout.dots) {
+    assert.ok(inside(layout.activeDot, layout.dots), `${size}: the current slide's dot is in view`);
+  }
+}
+
+describe('audience layout at every window size', { timeout: 240000 }, () => {
+  const decks = { 'ui-showcase': fixture('ui-showcase'), 'a 70-slide deck': longDeck(70) };
+  const servers = {};
+  let browser;
+  let context;
+
+  before(async () => {
+    browser = await launchBrowser();
+    for (const [name, presentation] of Object.entries(decks)) servers[name] = await startLocal(presentation);
+  });
+
+  after(async () => {
+    await context?.close();
+    await browser?.close();
+    for (const server of Object.values(servers)) await server.close();
+  });
+
+  async function open(url) {
+    await context?.close();
+    context = await newContext(browser);
+    const page = await newPage(context);
+    await page.goto(url);
+    await page.waitForSelector('.slide');
+    return page;
+  }
+
+  for (const [name, presentation] of Object.entries(decks)) {
+    it(`keeps the stage clear of the bars and the controls centered: ${name}`, async () => {
+      const page = await open(servers[name].url);
+      const slideCount = presentation.manifest.sections.flatMap((section) => section.slides).length;
+      await page.locator('.nav-dot').nth(Math.floor(slideCount / 2)).click();
+      for (const size of WINDOW_SIZES) await checkLayoutAt(page, size);
+      assert.deepEqual(page.errors, []);
+    });
+  }
+
+  it('gives the stage the whole height below the progress bar in fullscreen', async () => {
+    const page = await open(servers['ui-showcase'].url);
+    await page.keyboard.press('f');
+    await page.waitForFunction(() => document.fullscreenElement !== null);
+    await page.waitForFunction(stageFitsTheFreeSpace);
+    const layout = await page.evaluate(measureLayout);
+    assert.equal(layout.bar, null, 'the navigation bar is hidden');
+    assert.ok(Math.abs(layout.stage.bottom - layout.height) <= TOLERANCE_PX, 'the stage reaches the bottom of the window');
+  });
+
+  it('renders the capture and preview views at design size, without the bars', async () => {
+    for (const mode of ['capture&slide=0&step=0', 'preview']) {
+      const page = await open(`${servers['ui-showcase'].url}?mode=${mode}`);
+      const layout = await page.evaluate(measureLayout);
+      assert.deepEqual(layout.stage, { left: 0, top: 0, right: 1280, bottom: 720 }, mode);
+      assert.equal(layout.bar, null, mode);
+      assert.deepEqual(page.errors, [], mode);
+    }
   });
 });

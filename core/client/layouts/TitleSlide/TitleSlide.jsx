@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import './TitleSlide.css';
+import Text from '../../stage/Text.jsx';
 
 export default function TitleSlide({ slide, renderBackground }) {
   return (
@@ -17,7 +18,7 @@ export default function TitleSlide({ slide, renderBackground }) {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.6 }}
       >
-        {slide.title}
+        <Text>{slide.title}</Text>
       </motion.h1>
       {slide.subtitle && (
         <motion.p
@@ -26,7 +27,7 @@ export default function TitleSlide({ slide, renderBackground }) {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4, duration: 0.5 }}
         >
-          {slide.subtitle}
+          <Text>{slide.subtitle}</Text>
         </motion.p>
       )}
     </div>

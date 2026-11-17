@@ -20,8 +20,10 @@ function openPresenterWindow() {
 }
 
 /**
- * The audience view: the current slide on the scaled stage, the progress
- * bar, the navigation bar, the toolbar, and the slide overview.
+ * The audience view: the progress bar, the current slide on the scaled
+ * stage, the navigation bar (with the toolbar), and the slide overview. The
+ * two bars and the stage are stacked, so the stage fits the space the bars
+ * leave and never sits under them.
  *
  * Input comes from the keyboard (see `useKeyboardNavigation` for the keys),
  * swipes, the navigation bar, and the presenter window. While the live
@@ -81,7 +83,6 @@ export default function AudienceView({ presentation }) {
         </AnimatePresence>
       </Stage>
 
-      {presentation.slides.length > 1 && (
       <Navigation
         slides={presentation.slides}
         position={navigation.position}
@@ -91,24 +92,24 @@ export default function AudienceView({ presentation }) {
         previous={navigation.previous}
         goTo={navigation.goTo}
         disabled={following}
-      />
-      )}
-
-      <div className="toolbar-buttons">
-        {presentation.backLink && (
-          <a className="toolbar-btn" href={presentation.backLink} title="Back">&#8592;</a>
+        toolbar={(
+          <div className="toolbar-buttons">
+            {presentation.backLink && (
+              <a className="toolbar-btn" href={presentation.backLink} title="Back">&#8592;</a>
+            )}
+            <button
+              className="toolbar-btn"
+              onClick={toggleFullscreen}
+              title={isFullscreen ? 'Exit fullscreen (F)' : 'Fullscreen (F)'}
+            >
+              &#x26F6;
+            </button>
+            <button className="toolbar-btn" onClick={openPresenterWindow} title="Open presenter notes (P)">
+              &#x1F4CB;
+            </button>
+          </div>
         )}
-        <button
-          className="toolbar-btn"
-          onClick={toggleFullscreen}
-          title={isFullscreen ? 'Exit fullscreen (F)' : 'Fullscreen (F)'}
-        >
-          &#x26F6;
-        </button>
-        <button className="toolbar-btn" onClick={openPresenterWindow} title="Open presenter notes (P)">
-          &#x1F4CB;
-        </button>
-      </div>
+      />
 
       {showOverview && (
         <SlideOverview

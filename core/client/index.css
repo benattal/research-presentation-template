@@ -19,8 +19,8 @@
   --radius: 12px;
   --radius-sm: 8px;
   --transition: 0.2s ease;
-  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-mono: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', 'Consolas', monospace;
+  --font: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', 'Cascadia Code', 'Consolas', monospace;
 }
 
 /* ─── Reset ───────────────────────────────────────────────────── */
@@ -42,14 +42,25 @@ html, body, #root {
 }
 
 /* ─── Presentation Container ──────────────────────────────────── */
+/* The audience view stacks the progress bar, the stage area, and the
+   navigation bar; the stage area takes the height the bars leave. */
 .presentation {
   position: relative;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ─── Slide Stage (fixed-aspect-ratio viewport, always scaled) ── */
+/* Stage.jsx scales .slide-stage to fit .stage-area and centers it there. */
+.stage-area {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
 .slide-stage {
   position: absolute;
   top: 50%;
@@ -71,6 +82,36 @@ html, body, #root {
   background: var(--bg-slide);
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+/* ─── Slide header and math ──────────────────────────────────── */
+/* SlideTitle: the topic as the title, the slide's point as one line under it. */
+.slide-header {
+  margin-bottom: 1.25rem;
+}
+
+.slide-title {
+  font-family: var(--font-display, var(--font));
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--text-primary);
+}
+
+.slide-subtitle {
+  margin-top: 0.4rem;
+  font-size: 1.3rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.math .katex {
+  font-size: 1.08em;
+}
+
+.math--display {
+  display: block;
+  margin: 0.5em 0;
 }
 
 .slide-content {
@@ -105,52 +146,63 @@ html, body, #root {
 }
 
 /* ─── Progress Bar ────────────────────────────────────────────── */
-.progress-bar {
-  position: absolute;
-  top: 0;
-  left: 0;
+.progress-track {
+  flex: none;
   height: 3px;
+}
+
+.progress-bar {
+  height: 100%;
   background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
   transition: width 0.4s ease;
-  z-index: 100;
 }
 
 /* ─── Navigation ──────────────────────────────────────────────── */
-:fullscreen .navigation,
-:fullscreen .toolbar-buttons {
+/* In fullscreen only the slides show; the stage area grows to the window. */
+:fullscreen .navigation {
   display: none;
 }
 
+/*
+ * Three columns: the toolbar, the controls, the slide counter. Both ends
+ * reserve the same width, the toolbar's at its widest (three buttons), so
+ * the controls between them stay centered in the window. The controls take
+ * no more than they need; given less, the dots shrink, then scroll.
+ */
 .navigation {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
+  --nav-btn-size: 48px;
+  --nav-gap: 16px;
+  --toolbar-btn-size: 36px;
+  --toolbar-gap: 8px;
+  --nav-side-width: calc(3 * var(--toolbar-btn-size) + 2 * var(--toolbar-gap));
+  flex: none;
+  display: grid;
+  grid-template-columns:
+    minmax(var(--nav-side-width), 1fr)
+    minmax(0, max-content)
+    minmax(var(--nav-side-width), 1fr);
   align-items: center;
-  justify-content: space-between;
-  padding: 16px 32px;
-  z-index: 50;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.5));
+  column-gap: var(--nav-gap);
+  padding: 12px 16px;
 }
 
-.nav-section-label {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  font-weight: 500;
-  width: 200px;
-  flex-shrink: 0;
+.nav-start {
+  grid-column: 1;
+  justify-self: start;
 }
 
 .nav-controls {
+  grid-column: 2;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--nav-gap);
+  min-width: 0;
 }
 
 .nav-btn {
-  width: 48px;
-  height: 48px;
+  flex: none;
+  width: var(--nav-btn-size);
+  height: var(--nav-btn-size);
   border-radius: 50%;
   border: 1px solid var(--border-light);
   background: rgba(255, 255, 255, 0.05);
@@ -174,27 +226,54 @@ html, body, #root {
   cursor: not-allowed;
 }
 
+/* Each slide's button is a 16px slot drawing a 10px dot. With many slides
+   the slots shrink, the dots in proportion, down to 6px; past that the row
+   scrolls, and Navigation.jsx keeps the current dot in view. */
 .nav-dots {
+  position: relative; /* the dots' offsetParent, for Navigation.jsx */
   display: flex;
-  gap: 6px;
   align-items: center;
+  min-width: 0;
+  padding: 4px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 
 .nav-dot {
-  width: 10px;
-  height: 10px;
+  flex: 0 1 auto;
+  width: 16px;
+  min-width: 6px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: width 0.3s ease;
+}
+
+.nav-dot::before {
+  content: '';
+  width: 62.5%;
+  aspect-ratio: 1;
   border-radius: 50%;
   background: var(--border-light);
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  padding: 0;
+  transition: background 0.3s ease;
 }
 
 .nav-dot--active {
-  background: var(--accent);
+  flex-shrink: 0;
+  width: 34px;
+}
+
+.nav-dot--active::before {
   width: 28px;
+  height: 10px;
+  aspect-ratio: auto;
   border-radius: 5px;
+  background: var(--accent);
 }
 
 .nav-dot--section-start {
@@ -202,11 +281,11 @@ html, body, #root {
 }
 
 .nav-slide-counter {
+  grid-column: 3;
+  justify-self: end;
   font-size: 0.8rem;
   color: var(--text-muted);
-  width: 200px;
-  flex-shrink: 0;
-  text-align: right;
+  white-space: nowrap;
 }
 
 /* ─── Slide Overview ──────────────────────────────────────────── */
@@ -290,14 +369,10 @@ kbd {
   margin: 0 2px;
 }
 
-/* ─── Toolbar Buttons ────────────────────────────────────────── */
+/* ─── Toolbar Buttons (the start of the navigation bar) ──────── */
 .toolbar-buttons {
-  position: absolute;
-  top: 16px;
-  right: 16px;
   display: flex;
-  gap: 8px;
-  z-index: 50;
+  gap: var(--toolbar-gap);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -307,8 +382,8 @@ kbd {
 }
 
 .toolbar-btn {
-  width: 36px;
-  height: 36px;
+  width: var(--toolbar-btn-size);
+  height: var(--toolbar-btn-size);
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-light);
   background: rgba(255, 255, 255, 0.05);
@@ -548,14 +623,6 @@ kbd {
   color: var(--accent-secondary);
 }
 
-/* ─── Preview mode (iframe content) ────────────────────────── */
-
-.preview-mode .navigation,
-.preview-mode .toolbar-buttons,
-.preview-mode .progress-bar {
-  display: none;
-}
-
 .presenter-notes-content p {
   margin-bottom: 0.75em;
 }
@@ -594,22 +661,19 @@ kbd {
   color: var(--text-muted);
 }
 
-/* ─── Responsive ──────────────────────────────────────────────── */
+/* ─── Responsive (the window's chrome; slides never reflow) ──── */
 @media (max-width: 768px) {
-  .nav-dots {
-    display: none;
+  .navigation {
+    --nav-btn-size: 40px;
+    --nav-gap: 8px;
+    --toolbar-btn-size: 32px;
+    --toolbar-gap: 6px;
+    padding: 8px;
   }
 
-  .nav-section-label {
-    display: none;
-  }
-
+  .nav-dots,
   .nav-slide-counter {
     display: none;
-  }
-
-  .navigation {
-    justify-content: center;
   }
 }
 
@@ -666,3 +730,16 @@ kbd {
 .load-error h1 { font-size: 1.6rem; margin-bottom: 1rem; color: var(--warning); }
 .load-error ul { margin: 0 0 1rem 1.25rem; }
 .load-error code { font-family: var(--font-mono); color: var(--accent-secondary); }
+
+/* ─── Credit line of borrowed material (slide `credits`) ──────── */
+.slide-credits {
+  position: absolute;
+  right: 24px;
+  bottom: 14px;
+  max-width: 70%;
+  font-size: 0.72rem;
+  line-height: 1.3;
+  text-align: right;
+  color: var(--text-muted);
+  z-index: 2;
+}

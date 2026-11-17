@@ -1,0 +1,5 @@
+{
+  "layout": "narrowColumn",
+  "column": "left",
+  "text": "${A^\\top q = G^\\top S^\\top q + G^\\top S^\\top G^\\top S^\\top q}$"
+}

@@ -1,7 +1,8 @@
 /**
  * Every core layout, rendered by the capture view at every build step of
  * the ui-showcase fixture: what each layout must show, and no errors,
- * missing media, or overflow anywhere.
+ * missing media, or overflow anywhere. And the capture view's overflow
+ * report itself, on the overflow fixture's slides that do not fit.
  */
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -53,6 +54,7 @@ const EXPECTATIONS = {
   async media(page) {
     assert.equal(await count(page, '.media-grid-item'), 4);
     assert.equal(await loadedImages(page), 4);
+    assert.equal(await text(page, '.slide-credits'), 'Doe et al., Conference 2020, Fig. 1');
   },
   async illustrated(page, step) {
     assert.equal(await count(page, '.ip-point'), step + 1);
@@ -94,6 +96,10 @@ const EXPECTATIONS = {
   async 'numeric-poll'(page) {
     assert.equal(await count(page, 'input.np-input:disabled'), 1);
     assert.match(await text(page, '.np-status'), /Local mode/);
+  },
+  async credits(page) {
+    assert.equal(await count(page, '.credits-item'), 1);
+    assert.match(await text(page, '.credits-item'), /^Doe et al\. A borrowed figure\. Conference 2020$/);
   },
   async 'step-counter'(page, step) {
     assert.equal(await text(page, '.step-counter'), `Step ${step + 1} of 2`);
@@ -148,5 +154,39 @@ describe('core layouts', { timeout: 180000 }, () => {
         await EXPECTATIONS[slide.id](page, step);
       }
     }
+  });
+});
+
+describe('the overflow report', { timeout: 60000 }, () => {
+  let server;
+  let browser;
+  let page;
+
+  before(async () => {
+    server = await startLocal(fixture('overflow'));
+    browser = await launchBrowser();
+    page = await newPage(await newContext(browser));
+  });
+
+  after(async () => {
+    await browser?.close();
+    await server?.close();
+  });
+
+  // The text's column keeps its width, so no element box reaches past the
+  // column or the stage: only the text's own lines show the overflow.
+  it('reports text that runs out of its column, inside the stage and past its edge', async () => {
+    for (const [index, slideId] of ['formula-past-column', 'word-past-stage'].entries()) {
+      await page.goto(`${server.url}?mode=capture&slide=${index}&step=0`);
+      await page.waitForSelector('body[data-capture-ready="true"]');
+      const report = await page.evaluate(() => window.__captureReport);
+      assert.equal(report.slide, slideId);
+      assert.deepEqual(
+        report.overflow.map((finding) => `${finding.kind}: ${finding.element.split(' ')[0]}`),
+        ['text-past-box: div.narrow-column-text'],
+        slideId,
+      );
+    }
+    assert.deepEqual(page.errors, []);
   });
 });

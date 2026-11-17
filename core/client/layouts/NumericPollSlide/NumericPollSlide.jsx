@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNumericPoll } from '../../live/polls.js';
 import LiveStatus from '../../live/LiveStatus.jsx';
 import './NumericPollSlide.css';
+import Text from '../../stage/Text.jsx';
 
 /**
  * Each audience member submits one number (`pollId`, `title`, optional
@@ -42,7 +43,7 @@ export default function NumericPollSlide({ slide }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        {slide.title}
+        <Text>{slide.title}</Text>
       </motion.h2>
 
       {slide.subtitle && (
@@ -52,7 +53,7 @@ export default function NumericPollSlide({ slide }) {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.15, duration: 0.4 }}
         >
-          {slide.subtitle}
+          <Text>{slide.subtitle}</Text>
         </motion.p>
       )}
 

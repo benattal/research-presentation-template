@@ -3,6 +3,7 @@ import { describe, it } from 'node:test';
 import {
   PresentationError,
   buildPresentation,
+  formatCredit,
   indexNotes,
   mergeLayouts,
   notesFileName,
@@ -121,3 +122,37 @@ describe('notes', () => {
     assert.equal(notesFileName([], 0), 'notes.md');
   });
 });
+
+describe('credits', () => {
+  const sources = {
+    doe2020: { authors: 'Doe et al.', title: 'A paper', venue: 'CVPR', year: 2020 },
+    roe2021: { authors: 'Roe', title: 'A thesis', year: 2021 },
+  };
+  const withCredits = (credits) => build({
+    sources,
+    slideContents: {
+      intro: { layout: 'title', credits },
+      body: { layout: 'content', credits: ['roe2021', { source: 'doe2020' }] },
+      end: { layout: 'title' },
+    },
+  });
+
+  it('formats a credit as authors, venue and year, then what was taken', () => {
+    assert.equal(formatCredit(sources.doe2020, 'Fig. 3'), 'Doe et al., CVPR 2020, Fig. 3');
+    assert.equal(formatCredit(sources.roe2021), 'Roe, 2021');
+  });
+
+  it('gives each credited slide its credit line and lists citations in order of first use', () => {
+    const presentation = withCredits([{ source: 'doe2020', what: 'Fig. 1' }]);
+    assert.equal(presentation.slides[0].creditLine, 'Doe et al., CVPR 2020, Fig. 1');
+    assert.equal(presentation.slides[1].creditLine, 'Roe, 2021 · Doe et al., CVPR 2020');
+    assert.equal(presentation.slides[2].creditLine, undefined);
+    assert.deepEqual(presentation.citations.map((c) => [c.key, c.slideIds]), [['doe2020', ['intro', 'body']], ['roe2021', ['body']]]);
+  });
+
+  it('reports a credit to a source that sources.json does not have', () => {
+    assert.throws(() => withCredits(['nobody1999']), (error) => error instanceof PresentationError
+      && error.problems.some((problem) => problem.includes('"nobody1999"')));
+  });
+});
+

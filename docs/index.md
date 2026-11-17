@@ -22,6 +22,7 @@ and checks.
 - [Code style and organization](style/code.md)
 - [Writing style](style/writing.md)
 - [Slide style](style/slides.md)
+- [Slide review checklist](style/slide-review.md): the user's feedback, generalized, for every review cycle
 
 ## Environments
 

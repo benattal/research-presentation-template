@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
 import './PresentationLinksSlide.css';
+import Text from '../../stage/Text.jsx';
 
 /**
  * A menu of other presentations: the landing slide of a site that serves
@@ -15,9 +16,9 @@ export default function PresentationLinksSlide({ slide }) {
   return (
     <div className="slide--links">
       <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-        {slide.title}
+        <Text>{slide.title}</Text>
       </motion.h1>
-      {slide.subtitle && <p className="links-subtitle">{slide.subtitle}</p>}
+      {slide.subtitle && <p className="links-subtitle"><Text>{slide.subtitle}</Text></p>}
 
       {slide.qrCode && (
         <div className="links-qr">
