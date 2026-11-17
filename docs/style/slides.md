@@ -45,9 +45,12 @@ ways". Just state things plainly."
   visual, where they are introduced. The core `content` layout
   and every layout that renders `SlideTitle` show it
   ([layouts](../implementation/layouts.md)).
-- **Orient with the outline, not with numbers.** Before each section,
-  bring back the outline slide (the `outline` layout) with the current
-  section highlighted; titles do not say "Part 2" or "Thread 1".
+- **Orient with the outline and section dividers, not with numbers.** One
+  outline slide lists the parts; each part opens with a divider slide
+  (its name, a plain one-line goal, and a picture). Titles do not say
+  "Part 2" or "Thread 1", and dividers carry no section numbers (the user,
+  2026-11-17: "The numbers before the new sections (e.g. the 3 before
+  volume rendering) is awkwardly placed").
 
 ## One message per slide
 
