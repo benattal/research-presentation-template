@@ -81,6 +81,10 @@ a static build opened from disk. A media item is
 Text fields render math typeset with KaTeX: `$…$` is inline math,
 `$$…$$` is a formula on its own line, and `\$` is a literal dollar sign. In
 JSON, each backslash is doubled: `"$\\partial_\\theta m = y^\\top x$"`.
+A single backslash before `t`, `b`, `f`, `r`, or `n` is a JSON escape
+(`"\theta"` is a TAB followed by "heta"), so loading a presentation reports
+any string in slide content with a control character, and any inline
+formula with a newline, along with every formula KaTeX cannot render.
 
 `core/client/stage/math.js` owns the parsing and the KaTeX options, so the
 browser and `npm run check` render alike. `core/client/stage/Text.jsx`
