@@ -1,10 +1,13 @@
 /**
  * The audience view in local mode: keyboard, buttons, dots, the overview,
- * swipes, focus handling, position persistence, and the toolbar; and its
- * layout at every window size, where the stage and the bars share the
- * window without overlapping.
+ * swipes, focus handling, position persistence, and the toolbar; the stage
+ * and slide headings holding still from slide to slide; and its layout at
+ * every window size, where the stage and the bars share the window without
+ * overlapping.
  */
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { after, before, beforeEach, describe, it } from 'node:test';
 import {
   SHOWCASE_SLIDES, counter, counterText, fixture, goToSlide, launchBrowser, longDeck, newContext, newPage, slideNumber,
@@ -15,6 +18,51 @@ const FIRST = SHOWCASE_SLIDES[0];
 const SECOND = SHOWCASE_SLIDES[1];
 const THIRD = SHOWCASE_SLIDES[2];
 const LAST = SHOWCASE_SLIDES.at(-1);
+
+/** Every slide and build step of the ui-showcase fixture, in order: `{ id, step }`. */
+const POSITIONS = SHOWCASE_SLIDES.flatMap((id) => {
+  const content = JSON.parse(readFileSync(join(fixture('ui-showcase').dir, 'slides', id, 'content.json'), 'utf-8'));
+  return Array.from({ length: content.buildSteps?.length ?? 1 }, (_, step) => ({ id, step }));
+});
+
+/** True once one slide is on the stage, fully faded in, with no animation running. Runs in the page. */
+function slideSettled() {
+  const slides = document.querySelectorAll('.slide');
+  return slides.length === 1 && getComputedStyle(slides[0]).opacity === '1'
+    && document.getAnimations().every((animation) => animation.playState !== 'running');
+}
+
+/**
+ * Window-pixel boxes of the stage, the slide's first heading, and, for a
+ * `SlideTitle` header, its title and subtitle measured from the header's
+ * top. Runs in the page.
+ */
+function measureSlide() {
+  const box = (element) => {
+    if (!element) return null;
+    const { left, top, width, height } = element.getBoundingClientRect();
+    return { left, top, width, height };
+  };
+  const slide = document.querySelector('.slide');
+  const header = slide.querySelector('.slide-header');
+  const fromHeader = (element) => {
+    if (!element) return null;
+    const { top, height } = element.getBoundingClientRect();
+    return { top: top - header.getBoundingClientRect().top, height };
+  };
+  return {
+    stage: box(document.querySelector('.slide-stage')),
+    heading: box(slide.querySelector('h1, h2')),
+    header: header && { title: fromHeader(header.querySelector('.slide-title')), subtitle: fromHeader(header.querySelector('.slide-subtitle')) },
+  };
+}
+
+/** Assert that two boxes (objects of numbers) agree to half a window pixel. */
+function assertSameBox(actual, expected, message) {
+  for (const [key, value] of Object.entries(expected)) {
+    assert.ok(Math.abs(actual[key] - value) <= 0.5, `${message}: ${key} ${actual[key]} != ${value}`);
+  }
+}
 
 /** Dispatch a horizontal swipe starting on `selector`, travelling `dx` pixels. */
 function swipe(page, selector, dx) {
@@ -156,6 +204,34 @@ describe('audience view', { timeout: 180000 }, () => {
     const [popup] = await Promise.all([context.waitForEvent('page'), page.keyboard.press('p')]);
     await popup.waitForLoadState();
     assert.match(popup.url(), /\?mode=presenter$/);
+    assert.deepEqual(page.errors, []);
+  });
+
+  // A stage that rescales, or a heading that moves, jumps when the presenter
+  // advances. Every SlideTitle header has the same title height and subtitle
+  // offset: math in a title and a layout's own heading styles must not
+  // change them.
+  it('keeps the stage and each slide heading in place across slides and build steps', async () => {
+    const measured = [];
+    for (const [index, position] of POSITIONS.entries()) {
+      if (index > 0) await page.keyboard.press('ArrowRight');
+      await page.waitForSelector(`.slide[data-slide-id="${position.id}"]`);
+      await page.waitForFunction(slideSettled);
+      measured.push({ ...position, ...await page.evaluate(measureSlide) });
+    }
+    const [first] = measured;
+    const headers = measured.filter((entry) => entry.header);
+    assert.ok(headers.length >= 2 && headers.every((entry) => entry.header.subtitle), 'the fixture has two headers with subtitles');
+    for (const [index, entry] of measured.entries()) {
+      const frame = `${entry.id} step ${entry.step + 1}`;
+      assertSameBox(entry.stage, first.stage, `${frame}: the stage`);
+      const previous = measured[index - 1];
+      if (previous?.id === entry.id) assertSameBox(entry.heading, previous.heading, `${frame}: the heading`);
+      if (entry.header) {
+        assertSameBox(entry.header.title, headers[0].header.title, `${frame}: the title`);
+        assertSameBox(entry.header.subtitle, headers[0].header.subtitle, `${frame}: the subtitle`);
+      }
+    }
     assert.deepEqual(page.errors, []);
   });
 

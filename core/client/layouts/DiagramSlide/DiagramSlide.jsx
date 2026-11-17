@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import Media from '../../stage/Media.jsx';
 import './DiagramSlide.css';
 import Text from '../../stage/Text.jsx';
@@ -10,48 +9,25 @@ import Text from '../../stage/Text.jsx';
 export default function DiagramSlide({ slide }) {
   return (
     <div className="slide--diagram">
-      <motion.h2
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4 }}
-      >
-        <Text>{slide.title}</Text>
-      </motion.h2>
+      <h2><Text>{slide.title}</Text></h2>
 
       {slide.description && (
-        <motion.p
-          className="diagram-description"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.4 }}
-        >
-          <Text>{slide.description}</Text>
-        </motion.p>
+        <p className="diagram-description"><Text>{slide.description}</Text></p>
       )}
 
       {slide.media && slide.media.length > 0 && (
-        <motion.div
-          className="diagram-media"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-        >
+        <div className="diagram-media">
           {slide.media.map((m, i) => (
             <div key={i} className="diagram-media-item">
               <Media item={m} controls />
               {m.caption && <span className="diagram-caption"><Text>{m.caption}</Text></span>}
             </div>
           ))}
-        </motion.div>
+        </div>
       )}
 
       {slide.example && (
-        <motion.div
-          className="prompt-example"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.4 }}
-        >
+        <div className="prompt-example">
           <div className="prompt-box prompt-box--positive">
             <div className="prompt-box-label">Positive Prompt</div>
             <div className="prompt-box-text">"{slide.example.positive}"</div>
@@ -60,7 +36,7 @@ export default function DiagramSlide({ slide }) {
             <div className="prompt-box-label">Negative Prompt</div>
             <div className="prompt-box-text">"{slide.example.negative}"</div>
           </div>
-        </motion.div>
+        </div>
       )}
     </div>
   );

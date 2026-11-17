@@ -43,7 +43,8 @@ a changed frame can be toggled between now, before, and the difference.
 | failed request | error | a missing asset (HTTP 404) or a request that failed |
 | image or video did not load | error | a media element never produced a frame |
 | `slide-scrolls` | warning | the slide's content is taller than 720 pixels |
-| `clipped` | warning | an element cuts off its own text (`overflow: hidden`, ellipsis) |
+| `clipped` | warning | the box that lays out a text cuts it off (`overflow: hidden`, ellipsis) |
+| `text-past-box` | warning | a line of text (a formula, a long word, `nowrap`) is wider than the box that lays it out and spills over its neighbors or the stage edge; the box itself still fits, so only the text shows it |
 | `outside-stage` | warning | visible content extends past the stage edge |
 | changed | information | more than 0.1% of pixels differ from the previous run |
 

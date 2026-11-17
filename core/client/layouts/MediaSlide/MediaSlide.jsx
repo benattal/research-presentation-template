@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import Media from '../../stage/Media.jsx';
 import './MediaSlide.css';
 import Text from '../../stage/Text.jsx';
@@ -7,25 +6,13 @@ import Text from '../../stage/Text.jsx';
 export default function MediaSlide({ slide }) {
   return (
     <div className="slide--media">
-      <motion.h2
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4 }}
-      >
-        <Text>{slide.title}</Text>
-      </motion.h2>
+      <h2><Text>{slide.title}</Text></h2>
 
       <div className="media-grid">
         {slide.media.map((m, i) => (
-          <motion.div
-            key={i}
-            className="media-grid-item"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.15 * i, duration: 0.4 }}
-          >
+          <div key={i} className="media-grid-item">
             <Media item={m} controls />
-          </motion.div>
+          </div>
         ))}
       </div>
     </div>

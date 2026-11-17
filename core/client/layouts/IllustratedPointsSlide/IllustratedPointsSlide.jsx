@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import './IllustratedPointsSlide.css';
 import Text from '../../stage/Text.jsx';
 
@@ -96,43 +96,44 @@ function PointVisual({ visual }) {
   return null;
 }
 
+/**
+ * Numbered `points` (`{ text, visual? }`), one more per build step. A point
+ * slides in when its step reveals it; the points shown when the slide
+ * appears come with it.
+ */
 export default function IllustratedPointsSlide({ slide, buildStep }) {
   const points = slide.points || [];
   const visibleCount = buildStep + 1;
 
   return (
     <div className="slide--illustrated-points">
-      <motion.h2
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4 }}
-      >
-        <Text>{slide.title}</Text>
-      </motion.h2>
+      <h2><Text>{slide.title}</Text></h2>
 
       <div className="ip-points">
-        {points.map((point, i) => {
-          if (i >= visibleCount) return null;
-          return (
-            <motion.div
-              key={i}
-              className="ip-point"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-              <div className="ip-point-text">
-                <span className="ip-point-number">{i + 1}</span>
-                <span>{parseBold(point.text)}</span>
-              </div>
-              {point.visual && (
-                <div className="ip-point-visual">
-                  <PointVisual visual={point.visual} />
+        <AnimatePresence initial={false}>
+          {points.map((point, i) => {
+            if (i >= visibleCount) return null;
+            return (
+              <motion.div
+                key={i}
+                className="ip-point"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+              >
+                <div className="ip-point-text">
+                  <span className="ip-point-number">{i + 1}</span>
+                  <span>{parseBold(point.text)}</span>
                 </div>
-              )}
-            </motion.div>
-          );
-        })}
+                {point.visual && (
+                  <div className="ip-point-visual">
+                    <PointVisual visual={point.visual} />
+                  </div>
+                )}
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
       </div>
     </div>
   );

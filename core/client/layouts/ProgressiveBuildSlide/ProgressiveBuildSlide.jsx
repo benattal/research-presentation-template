@@ -5,8 +5,9 @@ import Text from '../../stage/Text.jsx';
 
 /**
  * Click-to-reveal steps: `buildSteps` is a list of `{ label, description?,
- * media? }`, and step k shows the first k + 1 of them. An optional
- * `className` is added to the root for per-slide styling.
+ * media? }`, and step k shows the first k + 1 of them. A step fades in when
+ * it is revealed; the steps shown when the slide appears come with it. An
+ * optional `className` is added to the root for per-slide styling.
  */
 export default function ProgressiveBuildSlide({ slide, buildStep }) {
   const steps = slide.buildSteps || [];
@@ -19,7 +20,7 @@ export default function ProgressiveBuildSlide({ slide, buildStep }) {
       <h2><Text>{slide.title}</Text></h2>
 
       <div className="build-steps">
-        <AnimatePresence>
+        <AnimatePresence initial={false}>
           {steps.map((step, i) => {
             if (i >= visibleCount) return null;
             return (

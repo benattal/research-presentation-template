@@ -27,8 +27,8 @@ file at a time:
 
 | File | Covers |
 |---|---|
-| `layouts.test.mjs` | every core layout at every build step: its content, loaded media, and no errors or overflow; fails when a core layout is added without a fixture slide |
-| `audience.test.mjs` | keys, buttons, dots, overview, swipes (and drags on controls that are not swipes), focus handling, position persistence, toolbar, progress bar; at nine window sizes, for the fixture and a generated 70-slide deck (`longDeck` in `harness.mjs`), the navigator is centered and the stage stays clear of the navigation bar, toolbar, and progress bar |
+| `layouts.test.mjs` | every core layout at every build step: its content, loaded media, and no errors or overflow; fails when a core layout is added without a fixture slide; and the overflow report on slides that do not fit |
+| `audience.test.mjs` | keys, buttons, dots, overview, swipes (and drags on controls that are not swipes), focus handling, position persistence, toolbar, progress bar; the stage and each slide heading holding still across every slide and build step, and every `SlideTitle` header alike (math in a title included); at nine window sizes, for the fixture and a generated 70-slide deck (`longDeck` in `harness.mjs`), the navigator is centered and the stage stays clear of the navigation bar, toolbar, and progress bar |
 | `presenter.test.mjs` | the presenter window following and driving the audience window, per-step notes, the preview, the timer, and saving edited notes without reloading the audience |
 | `live.test.mjs` | presenter login and logout, votes across browsers, changing a vote, live results, reset with C, numeric polls, closed voting, follow-the-presenter |
 | `errorsAndHosting.test.mjs` | the load-error screen, unknown modes, and a static build served under a URL prefix |
@@ -36,7 +36,8 @@ file at a time:
 `tests/ui/harness.mjs` holds the shared setup. The fixture
 `tests/fixtures/ui-showcase/` uses every core layout once, with SVG media
 (text files, so they live in git) and one presentation-specific layout;
-`tests/fixtures/broken/` has the errors the load-error test expects.
+`tests/fixtures/broken/` has the errors the load-error test expects, and
+`tests/fixtures/overflow/` the text that the overflow report must catch.
 
 ## Adding a core layout
 
