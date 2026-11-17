@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import Media from '../../stage/Media.jsx';
 import './MediaSlide.css';
+import Text from '../../stage/Text.jsx';
 
 /** A title over a grid of up to four `media` items. */
 export default function MediaSlide({ slide }) {
@@ -11,7 +12,7 @@ export default function MediaSlide({ slide }) {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4 }}
       >
-        {slide.title}
+        <Text>{slide.title}</Text>
       </motion.h2>
 
       <div className="media-grid">

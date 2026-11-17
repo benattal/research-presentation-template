@@ -115,6 +115,8 @@ is different, and still required.
 - Do **not** write "x is genuinely y." State it.
 - Do **not** call a parameter a "knob." Say "parameter," or name it (the
   learning rate, the grid resolution `base_resolution`).
+- Do **not** say paths, walks, or rays "grow." Say they "start at" a
+  point, or are "built" or "traced."
 - More generally, cut clever or unusual phrasing in favor of the plain
   version. If a phrase would make a careful reader pause to decode it, rewrite
   it.

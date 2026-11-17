@@ -1,18 +1,14 @@
 import { motion } from 'framer-motion';
 import Media from '../../stage/Media.jsx';
 import './ContentSlide.css';
+import Text from '../../stage/Text.jsx';
+import SlideTitle from '../../stage/SlideTitle.jsx';
 
-/** A title, a bullet list (`bullets`), and an optional row of `media`. */
+/** A title, an optional `subtitle` line, a bullet list (`bullets`), and an optional row of `media`. */
 export default function ContentSlide({ slide }) {
   return (
     <div className="slide--content">
-      <motion.h2
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4 }}
-      >
-        {slide.title}
-      </motion.h2>
+      <SlideTitle title={slide.title} subtitle={slide.subtitle} />
 
       {slide.bullets && (
         <ul className="bullet-list">
@@ -25,7 +21,7 @@ export default function ContentSlide({ slide }) {
               transition={{ delay: 0.2 + i * 0.15, duration: 0.4 }}
             >
               <span className="bullet-icon">&#9656;</span>
-              {bullet}
+              <Text>{bullet}</Text>
             </motion.li>
           ))}
         </ul>

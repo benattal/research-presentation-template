@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import './IllustratedPointsSlide.css';
+import Text from '../../stage/Text.jsx';
 
 /** Parse **bold** markdown into React elements */
 function parseBold(text) {
@@ -106,7 +107,7 @@ export default function IllustratedPointsSlide({ slide, buildStep }) {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4 }}
       >
-        {slide.title}
+        <Text>{slide.title}</Text>
       </motion.h2>
 
       <div className="ip-points">

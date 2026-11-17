@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
 import './ColabLinkSlide.css';
+import Text from '../../stage/Text.jsx';
 
 /**
  * A notebook the audience opens on their own devices: `title`,
@@ -20,7 +21,7 @@ export default function ColabLinkSlide({ slide }) {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4 }}
       >
-        {slide.title}
+        <Text>{slide.title}</Text>
       </motion.h2>
 
       <motion.p
@@ -29,7 +30,7 @@ export default function ColabLinkSlide({ slide }) {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.4 }}
       >
-        {slide.description}
+        <Text>{slide.description}</Text>
       </motion.p>
 
       {slide.steps && (

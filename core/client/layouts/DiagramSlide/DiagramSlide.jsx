@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import Media from '../../stage/Media.jsx';
 import './DiagramSlide.css';
+import Text from '../../stage/Text.jsx';
 
 /**
  * A title, a `description`, `media` items with optional `caption`s, and an
@@ -14,7 +15,7 @@ export default function DiagramSlide({ slide }) {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4 }}
       >
-        {slide.title}
+        <Text>{slide.title}</Text>
       </motion.h2>
 
       {slide.description && (
@@ -24,7 +25,7 @@ export default function DiagramSlide({ slide }) {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.4 }}
         >
-          {slide.description}
+          <Text>{slide.description}</Text>
         </motion.p>
       )}
 
@@ -38,7 +39,7 @@ export default function DiagramSlide({ slide }) {
           {slide.media.map((m, i) => (
             <div key={i} className="diagram-media-item">
               <Media item={m} controls />
-              {m.caption && <span className="diagram-caption">{m.caption}</span>}
+              {m.caption && <span className="diagram-caption"><Text>{m.caption}</Text></span>}
             </div>
           ))}
         </motion.div>

@@ -16,6 +16,7 @@ presentations/<id>/
   public/slides/<slide-id>/...        assets (DATA.md)
   assets/...                          assets (DATA.md)
   theme.css                           optional
+  sources.json                        optional: citations of borrowed material
   layouts/<LayoutName>/...            optional, registered in layouts/index.js
 ```
 
@@ -51,7 +52,8 @@ Every slide names a layout and supplies that layout's fields:
 {
   "layout": "content",
   "sectionLabel": "Method",
-  "title": "Three steps",
+  "title": "Radiance caching",
+  "subtitle": "A cache ends the series after one bounce: $x \\approx e + A \\hat{x}$",
   "bullets": ["Sample paths", "Fit a cache", "Render"],
   "media": [{ "type": "image", "src": "/slides/pipeline/overview.png" }]
 }
@@ -64,6 +66,7 @@ Fields every slide may use, whatever its layout:
 | `layout` | required; a core layout ([layouts](layouts.md)) or one in `layouts/index.js` |
 | `sectionLabel` | small label above the layout |
 | `footnote` | small italic line at the bottom of the slide |
+| `credits` | sources of borrowed material on the slide, as keys of `sources.json` or `{ "source": key, "what": "Fig. 3" }`; shown as a small credit line at the bottom right |
 | `transition` | overrides `defaultTransition` for this slide |
 | `buildSteps` | an array whose length is the number of clicks the slide takes; layouts that reveal content read their step from it |
 
@@ -72,6 +75,57 @@ Media paths start with `/slides/<slide-id>/` and name a file in
 URL when the presentation loads, so they work at `/`, under `/<id>/`, and in
 a static build opened from disk. A media item is
 `{ "type": "image" | "gif" | "video", "src": "...", "alt"?: "..." }`.
+
+## Math in text
+
+Text fields render math typeset with KaTeX: `$…$` is inline math,
+`$$…$$` is a formula on its own line, and `\$` is a literal dollar sign. In
+JSON, each backslash is doubled: `"$\\partial_\\theta m = y^\\top x$"`.
+
+`core/client/stage/math.js` owns the parsing and the KaTeX options, so the
+browser and `npm run check` render alike. `core/client/stage/Text.jsx`
+renders one string with its math; the core layouts pass their titles,
+subtitles, bullets, descriptions, captions, prompts, questions, and the
+outline's section titles through it, and the slide frame passes the
+footnote. `sectionLabel` is shown as plain text.
+
+When a presentation loads, every string in each listed slide's
+`content.json`, and every section title, is typeset once. A formula that
+KaTeX cannot parse is a load error naming the slide and the formula: the
+presentation shows it with every other problem instead of rendering, and
+`npm run check` reports it.
+
+KaTeX trusts one command beyond its defaults: `\htmlClass{name}{…}` wraps a
+term in a CSS class, so a presentation's `theme.css` owns the colors of its
+terms instead of the slide text (`\htmlClass{term-adjoint}{y}`, with
+`.term-adjoint { color: … }` in the theme).
+
+## Credits
+
+A slide that shows borrowed material (a figure, a photograph, a video, a
+slide adapted from someone's lecture) names its sources in `credits`. The
+citation text lives once, in the presentation's `sources.json`:
+
+```json
+{
+  "nayar2006": {
+    "authors": "Nayar et al.",
+    "title": "Fast separation of direct and global components ...",
+    "venue": "SIGGRAPH",
+    "year": 2006,
+    "url": "https://..."
+  }
+}
+```
+
+The slide shows "Nayar et al., SIGGRAPH 2006, Fig. 6" for
+`"credits": [{ "source": "nayar2006", "what": "Fig. 6" }]`
+(`formatCredit` in `core/client/presentation/model.js` owns the format).
+The core `credits` layout lists every cited source in the order the talk
+first uses it, so a credits slide never drifts from the slides. A credit to
+a key that `sources.json` lacks is a load error. When a borrowed slide
+credits someone else, keep the chain in `authors` ("Gkioulekas, after
+Jarosz").
 
 ## Presenter notes
 
@@ -111,6 +165,13 @@ wraps `title`). Layouts import the framework as `@core/...`; for example
 `@core/stage/Media.jsx` for a media item, `@core/live/polls.js` for a live
 poll, and `@core/presentation/assetUrl.js` to resolve an asset path built in
 code.
+
+A layout with a heading renders it with `@core/stage/SlideTitle.jsx`
+(`<SlideTitle title={slide.title} subtitle={slide.subtitle} />`), so every
+slide's title and subtitle look the same and render their math. Any other
+text field goes through `@core/stage/Text.jsx`
+(`<Text>{slide.caption}</Text>`), which renders [math](#math-in-text) and
+throws if given anything but a string.
 
 Conventions for layouts:
 

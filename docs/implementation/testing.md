@@ -28,7 +28,7 @@ file at a time:
 | File | Covers |
 |---|---|
 | `layouts.test.mjs` | every core layout at every build step: its content, loaded media, and no errors or overflow; fails when a core layout is added without a fixture slide |
-| `audience.test.mjs` | keys, buttons, dots, overview, swipes (and drags on controls that are not swipes), focus handling, position persistence, toolbar, progress bar |
+| `audience.test.mjs` | keys, buttons, dots, overview, swipes (and drags on controls that are not swipes), focus handling, position persistence, toolbar, progress bar; at nine window sizes, for the fixture and a generated 70-slide deck (`longDeck` in `harness.mjs`), the navigator is centered and the stage stays clear of the navigation bar, toolbar, and progress bar |
 | `presenter.test.mjs` | the presenter window following and driving the audience window, per-step notes, the preview, the timer, and saving edited notes without reloading the audience |
 | `live.test.mjs` | presenter login and logout, votes across browsers, changing a vote, live results, reset with C, numeric polls, closed voting, follow-the-presenter |
 | `errorsAndHosting.test.mjs` | the load-error screen, unknown modes, and a static build served under a URL prefix |

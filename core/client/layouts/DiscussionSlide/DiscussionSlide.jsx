@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import './DiscussionSlide.css';
+import Text from '../../stage/Text.jsx';
 
 export default function DiscussionSlide({ slide }) {
   return (
@@ -9,7 +10,7 @@ export default function DiscussionSlide({ slide }) {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4 }}
       >
-        {slide.title}
+        <Text>{slide.title}</Text>
       </motion.h2>
 
       <div className="discussion-prompts">
@@ -22,7 +23,7 @@ export default function DiscussionSlide({ slide }) {
             transition={{ delay: 0.2 + i * 0.15, duration: 0.4 }}
           >
             <span className="prompt-number">{i + 1}</span>
-            {prompt}
+            <Text>{prompt}</Text>
           </motion.div>
         ))}
       </div>
