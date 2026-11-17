@@ -8,6 +8,11 @@ media item is `{ type: "image" | "gif" | "video", src, alt? }`. Text fields
 render math written as `$…$` and `$$…$$`, and color terms with
 `\htmlClass` ([math in text](presentations.md#math-in-text)).
 
+A slide appears through its slide transition, and what it shows on arrival
+comes with it: headings, lists, and media do not fade in again on their
+own. Inside a slide only changes animate: an item a build step reveals, a
+poll's bars as votes arrive.
+
 ## Structure
 
 | Layout | Fields | Notes |

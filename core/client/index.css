@@ -109,6 +109,14 @@ html, body, #root {
   font-size: 1.08em;
 }
 
+/* A formula in the title or subtitle adds no line height of its own (KaTeX
+   gives it 1.2 at its larger size), so a header with math is as tall as one
+   without and the slide under it stays in place from slide to slide.
+   KaTeX's struts still make room for a formula taller than the line. */
+.slide-header .math:not(.math--display) > .katex {
+  line-height: 0;
+}
+
 .math--display {
   display: block;
   margin: 0.5em 0;

@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
 import './PresentationLinksSlide.css';
 import Text from '../../stage/Text.jsx';
@@ -15,9 +14,7 @@ import Text from '../../stage/Text.jsx';
 export default function PresentationLinksSlide({ slide }) {
   return (
     <div className="slide--links">
-      <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-        <Text>{slide.title}</Text>
-      </motion.h1>
+      <h1><Text>{slide.title}</Text></h1>
       {slide.subtitle && <p className="links-subtitle"><Text>{slide.subtitle}</Text></p>}
 
       {slide.qrCode && (
@@ -32,19 +29,12 @@ export default function PresentationLinksSlide({ slide }) {
       )}
 
       <div className="links-cards">
-        {slide.links.map((link, i) => (
-          <motion.a
-            key={link.href}
-            className="links-card"
-            href={link.href}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15 + i * 0.08, duration: 0.4 }}
-          >
+        {slide.links.map((link) => (
+          <a key={link.href} className="links-card" href={link.href}>
             {link.icon && <div className="links-card-icon">{link.icon}</div>}
             <h2>{link.title}</h2>
             {link.description && <p>{link.description}</p>}
-          </motion.a>
+          </a>
         ))}
       </div>
     </div>

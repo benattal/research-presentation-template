@@ -8,7 +8,8 @@ import Text from '../../stage/Text.jsx';
 /**
  * Each audience member submits one number (`pollId`, `title`, optional
  * `subtitle`); the answers appear as a histogram. Submitting again replaces
- * the browser's earlier answer.
+ * the browser's earlier answer. What the slide shows when it appears does
+ * not animate; a submission and arriving answers do.
  */
 export default function NumericPollSlide({ slide }) {
   const { values, myValue, connected, votingOpen, submit } = useNumericPoll(slide.pollId);
@@ -38,34 +39,15 @@ export default function NumericPollSlide({ slide }) {
 
   return (
     <div className="slide--numeric-poll">
-      <motion.h2
-        initial={{ opacity: 0, y: -15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <Text>{slide.title}</Text>
-      </motion.h2>
+      <h2><Text>{slide.title}</Text></h2>
 
       {slide.subtitle && (
-        <motion.p
-          className="np-subtitle"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.15, duration: 0.4 }}
-        >
-          <Text>{slide.subtitle}</Text>
-        </motion.p>
+        <p className="np-subtitle"><Text>{slide.subtitle}</Text></p>
       )}
 
       <div className="np-body">
         {/* Input form */}
-        <motion.form
-          className="np-form"
-          onSubmit={handleSubmit}
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.25, duration: 0.4 }}
-        >
+        <form className="np-form" onSubmit={handleSubmit}>
           <div className="np-input-row">
             <input
               className={`np-input${submitted ? ' np-input--done' : ''}`}
@@ -77,7 +59,7 @@ export default function NumericPollSlide({ slide }) {
               onChange={(event) => { setInput(event.target.value); setEditing(true); }}
               disabled={!votingOpen}
             />
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="wait" initial={false}>
               {submitted ? (
                 <motion.div
                   key="check"
@@ -104,10 +86,10 @@ export default function NumericPollSlide({ slide }) {
               )}
             </AnimatePresence>
           </div>
-        </motion.form>
+        </form>
 
         {/* Results bar chart */}
-        <AnimatePresence>
+        <AnimatePresence initial={false}>
           {values.length > 0 && (
             <motion.div
               className="np-results"

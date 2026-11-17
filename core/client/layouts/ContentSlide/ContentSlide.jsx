@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import Media from '../../stage/Media.jsx';
 import './ContentSlide.css';
 import Text from '../../stage/Text.jsx';
@@ -13,29 +12,18 @@ export default function ContentSlide({ slide }) {
       {slide.bullets && (
         <ul className="bullet-list">
           {slide.bullets.map((bullet, i) => (
-            <motion.li
-              key={i}
-              className="bullet-item"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 + i * 0.15, duration: 0.4 }}
-            >
+            <li key={i} className="bullet-item">
               <span className="bullet-icon">&#9656;</span>
               <Text>{bullet}</Text>
-            </motion.li>
+            </li>
           ))}
         </ul>
       )}
 
       {slide.media && slide.media.length > 0 && (
-        <motion.div
-          className="slide-media-row"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-        >
+        <div className="slide-media-row">
           {slide.media.map((item) => <Media key={item.src} item={item} />)}
-        </motion.div>
+        </div>
       )}
     </div>
   );

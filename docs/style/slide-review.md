@@ -111,6 +111,14 @@ as the fix.
   shifts location", "Transient light transport visualization are still
   broken (they jump)". Elements keep their place between build steps and
   slides; an animation runs once from the previous state to the new one.
+- **Equations keep their places while they build up.** "When you're
+  building equations up, try not to have their locations change between
+  slides (e.g. when you're building up the equations in the neumann series
+  section)" and "This can be an option for the equation stack object, but
+  it should be default on". A stack of equations reserves the space of all
+  its lines from the first step (the deck's `EquationStack`, with
+  `keepPlaces` on by default), and a stack that continues on the next slide
+  starts at the same position.
 - **No repeated animations.** "it's a bit awkward when animations repeat
   when cycling from one slide to the next".
 - **Controls work.** "The selection for different items in the demo (e.g.
