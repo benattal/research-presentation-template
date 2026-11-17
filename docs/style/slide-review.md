@@ -41,8 +41,10 @@ as the fix.
 
 ## Titles, subtitles, and text
 
-- **Titles name topics.** "Weird phrases rather than single words/clear
-  phrases encapsulating the content of a section".
+- **Titles name topics, on one line.** "Weird phrases rather than single
+  words/clear phrases encapsulating the content of a section", and "The
+  "Adjoint light transport" title slide has these words split between two
+  lines. That's not nice". The capture reports a title that wraps.
 - **Subtitles state high-level goals, readable without the symbols.** "way
   too specific", "High level goals instead of something super specific e.g.
   "The scene in e and A is learned from measurements" -- that's so hard to
@@ -80,7 +82,10 @@ as the fix.
   again." A few high-level takeaways, one per part, plain and organized; no
   method details, symbols, or clever subtitle.
 - **Keep only details that help understand the method.** "The statement
-  about the shadow ray is also kind of too specific a detail to be useful".
+  about the shadow ray is also kind of too specific a detail to be useful",
+  and "Again, high level explanations over things that are too technical."
+  A slide explains the idea; implementation details go in the notes or
+  nowhere.
 
 ## Math and notation
 
