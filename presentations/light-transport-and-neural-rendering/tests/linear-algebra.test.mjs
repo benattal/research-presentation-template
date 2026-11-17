@@ -2,25 +2,31 @@
  * The linear algebra of section 1: the Neumann series telescopes and
  * converges to the direct solve within its error bound, the slides share
  * one example matrix, the iteration on the large sparse chain stays within
- * the bound, an entry of A^k is the sum of its path weights, a matrix built
- * from a spectrum has that spectrum, and the random-walk estimator is
- * unbiased with the variance it predicts.
+ * the bound, and a matrix built from a spectrum has that spectrum.
  */
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
 import { applyChain, chainErrors, chainSolution, chainTerms, errorBound } from '../layouts/linearAlgebra/chain.js';
-import { GRAPH_MATRIX, GRAPH_SOURCE } from '../layouts/linearAlgebra/graph.js';
-import { matrixPower, matrixProduct, multiply, partialSums, pathsBetween, resolvent, seriesSum, solve } from '../layouts/linearAlgebra/linear.js';
+import { matrixPower, matrixProduct, multiply, partialSums, resolvent, seriesSum, solve } from '../layouts/linearAlgebra/linear.js';
 import { amplification, combine, components, normalize, spectralMatrix } from '../layouts/linearAlgebra/plane.js';
-import { estimate, runWalks, walkVariance } from '../layouts/linearAlgebra/walks.js';
 
 const close = (a, b, tolerance, what) => assert.ok(Math.abs(a - b) <= tolerance, `${what}: ${a} vs ${b}`);
 const BASIS = [[1, 0.25], [-0.5, 1]].map(normalize);
 
+/** A small nonnegative matrix with row sums at most 0.75, and a source at node 0. */
+const SMALL_MATRIX = [
+  [0, 0.25, 0, 0, 0.25],
+  [0.3, 0, 0.25, 0, 0.2],
+  [0.2, 0.25, 0, 0.25, 0],
+  [0, 0, 0.3, 0, 0.3],
+  [0.25, 0.2, 0, 0.3, 0],
+];
+const SMALL_SOURCE = [1, 0, 0, 0, 0];
+
 describe('Neumann series', () => {
-  const A = GRAPH_MATRIX;
-  const e = GRAPH_SOURCE;
+  const A = SMALL_MATRIX;
+  const e = SMALL_SOURCE;
   const x = solve(A, e);
 
   it('the direct solve satisfies x = e + Ax', () => {
@@ -37,18 +43,6 @@ describe('Neumann series', () => {
       assert.ok(error <= normA ** (k + 1) * Math.max(...e) / (1 - normA) + 1e-12, `k = ${k}: error ${error}`);
     });
     sums[79].forEach((value, i) => close(value, x[i], 1e-10, `entry ${i}`));
-  });
-
-  it('an entry of A^k is the sum of the weights of the paths of k hops', () => {
-    for (let k = 1; k <= 4; k += 1) {
-      const power = matrixPower(A, k);
-      for (let from = 0; from < A.length; from += 1) {
-        for (let to = 0; to < A.length; to += 1) {
-          const paths = pathsBetween(A, from, to, k);
-          close(paths.reduce((sum, path) => sum + path.weight, 0), power[to][from], 1e-12, `k = ${k}, ${from} → ${to}`);
-        }
-      }
-    }
   });
 });
 
@@ -152,42 +146,5 @@ describe('spectral view', () => {
   it('components and combine are inverse', () => {
     const v = [0.3, -1.7];
     combine(BASIS, components(BASIS, v)).forEach((value, c) => close(value, v[c], 1e-12, `coordinate ${c}`));
-  });
-});
-
-describe('random walks', () => {
-  const A = GRAPH_MATRIX;
-  const e = GRAPH_SOURCE;
-  const x = solve(A, e);
-  const count = 40000;
-  const run = runWalks(A, e, count, 11, { orders: 5 });
-
-  it('the estimate is unbiased: within four standard errors of x at a fixed seed', () => {
-    estimate(run.samples, count).forEach(({ mean, standardError }, i) => {
-      assert.ok(Math.abs(mean - x[i]) <= 4 * standardError + 1e-12, `node ${i + 1}: ${mean} ± ${standardError} vs ${x[i]}`);
-    });
-  });
-
-  it('the sample variance matches the predicted variance of one walk', () => {
-    const predicted = walkVariance(A, e, x, solve);
-    estimate(run.samples, count).forEach(({ standardError }, i) => {
-      const sampleVariance = standardError ** 2 * count;
-      close(sampleVariance, predicted[i], 0.05 * predicted[i] + 1e-9, `node ${i + 1}`);
-    });
-  });
-
-  it('the light collected by bounce order adds up to each walk\'s total', () => {
-    run.samples.forEach((values, i) => {
-      for (let w = 0; w < 200; w += 1) close(run.byOrder[i].reduce((sum, order) => sum + order[w], 0), values[w], 1e-12, `node ${i + 1}, walk ${w}`);
-    });
-  });
-
-  it('the same seed gives the same walks', () => {
-    const again = runWalks(A, e, 500, 11, { orders: 5 });
-    again.samples.forEach((values, i) => assert.deepEqual(Array.from(values), Array.from(run.samples[i].slice(0, 500))));
-  });
-
-  it('refuses a matrix whose rows are not probabilities', () => {
-    assert.throws(() => runWalks([[0.6, 0.6], [0, 0]], [1, 0], 1, 1), /sum to at most 1/);
   });
 });

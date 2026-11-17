@@ -81,25 +81,3 @@ export function partialSums(A, b, count) {
   }
   return sums;
 }
-
-/**
- * Every path of `length` hops from node `from` to node `to` with a nonzero
- * weight, heaviest first. A path's nodes are [from, …, to]; its factors
- * are the entries A[next][current] along it, and its weight their product.
- * The weights of all such paths sum to (A^length)[to][from].
- */
-export function pathsBetween(A, from, to, length) {
-  const paths = [];
-  const extend = (nodes, factors) => {
-    const current = nodes[nodes.length - 1];
-    if (nodes.length === length + 1) {
-      if (current === to) paths.push({ nodes, factors, weight: factors.reduce((p, f) => p * f, 1) });
-      return;
-    }
-    A.forEach((row, next) => {
-      if (row[current] > 0) extend([...nodes, next], [...factors, row[current]]);
-    });
-  };
-  extend([from], []);
-  return paths.sort((p, q) => q.weight - p.weight);
-}

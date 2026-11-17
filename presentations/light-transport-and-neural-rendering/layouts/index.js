@@ -15,9 +15,6 @@ import IntegratingFactor from './IntegratingFactor/IntegratingFactor.jsx';
 import InverseOperator from './InverseOperator/InverseOperator.jsx';
 import Iteration from './Iteration/Iteration.jsx';
 import LightPaths from './LightPaths/LightPaths.jsx';
-import MatrixFree from './MatrixFree/MatrixFree.jsx';
-import MatrixPaths from './MatrixPaths/MatrixPaths.jsx';
-import MemoryMeter from './MemoryMeter/MemoryMeter.jsx';
 import NeumannSeries from './NeumannSeries/NeumannSeries.jsx';
 import AdjointViews from './OperatorExplorer/AdjointViews.jsx';
 import OperatorExplorer from './OperatorExplorer/OperatorExplorer.jsx';
@@ -30,7 +27,6 @@ import ProbingMatrix from './ProbingMatrix/ProbingMatrix.jsx';
 import ProjectorQuadrature from './ProjectorQuadrature/ProjectorQuadrature.jsx';
 import QuadratureExplorer from './QuadratureExplorer/QuadratureExplorer.jsx';
 import RadianceCache from './RadianceCache/RadianceCache.jsx';
-import RandomWalks from './RandomWalks/RandomWalks.jsx';
 import ScatteringGather from './ScatteringGather/ScatteringGather.jsx';
 import { Derivation, Figures, LectureTitle, SectionTitle } from './Slides/Slides.jsx';
 import SpectralView from './SpectralView/SpectralView.jsx';
@@ -59,9 +55,6 @@ export default {
   iteration: Iteration,
   lectureTitle: LectureTitle,
   lightPaths: LightPaths,
-  matrixFree: MatrixFree,
-  matrixPaths: MatrixPaths,
-  memoryMeter: MemoryMeter,
   neumannSeries: NeumannSeries,
   operatorExplorer: OperatorExplorer,
   operatorForm: OperatorForm,
@@ -73,7 +66,6 @@ export default {
   projectorQuadrature: ProjectorQuadrature,
   quadratureExplorer: QuadratureExplorer,
   radianceCache: RadianceCache,
-  randomWalks: RandomWalks,
   scatteringGather: ScatteringGather,
   sectionTitle: SectionTitle,
   spectralView: SpectralView,

@@ -1,6 +1,6 @@
 /**
  * The active-sensing math of section 4: continuous-wave time of flight,
- * transient histograms, structured light, and the memory estimate.
+ * transient histograms, and structured light.
  * Run: node --test presentations/light-transport-and-neural-rendering/tests/
  */
 import assert from 'node:assert/strict';
@@ -10,7 +10,6 @@ import {
   roundTripPhase, roundTripTime, tofQuadrature, transientHistogram,
 } from '../layouts/activeSensing/measurement.js';
 import { RAY_SCENE, raySamples } from '../layouts/activeSensing/rayScene.js';
-import { adjointBytes, formatBytes, tapeBytes, unitBytes } from '../layouts/MemoryMeter/memory.js';
 import { PHASOR_SCENE, directReturn, mirrorReturn } from '../layouts/PhasorToF/multipath.js';
 import {
   PROJECTOR_SCENE, cameraSamples, filteredStripePattern, stripePattern, structuredLightQuadrature, transmittanceToProjector,
@@ -142,20 +141,5 @@ describe('structured light', () => {
       const { pixel, pixelUnshadowed } = structuredLightQuadrature(PROJECTOR_SCENE, samples, 10);
       assert.ok(pixel <= pixelUnshadowed + 1e-15, `pixel at ${floorX}`);
     }
-  });
-});
-
-describe('memory estimate', () => {
-  const nerf = { rays: 4096, samples: 128, secondary: 0, bounces: 1, bytesPerSample: 4 * unitBytes('KB') };
-
-  it('multiplies rays, samples, secondary samples, bounces, and bytes', () => {
-    assert.equal(tapeBytes(nerf), 2 * unitBytes('GB'));
-    assert.equal(tapeBytes({ ...nerf, secondary: 64 }), 65 * tapeBytes(nerf));
-    assert.equal(tapeBytes({ ...nerf, bounces: 8 }), 8 * tapeBytes(nerf));
-  });
-
-  it('keeps the adjoint method flat in bounces and samples', () => {
-    assert.equal(adjointBytes(nerf), adjointBytes({ ...nerf, samples: 512, bounces: 8 }));
-    assert.equal(formatBytes(adjointBytes(nerf)), '16 MB');
   });
 });

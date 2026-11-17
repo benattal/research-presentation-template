@@ -83,7 +83,9 @@ each section's draft as it lands; slide wording stays the user's to change.
    Gate: the tests pass (with `node --test` until presentation tests join
    `npm test`), and the room renders in under 4 ms a frame on this laptop.
 7. **Section 1, linear algebra.** Slides and the `neumannSeries` and
-   `randomWalks` visuals. Gate: capture review, then user review.
+   `randomWalks` visuals (the paths and random walks slides were later cut at
+   the user's request, and their layouts removed). Gate: capture review, then
+   user review.
 8. **Section 2, operator light transport.** `operatorExplorer` (forward
    modes, in progress with todo 6), `flatlandPaths`, `transportMatrix`,
    `opticalComputing`, `probingMatrix`. Gate as in 7.
