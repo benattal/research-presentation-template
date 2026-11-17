@@ -6,7 +6,8 @@
       "title": "S",
       "slides": [
         "formula-past-column",
-        "word-past-stage"
+        "word-past-stage",
+        "title-too-long"
       ]
     }
   ]

@@ -144,6 +144,19 @@ function textPastItsBox(textByContainer) {
  * `overflow: hidden` box, is not reported; a subtree marked
  * `data-overflow-ok` (a full-bleed background) is skipped.
  */
+/**
+ * A title that runs onto a second line: the rule is one line per title
+ * (docs/style/slides.md). Titles are the SlideTitle heading and any `h1`
+ * (title and divider slides); a title is wrapped when its box is taller
+ * than one and a half of its lines.
+ */
+function wrappedTitles(slide) {
+  return [...slide.querySelectorAll('.slide-title, h1')].filter((title) => {
+    const lineHeight = parseFloat(getComputedStyle(title).lineHeight);
+    return Number.isFinite(lineHeight) && title.getBoundingClientRect().height > 1.5 * lineHeight;
+  });
+}
+
 function findOverflow(stageElement) {
   const findings = [];
   const slide = stageElement.querySelector('.slide');
@@ -153,6 +166,9 @@ function findOverflow(stageElement) {
   const extraHeight = slide.scrollHeight - slide.clientHeight;
   if (extraHeight > OVERFLOW_TOLERANCE_PX) {
     findings.push({ kind: 'slide-scrolls', element: '.slide', detail: `content is ${extraHeight}px taller than the slide` });
+  }
+  for (const title of wrappedTitles(slide)) {
+    findings.push({ kind: 'title-wraps', element: describe(title), detail: 'the title runs onto a second line' });
   }
 
   const reported = new Set();
