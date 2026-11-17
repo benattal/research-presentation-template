@@ -39,8 +39,9 @@ After adding or changing media, push them:
 npm run assets -- push light-transport-and-neural-rendering    # copies only; never deletes in the bucket
 ```
 
-**Status (2026-11-17):** `public/` (55 files) and `assets/` (89 files) are
-in the bucket, verified with `rclone check`. Push again after adding media.
+**Status (2026-11-17, after review cycle 2):** `public/` (74 files) and
+`assets/` (91 files) are in the bucket, verified with `rclone check`. Push
+again after adding media.
 
 `assets/sources/README.md` (in the bucket with the assets) records where
 every borrowed figure, photo, and video came from; the slides credit them
