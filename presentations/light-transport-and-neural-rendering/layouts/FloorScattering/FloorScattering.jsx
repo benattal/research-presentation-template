@@ -3,13 +3,13 @@ import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
 import { useStageCanvas } from '../canvas/canvas.js';
 import { SURFACE_GAIN, cachedFluence, derived, sceneGain } from '../flatland/pictures.js';
-import { drawRoom } from '../flatland/render.js';
+import { ROOM_VIEW, drawRoom } from '../flatland/render.js';
 import { patchRadiosity } from '../flatland/transport.js';
 import { beamPicture, reflectedFraction } from './reflection.js';
 import './FloorScattering.css';
 
 /** Size of the room render, in stage pixels (10 × 6 room units). */
-const ROOM_SIZE = [890, 534];
+const ROOM_SIZE = ROOM_VIEW;
 /** The spotlight's beam is narrow: expose it brighter than the lamp's room. */
 const SPOT_EXPOSURE = 3;
 

@@ -5,12 +5,12 @@ import { useStageCanvas } from '../canvas/canvas.js';
 import { albedoGradients, finiteDifference } from '../flatland/gradients.js';
 import { SURFACE_GAIN, cachedFluence, derived, sceneGain, subtract } from '../flatland/pictures.js';
 import { MEASURED_PIXEL, flatlandRoom } from '../flatland/rooms.js';
-import { autoGain, drawRoom, roomTransform } from '../flatland/render.js';
+import { ROOM_VIEW, autoGain, drawRoom, roomTransform } from '../flatland/render.js';
 import { BINS, stateIndex } from '../flatland/scene.js';
 import { bounce, fluence, patchRadiosity, solve } from '../flatland/transport.js';
 import './OperatorExplorer.css';
 
-const ROOM_SIZE = [820, 492];
+const ROOM_SIZE = ROOM_VIEW;
 /** The wall whose albedo the derivative and gradient views differentiate. */
 const WALL = 'left wall';
 /** How far the geometry view moves the box, in room units. */

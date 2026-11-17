@@ -6,7 +6,7 @@ import Chart from '../charts/Chart.jsx';
 import RoomView from '../flatland/RoomView.jsx';
 import { drawPixelWedge, drawRoomCamera } from '../flatland/overlays.js';
 import { SURFACE_GAIN, derived } from '../flatland/pictures.js';
-import { drawRoom } from '../flatland/render.js';
+import { ROOM_VIEW, drawRoom } from '../flatland/render.js';
 import { MEASURED_PIXEL, flatlandRoom } from '../flatland/rooms.js';
 import { CAMERA, angleAt, binOf, cameraRay, castRay, stateIndex } from '../flatland/scene.js';
 import {
@@ -14,7 +14,7 @@ import {
 } from '../flatland/transient.js';
 import './TransientFlatland.css';
 
-const ROOM = [800, 480];
+const ROOM = ROOM_VIEW;
 const CHART = [338, 320];
 /** Time bins of the solve: 0.2 m each, 180 m in all, so the light still to arrive is below 1 ppm. */
 const STEP = 0.2;

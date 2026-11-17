@@ -8,13 +8,13 @@ import {
 } from '../flatland/cache.js';
 import { drawDevice } from '../flatland/overlays.js';
 import { SURFACE_GAIN, cachedFluence, derived, sceneGain, subtract } from '../flatland/pictures.js';
-import { drawRoom } from '../flatland/render.js';
+import { ROOM_VIEW, drawRoom } from '../flatland/render.js';
 import { flatlandRoom } from '../flatland/rooms.js';
 import { BINS, binCosine } from '../flatland/scene.js';
 import { patchRadiosity } from '../flatland/transport.js';
 import './RadianceCache.css';
 
-const ROOM = [800, 480];
+const ROOM = ROOM_VIEW;
 const THUMB = [130, 78];
 /** Exposure relative to the operator explorer's, and how much brighter the missing light is drawn. */
 const EXPOSURE = 0.45;

@@ -9,6 +9,12 @@ import { CAMERA, ROOM_HEIGHT, ROOM_WIDTH, cameraRay, castRay } from './scene.js'
 /** The color importance is drawn in (cyan), per unit luminance. */
 const IMPORTANCE_TINT = [0.3, 0.79, 0.94];
 
+/**
+ * The size of the room render, in stage pixels, on every slide that shows
+ * the room: one size, so the room does not jump between consecutive slides.
+ */
+export const ROOM_VIEW = [800, 480];
+
 /** Background of renders, matching `--render-bg` in theme.css. */
 export const RENDER_BACKGROUND = '#07090f';
 

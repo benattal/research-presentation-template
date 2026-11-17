@@ -9,7 +9,7 @@ import { MEASURED_PIXEL, flatlandRoom } from '../flatland/rooms.js';
 import {
   SURFACE_GAIN, cachedFluence, derived, sceneGain, subtract,
 } from '../flatland/pictures.js';
-import { drawRoom } from '../flatland/render.js';
+import { ROOM_VIEW, drawRoom } from '../flatland/render.js';
 import { fluence, outgoingFlux, patchRadiosity, propagate, propagateAdjoint } from '../flatland/transport.js';
 import {
   DIRECTIONS, addFrame, allowedOperations, applyOperator, bounceTerms, frameTex, scriptedFrames,
@@ -31,7 +31,7 @@ const KINDS = {
 };
 
 /** Size of the room render, in stage pixels (10 × 6 room units). */
-const ROOM_SIZE = [890, 534];
+const ROOM_SIZE = ROOM_VIEW;
 
 function mix(...pairs) {
   const present = pairs.filter(([array, weight]) => array && weight !== 0);

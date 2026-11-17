@@ -10,13 +10,13 @@ import {
 } from '../flatland/lightElements.js';
 import { drawPixelWedge, drawRoomCamera } from '../flatland/overlays.js';
 import { SURFACE_GAIN } from '../flatland/pictures.js';
-import { drawRoom } from '../flatland/render.js';
+import { ROOM_VIEW, drawRoom } from '../flatland/render.js';
 import {
   Strip, drawElements, elementAt, elementPictures, exposures, patternPicture,
 } from './elementViews.jsx';
 import './TransportMatrix.css';
 
-const ROOM = [800, 480];
+const ROOM = ROOM_VIEW;
 const THUMB = [74, 44];
 /** Longest bar of the pattern p hanging from the ceiling, in stage pixels. */
 const BAR = 70;

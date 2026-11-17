@@ -38,16 +38,27 @@ export function useStageCanvas() {
   return [ref, ratio];
 }
 
+/** How long after a layout mounts its animations still count as arriving on the slide, in ms. */
+const ARRIVAL_MS = 400;
+
 /**
  * Run `frame(progress)` on every animation frame for `duration` ms, with
  * progress from 0 to 1, whenever `key` changes; `frame(1)` alone in still
- * mode. Cancels on unmount and when `key` changes mid-animation.
+ * mode and on arriving at the slide (within ARRIVAL_MS of mounting). Cancels
+ * on unmount and when `key` changes mid-animation.
  */
 export function useAnimation(key, duration, frame) {
   const frameRef = useRef(frame);
   frameRef.current = frame;
+  const mountedAt = useRef(null);
   useEffect(() => {
-    if (duration <= 0 || stillFrames()) {
+    mountedAt.current ??= performance.now();
+    // Arriving on a slide shows its settled frame: an animation plays only
+    // for a change made while the slide is shown (a build step, a click).
+    // The canvas measures its pixel ratio just after mounting, which changes
+    // `key` once more; that is still the arrival.
+    const arriving = performance.now() - mountedAt.current < ARRIVAL_MS;
+    if (duration <= 0 || stillFrames() || arriving) {
       frameRef.current(1);
       return undefined;
     }

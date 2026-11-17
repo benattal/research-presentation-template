@@ -7,13 +7,13 @@ import {
   ELEMENT_EMISSION, angleBetween, dominantEigenvector, elementReturns, lightElementRoom, oneHot, powerIteration,
 } from '../flatland/lightElements.js';
 import { derived, SURFACE_GAIN } from '../flatland/pictures.js';
-import { drawRoom } from '../flatland/render.js';
+import { ROOM_VIEW, drawRoom } from '../flatland/render.js';
 import {
   Strip, drawElements, elementAt, exposures, patternPicture,
 } from '../TransportMatrix/elementViews.jsx';
 import './OpticalComputing.css';
 
-const ROOM = [800, 480];
+const ROOM = ROOM_VIEW;
 const STRIP_SIZE = [228, 26];
 /** Patterns are drawn with this total weight, so every photo is equally bright. */
 const DISPLAY_TOTAL = 2;

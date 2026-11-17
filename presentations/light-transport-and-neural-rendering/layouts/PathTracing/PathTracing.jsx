@@ -8,16 +8,16 @@ import {
   cameraRays, exactImage, rayTable, relativeError, tracePaths,
 } from '../flatland/pathSamples.js';
 import { SURFACE_GAIN, derived, sceneGain } from '../flatland/pictures.js';
-import { autoGain, drawRoom } from '../flatland/render.js';
+import { ROOM_VIEW, autoGain, drawRoom } from '../flatland/render.js';
 import { flatlandRoom } from '../flatland/rooms.js';
 import { CAMERA } from '../flatland/scene.js';
 import { patchRadiosity } from '../flatland/transport.js';
 import { Strip } from '../TransportMatrix/elementViews.jsx';
 import './PathTracing.css';
 
-const ROOM = [720, 432];
+const ROOM = ROOM_VIEW;
 const STRIP_SIZE = [620, 24];
-const CHART = [418, 280];
+const CHART = [336, 280];
 /** Camera pixels and evenly spaced rays per pixel (a path starts on one of them). */
 const PIXELS = 64;
 const RAYS_PER_PIXEL = 16;

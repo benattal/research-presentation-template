@@ -6,13 +6,13 @@ import RoomView from '../flatland/RoomView.jsx';
 import { GATHER_RAYS_PER_BIN, gatherAt, nearestSurfacePoint } from '../flatland/gather.js';
 import { drawGlowPoint, drawLightSegments, lightColor } from '../flatland/overlays.js';
 import { SURFACE_GAIN, cachedFluence, derived, sceneGain } from '../flatland/pictures.js';
-import { drawRoom, roomTransform } from '../flatland/render.js';
+import { ROOM_VIEW, drawRoom, roomTransform } from '../flatland/render.js';
 import { flatlandRoom } from '../flatland/rooms.js';
 import { BINS, direction } from '../flatland/scene.js';
 import { patchRadiosity } from '../flatland/transport.js';
 import './ScatteringGather.css';
 
-const ROOM = [800, 480];
+const ROOM = ROOM_VIEW;
 const CHART = [338, 270];
 /** The point gathered at first: the floor left of the box, under the lamp's edge. */
 const START = { group: 'floor', x: 3.31 };
