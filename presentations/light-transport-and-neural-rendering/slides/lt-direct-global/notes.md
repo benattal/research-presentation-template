@@ -5,4 +5,4 @@ Project a high-frequency pattern, such as a checkerboard with half the pixels on
 - Eggs: the direct component has sharp shadows; the global component is the light the eggs bounce onto each other.
 - Peppers: almost all their light is global, from subsurface scattering. The direct component is the specular highlights.
 
-To remember: with high spatial frequencies in the illumination, light that bounced once is separable from light that bounced more, from a few photos and with no measured $T$.
+To remember: with high spatial frequencies in the illumination, light that bounced once is separable from light that bounced more, from a few photos and with no measured $\mathbf{T}$.

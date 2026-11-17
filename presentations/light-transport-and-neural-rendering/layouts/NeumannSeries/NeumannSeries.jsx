@@ -5,6 +5,7 @@ import { multiply, resolvent, seriesSum } from '../linearAlgebra/linear.js';
 import { normalize, spectralMatrix } from '../linearAlgebra/plane.js';
 import VectorPlane, { Arrow, PlaneLine, fitView } from '../linearAlgebra/VectorPlane.jsx';
 import './NeumannSeries.css';
+import EquationStack from '../equations/EquationStack.jsx';
 
 const PLANE = [680, 520];
 const EIGEN_INKS = ['la-ink-first', 'la-ink-second'];
@@ -78,17 +79,12 @@ export default function NeumannSeries({ slide, buildStep }) {
       <div className="neumann-body">
         <div className="neumann-side">
           <div className="neumann-equations">
-            {steps.slice(0, buildStep + 1).map((s, i) => (
-              <motion.div
-                key={i}
-                className="neumann-equation"
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: i === buildStep ? 1 : 0.4, y: 0 }}
-                transition={{ duration: 0.35 }}
-              >
-                <Text>{s.equation}</Text>
-              </motion.div>
-            ))}
+            <EquationStack
+              lines={steps.map((s) => ({ tex: s.equation }))}
+              step={buildStep}
+              className="neumann-stack"
+              lineClassName="neumann-equation"
+            />
           </div>
           <div className="neumann-key">
             <div><svg width="44" height="20"><circle cx="22" cy="10" r="8" className="neumann-circle" /></svg>unit circle</div>

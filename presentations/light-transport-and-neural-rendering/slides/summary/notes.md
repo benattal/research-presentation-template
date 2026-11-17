@@ -1,7 +1,9 @@
-What to take away.
+What to take away, one line per part of the lecture, in the order of the outline. Click once per row.
 
-- Light in steady state solves $x = e + Ax$, and its solution is a sum over bounces. Each application of $A$ adds a bounce, and path tracing is a random-walk estimate of the same sum.
-- The transport matrix $T$ can be measured and probed with a projector and a camera: optical computing, dual photography, direct–global separation, probing.
-- Volume rendering is the same equation with in-scattering as $A$, and its quadrature is the one NeRF uses.
-- In neural rendering, a scene representation is fit to measurements through this model, including time of flight and structured light.
-- With the adjoint method, the gradient for every parameter costs one extra solve with $A^\top$: importance, transported like light.
+- **Light transport.** Light in steady state is the solution of a linear fixed-point equation, $x = e + Ax$, and the solution is the sum over bounces $\sum_k A^k e$. Path tracing estimates the same sum with random walks.
+- **Computational imaging.** With a projector and a camera, light transport $\mathbf{T}$ can be measured and probed optically: relighting, dual photography, optical computing, direct and global separation.
+- **Volume rendering.** In a participating medium the equation keeps the same form: in-scattering plays the role of scattering, and propagation includes attenuation.
+- **Neural rendering.** A scene representation is fit to measurements through this model, for photographs, time of flight, and structured light.
+- **Adjoint light transport.** The gradient of a loss with respect to every parameter costs one extra solve, with $A^\top$: importance, transported like light.
+
+One sentence: one linear equation for light, and three things we do with it: solve it, measure it, and differentiate it.

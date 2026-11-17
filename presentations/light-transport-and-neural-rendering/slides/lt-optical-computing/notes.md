@@ -1,4 +1,4 @@
-We never need $\mathbf{T}$ itself to multiply by it: light the scene with pattern $p$ and take a photograph, and the photograph is $\mathbf{T}p$. Any algorithm that only needs products, like the iterative solvers of section 1, can run optically, one photograph per product. O'Toole and Kutulakos (SIGGRAPH Asia 2010) ran power iteration and Arnoldi iteration this way with a projector and a camera.
+We never need $\mathbf{T}$ itself to multiply by it: light the scene with pattern $p$ and take a photograph, and the photograph is $\mathbf{T}p$. Any algorithm that only needs products, like the iteration $x_{k+1} = e + Ax_k$ of the Neumann series, can run optically, one photograph per product. O'Toole and Kutulakos (SIGGRAPH Asia 2010) ran power iteration and Arnoldi iteration this way with a projector and a camera.
 
 An eigenvector of $\mathbf{T}$ is a pattern that, projected onto the scene, comes back in the photograph unchanged up to a scale: $\mathbf{T}v_1 = \lambda_1 v_1$. Power iteration finds the one with the largest eigenvalue: project $p$, capture $\mathbf{T}p$, normalize, and project the result again.
 

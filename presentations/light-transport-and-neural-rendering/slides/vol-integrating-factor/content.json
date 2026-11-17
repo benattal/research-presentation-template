@@ -19,7 +19,7 @@
     },
     {
       "label": "So $D^{-1}$ is an integral along rays",
-      "equation": "$$(D^{-1} g)(\\mathbf{x}, \\omega) = \\int_0^d T(t)\\, g(\\mathbf{x} - t\\omega, \\omega)\\,dt$$"
+      "equation": "$$(D^{-1} g)(\\mathbf{x}, \\omega) = \\int_0^d T\\, g(\\mathbf{x} - t\\omega)\\,dt$$"
     }
   ]
 }

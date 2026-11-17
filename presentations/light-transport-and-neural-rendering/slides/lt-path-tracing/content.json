@@ -2,7 +2,7 @@
   "layout": "pathTracing",
   "sectionLabel": "Operator light transport",
   "title": "Path tracing",
-  "subtitle": "Path tracing is a random-walk estimate of the same sum",
+  "subtitle": "Path tracing estimates the sum over bounces with random walks",
   "buildSteps": [
     { "paths": 1 },
     { "paths": 16 },

@@ -5,7 +5,6 @@
   "subtitle": "NeRF's approach extends to time of flight, lidar, and structured light",
   "rows": [
     {
-      "weight": 1,
       "figures": [
         {
           "type": "video",
@@ -24,7 +23,6 @@
       ]
     },
     {
-      "weight": 1.55,
       "figures": [
         {
           "type": "video",

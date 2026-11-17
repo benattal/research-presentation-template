@@ -3,13 +3,14 @@ import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
 import Chart from '../charts/Chart.jsx';
 import RoomView from '../flatland/RoomView.jsx';
-import { drawLightSegments, drawRoomCamera, lightColor } from '../flatland/overlays.js';
+import { drawLightSegments, drawRoomCamera } from '../flatland/overlays.js';
 import {
   cameraRays, exactImage, rayTable, relativeError, tracePaths,
 } from '../flatland/pathSamples.js';
 import { SURFACE_GAIN, derived, sceneGain } from '../flatland/pictures.js';
 import { autoGain, drawRoom } from '../flatland/render.js';
 import { flatlandRoom } from '../flatland/rooms.js';
+import { CAMERA } from '../flatland/scene.js';
 import { patchRadiosity } from '../flatland/transport.js';
 import { Strip } from '../TransportMatrix/elementViews.jsx';
 import './PathTracing.css';
@@ -36,6 +37,27 @@ function tracedRoom(env, counts) {
     const errors = new Map(counts.map((n) => [n, relativeError(traced.images.get(n), exact)]));
     return { camera, exact, traced, errors };
   });
+}
+
+/**
+ * The color of a path's light (linear RGB) at exposure `gain`, keeping its
+ * hue: the brightness is tone mapped as the renders map it, and the
+ * channels keep their linear ratios. Tone mapping each channel on its own
+ * would saturate bright green-wall light (green and blue both near 1) to
+ * cyan, the color this lecture keeps for importance.
+ */
+function pathColor(rgb, gain) {
+  const largest = Math.max(rgb[0], rgb[1], rgb[2]);
+  if (!(largest > 0)) return 'rgb(0, 0, 0)';
+  const y = 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
+  const brightness = (1 - Math.exp(-y * gain)) ** (1 / 1.8);
+  const [r, g, b] = rgb.map((v) => Math.round(255 * brightness * (v / largest)));
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
+/** A count with a thousands separator, as TeX: 4096 becomes 4{,}096. */
+function texCount(n) {
+  return n.toLocaleString('en-US').replaceAll(',', '{,}');
 }
 
 /** Path length of a drawn path, in room units, for growing it from the camera. */
@@ -92,7 +114,7 @@ export default function PathTracing({ slide, buildStep }) {
         if (travelled >= reach) break;
         const t = Math.min(1, (reach - travelled) / length);
         const segment = { a: [x0, y0], b: [x0 + (x1 - x0) * t, y0 + (y1 - y0) * t] };
-        if (found) lit.push({ ...segment, color: lightColor(path.value, pathGain) });
+        if (found) lit.push({ ...segment, color: pathColor(path.value, pathGain) });
         else dark.push({ ...segment, color: `rgba(150, 160, 182, ${faint})` });
         travelled += length;
       }
@@ -100,6 +122,15 @@ export default function PathTracing({ slide, buildStep }) {
     drawLightSegments(ctx, transform, dark, { width: 0.8, glow: 0 });
     drawLightSegments(ctx, transform, lit, { width: 2, glow: 8 });
     drawRoomCamera(ctx, transform);
+    const [cx, cy] = transform.toCanvas(CAMERA.position);
+    ctx.save();
+    ctx.font = "18px 'Inter Variable', Inter, sans-serif";
+    ctx.fillStyle = 'rgba(215, 219, 228, 0.95)';
+    ctx.shadowColor = 'rgba(7, 9, 15, 0.95)';
+    ctx.shadowBlur = 6;
+    ctx.textAlign = 'right';
+    ctx.fillText('camera', cx - 4, cy + 34);
+    ctx.restore();
   };
 
   const exactPoints = Array.from({ length: PIXELS }, (_, j) => [j + 0.5, luminance(traced.exact, j)]);
@@ -129,7 +160,7 @@ export default function PathTracing({ slide, buildStep }) {
           </div>
         </div>
         <div className="paths-side">
-          <div className="paths-count"><Text>{`$n = ${n.toLocaleString('en-US').replace(',', '\\,')}$`}</Text> paths per pixel</div>
+          <div className="paths-count"><Text>{`$n = ${texCount(n)}$`}</Text> paths per pixel</div>
           <Chart
             width={CHART[0]}
             height={CHART[1]}

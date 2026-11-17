@@ -6,6 +6,7 @@ import { multiply, solve } from '../linearAlgebra/linear.js';
 import { normalize, spectralMatrix } from '../linearAlgebra/plane.js';
 import VectorPlane, { Arrow, fitView } from '../linearAlgebra/VectorPlane.jsx';
 import './FixedPoint.css';
+import EquationStack from '../equations/EquationStack.jsx';
 
 const PLANE = [600, 520];
 /** Stage pixels from the tip of x within which a press starts dragging it. */
@@ -60,17 +61,12 @@ export default function FixedPoint({ slide, buildStep }) {
           <div className="fixed-point-data">
             <Text>{`$A = ${texMatrix(A)} \\qquad \\htmlClass{term-emission}{b} = ${texMatrix(b.map((v) => [v]))}$`}</Text>
           </div>
-          {steps.slice(0, buildStep + 1).map((s, i) => (
-            <motion.div
-              key={i}
-              className="fixed-point-equation"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: i === buildStep ? 1 : 0.4, y: 0 }}
-              transition={{ duration: 0.35 }}
-            >
-              <Text>{s.equation}</Text>
-            </motion.div>
-          ))}
+          <EquationStack
+            lines={steps.map((s) => ({ tex: s.equation }))}
+            step={buildStep}
+            className="fixed-point-stack"
+            lineClassName="fixed-point-equation"
+          />
         </div>
         <FixedPointPlane
           key={buildStep}

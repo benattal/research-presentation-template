@@ -1,24 +1,50 @@
 {
-  "layout": "pointList",
+  "layout": "sectionOutline",
   "sectionLabel": "Closing",
   "title": "Summary",
-  "subtitle": "Every method here is a solve, inverse, or derivative of $x = e + Ax$",
-  "points": [
+  "subtitle": "What to take away",
+  "sections": [
     {
-      "text": "Light in steady state is a sum over bounces: $x = \\sum_k A^k e$"
+      "title": "Light transport",
+      "subtitle": "A linear fixed-point problem, solved by summing bounces",
+      "render": "light"
     },
     {
-      "text": "$T$ can be measured and probed optically"
+      "title": "Aside: computational imaging",
+      "subtitle": "Light transport can be measured and probed optically",
+      "image": "/slides/summary/coded-photo.jpg",
+      "aside": true
     },
     {
-      "text": "Volume rendering is the same equation in a medium"
+      "title": "Volume rendering",
+      "subtitle": "Surfaces and participating media share one operator equation",
+      "image": "/slides/summary/fog.jpg"
     },
     {
-      "text": "In neural rendering, a scene is fit to measurements"
+      "title": "Neural rendering",
+      "subtitle": "Scenes are reconstructed by fitting this model to measurements",
+      "render": "pulse"
     },
     {
-      "text": "All gradients cost one adjoint solve with $A^\\top$"
+      "title": "Adjoint light transport ⚡",
+      "subtitle": "All gradients cost one extra transport solve",
+      "render": "importance"
     }
   ],
-  "render": "light"
+  "buildSteps": [
+    {},
+    {},
+    {},
+    {},
+    {}
+  ],
+  "credits": [
+    {
+      "source": "otoole2012"
+    },
+    {
+      "source": "cmu15468-media",
+      "what": "p. 5"
+    }
+  ]
 }

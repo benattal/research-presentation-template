@@ -1,8 +1,8 @@
 {
   "layout": "figureRows",
   "sectionLabel": "Operator light transport",
-  "title": "Computing $Tp$",
-  "subtitle": "$Tp$ is computable from a stored $T$, by simulation, or optically",
+  "title": "Transport products",
+  "subtitle": "A product with the transport matrix is stored, simulated, or measured",
   "rows": [
     {
       "figures": [
@@ -11,14 +11,14 @@
           "src": "/slides/lt-how-to-apply/precomputed-transport.jpg",
           "alt": "A statue relit in real time from precomputed light transport",
           "caption": "stored",
-          "width": 1
+          "width": 1.016
         },
         {
           "type": "image",
           "src": "/slides/lt-how-to-apply/simulated-room.png",
           "alt": "The flatland room, simulated",
           "caption": "simulated",
-          "width": 1.45,
+          "width": 1.667,
           "step": 1
         },
         {
@@ -26,7 +26,7 @@
           "src": "/slides/lt-how-to-apply/projector-camera-setup.jpg",
           "alt": "A projector, a beam splitter, and a camera aimed at a scene",
           "caption": "measured optically",
-          "width": 0.75,
+          "width": 0.666,
           "step": 2
         }
       ]
