@@ -1,0 +1,11 @@
+{
+  "layout": "poll",
+  "title": "Poll",
+  "pollId": "fixture-poll",
+  "question": "Pick one",
+  "options": [
+    "Alpha",
+    "Beta",
+    "Gamma"
+  ]
+}

@@ -4,6 +4,26 @@
 
 Newest entry first.
 
+## 2026-11-17 — Browser tests for every view and core layout
+
+User direction (2026-11-17): "Could you make/run some tests on all UI
+components to make sure they are working correctly?"
+
+- Added `npm run test:ui` (tests/ui/, 28 tests in 5 suites) against the
+  fixtures `tests/fixtures/ui-showcase` (every core layout) and
+  `tests/fixtures/broken`; documented in
+  [testing](../implementation/testing.md).
+- Bugs the tests found, fixed: every page load logged a 404 for
+  `/favicon.ico` (an inline icon in `core/client/index.html` now); changing
+  a vote quickly could leave the browser showing the first choice while the
+  server recorded the second, because vote responses can arrive out of order
+  (`core/client/live/polls.js` now applies only the latest response and takes
+  counts only from the server's stream).
+- Checked the tests catch regressions: breaking build-step navigation and
+  the slider-focus fix each made the audience suite fail.
+- Checked: `npm test` 25 passing, `npm run test:ui` 28 passing (twice),
+  `npm run check`.
+
 ## 2026-11-17 — Framework, tooling, and documentation landed; assets wait for rclone
 
 User directions (2026-11-17), quoted: "use data/captures for visual

@@ -15,6 +15,7 @@ and checks.
 - [Hosting](implementation/hosting.md): local mode, live mode, deployment
 - [Visual validation](implementation/visual-validation.md): capturing and
   reviewing every slide
+- [Testing](implementation/testing.md): unit, repository, and browser tests
 
 ## Style
 

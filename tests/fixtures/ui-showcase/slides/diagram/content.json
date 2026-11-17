@@ -1,0 +1,16 @@
+{
+  "layout": "diagram",
+  "title": "A diagram",
+  "description": "With a captioned figure",
+  "media": [
+    {
+      "type": "image",
+      "src": "/slides/diagram/figure.svg",
+      "caption": "The figure"
+    }
+  ],
+  "example": {
+    "positive": "a red apple",
+    "negative": "blurry"
+  }
+}

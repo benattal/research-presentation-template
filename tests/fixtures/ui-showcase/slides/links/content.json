@@ -1,0 +1,21 @@
+{
+  "layout": "presentationLinks",
+  "title": "Pick one",
+  "subtitle": "Two choices",
+  "qrCode": {
+    "url": "https://example.com/",
+    "label": "example.com"
+  },
+  "links": [
+    {
+      "href": "../a/",
+      "title": "A",
+      "description": "First",
+      "icon": "A"
+    },
+    {
+      "href": "../b/",
+      "title": "B"
+    }
+  ]
+}
