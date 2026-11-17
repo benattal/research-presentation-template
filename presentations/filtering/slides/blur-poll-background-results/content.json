@@ -1,0 +1,8 @@
+{
+  "layout": "pollResults",
+  "sectionLabel": "What is Blur?",
+  "title": "Background Blur: Results",
+  "pollId": "blur-background",
+  "question": "Which image is more blurry?",
+  "options": ["Image A", "Image B"]
+}

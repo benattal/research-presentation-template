@@ -94,8 +94,16 @@ example with the project's presentations.
 
 ## This branch
 
-`main`: the template. `presentations/example/` demonstrates the format and is
-the target of the template's own checks and captures.
+`vision-workshop`: four interactive computer-vision workshops for
+high-school students (`image-manipulation`, `filtering`, `tracking`,
+`diffusion`) and the landing presentation `home`, which sets
+`"servedAtRoot": true` and links to the four. They are served together by
+the live gateway (deployed on Railway); students follow the presenter when
+`PRESENTER_CONTROLLED=true`. Notebooks for the hands-on parts are in
+`presentations/<id>/notebooks/`, with their conda environment in
+`environment.yml`. The history before this repository is in
+`github.com/benattal/stem-hs-diffusion`. Active plan:
+[vision workshop](docs/plans/vision-workshop.md).
 
 ## Project model
 

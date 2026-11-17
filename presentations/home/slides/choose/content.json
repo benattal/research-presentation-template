@@ -1,0 +1,35 @@
+{
+  "layout": "presentationLinks",
+  "title": "Vision Workshop",
+  "subtitle": "Choose a presentation",
+  "qrCode": {
+    "url": "https://www.cv-workshop.ca",
+    "label": "www.cv-workshop.ca"
+  },
+  "links": [
+    {
+      "href": "../image-manipulation/",
+      "icon": "🖼️",
+      "title": "Image Manipulation",
+      "description": "Crop, rotate, recolor & transform images"
+    },
+    {
+      "href": "../filtering/",
+      "icon": "🔍",
+      "title": "Image Filtering",
+      "description": "Blurring, filtering & edge detection"
+    },
+    {
+      "href": "../tracking/",
+      "icon": "🤚",
+      "title": "Face & Hand Tracking",
+      "description": "Computer vision for interactive digital humans"
+    },
+    {
+      "href": "../diffusion/",
+      "icon": "🎨",
+      "title": "Generative AI & Diffusion",
+      "description": "How to make images with generative AI"
+    }
+  ]
+}

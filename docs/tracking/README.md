@@ -37,5 +37,7 @@ User direction (YYYY-MM-DD): "<quoted direction>".
 
 ## Active trackers
 
+- [Vision workshop](vision-workshop.md), for
+  [its plan](../plans/vision-workshop.md).
 - [Template restructure](template-restructure.md), for
   [its plan](../plans/template-restructure.md).

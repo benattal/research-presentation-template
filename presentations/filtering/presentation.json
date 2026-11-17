@@ -1,0 +1,57 @@
+{
+  "title": "Image Filtering Workshop",
+  "defaultTransition": "fade",
+  "backLink": "../",
+  "sections": [
+    {
+      "id": "what-is-blur",
+      "title": "What is Blur?",
+      "slides": [
+        "blur-intro-title",
+        "blur-poll-spatial",
+        "blur-poll-spatial-results",
+        "blur-poll-temporal",
+        "blur-poll-temporal-results",
+        "blur-what-is-blurry"
+      ]
+    },
+    {
+      "id": "blur-demos",
+      "title": "Examples of Blur",
+      "slides": [
+        "blur-temporal-demo",
+        "blur-spatial-demo",
+        "blur-filtering-intro"
+      ]
+    },
+    {
+      "id": "convolution-filters",
+      "title": "Introduction to Filtering",
+      "slides": [
+        "blur-convolution-anim",
+        "blur-poll-temporal-kernel",
+        "blur-poll-temporal-kernel-results",
+        "blur-filter-designer",
+        "blur-negative-intro"
+      ]
+    },
+    {
+      "id": "edge-detection",
+      "title": "Edge Detection",
+      "slides": [
+        "edge-sobel-results",
+        "canny-steps",
+        "canny-refinement"
+      ]
+    },
+    {
+      "id": "deep-learning",
+      "title": "From Filters to Deep Learning",
+      "slides": [
+        "edge-dnn-connection",
+        "edge-why-useful",
+        "colab-notebook"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "layout": "fiveVideo",
+  "sectionLabel": "Position Transformations",
+  "title": "Manipulating Pixel Positions",
+  "videos": [
+    { "src": "/slides/geometric-transforms/media20.mp4", "label": "Original" },
+    { "src": "/slides/geometric-transforms/media21.mp4", "label": "Cropping" },
+    { "src": "/slides/geometric-transforms/media22.mp4", "label": "Rotate 90 degrees" },
+    { "src": "/slides/geometric-transforms/media23.mp4", "label": "Flip Horizontally" },
+    { "src": "/slides/geometric-transforms/media24.mp4", "label": "Flip Vertically" }
+  ]
+}

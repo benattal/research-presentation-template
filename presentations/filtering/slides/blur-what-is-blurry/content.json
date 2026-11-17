@@ -1,0 +1,19 @@
+{
+  "layout": "revealCompare",
+  "sectionLabel": "What is Blur?",
+  "title": "What Does \"Blurry\" Mean?",
+  "buildSteps": [
+    {
+      "label": "It removes information",
+      "description": "We think of blur as losing detail, like a Zoom background that hides your messy room",
+      "media": [
+        { "type": "image", "src": "/slides/blur-poll-background/zoom_clean.jpg" },
+        { "type": "image", "src": "/slides/blur-poll-background/zoom_blur.jpg" }
+      ]
+    },
+    {
+      "label": "But what is it, really?",
+      "description": "Blur isn't just \"losing detail\". It's a specific mathematical operation. Let's find out what."
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+This one is a bit different. Instead of soft focus, you see streaks — the blur follows the direction of motion. This is called motion blur, or temporal blur. It happens when something moves during the time the camera shutter is open. Notice how it looks very different from the first example — but they're both blur. So what do they have in common?

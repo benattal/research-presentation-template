@@ -1,0 +1,1 @@
+"The correct answer is C — the uniform horizontal kernel: [1, 1, 1] across the middle row. The camera is averaging pixels from the left and right of where the object currently is, because that's where it was a moment ago — exactly what this kernel does. The other kernels average in the vertical direction, or are just the identity filter."

@@ -1,0 +1,3 @@
+- So these were the results
+- It seems like some of you think it's helpful, which I agree with
+- And a lot of you also think that it's dangerous -- and I also agree with that too

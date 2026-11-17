@@ -1,0 +1,1 @@
+When we average all those frames together, we get this — motion blur. The static parts of the scene add up cleanly, so they stay sharp. The moving parts appear in different positions in each frame, so they smear together. Blur is literally an average. That's the key idea.

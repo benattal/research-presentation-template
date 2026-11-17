@@ -1,0 +1,1 @@
+Welcome everyone. Today we're going to talk about image filtering — a concept that's at the core of modern computer vision and AI. We're going to start with a simple question: what does it actually mean for an image to be blurry? That might sound obvious, but I think the answer will surprise you.

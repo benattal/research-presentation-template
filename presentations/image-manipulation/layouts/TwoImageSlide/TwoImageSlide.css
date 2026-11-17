@@ -1,0 +1,44 @@
+.slide--two-image {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.two-image__title {
+  color: var(--accent, #6c63ff);
+  font-size: 1.55rem;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.02em;
+  margin: 0 0 12px;
+  flex-shrink: 0;
+}
+
+.two-image__body {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  min-height: 0;
+  gap: 0;
+}
+
+.two-image__caption {
+  flex-shrink: 0;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+  margin: 10px 0 0;
+}
+
+.two-image__img {
+  flex: 1;
+  min-width: 0;
+  width: 50%;
+  height: 100%;
+  object-fit: contain;
+}

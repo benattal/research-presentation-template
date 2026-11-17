@@ -1,0 +1,8 @@
+{
+  "layout": "pollResults",
+  "sectionLabel": "What is Blur?",
+  "title": "Poll #1: Results",
+  "pollId": "blur-spatial",
+  "question": "What do you think caused the blur in this image?",
+  "options": ["Image A", "Image B"]
+}

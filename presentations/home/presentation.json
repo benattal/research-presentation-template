@@ -1,0 +1,13 @@
+{
+  "title": "Vision Workshop",
+  "servedAtRoot": true,
+  "sections": [
+    {
+      "id": "home",
+      "title": "Vision Workshop",
+      "slides": [
+        "choose"
+      ]
+    }
+  ]
+}

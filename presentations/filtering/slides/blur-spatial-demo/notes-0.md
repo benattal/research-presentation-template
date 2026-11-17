@@ -1,0 +1,1 @@
+Here's a zoomed-in view of an image — you can see the individual pixels. Each pixel is just a number representing brightness. To blur this image spatially, we take each pixel and replace it with the average of its neighbors — the pixels immediately to the left, right, above, below, and diagonally adjacent.

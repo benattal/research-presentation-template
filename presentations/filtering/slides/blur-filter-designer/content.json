@@ -1,0 +1,9 @@
+{
+  "layout": "filterDesigner",
+  "sectionLabel": "Introduction to Filtering",
+  "title": "Design Your Own Filter",
+  "imageSrc": "/slides/blur-filter-designer/sample.jpg",
+  "kernelSize": 5,
+  "defaultKernel": [[0,0,0,0,0],[0,0,0,0,0],[0,0,1,0,0],[0,0,0,0,0],[0,0,0,0,0]],
+  "presets": []
+}

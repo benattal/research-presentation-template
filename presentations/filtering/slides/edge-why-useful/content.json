@@ -1,0 +1,23 @@
+{
+  "layout": "diagram",
+  "sectionLabel": "From Filters to Deep Learning",
+  "title": "Deep Learning Applications",
+  "description": "Computer vision and deep neural networks power AI: on the road, in the hospital, and on the game board.",
+  "media": [
+    {
+      "type": "image",
+      "src": "/slides/edge-why-useful/autonomous-driving.jpg",
+      "caption": "Object detection for autonomous driving"
+    },
+    {
+      "type": "image",
+      "src": "/slides/edge-why-useful/mri-enhancement.jpg",
+      "caption": "MRI image enhancement with neural networks"
+    },
+    {
+      "type": "image",
+      "src": "/slides/edge-why-useful/robot-manipulation.png",
+      "caption": "Finding and moving objects with robot arms"
+    }
+  ]
+}

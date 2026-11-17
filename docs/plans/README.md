@@ -62,5 +62,7 @@ The measurable gates that close the plan.
 
 ## Active plans
 
+- [Vision workshop](vision-workshop.md), tracked in
+  [its tracker](../tracking/vision-workshop.md).
 - [Template restructure](template-restructure.md), tracked in
   [its tracker](../tracking/template-restructure.md).
