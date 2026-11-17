@@ -1,0 +1,14 @@
+.poll-status {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.poll-status--live {
+  color: var(--success);
+}
+
+.slide--poll .poll-status {
+  display: block;
+  margin-top: 1.25rem;
+  text-align: center;
+}

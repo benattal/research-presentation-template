@@ -1,0 +1,10 @@
+{
+  "layout": "progressiveBuild",
+  "sectionLabel": "Slides from data",
+  "title": "Build steps reveal a slide one click at a time",
+  "buildSteps": [
+    { "label": "Step 1", "description": "A slide with a buildSteps array takes one click per step." },
+    { "label": "Step 2", "description": "Going back from the next slide lands on the last step." },
+    { "label": "Step 3", "description": "Each step can have its own notes file: notes-2.md for this one." }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "name": "research-presentation-template",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Interactive slide decks for research talks and workshops: one shared framework, one directory per presentation",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "build": "node scripts/build.mjs",
+    "preview": "node scripts/preview.mjs",
+    "serve": "node scripts/serve.mjs",
+    "build:live": "node scripts/build.mjs --live",
+    "start": "node scripts/serve.mjs --production",
+    "new": "node scripts/new-presentation.mjs",
+    "check": "node scripts/check.mjs",
+    "capture": "node scripts/capture.mjs",
+    "assets": "node scripts/assets.mjs",
+    "extract-pptx": "node scripts/extract-pptx.mjs",
+    "test": "node --test \"tests/*.test.mjs\""
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^6.3.0",
+    "express": "^5.3.0",
+    "framer-motion": "^12.43.0",
+    "katex": "^0.19.1",
+    "qrcode.react": "^4.2.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-markdown": "^10.1.0",
+    "vite": "^8.3.8"
+  },
+  "devDependencies": {
+    "pixelmatch": "^8.0.0",
+    "playwright": "^1.65.1",
+    "pngjs": "^7.0.0",
+    "unzipper": "^0.12.3"
+  }
+}

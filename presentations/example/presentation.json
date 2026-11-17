@@ -1,0 +1,21 @@
+{
+  "title": "Example Presentation",
+  "defaultTransition": "fade",
+  "sections": [
+    {
+      "id": "basics",
+      "title": "Slides from data",
+      "slides": ["title", "outline-basics", "what-is-this", "building-up"]
+    },
+    {
+      "id": "custom",
+      "title": "A layout of your own",
+      "slides": ["outline-custom", "big-number"]
+    },
+    {
+      "id": "audience",
+      "title": "Talking with the audience",
+      "slides": ["outline-audience", "poll-vote", "poll-results", "closing"]
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+
+# Builds and generated data
+/dist/
+/data/captures/
+
+# Live server state (poll votes)
+/.live-state/
+
+# Environment and secrets: PRESENTER_PASSWORD lives in .env. Never commit.
+.env
+.env.*
+!.env.example
+
+# Presentation assets: their durable copy is the R2 bucket (DATA.md).
+/presentations/*/public/
+/presentations/*/assets/
+
+# Editors and OS
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Local tool state; .claude/skills/ is shared agent tooling.
+.claude/*
+!.claude/skills/
+.gradio/

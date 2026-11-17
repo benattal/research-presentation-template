@@ -1,0 +1,149 @@
+# Presentation format
+
+A presentation is a directory `presentations/<id>/`. The directory name is
+the presentation's id: its URL segment behind the live gateway
+(`/<id>/`), its namespace for browser storage, and its prefix in the asset
+bucket. Ids use lowercase letters, digits, and hyphens.
+`npm run new -- <id>` creates a working skeleton.
+
+```text
+presentations/<id>/
+  presentation.json
+  layouts/index.js
+  slides/<slide-id>/content.json
+  slides/<slide-id>/notes.md          optional
+  slides/<slide-id>/notes-<step>.md   optional
+  public/slides/<slide-id>/...        assets (DATA.md)
+  assets/...                          assets (DATA.md)
+  theme.css                           optional
+  layouts/<LayoutName>/...            optional, registered in layouts/index.js
+```
+
+## `presentation.json`
+
+```json
+{
+  "title": "Learning Light Transport",
+  "defaultTransition": "fade",
+  "sections": [
+    { "id": "intro", "title": "Introduction", "slides": ["title", "outline-intro", "motivation"] },
+    { "id": "method", "title": "Method", "slides": ["outline-method", "pipeline"] }
+  ]
+}
+```
+
+| Field | Meaning |
+|---|---|
+| `title` | required; the page title and the presentation's name in listings |
+| `sections` | required; ordered sections, each with an `id`, a `title`, and its slide ids in order |
+| `defaultTransition` | `fade` (default), `slide`, `zoom`, or `none`; a slide's own `transition` wins |
+| `backLink` | optional URL for a "back" button in the toolbar, relative to the presentation (`"../"` returns to the gateway's root) |
+| `servedAtRoot` | optional; `true` makes the live gateway redirect `/` to this presentation (at most one per branch) |
+
+A slide directory that no section lists is a draft: it is not shown, and
+`npm run check` names it.
+
+## `slides/<slide-id>/content.json`
+
+Every slide names a layout and supplies that layout's fields:
+
+```json
+{
+  "layout": "content",
+  "sectionLabel": "Method",
+  "title": "Three steps",
+  "bullets": ["Sample paths", "Fit a cache", "Render"],
+  "media": [{ "type": "image", "src": "/slides/pipeline/overview.png" }]
+}
+```
+
+Fields every slide may use, whatever its layout:
+
+| Field | Meaning |
+|---|---|
+| `layout` | required; a core layout ([layouts](layouts.md)) or one in `layouts/index.js` |
+| `sectionLabel` | small label above the layout |
+| `footnote` | small italic line at the bottom of the slide |
+| `transition` | overrides `defaultTransition` for this slide |
+| `buildSteps` | an array whose length is the number of clicks the slide takes; layouts that reveal content read their step from it |
+
+Media paths start with `/slides/<slide-id>/` and name a file in
+`public/slides/<slide-id>/`. They are resolved against the deployment's base
+URL when the presentation loads, so they work at `/`, under `/<id>/`, and in
+a static build opened from disk. A media item is
+`{ "type": "image" | "gif" | "video", "src": "...", "alt"?: "..." }`.
+
+## Presenter notes
+
+`notes.md` holds a slide's notes, in Markdown. A slide with build steps can
+add `notes-<step>.md` (0-based) for a step that needs its own notes; every
+other step shows `notes.md`. Under the development server the presenter
+window can edit notes and saves them to the file that was on screen; saving
+does not reload the audience view.
+
+## Custom layouts
+
+A layout is a React component that receives `{ slide, buildStep, sections }`
+and renders inside the 1280×720 stage:
+
+```jsx
+// presentations/<id>/layouts/BigNumberSlide/BigNumberSlide.jsx
+export default function BigNumberSlide({ slide, buildStep }) {
+  return (
+    <div className="slide--big-number">
+      <div className="big-number-value">{slide.value}</div>
+      {buildStep >= 1 && <p>{slide.explanation}</p>}
+    </div>
+  );
+}
+```
+
+Register it in `layouts/index.js` under the name slides use:
+
+```js
+import BigNumberSlide from './BigNumberSlide/BigNumberSlide.jsx';
+export default { bigNumber: BigNumberSlide };
+```
+
+A presentation's layout may not reuse a core layout's name; wrap the core
+layout under a new name instead (the diffusion workshop's `diffusionTitle`
+wraps `title`). Layouts import the framework as `@core/...`; for example
+`@core/stage/Media.jsx` for a media item, `@core/live/polls.js` for a live
+poll, and `@core/presentation/assetUrl.js` to resolve an asset path built in
+code.
+
+Conventions for layouts:
+
+- Design for the 1280×720 stage. Never use viewport media queries; the stage
+  is scaled as a whole.
+- Prefix CSS classes with the layout's name (`slide--big-number`,
+  `big-number-value`): all layout styles share one page.
+- Read build steps from `buildStep` and declare the matching `buildSteps`
+  count in the slide's data.
+- Clean up timers, animation frames, and listeners, and ignore media loads
+  that finish after a newer request or after unmount.
+- Mark a deliberately full-bleed or overflowing decoration with
+  `data-overflow-ok`, and a draggable region with `data-no-swipe` so touch
+  drags do not change slides.
+
+## Themes
+
+The framework's colors, fonts, and radii are CSS custom properties at the
+top of `core/client/index.css`. An optional `theme.css` in the presentation
+directory overrides them for that presentation only:
+
+```css
+:root {
+  --bg-primary: #ffffff;
+  --bg-slide: #ffffff;
+  --text-primary: #1a1a2e;
+  --accent: #b5121b;
+}
+```
+
+## Checks
+
+`npm run check -- <id>` loads the presentation the way the browser does and
+reports every problem, plus missing assets. `npm run capture -- <id>`
+renders every slide and step and reports what only a browser can see
+([visual validation](visual-validation.md)).

@@ -1,0 +1,44 @@
+# Core layouts
+
+Layouts every presentation can use, registered in
+`core/client/layouts/index.js`. Each takes the common slide fields
+(`sectionLabel`, `footnote`, `transition`, `buildSteps`) from
+[the presentation format](presentations.md) as well as the fields below. A
+media item is `{ type: "image" | "gif" | "video", src, alt? }`.
+
+## Structure
+
+| Layout | Fields | Notes |
+|---|---|---|
+| `title` | `title`, `subtitle`?, `background`? (image path) | title and closing slides |
+| `outline` | `activeSection` (a section id) | lists every section; earlier ones show as done, the active one highlighted |
+| `content` | `title`, `bullets`?, `media`? | bullet list with an optional row of media |
+| `progressiveBuild` | `title`, `buildSteps`: `[{ label, description?, media? }]`, `className`? | step k shows the first k + 1 entries |
+| `diagram` | `title`, `description`?, `media`? (each with `caption`?), `example`? `{ positive, negative }` | an explanation beside figures |
+| `media` | `title`, `media` (up to four) | 2×2 grid; videos get controls |
+| `illustratedPoints` | `title`, `points`: `[{ text, visual }]`, `buildSteps` | each point appears with an illustration; `visual.type` is `imageCompare` (`fakeImg`, `realImg`), `chatCompare` (`bad`, `good`, each `{ messages }`), or `chatConversation` (`messages`); `**bold**` works in `text` |
+| `discussion` | `title`, `prompts` | numbered discussion prompts |
+| `colabLink` | `title`, `description`, `colabUrl`?, `steps`? `[{ text, url? }]`, `imageSrc`?, `note`? | button and QR code for a notebook; without `colabUrl` the button reads "Link Coming Soon" |
+| `presentationLinks` | `title`, `subtitle`?, `qrCode`? `{ url, label? }`, `links`: `[{ href, title, description?, icon? }]` | a menu of other presentations, for a landing presentation served at the gateway root; `href` is relative (`"../filtering/"`) |
+
+## Live audience
+
+These need the live server ([hosting](hosting.md)). In local mode they show
+their question and a "Local mode: no live voting" badge.
+
+| Layout | Fields | Notes |
+|---|---|---|
+| `poll` | `pollId`, `title`, `question`, `options` | audience members vote from their devices; clicking another option changes the vote |
+| `pollResults` | `pollId`, `options`, `title`, `question`? | live bar chart of the poll with the same `pollId` and `options` |
+| `numericPoll` | `pollId`, `title`, `subtitle`? | each browser submits one number; answers appear as a histogram |
+
+A poll's vote and results slides share `pollId` and `options`. Changing a
+poll's options in the content starts that poll over on the server. The
+presenter resets the current slide's poll with **C**.
+
+## Presentation-specific layouts
+
+Layouts used by one presentation live in that presentation's `layouts/` and
+are listed in its `layouts/index.js`; their fields are documented in the
+component's docstring. [The presentation format](presentations.md#custom-layouts)
+explains how to write one.
