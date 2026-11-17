@@ -1,41 +1,39 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
-import Text from '@core/stage/Text.jsx';
 import { Readout } from '../activeSensing/Controls.jsx';
 import PhasorPlane from '../activeSensing/PhasorPlane.jsx';
 import { themeColors } from '../activeSensing/draw.js';
 import {
-  amplitudeOf, collocatedWeights, compositingWeights, phaseOf, phasor, roundTripPhase,
+  amplitudeOf, collocatedWeights, phaseOf, phasor, roundTripPhase,
 } from '../activeSensing/measurement.js';
-import { RAY_PANEL_COLORS, drawRayPanel } from '../activeSensing/rayPanel.js';
+import {
+  RAY_PANEL, RAY_PANEL_BOUNDS, RAY_PANEL_COLORS, drawRayPanel,
+} from '../activeSensing/rayPanel.js';
 import { RAY_SCENE, raySamples } from '../activeSensing/rayScene.js';
 import { ease, useAnimation, useStageCanvas } from '../canvas/canvas.js';
+import EquationStack from '../equations/EquationStack.jsx';
 import './ToFQuadrature.css';
 
-/** The render panel and the complex plane, in stage pixels. */
-const PANEL = { width: 690, height: 390 };
-const PLANE = { width: 450, height: 450 };
-
-const WEIGHT_MODELS = ['compositing', 'collocated'];
+/** The render panel (the transient slide's, in the same place) and the complex plane, in stage pixels. */
+const PANEL = RAY_PANEL;
+const PLANE = { width: 420, height: 440 };
 
 function stepState(slide, buildStep) {
   const step = slide.buildSteps?.[buildStep];
-  if (!WEIGHT_MODELS.includes(step?.weights) || typeof step.phase !== 'boolean' || typeof step.fog !== 'boolean' || typeof step.equation !== 'string') {
-    throw new Error(`tofQuadrature: build step ${buildStep} needs "equation", "weights" (${WEIGHT_MODELS.join(' or ')}), "phase", and "fog"`);
+  if (typeof step?.phase !== 'boolean' || typeof step.fog !== 'boolean') {
+    throw new Error(`tofQuadrature: build step ${buildStep} needs "phase" and "fog"`);
   }
   return step;
 }
 
 /**
- * The arrows of one build step, one per sample: the length each sample
- * contributes (NeRF's Tᵢαᵢaᵢ, or the collocated source's Tᵢ²αᵢaᵢ/tᵢ²) and
- * its angle (the round-trip phase, or 0 before the phase is introduced).
+ * The arrows of one build step, one per sample: the transient's weight
+ * wᵢ = Tᵢ²αᵢρᵢ/tᵢ² of each sample as its length, and its angle (the
+ * round-trip phase, or 0 before the phase is introduced).
  */
 function stepFrame(step, frequency) {
   const samples = raySamples(RAY_SCENE, { fog: step.fog });
-  const lengths = step.weights === 'compositing'
-    ? compositingWeights(samples).map(({ weight }, i) => weight * samples[i].albedo)
-    : collocatedWeights(samples);
+  const lengths = collocatedWeights(samples);
   const angles = samples.map(({ t }) => (step.phase ? roundTripPhase(t, frequency) : 0));
   // The plot's circle is sized so the chain of arrows reaches 85% of it.
   let tip = [0, 0];
@@ -48,26 +46,21 @@ function stepFrame(step, frequency) {
   return { samples, lengths, angles, fog: step.fog ? 1 : 0, sum: step.phase ? 1 : 0, radius: reach / 0.85 };
 }
 
-/** What the pixel measures at a step: NeRF's color, the intensity, or the phasor's amplitude. */
-function measuredLabel(step) {
-  if (step.phase) return '$|m|$';
-  return step.weights === 'compositing' ? '$\\hat C$' : '$I$';
-}
-
 function mix(a, b, k) {
   return a + (b - a) * k;
 }
 
 /**
  * The time-of-flight quadrature: samples along a camera ray through fog to
- * a wall, each sample's return drawn as an arrow in the complex plane, tip
- * to tail, summing to the measured phasor. Build steps (`buildSteps`
- * entries `{ equation, weights, phase, fog }`) go from NeRF's weights to the
- * collocated source's, add the phase, and remove the fog for the check
- * against a single opaque surface. `recipe` is the quadrature the steps
- * start from; `fourierLabel`, shown under the panel once the phase is on,
- * relates the phasor to the transient. The model is credited through the
- * slide's `credits`.
+ * a wall, each sample's weight wᵢ (the transient's, from the previous
+ * slide) drawn as an arrow in the complex plane, tip to tail. The
+ * equations build up beside them (`lines`, an EquationStack): the phasor as
+ * the transient's Fourier coefficient, and the same weights with a phase
+ * each. Build steps (`buildSteps` entries `{ phase, fog }`) rotate each
+ * arrow by its round-trip phase, so the chain sums to the measured phasor,
+ * and remove the fog for the check against a single opaque surface. Moving
+ * between steps animates from the arrows on screen. The model is credited
+ * through the slide's `credits`.
  */
 export default function ToFQuadrature({ slide, buildStep }) {
   const step = stepState(slide, buildStep);
@@ -105,7 +98,7 @@ export default function ToFQuadrature({ slide, buildStep }) {
     const ctx = canvas.getContext('2d');
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
     drawRayPanel(ctx, themeColors(canvas, RAY_PANEL_COLORS), PANEL, {
-      scene: RAY_SCENE, samples: target.samples, returns: frame.lengths, fog: frame.fog,
+      scene: RAY_SCENE, samples: target.samples, returns: frame.lengths, fog: frame.fog, bounds: RAY_PANEL_BOUNDS,
     });
   });
 
@@ -125,13 +118,13 @@ export default function ToFQuadrature({ slide, buildStep }) {
   const checks = opaque
     ? [
       { label: '$|m|$', value: amplitudeOf(measured).toFixed(4) },
-      { label: '$a/d^2$', value: (albedo / depth ** 2).toFixed(4) },
+      { label: '$\\rho/d^2$', value: (albedo / depth ** 2).toFixed(4) },
       { label: '$\\arg m$', value: `${((phaseOf(measured) * 180) / Math.PI).toFixed(1)}°` },
       { label: '$4\\pi f d/c$', value: `${((roundTripPhase(depth, frequency) * 180) / Math.PI).toFixed(1)}°` },
     ]
     : [
-      { label: measuredLabel(step), value: amplitudeOf(measured).toFixed(4) },
-      ...(step.phase ? [{ label: '$\\arg m$', value: `${((phaseOf(measured) * 180) / Math.PI).toFixed(1)}°` }] : []),
+      { label: step.phase ? '$|m|$' : '$\\int h\\,d\\tau$', value: amplitudeOf(measured).toFixed(4) },
+      { label: '$\\arg m$', value: `${((phaseOf(measured) * 180) / Math.PI).toFixed(1)}°`, hidden: !step.phase },
     ];
 
   return (
@@ -139,8 +132,6 @@ export default function ToFQuadrature({ slide, buildStep }) {
       <SlideTitle title={slide.title} subtitle={slide.subtitle} />
       <div className="tof-quadrature-body">
         <div className="tof-quadrature-left">
-          <div className="tof-quadrature-recipe"><Text>{slide.recipe}</Text></div>
-          <div className="tof-quadrature-equation"><Text>{step.equation}</Text></div>
           <canvas
             ref={canvasRef}
             className="tof-quadrature-panel"
@@ -148,9 +139,7 @@ export default function ToFQuadrature({ slide, buildStep }) {
             height={PANEL.height * ratio}
             style={{ width: PANEL.width, height: PANEL.height }}
           />
-          {slide.fourierLabel && (
-            <p className="tof-quadrature-fourier" style={{ visibility: step.phase ? 'visible' : 'hidden' }}><Text>{slide.fourierLabel}</Text></p>
-          )}
+          <EquationStack lines={slide.lines} step={buildStep} className="tof-quadrature-stack" />
         </div>
         <div className="tof-quadrature-right">
           <PhasorPlane

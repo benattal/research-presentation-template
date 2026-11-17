@@ -21,6 +21,9 @@ const SOURCE_WIDTH = 0.018;
 const NOISE_MAX = 0.03;
 const STRIP_GAIN = 3;
 
+/** A fraction as a percentage in math text: one decimal below 10%, none from 10% up. */
+const percent = (value) => `${(100 * value).toFixed(100 * value < 10 ? 1 : 0)}\\%`;
+
 const source = (t) => SOURCES.reduce((sum, s) => sum + s.peak * Math.exp(-(((t - s.t) / SOURCE_WIDTH) ** 2) / 2), 0);
 
 function figureGeometry({ width, height }) {
@@ -43,7 +46,9 @@ function figureGeometry({ width, height }) {
  *
  * Slide fields: `equations` (EquationLines lines) and build steps
  * `{ recovered, noise }`: whether the recovered sources are drawn, and the
- * noise in L as a fraction of its maximum (the slider starts there).
+ * noise in L as a fraction of its maximum (the slider starts there). With
+ * the recovered sources, one line states the noise in L and the error of
+ * the recovered Q that it leads to.
  */
 export default function InverseOperator({ slide, buildStep }) {
   const step = slide.buildSteps?.[buildStep];
@@ -164,13 +169,11 @@ export default function InverseOperator({ slide, buildStep }) {
         <div className="inverse-side">
           <EquationLines lines={slide.equations} buildStep={buildStep} className="inverse-lines" />
           <div className="inverse-check" style={{ visibility: step.recovered ? 'visible' : 'hidden' }}>
-            <span className="inverse-check-label">error</span>
-            <span className="inverse-check-value">{`${(100 * measured.error).toFixed(1)}%`}</span>
+            <Text>{`$${percent(noise)}$ noise $\\to$ $${percent(measured.error)}$ error`}</Text>
           </div>
           <label className="inverse-slider" style={{ visibility: step.recovered ? 'visible' : 'hidden' }}>
             <span className="inverse-slider-head">
               <span>{'noise in '}<Text>{'$L$'}</Text></span>
-              <span className="inverse-slider-value">{`${(100 * noise).toFixed(1)}%`}</span>
             </span>
             <input
               type="range"

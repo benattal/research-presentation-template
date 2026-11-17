@@ -5,9 +5,9 @@ Apply $D^{-1}$ to both sides of $DL = KL + Q$ and write the result term by term,
 - Step 1: the light from the surface behind the medium, $L(d)$, attenuated by the transmittance of the whole ray, $T(d)$.
 - Step 2: the emission along the ray, $D^{-1}Q$: each point's emission, weighted by the transmittance between it and the camera.
 - Step 3: the in-scattered light, $D^{-1}KL$, attenuated the same way. The three terms together are the volume rendering equation. Every term is an integral, along the ray ($D^{-1}$) or over directions ($K$), evaluated by quadrature or Monte Carlo. No derivatives of $L$ are needed.
-- Step 4: this is the fixed-point equation of the whole lecture, $x = b + Ax$, with $x = L$. The source $b = D^{-1}Q + T(d)\,L(d)$ holds the emission and the attenuated surface light behind the medium. Equivalently $(I - A)x = b$.
+- Step 4: this is the fixed-point equation of the whole lecture, $x = b + Ax$, with $x = L$. The source $b = D^{-1}Q + T(d)\,L(d)$ is the emission plus the attenuated surface light behind the medium. Equivalently $(I - A)x = b$.
 - Step 5: $A = D^{-1}K$ is one bounce in the medium. $K$ is scattering at a point, the role $S$ had at surfaces; $D^{-1}$ is propagation with attenuation to the next point, the role $G$ had. (The order is reversed, scattering then propagation, which does not change the series.)
-- Step 6: the Neumann series of $A$ sorts the light by the number of scattering events: $b$ has none, $Ab$ is single scattering, $A^2 b$ double scattering, and so on. This is the series of bounces of section 2, with scattering events in place of bounces.
+- Step 6: the terms of the series are the light after 0, 1, 2, … scattering events: $b$ has none, $Ab$ is single scattering, $A^2 b$ double scattering, and so on. This is the series of bounces of section 2, with scattering events in place of bounces.
 
 The renders on the right: the same glasses of juice with single scattering only (truncated after $Ab$) and with all orders. Dense media like juice or milk get much of their brightness and color from the higher orders.
 

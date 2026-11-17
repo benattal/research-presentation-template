@@ -46,9 +46,7 @@
         "lt-relighting",
         "lt-dual",
         "lt-optical-computing",
-        "lt-direct-global",
         "lt-probing",
-        "lt-primal-dual",
         "lt-epipolar"
       ]
     },
@@ -73,6 +71,7 @@
       "title": "Neural rendering",
       "slides": [
         "nr-divider",
+        "nr-inverse",
         "nr-nerf",
         "nr-applications",
         "nr-recipe",
@@ -101,6 +100,7 @@
         "adj-neumann",
         "adj-sensitivity",
         "adj-gradient",
+        "adj-quadrature",
         "adj-radiative-backprop"
       ]
     },
@@ -121,8 +121,9 @@
         "lt-three-point",
         "lt-structured-light",
         "lt-how-to-apply",
+        "lt-direct-global",
+        "lt-primal-dual",
         "nr-nlos",
-        "adj-quadrature",
         "adj-volumes"
       ]
     }

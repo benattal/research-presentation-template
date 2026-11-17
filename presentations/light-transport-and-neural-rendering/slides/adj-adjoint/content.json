@@ -5,12 +5,12 @@
   "subtitle": "All derivatives from one transposed solve",
   "lines": [
     {
-      "tex": "\\partial_\\theta m = \\langle \\htmlClass{term-adjoint}{q},\\, (I - A)^{-1} (\\partial_\\theta A)\\, x \\rangle",
-      "label": "one forward solve per parameter"
+      "tex": "\\partial_\\theta m = \\langle \\htmlClass{term-adjoint}{q},\\, (I - A)^{-1} z \\rangle, \\quad z = (\\partial_\\theta A)\\, x",
+      "label": "forward mode: one solve per parameter"
     },
     {
-      "tex": "\\langle \\htmlClass{term-adjoint}{q},\\, (I - A)^{-1} z \\rangle = \\langle (I - A^\\top)^{-1} \\htmlClass{term-adjoint}{q},\\, z \\rangle",
-      "label": "from $\\langle y, Az \\rangle = \\langle A^\\top y, z \\rangle$"
+      "tex": "\\begin{aligned} \\langle \\htmlClass{term-adjoint}{q},\\, \\textstyle\\sum_k A^k z \\rangle &= \\textstyle\\sum_k \\langle (A^\\top)^k \\htmlClass{term-adjoint}{q},\\, z \\rangle \\\\ &= \\langle (I - A^\\top)^{-1} \\htmlClass{term-adjoint}{q},\\, z \\rangle \\end{aligned}",
+      "label": "$\\langle u, Az \\rangle = \\langle A^\\top u, z \\rangle$, $k$ times"
     },
     {
       "tex": "\\htmlClass{term-adjoint}{y} = (I - A^\\top)^{-1} \\htmlClass{term-adjoint}{q}",

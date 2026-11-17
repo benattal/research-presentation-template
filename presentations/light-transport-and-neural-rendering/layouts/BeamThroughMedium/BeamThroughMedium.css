@@ -27,11 +27,19 @@
   white-space: nowrap;
 }
 
+/* A zero-width slot (its flex gap cancelled) that holds the 0 over the first term's place. */
+.beam-zero-slot {
+  position: relative;
+  width: 0;
+  margin-right: -14px;
+}
+
 .beam-zero {
   position: absolute;
   left: 0;
   top: 0;
   color: var(--text-primary);
+  transition: opacity 250ms ease;
 }
 
 .beam-body {

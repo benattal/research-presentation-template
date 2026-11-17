@@ -5,6 +5,10 @@
   "subtitle": "Model the measurement, discretize it, and differentiate it",
   "lines": [
     {
+      "tex": "(\\htmlClass{term-learned}{\\sigma}, \\htmlClass{term-learned}{c}) = \\htmlClass{term-learned}{F_\\theta}(\\mathbf{x}, \\omega)",
+      "label": "network"
+    },
+    {
       "tex": "C(\\mathbf{r}) = \\int_0^d T(t)\\, \\htmlClass{term-learned}{\\sigma(t)}\\, \\htmlClass{term-learned}{c(t)}\\, dt",
       "label": "measurement model"
     },
@@ -17,5 +21,10 @@
       "label": "gradient descent"
     }
   ],
-  "buildSteps": [{}, {}, {}]
+  "buildSteps": [
+    {},
+    {},
+    {},
+    {}
+  ]
 }

@@ -12,17 +12,17 @@
       "label": "ray tracing"
     },
     {
-      "tex": "L(\\mathbf{x}, \\omega) = \\htmlClass{term-emission}{L_e(\\mathbf{x}, \\omega)} + \\underbrace{\\htmlClass{term-operator}{\\int_{H^2} f_r \\, \\underbrace{L(r(\\mathbf{x}, \\omega'), -\\omega')}_{G L} \\cos\\theta' \\, d\\omega'}}_{S G L}"
+      "tex": "L(\\mathbf{x}, \\omega_o) = \\htmlClass{term-emission}{L_e(\\mathbf{x}, \\omega_o)} + \\underbrace{\\htmlClass{term-operator}{\\int_{H^2} f_r \\, \\underbrace{L(r(\\mathbf{x}, \\omega_i), -\\omega_i)}_{G L} \\cos\\theta_i \\, d\\omega_i}}_{S G L}"
     },
     {
-      "tex": "L = \\htmlClass{term-emission}{L_e} + \\htmlClass{term-operator}{A}\\, L",
-      "label": "$A = SG$"
+      "tex": "L = \\htmlClass{term-emission}{L_e} + \\htmlClass{term-operator}{A}\\, L, \\quad \\htmlClass{term-operator}{A} = SG"
     },
     {
       "tex": "x = \\htmlClass{term-emission}{e} + \\htmlClass{term-operator}{A}\\, x",
       "label": "discretized"
     }
   ],
+  "fontSize": "1.45rem",
   "buildSteps": [
     {},
     {},
@@ -32,16 +32,15 @@
   ],
   "figure": {
     "type": "image",
-    "src": "/slides/lt-rendering-equation/incident-light.png",
-    "alt": "Direct and indirect light arriving at a point visible to the camera",
-    "caption": "light arriving at a visible point",
-    "width": 400
+    "src": "/slides/lt-rendering-equation/ray-tracing-function.png",
+    "alt": "The ray-tracing function r(x, omega): the first surface point on the ray from x in direction omega; the incident light at x is the outgoing light there",
+    "width": 450
   },
   "credits": [
     "kajiya1986",
     {
       "source": "cmu15468-rendering",
-      "what": "p. 5"
+      "what": "p. 11"
     }
   ]
 }

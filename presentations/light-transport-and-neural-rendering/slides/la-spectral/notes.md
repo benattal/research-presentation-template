@@ -9,7 +9,7 @@ What $(I - A)^{-1}$ does to different vectors, and why the convergence depends o
 
 Steps:
 
-1. $b$ along $v_1$ ($\lambda_1 = 0.8$): $x = 5b$, and the chain takes many terms.
+1. $b$ along $v_1$ ($\lambda_1 = 0.8$): $x = 5b$, and many terms are needed.
 2. $b$ along $v_2$ ($\lambda_2 = 0.3$): $x = 1.43b$, and three terms come close.
 3. A general $b$: the $v_1$ component is amplified most, so $x$ lies close to the $v_1$ line, and the error falls like $0.8^k$.
 4. $\lambda_1 = 0.97$: the amplification is 33, and after 8 terms the chain is far from $x$.

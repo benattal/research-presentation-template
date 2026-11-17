@@ -6,10 +6,25 @@
   "title": "Multiple bounces",
   "subtitle": "One bounce of light at a time",
   "buildSteps": [
-    {},
-    {},
-    {},
-    {},
-    {}
-  ]
+    {
+      "label": "light leaving the lamp"
+    },
+    {
+      "label": "after 1 bounce"
+    },
+    {
+      "label": "after 2 bounces"
+    },
+    {
+      "label": "after 3 bounces"
+    },
+    {
+      "label": "after 4 bounces"
+    }
+  ],
+  "shareLabel": "share of $x$",
+  "columnNote": {
+    "text": "ratio $\\approx 0.64 \\to \\rho(A) = 0.69 < 1$",
+    "step": 2
+  }
 }

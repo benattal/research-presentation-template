@@ -33,7 +33,7 @@
     "type": "image",
     "src": "/slides/vol-vre/single-and-multiple-scattering.jpg",
     "alt": "Two renders of glasses of juice, with single and with multiple scattering",
-    "caption": "Renders"
+    "caption": "Single and multiple scattering"
   },
   "buildSteps": [
     {},

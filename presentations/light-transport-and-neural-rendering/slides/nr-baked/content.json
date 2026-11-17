@@ -6,22 +6,27 @@
   "lines": [
     {
       "tex": "\\htmlClass{term-learned}{c} = x = (I - A)^{-1}\\, \\htmlClass{term-emission}{e}",
-      "label": "NeRF color: outgoing radiance"
+      "label": "real scene's $A$"
     },
     {
       "tex": "x = \\htmlClass{term-emission}{e} + \\htmlClass{term-bounce-1}{Ae} + \\htmlClass{term-bounce-2}{A^2 e} + \\htmlClass{term-bounce-3}{A^3 e} + \\cdots",
       "label": "every bounce, summed"
     },
     {
-      "tex": "x' = (I - SG)^{-1}\\, \\htmlClass{term-emission}{e'}",
-      "label": "new light $e'$, materials $S$"
+      "tex": "x' = (I - A)^{-1}\\, \\htmlClass{term-emission}{e'}",
+      "label": "new light, same $A$"
     }
   ],
   "figure": {
     "type": "image",
-    "src": "/slides/nr-baked/emissive-volume-relit.png",
-    "alt": "A smoke plume reconstructed as an emissive volume and as a scattering volume, under the original lighting and relit",
-    "caption": "Reconstructed volumes, relit"
+    "src": "/slides/nr-baked/emissive-scattering-reference.jpg",
+    "alt": "A smoke plume reconstructed as an emissive volume and as a scattering volume, beside the reference, under the original lighting and relit",
+    "columnLabels": [
+      "emissive volume",
+      "scattering volume",
+      "reference"
+    ],
+    "columnInset": 0.042
   },
   "buildSteps": [
     {},
@@ -33,5 +38,6 @@
       "source": "nimierdavid2022",
       "what": "Fig. 12"
     }
-  ]
+  ],
+  "fontSize": "1.45rem"
 }

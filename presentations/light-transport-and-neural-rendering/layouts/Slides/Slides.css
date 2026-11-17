@@ -10,7 +10,25 @@
   height: 100%;
 }
 
+/* The title slide: the title and speaker line across the top, on one line
+   each, and the room below them on the right. */
+.slide--lecture-title {
+  grid-template-rows: auto auto;
+  align-items: start;
+  align-content: center;
+  row-gap: 40px;
+}
+
+.lecture-title-text {
+  grid-column: 1 / -1;
+}
+
+.lecture-title-render {
+  grid-column: 2;
+}
+
 .lecture-title-text h1 {
+  white-space: nowrap;
   font-family: var(--font-display);
   font-size: 3.2rem;
   font-weight: 600;
@@ -43,11 +61,13 @@
   color: var(--text-primary);
 }
 
+/* A subtitle that wraps is split into lines of similar length, with no word alone on the last. */
 .section-title-text p {
   margin-top: 16px;
   font-size: 1.35rem;
   line-height: 1.4;
   color: var(--text-secondary);
+  text-wrap: balance;
 }
 
 .section-title-visual {
@@ -166,12 +186,14 @@
   height: 100%;
 }
 
+/* Lines and figure start at the top left under the header, at the same place on every derivation slide. */
 .derivation-body {
   flex: 1;
   min-height: 0;
   display: flex;
   gap: 40px;
-  align-items: center;
+  align-items: flex-start;
+  padding-top: 20px;
 }
 
 .derivation-lines {
@@ -185,11 +207,7 @@
   color: var(--text-muted);
 }
 
-/* Without a figure the equations are larger and centered, not left in one half. */
-.derivation-body:not(.derivation-body--figure) {
-  justify-content: center;
-}
-
+/* Without a figure the equations are larger. */
 .derivation-body:not(.derivation-body--figure) .derivation-lines {
   flex: 0 1 auto;
   gap: 30px;
@@ -229,6 +247,14 @@
 .derivation-figure video {
   width: 100%;
   border-radius: 4px;
+}
+
+.derivation-figure-columns {
+  display: grid;
+  margin-top: 6px;
+  text-align: center;
+  font-size: 1.05rem;
+  color: var(--text-secondary);
 }
 
 .derivation-figure figcaption {

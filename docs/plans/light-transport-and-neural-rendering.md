@@ -18,11 +18,12 @@ borrowed visual is credited on its slide and on a credits slide, every
 interactive slide can be driven with the clicker alone, the deck captures
 cleanly at every step, and it presents offline from a static build.
 
-**Status:** every slide is built (63 in the main talk, 7 in the appendix),
-with notes and credits; framework additions are on `main`. Review cycle 1
-(content, layout, and UI reviewers; fixes by section) is done; cycle 2 is
-under review. Open beyond the cycles: pushing assets to the bucket (rclone
-is not installed on this workstation) and a timed rehearsal (todo 13).
+**Status:** every slide is built (63 in the main talk, 8 in the appendix),
+with notes and credits; framework additions are on `main`; the assets are
+in the bucket. Review cycles 1 and 2 (content reviewers by part, a layout,
+text, and UI vetter; fixes by section) are done; cycle 3 is next (todo 12's
+gate: a cycle that finds nothing substantive). Open beyond the cycles: a
+timed rehearsal (todo 13).
 
 ## Immediate todos
 
@@ -157,8 +158,8 @@ Plain linear algebra before any light: the user (2026-11-17), "You do not need t
 | `la-fixed-point` | Fixed-point equation | A linear system written as a fixed point | `fixedPoint` |
 | `la-geometric` | Geometric series | Inverting a number with a power series | `geometricSeries` |
 | `la-neumann` | Neumann series | Inverting a matrix with a power series | `neumannSeries` |
-| `la-spectral` | Spectral view | Along each eigenvector, the series is a geometric series | `spectralView` |
-| `la-apply` | Iteration | Summing the series needs only matrix–vector products | `iteration` |
+| `la-spectral` | Spectral view | The matrix series, one eigenvector at a time | `spectralView` |
+| `la-apply` | Iteration | Summing the series with matrix–vector products | `iteration` |
 
 ### Operator light transport
 
@@ -171,8 +172,8 @@ The rendering equation as $x = e + Ax$ with $A = SG$, shown on the flatland room
 | `lt-gather` | Scattering integral | Light leaving a point is a weighted integral of incident light | `scatteringGather` |
 | `lt-operators` | Transport operator | One bounce of light, split into propagation and scattering | `operatorExplorer` |
 | `lt-iterate` | Multiple bounces | One bounce of light at a time | `operatorExplorer` |
-| `lt-neumann-sum` | Global illumination | All bounces together give the lit room | `operatorExplorer` |
-| `lt-path-tracing` | Path tracing | Path tracing estimates the sum over bounces with random walks | `pathTracing` |
+| `lt-neumann-sum` | Global illumination | The sum of all bounces | `operatorExplorer` |
+| `lt-path-tracing` | Path tracing | Estimating the sum over bounces with random walks | `pathTracing`; credits `cmu15468-rendering` |
 
 ### Aside: computational imaging
 
@@ -184,12 +185,10 @@ An aside, framed as one (the user, 2026-11-17: "the "computational imaging" appl
 | `lt-transport` | Light transport | Light transport is the map from light sources to measurements | `lightPaths`; credits `nayar2006`, `cmu15463-transport` |
 | `lt-matrix` | Light transport matrix | With discrete lights and pixels, light transport is a matrix | `transportMatrix` |
 | `lt-relighting` | Relighting | A photo under any lighting is a weighted sum of one-light photos | `transportMatrix`; credits `debevec2000`, `cmu15463-transport` |
-| `lt-dual` | Dual photography | Swapping camera and projector transposes the transport matrix | `figures`; credits `sen2005` |
-| `lt-optical-computing` | Optical computing | Power iteration with photographs estimates the dominant eigenvector | `opticalComputing`; credits `otoole2010`, `cmu15463-transport` |
-| `lt-direct-global` | Direct and global light | Direct and global light are separable with high-frequency patterns | `figures`; credits `nayar2006` |
-| `lt-probing` | Light transport probing | Masking the camera in sync with the projector selects light paths | `probingMatrix`; credits `otoole2016`, `cmu15463-probing` |
-| `lt-primal-dual` | Primal-dual coding | Projector and camera masks are coded in lockstep in one exposure | `figures`; credits `otoole2012` |
-| `lt-epipolar` | Epipolar imaging | Epipolar probing separates direct and indirect light at video rate | `figures`; credits `cmu15463-transport`, `otoole2015`, `achar2017` |
+| `lt-dual` | Dual photography | Swapping the camera and the projector | `figurePanel`; credits `sen2005` |
+| `lt-optical-computing` | Optical computing | Power iteration with photographs | `opticalComputing`; credits `otoole2010`, `cmu15463-transport` |
+| `lt-probing` | Light transport probing | Selecting light paths with coded illumination and masks | `probingMatrix`; credits `otoole2016`, `cmu15463-probing`, `nayar2006` |
+| `lt-epipolar` | Epipolar imaging | Separating direct and indirect light at video rate | `figures`; credits `cmu15463-transport`, `otoole2015` |
 
 ### Volume rendering
 
@@ -198,15 +197,15 @@ The radiative transfer equation in operator form, $(D - K)L = Q$, its integral f
 | Slide | Title | Subtitle | Visual |
 |---|---|---|---|
 | `vol-divider` | Volume rendering | Light inside scattering media | `sectionTitle`; credits `cmu15468-media` |
-| `vol-media` | Participating media | In fog, clouds, smoke, and jade, light interacts along the whole ray | `figures`; credits `cmu15468-media` |
+| `vol-media` | Participating media | Light scattering throughout a volume | `figures`; credits `cmu15468-media` |
 | `vol-rte` | Radiative transfer equation | In a medium, the radiance along a ray changes at every point | `beamThroughMedium` |
-| `vol-operator` | Operator form | A medium's transport splits into terms along rays and over directions | `operatorForm` |
+| `vol-operator` | Operator form | Transport along rays and scattering over directions | `operatorForm` |
 | `vol-integrating-factor` | Integrating factor | Along one ray, the transfer equation is solved by an integral | `integratingFactor` |
 | `vol-vre` | Volume rendering equation | Light in a medium has the same fixed-point form as between surfaces | `derivation`; credits `cmu15468-media` |
-| `vol-inverse` | Inverse operator | Recovering the sources from the light needs only local derivatives | `inverseOperator` |
-| `vol-emission-absorption` | Emission–absorption model | Without scattering, the integral is the one NeRF uses | `emissionAbsorption`; credits `max1995` |
-| `vol-quadrature` | Quadrature | Piecewise-constant quadrature of the integral is alpha compositing | `quadratureExplorer`; credits `tagliasacchi2022` |
-| `vol-sampling` | Sampling | With the same number of samples, the error depends on where they are | `quadratureExplorer`; credits `mildenhall2020` |
+| `vol-inverse` | Integral and differential forms | Recovering sources requires derivatives | `inverseOperator` |
+| `vol-emission-absorption` | Emission–absorption model | Emission and absorption without scattering | `emissionAbsorption`; credits `max1995` |
+| `vol-quadrature` | Quadrature | Alpha compositing as a quadrature of the integral | `quadratureExplorer`; credits `tagliasacchi2022` |
+| `vol-sampling` | Sampling | The placement of samples along a ray | `quadratureExplorer`; credits `mildenhall2020` |
 
 ### Neural rendering
 
@@ -215,19 +214,20 @@ Reconstructing scenes from measurements using a renderer: NeRF, transients, cont
 | Slide | Title | Subtitle | Visual |
 |---|---|---|---|
 | `nr-divider` | Neural rendering | Reconstructing scenes from measurements using a renderer | `sectionTitle` |
+| `nr-inverse` | Inverse rendering | Recovering a scene by matching renderings to measurements | `derivation`; credits `cmu15468-diffrender` |
 | `nr-nerf` | Neural radiance fields | A scene reconstructed from photographs by fitting a volume | `figureRows`; credits `mildenhall2020` |
-| `nr-applications` | Applications | NeRF's approach extends to time of flight, lidar, and structured light | `figureRows`; credits `attal2021`, `malik2023`, `malik2024`, `shandilya2023` |
+| `nr-applications` | Applications | The same approach for time of flight, lidar, and structured light | `figures`; credits `attal2021`, `malik2023`, `malik2024`, `shandilya2023` |
 | `nr-recipe` | Neural rendering recipe | Model the measurement, discretize it, and differentiate it | `derivation` |
 | `nr-transient` | Transient light transport | Light arrives in order of path length | `transientFlatland` |
-| `nr-transient-quadrature` | Transient quadrature | A lidar pixel records when the light from each depth arrives | `transientQuadrature`; credits `malik2023` |
-| `nr-cw-tof` | Continuous-wave time of flight | A continuous-wave camera measures path length as a phase | `phasorToF` |
-| `nr-cw-tof-quadrature` | Phasor quadrature | The time-of-flight measurement is a sum of phasors along the ray | `tofQuadrature`; credits `attal2021` |
-| `nr-structured-light` | Structured light | The projected pattern lights each sample of the camera ray | `projectorQuadrature`; credits `shandilya2023` |
-| `nr-representation` | Scene and measurement fields | A network can represent the scene or the measurement | `figureRows`; credits `malik2023`, `malik2024` |
-| `nr-baked` | Baked illumination | Relighting requires separating the bounces that a NeRF combines | `derivation`; credits `nimierdavid2022` |
-| `nr-radiance-cache` | Radiance caching | Every bounce after the first is replaced by a cache $\hat{x}$ | `radianceCache` |
-| `nr-flash-cache` | Flash Cache | Flash Cache reduces the bias of radiance caches | `figureRows`; credits `attal2024` |
-| `nr-memory` | Memory | Differentiating through a renderer is limited by memory | `content` |
+| `nr-transient-quadrature` | Transient quadrature | Volume rendering of a transient | `transientQuadrature`; credits `malik2023` |
+| `nr-cw-tof` | Continuous-wave time of flight | Distance from the phase of modulated light | `phasorToF`; credits `csc2529-tof` |
+| `nr-cw-tof-quadrature` | Phasor quadrature | Volume rendering of a phasor | `tofQuadrature`; credits `attal2021` |
+| `nr-structured-light` | Structured light | Volume rendering with a projected pattern | `projectorQuadrature`; credits `shandilya2023` |
+| `nr-representation` | Scene and measurement fields | Representing the scene or the measurement | `figureRows`; credits `malik2023`, `malik2024` |
+| `nr-baked` | Baked illumination | Relighting a NeRF means separating the bounces in its colors | `derivation`; credits `nimierdavid2022` |
+| `nr-radiance-cache` | Radiance caching | A NeRF for the bounces after the first | `radianceCache` |
+| `nr-flash-cache` | Flash Cache | Reducing the bias of radiance caches | `figureRows`; credits `attal2024` |
+| `nr-memory` | Memory | Differentiating through a renderer is limited by memory | `pointList` |
 
 ### Adjoint light transport ⚡
 
@@ -236,14 +236,15 @@ Differential light transport in operator form and its adjoint, written with inne
 | Slide | Title | Subtitle | Visual |
 |---|---|---|---|
 | `adj-divider` | Adjoint light transport ⚡ | Gradients of light transport | `sectionTitle` |
-| `adj-measurement` | Measurement | What a pixel measures | `adjointViews` |
+| `adj-measurement` | Measurement | Describing the measurement at a camera pixel | `adjointViews` |
 | `adj-derivative` | Differential light transport | How the light changes when the scene changes | `adjointViews` |
 | `adj-operator-derivative` | Operator derivative | Changing a material and changing the geometry | `adjointViews` |
-| `adj-adjoint` | Adjoint method | All parameter derivatives are computed with one transposed solve | `adjointSolves` |
+| `adj-adjoint` | Adjoint method | All derivatives from one transposed solve | `adjointSolves` |
 | `adj-importance` | Importance | The sensor's response, transported backward | `operatorExplorer` |
 | `adj-neumann` | Adjoint Neumann series | Importance, computed bounce by bounce | `operatorExplorer` |
 | `adj-sensitivity` | Sensitivity | How much a pixel changes when light is added | `adjointViews` |
 | `adj-gradient` | Gradient | All derivatives from one forward and one adjoint solve | `adjointViews` |
+| `adj-quadrature` | Volume rendering gradient | Each sample's gradient depends on the color behind it | `volumeGradient` |
 | `adj-radiative-backprop` | Radiative backpropagation | The gradient of a rendering is computed by a second rendering | `figureRows`; credits `nimierdavid2020` |
 
 ### Closing
@@ -266,9 +267,10 @@ Optional slides after "Questions", cut from the main talk for time.
 | `lt-three-point` | Three-point form | In area form, propagation and scattering are separate factors | `derivation`; credits `veach1997`, `arvo1995` |
 | `lt-structured-light` | Structured light transport | Structured-light scans with probing are robust to indirect light | `figures`; credits `otoole2014` |
 | `lt-how-to-apply` | Transport products | A product with the transport matrix is stored, simulated, or measured | `figureRows`; credits `ng2003`, `cmu15463-transport` |
+| `lt-direct-global` | Direct and global light | Direct and global light are separable with high-frequency patterns | `figures`; credits `nayar2006` |
+| `lt-primal-dual` | Primal-dual coding | Probing light transport in a single exposure | `figures`; credits `otoole2012` |
 | `nr-nlos` | Non-line-of-sight imaging | Objects around a corner are reconstructed from time-resolved light | `figureRows`; credits `otoole2018` |
-| `adj-quadrature` | Volume rendering gradient | Each sample's gradient depends on the color behind it | `derivation` |
-| `adj-volumes` | Differentiable volumes | Volume reconstruction needs unbiased gradient estimators | `figures`; credits `nimierdavid2022` |
+| `adj-volumes` | Differentiable volumes | Unbiased gradient estimators for volume reconstruction | `figures`; credits `nimierdavid2022` |
 
 ## Interactive visuals
 

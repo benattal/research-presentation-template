@@ -92,8 +92,8 @@ const STENCILS = {
  *
  * Slide fields: build steps `{ label?, equation }` (see EquationLines), and
  * `stencils`: `[{ operator: 'D' | 'K', label, step }]`. Each stencil's
- * panel of medium shows from the first step; the stencil and its label are
- * drawn from build step `step`.
+ * panel of medium, the stencil, and its label are drawn from build step
+ * `step`; until then its place stays empty.
  */
 export default function OperatorForm({ slide, buildStep }) {
   for (const stencil of slide.stencils) {
@@ -119,16 +119,16 @@ export default function OperatorForm({ slide, buildStep }) {
     const ctx = canvas.getContext('2d');
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
     ctx.clearRect(0, 0, size.width, size.height);
-    // The medium shows from the first step, so the equation of the medium has its picture;
-    // each operator's stencil is drawn into it from its own step.
+    // Each operator's panel appears with its stencil, at its own step.
     for (const panel of panels) {
+      if (buildStep < panel.step) continue;
       drawPanel(ctx, panel.rect, colors['render-bg']);
       ctx.save();
       ctx.beginPath();
       ctx.rect(panel.rect.x, panel.rect.y, panel.rect.width, panel.rect.height);
       ctx.clip();
       drawMedium(ctx, panel.rect, colors);
-      if (buildStep >= panel.step) STENCILS[panel.operator](ctx, panel.rect, colors);
+      STENCILS[panel.operator](ctx, panel.rect, colors);
       ctx.restore();
     }
   }, [canvasRef, colors, size, ratio, panels, buildStep]);

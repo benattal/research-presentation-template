@@ -3,6 +3,7 @@
   "sectionLabel": "Operator light transport",
   "title": "Path tracing",
   "subtitle": "Estimating the sum over bounces with random walks",
+  "equation": "$L \\approx L_e + \\dfrac{f_r\\, L(r(\\mathbf{x}, \\omega_i), -\\omega_i) \\cos\\theta_i}{p(\\omega_i)}$",
   "buildSteps": [
     {
       "paths": 1
@@ -15,6 +16,12 @@
     },
     {
       "paths": 4096
+    }
+  ],
+  "credits": [
+    {
+      "source": "cmu15468-rendering",
+      "what": "p. 31"
     }
   ]
 }

@@ -9,4 +9,4 @@ The sentence to remember: each of these is NeRF's recipe with a different measur
 
 The next slide states the recipe; the slides after it derive each measurement model.
 
-Videos and figures from the project pages and papers; the time-of-flight video is cropped to the TöRF color and depth panels.
+Videos and figures from the project pages and papers; the time-of-flight video is cropped to the TöRF color and depth panels, without their titles.

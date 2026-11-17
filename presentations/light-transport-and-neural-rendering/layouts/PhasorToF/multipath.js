@@ -14,10 +14,10 @@ export const PHASOR_SCENE = {
   wall: { depth: 2, albedo: 0.8, bottom: -1.6, top: 1.05 },
   mirror: { center: [1, -1], halfLength: 0.55, reflectance: 0.9 },
   /** Where the mirror may be dragged: below the ray, in front of the wall. */
-  mirrorRange: { x0: 0.35, x1: 1.65, y0: -1.45, y1: -0.25 },
+  mirrorRange: { x0: 0.35, x1: 1.65, y0: -1.12, y1: -0.25 },
 };
 
-/** The return straight from the wall point: amplitude a/d², phase 4πfd/c. */
+/** The return straight from the wall point: amplitude ρ/d² (ρ the wall's albedo), phase 4πfd/c. */
 export function directReturn(scene, frequency) {
   const { depth, albedo } = scene.wall;
   return { amplitude: albedo / depth ** 2, phase: roundTripPhase(depth, frequency), length: 2 * depth };

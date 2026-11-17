@@ -4,6 +4,15 @@
   height: 100%;
 }
 
+/* The renders and the product under them; the real scenes cover both from their step on. */
+.probing-stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 .probing-row {
   display: flex;
   justify-content: space-between;
@@ -58,7 +67,6 @@
   min-height: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 32px;
 }
 
@@ -70,9 +78,11 @@
   color: var(--text-primary);
 }
 
+/* The blocks sit centered in the space right of the equations. */
 .probing-blocks {
   position: relative;
   flex-shrink: 0;
+  margin: 0 auto;
 }
 
 .probing-blocks svg {
@@ -112,4 +122,67 @@
   margin: 0;
   font-size: 20px;
   color: var(--text-secondary);
+}
+
+/* Real scenes: a table of photos, scene = direct + global per row, column captions on top. */
+.probing-real {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 146px 1fr 34px 1fr 34px 1fr;
+  align-content: start;
+  align-items: center;
+  row-gap: 10px;
+  padding-top: 18px;
+  background: var(--bg-slide);
+}
+
+.probing-real-caption {
+  text-align: center;
+  font-size: 22px;
+  color: var(--text-primary);
+}
+
+.probing-real-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.probing-real-name {
+  font-size: 22px;
+  color: var(--text-primary);
+}
+
+.probing-real-detail {
+  font-size: 18px;
+  line-height: 1.25;
+  color: var(--text-secondary);
+}
+
+.probing-real-sign {
+  text-align: center;
+  font-size: 36px;
+  color: var(--text-primary);
+}
+
+.probing-real-media img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 309 / 183;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.probing-real-label {
+  grid-column: 1 / -1;
+  margin: 8px 0 0;
+  font-size: 22px;
+  color: var(--text-primary);
+}
+
+/* T: never measured, so drawn as a faint filled block, not as values. */
+.probing-block--matrix {
+  fill: var(--text-muted);
+  fill-opacity: 0.16;
 }

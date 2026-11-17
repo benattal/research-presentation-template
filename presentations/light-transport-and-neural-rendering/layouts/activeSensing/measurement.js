@@ -74,7 +74,7 @@ export function compositingWeights(samples) {
 
 /**
  * The weight of each sample's return when the light source sits at the
- * camera: Tᵢ² αᵢ aᵢ / tᵢ². Light reaching the sample is attenuated by Tᵢ on
+ * camera: Tᵢ² αᵢ ρᵢ / tᵢ². Light reaching the sample is attenuated by Tᵢ on
  * the way out, falls off with the inverse square of distance, and is
  * attenuated by Tᵢ again on the way back.
  */
@@ -87,7 +87,7 @@ export function collocatedWeights(samples) {
 
 /**
  * The continuous-wave time-of-flight quadrature: each sample's return
- * Tᵢ²αᵢaᵢ/tᵢ² delayed by the phase 4πf tᵢ/c of its round trip; the pixel
+ * Tᵢ²αᵢρᵢ/tᵢ² delayed by the phase 4πf tᵢ/c of its round trip; the pixel
  * measures their sum. Returns the per-sample phasors and the measurement.
  */
 export function tofQuadrature(samples, frequency) {
@@ -120,7 +120,7 @@ function normalCdf(x) {
 
 /**
  * A pulsed lidar's transient histogram for one pixel: each sample's weight
- * Tᵢ²αᵢaᵢ/tᵢ² arrives at its round-trip time 2tᵢ/c, spread by the laser
+ * Tᵢ²αᵢρᵢ/tᵢ² arrives at its round-trip time 2tᵢ/c, spread by the laser
  * pulse (a Gaussian of full width at half maximum `pulseWidth`; 0 is an
  * impulse). Bin k covers [k·binWidth, (k+1)·binWidth) seconds.
  *

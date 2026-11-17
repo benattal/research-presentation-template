@@ -7,7 +7,7 @@ import {
   PIXEL_GAIN, drawCloudPanel, drawPixel, drawRayLine, figureGeometry, panelToT, worldToPanel,
 } from '../volume/cloudFigure.js';
 import {
-  drawAxes, fillSeries, glowDot, linear, plotScale, radianceCss, rgba, strokeSeries, themeColors,
+  VOLUME_COLORS, drawAxes, fillSeries, glowDot, linear, plotScale, radianceCss, rgba, strokeSeries, themeColors,
 } from '../volume/draw.js';
 import { useFigureSize } from '../volume/figure.js';
 import { createRandom } from '../volume/random.js';
@@ -49,6 +49,42 @@ function edgeFromSlider(value) {
 function sliderFromEdge(edge) {
   const [soft, sharp] = EDGE_RANGE;
   return Math.log(edge / soft) / Math.log(sharp / soft);
+}
+
+/**
+ * Break marks on a plot's top edge over each stretch where `values` exceed
+ * the plotted range `max`: a gap between two short slanted strokes, as on
+ * an axis that skips values.
+ */
+function drawBreaks(ctx, scale, ts, values, max, colors) {
+  const runs = [];
+  values.forEach((value, i) => {
+    if (value <= max) return;
+    if (runs.length && runs.at(-1).end === i - 1) runs.at(-1).end = i;
+    else runs.push({ start: i, end: i });
+  });
+  const y = scale.y(max);
+  for (const run of runs) {
+    const x = (scale.x(ts[run.start]) + scale.x(ts[run.end])) / 2;
+    ctx.save();
+    ctx.fillStyle = rgba(colors['bg-slide']);
+    ctx.beginPath();
+    ctx.moveTo(x - 9, y + 7);
+    ctx.lineTo(x - 1, y - 7);
+    ctx.lineTo(x + 9, y - 7);
+    ctx.lineTo(x + 1, y + 7);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = rgba(colors['ink-medium']);
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(x - 9, y + 7);
+    ctx.lineTo(x - 1, y - 7);
+    ctx.moveTo(x + 1, y + 7);
+    ctx.lineTo(x + 9, y - 7);
+    ctx.stroke();
+    ctx.restore();
+  }
 }
 
 /** The samples a build step asks for, with the same seed every time. */
@@ -94,7 +130,7 @@ export default function QuadratureExplorer({ slide, buildStep }) {
     progressRef.current = 0;
   }
 
-  useLayoutEffect(() => setColors(themeColors(canvasRef.current)), [canvasRef]);
+  useLayoutEffect(() => setColors(themeColors(canvasRef.current, [...VOLUME_COLORS, 'bg-slide'])), [canvasRef]);
 
   const geometry = useMemo(() => figureGeometry(size), [size]);
 
@@ -194,6 +230,7 @@ export default function QuadratureExplorer({ slide, buildStep }) {
     ctx.stroke();
     ctx.restore();
     drawAxes(ctx, density, colors['text-muted']);
+    drawBreaks(ctx, sigma, profile.t, profile.density, DENSITY_MAX, colors);
 
     // Weights: bars of area Tᵢαᵢ against the exact weight density Tσ.
     const barHeights = ray.result.terms.map((term) => term.weight / Math.max(term.delta, 1e-9));
@@ -295,7 +332,7 @@ export default function QuadratureExplorer({ slide, buildStep }) {
             <Text>{`$N = ${step.samples}$`}</Text>
             {slide.compareSamplers && <span className="quadrature-sampler">{step.sampler}</span>}
           </div>
-          {ray && (
+          {ray && !slide.compareSamplers && (
             <div className="quadrature-check">
               <div className="quadrature-pixel">
                 <span className="quadrature-swatch" style={{ background: radianceCss(ray.result.color, PIXEL_GAIN) }} />

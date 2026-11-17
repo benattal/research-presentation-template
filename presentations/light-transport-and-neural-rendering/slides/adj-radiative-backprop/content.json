@@ -10,22 +10,18 @@
           "type": "image",
           "src": "/slides/adj-radiative-backprop/radiative-backprop-overview.png",
           "alt": "Radiative backpropagation: primal rendering, objective, adjoint rendering emitted by the sensor, and parameter gradients",
-          "caption": "Adjoint rendering, emitted from the camera",
-          "width": 2.7,
-          "labels": [
-            "figure's $\\mathbf{x}$: our $\\theta$",
-            "figure's $\\delta_\\mathbf{y}$: our $q$",
-            "$q = \\sum_k \\dfrac{\\partial \\ell}{\\partial m_k}\\, q_k$"
-          ]
+          "caption": "Backward pass: a second solve",
+          "width": 2.7
         },
         {
           "type": "image",
-          "src": "/slides/adj-radiative-backprop/speedup-over-autodiff.png",
+          "src": "/slides/adj-radiative-backprop/speedup-over-autodiff-no-legend.png",
           "alt": "Bar chart of the speed-up of radiative backpropagation over automatic differentiation, by samples per pixel",
           "caption": "Speed-up over automatic differentiation",
           "width": 1.4
         }
-      ]
+      ],
+      "align": "bottom"
     }
   ],
   "credits": [

@@ -6,8 +6,9 @@
   "figures": [
     {
       "type": "image",
-      "src": "/slides/lt-direct-global/separation-results.jpg",
-      "alt": "Eggs and peppers: scene, direct component, and global component"
+      "src": "/slides/lt-direct-global/separation-eggs-peppers.jpg",
+      "alt": "Eggs and peppers: scene, direct component, and global component",
+      "caption": "top: eggs, interreflections; bottom: peppers, subsurface scattering"
     }
   ],
   "credits": [

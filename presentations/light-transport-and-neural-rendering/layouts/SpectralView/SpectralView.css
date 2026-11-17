@@ -46,7 +46,10 @@
   stroke-width: 2.5;
 }
 
+/* Top-aligned with the plane, so it stays put whatever the step shows. */
 .spectral-side {
+  align-self: flex-start;
+  margin-top: 13px;
   display: flex;
   flex-direction: column;
   gap: 16px;

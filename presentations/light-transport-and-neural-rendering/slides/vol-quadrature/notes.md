@@ -1,6 +1,6 @@
 Transition: a renderer, or NeRF, cannot integrate $\int T\sigma c\,dt$ exactly. It evaluates the field at samples along the ray.
 
-- Each sample $t_i$ owns an interval of length $\delta_i$, here the stretch between the midpoints to its neighbours. The quadrature takes $\sigma$ and $c$ constant on each interval, at their values at the sample: the purple steps on the $\sigma$ plot.
+- Each sample $t_i$ owns an interval of length $\delta_i$, here the stretch between the midpoints to its neighbours. In the quadrature, $\sigma$ and $c$ are constant on each interval, at their values at the sample: the purple steps on the $\sigma$ plot.
 - On an interval of constant $\sigma_i$, the light absorbed is $1 - e^{-\sigma_i\delta_i}$, the opacity $\alpha_i$. $T_i = e^{-\sum_{j<i}\sigma_j\delta_j} = \prod_{j<i}(1 - \alpha_j)$ is the light left after the intervals in front.
 - So $\hat C = \sum_i T_i \alpha_i c_i$, which is front-to-back alpha compositing.
 - The result is exact when $\sigma$ and $c$ are constant on every interval. Otherwise it converges to the integral as the intervals shrink.

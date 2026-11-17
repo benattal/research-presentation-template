@@ -6,6 +6,7 @@
 import AdjointSolves from './AdjointSolves/AdjointSolves.jsx';
 import BeamThroughMedium from './BeamThroughMedium/BeamThroughMedium.jsx';
 import EmissionAbsorption from './EmissionAbsorption/EmissionAbsorption.jsx';
+import FigurePanel from './FigurePanel/FigurePanel.jsx';
 import FigureRows from './FigureRows/FigureRows.jsx';
 import FixedPoint from './FixedPoint/FixedPoint.jsx';
 import FloorScattering from './FloorScattering/FloorScattering.jsx';
@@ -37,6 +38,7 @@ import ToFQuadrature from './ToFQuadrature/ToFQuadrature.jsx';
 import TransientFlatland from './TransientFlatland/TransientFlatland.jsx';
 import TransientQuadrature from './TransientQuadrature/TransientQuadrature.jsx';
 import TransportMatrix from './TransportMatrix/TransportMatrix.jsx';
+import VolumeGradient from './VolumeGradient/VolumeGradient.jsx';
 
 import Outline from './Outline/Outline.jsx';
 export default {
@@ -46,6 +48,7 @@ export default {
   beamThroughMedium: BeamThroughMedium,
   derivation: Derivation,
   emissionAbsorption: EmissionAbsorption,
+  figurePanel: FigurePanel,
   figureRows: FigureRows,
   figures: Figures,
   fixedPoint: FixedPoint,
@@ -78,4 +81,5 @@ export default {
   transientFlatland: TransientFlatland,
   transientQuadrature: TransientQuadrature,
   transportMatrix: TransportMatrix,
+  volumeGradient: VolumeGradient,
 };

@@ -186,7 +186,7 @@ describe('a radiance cache', () => {
   it('leaves unobserved only the surfaces behind the box', () => {
     const hidden = room.patches.filter((patch) => !observed[patch.index]);
     assert.ok(hidden.length > 0);
-    for (const patch of hidden) assert.ok(patch.center[0] > 4.5 && patch.center[0] < 5.7 && patch.center[1] < 2.3, `patch ${patch.index}`);
+    for (const patch of hidden) assert.ok(patch.center[0] > 2.5 && patch.center[0] < 5.7 && patch.center[1] < 2.3, `patch ${patch.index}`);
   });
 
   it('its bias is one bounce of the cache\'s error, and never adds light', () => {

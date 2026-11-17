@@ -3,18 +3,26 @@
   "sectionLabel": "Operator light transport",
   "title": "Epipolar imaging",
   "subtitle": "Separating direct and indirect light at video rate",
+  "columns": 2,
+  "rows": 1,
   "figures": [
     {
       "type": "image",
       "src": "/slides/lt-epipolar/epipolar-direct.jpg",
       "alt": "A direct path from projector to camera through the epipolar lines of both",
-      "caption": "direct"
+      "caption": "direct",
+      "column": 1,
+      "row": 1,
+      "until": 1
     },
     {
       "type": "image",
       "src": "/slides/lt-epipolar/epipolar-indirect.jpg",
       "alt": "Indirect paths, scattered and through a mirror, leaving the camera's epipolar line",
-      "caption": "indirect"
+      "caption": "indirect",
+      "column": 2,
+      "row": 1,
+      "until": 1
     },
     {
       "type": "video",
@@ -25,22 +33,13 @@
       "fit": {
         "aspect": 2.53,
         "position": "50% 38%"
-      }
-    },
-    {
-      "type": "video",
-      "src": "/slides/lt-epipolar/epipolar-tof-sunlight.mp4",
-      "alt": "Regular and epipolar time-of-flight depth outdoors in sunlight",
-      "caption": "time of flight in sunlight",
-      "step": 2,
-      "fit": {
-        "aspect": 2.31,
-        "position": "50% 16%"
-      }
+      },
+      "span": 2,
+      "column": 1,
+      "row": 1
     }
   ],
   "buildSteps": [
-    {},
     {},
     {}
   ],
@@ -52,10 +51,6 @@
     {
       "source": "otoole2015",
       "what": "Episcan3D video"
-    },
-    {
-      "source": "achar2017",
-      "what": "EpiToF video"
     }
   ]
 }

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import Media from '@core/stage/Media.jsx';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import { Readout, Slider } from '../activeSensing/Controls.jsx';
 import PhasorPlane from '../activeSensing/PhasorPlane.jsx';
@@ -13,11 +14,11 @@ import { PHASOR_SCENE, clampMirror, directReturn, mirrorReturn } from './multipa
 import './PhasorToF.css';
 
 /** The render panel and the complex plane, in stage pixels. */
-const PANEL = { width: 720, height: 480 };
-const PLANE = { width: 420, height: 440 };
+const PANEL = { width: 500, height: 262 };
+const PLANE = { width: 440, height: 412 };
 
 /** The part of the scene the panel shows, in meters. */
-const BOUNDS = { x0: -0.55, x1: 3.6, y0: -1.62, y1: 1.08 };
+const BOUNDS = { x0: -0.45, x1: 3.3, y0: -1.41, y1: 0.56 };
 
 /** The complex plane's dashed circle, in units of the source's intensity: 1.3× the direct return. */
 const PLANE_RADIUS = 1.3 * directReturn(PHASOR_SCENE, 1).amplitude;
@@ -44,15 +45,19 @@ function formatDegrees(radians) {
 }
 
 /**
- * A continuous-wave time-of-flight pixel: a camera and source beside each
- * other, a ray to a wall, and the returns drawn as phasors in the complex
- * plane. Each build step (`buildSteps` entries `{ frequencyMHz, mirror }`)
- * sets the modulation frequency and whether a mirror adds a second path;
- * the frequency slider and dragging the mirror explore further. The check
- * reads the depth recovered from the phase against the true depth.
+ * A continuous-wave time-of-flight pixel: `figure` (a media item, usually
+ * borrowed and credited through the slide's `credits`) shows the emitted
+ * and received modulation above a panel with a camera and source beside
+ * each other and a ray to a wall; the returns are drawn as phasors in the
+ * complex plane. Each build step (`buildSteps` entries `{ frequencyMHz,
+ * mirror }`) sets the modulation frequency and whether a mirror adds a
+ * second path; the frequency slider and dragging the mirror explore
+ * further. The check reads the depth recovered from the phase against the
+ * true depth.
  */
 export default function PhasorToF({ slide, buildStep }) {
   const step = stepState(slide, buildStep);
+  if (!slide.figure?.src) throw new Error('phasorToF: the slide needs "figure", a media item');
   const [frequency, setFrequency] = useState(step.frequencyMHz * 1e6);
   const [mirrorShown, setMirrorShown] = useState(step.mirror ? 1 : 0);
   const [mirrorCenter, setMirrorCenter] = useState(PHASOR_SCENE.mirror.center);
@@ -109,7 +114,7 @@ export default function PhasorToF({ slide, buildStep }) {
     }
 
     drawSurface(ctx, toCanvas([depth, bottom]), toCanvas([depth, top]), colors['text-muted'], { alpha: 0.75 });
-    panelLabel(ctx, 'wall', toCanvas([depth + 0.08, top - 0.12]), colors['bg-elevated'], { alpha: 0.6 });
+    panelLabel(ctx, 'wall', toCanvas([depth + 0.08, Math.max(bottom, BOUNDS.y0) + 0.14]), colors['bg-elevated'], { alpha: 0.6 });
 
     if (mirrorShown > 0) {
       const [mx, my] = mirrorCenter;
@@ -128,7 +133,9 @@ export default function PhasorToF({ slide, buildStep }) {
     glowSpot(ctx, toCanvas(wallPoint), colors['light-1'], 30, 0.9);
     drawDevice(ctx, toCanvas([-0.03, 0]), 0, colors['bg-elevated']);
     glowSpot(ctx, toCanvas([0.02, 0]), colors['light-0'], 16, 1);
-    panelLabel(ctx, 'camera and source', toCanvas([-0.42, -0.24]), colors['bg-elevated'], { alpha: 0.6 });
+    // Two short lines under the camera, left of the mirror path and the depth marks.
+    panelLabel(ctx, 'camera', toCanvas([-0.43, -0.25]), colors['bg-elevated'], { alpha: 0.6 });
+    panelLabel(ctx, 'and source', toCanvas([-0.43, -0.42]), colors['bg-elevated'], { alpha: 0.6 });
   }, [canvasRef, ratio, mirrorShown, mirrorCenter, bounce, reportedDepth, wrapDistance]);
 
   // Dragging the mirror: pointer positions in stage pixels, whatever the stage's scale.
@@ -179,46 +186,50 @@ export default function PhasorToF({ slide, buildStep }) {
   return (
     <div className="slide--phasor-tof">
       <SlideTitle title={slide.title} subtitle={slide.subtitle} />
-      <div className="phasor-tof-figures">
-        <canvas
-          ref={canvasRef}
-          className="phasor-tof-panel"
-          width={PANEL.width * ratio}
-          height={PANEL.height * ratio}
-          style={{ width: PANEL.width, height: PANEL.height }}
-          data-no-swipe
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerUp}
-          onPointerCancel={onPointerUp}
-        />
-        <PhasorPlane
-          width={PLANE.width}
-          height={PLANE.height}
-          radius={PLANE_RADIUS}
-          arrows={arrows}
-          rays={bounce ? [{ angle: direct.phase, tone: 'light-1' }] : []}
-          arc={{ angle: measuredPhase, tone: 'text', label: '$\\phi$' }}
-        />
-      </div>
-      <div className="phasor-tof-bottom">
-        <Readout
-          items={[
-            { label: '$\\phi$', value: formatDegrees(measuredPhase) },
-            { label: '$\\hat d = c\\phi/4\\pi f$', value: formatDepth(reportedDepth) },
-            { label: '$d$', value: formatDepth(PHASOR_SCENE.wall.depth) },
-            { label: '$c/2f$', value: formatDepth(wrapDistance) },
-          ]}
-        />
-        <Slider
-          label="$f$"
-          value={Math.round(frequency / 1e6)}
-          min={10}
-          max={150}
-          step={1}
-          onChange={(megahertz) => setFrequency(megahertz * 1e6)}
-          format={(megahertz) => `${megahertz} MHz`}
-        />
+      <div className="phasor-tof-body">
+        <div className="phasor-tof-left" style={{ width: PANEL.width }}>
+          <Media item={slide.figure} className="phasor-tof-figure" />
+          <canvas
+            ref={canvasRef}
+            className="phasor-tof-panel"
+            width={PANEL.width * ratio}
+            height={PANEL.height * ratio}
+            style={{ width: PANEL.width, height: PANEL.height }}
+            data-no-swipe
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
+            onPointerCancel={onPointerUp}
+          />
+        </div>
+        <div className="phasor-tof-right">
+          <PhasorPlane
+            width={PLANE.width}
+            height={PLANE.height}
+            radius={PLANE_RADIUS}
+            arrows={arrows}
+            rays={bounce ? [{ angle: direct.phase, tone: 'light-1' }] : []}
+            arc={{ angle: measuredPhase, tone: 'text', label: '$\\phi$' }}
+          />
+          <Readout
+            columns={2}
+            items={[
+              { label: '$\\phi$', value: formatDegrees(measuredPhase) },
+              { label: '$\\hat d = c\\phi/4\\pi f$', value: formatDepth(reportedDepth) },
+              { label: '$c/2f$', value: formatDepth(wrapDistance) },
+              { label: '$d$', value: formatDepth(PHASOR_SCENE.wall.depth) },
+            ]}
+          />
+          <Slider
+            label="$f$"
+            value={Math.round(frequency / 1e6)}
+            min={10}
+            max={150}
+            step={1}
+            onChange={(megahertz) => setFrequency(megahertz * 1e6)}
+            format={(megahertz) => `${megahertz} MHz`}
+          />
+        </div>
       </div>
     </div>
   );

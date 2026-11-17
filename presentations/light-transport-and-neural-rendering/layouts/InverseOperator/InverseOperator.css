@@ -52,19 +52,7 @@
 }
 
 .inverse-check {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-  font-size: 20px;
-}
-
-.inverse-check-label {
-  color: var(--text-muted);
-}
-
-.inverse-check-value {
-  font-size: 26px;
-  font-variant-numeric: tabular-nums;
+  font-size: 24px;
   color: var(--text-primary);
 }
 
@@ -81,11 +69,6 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-}
-
-.inverse-slider-value {
-  font-variant-numeric: tabular-nums;
-  color: var(--text-secondary);
 }
 
 .inverse-slider input {

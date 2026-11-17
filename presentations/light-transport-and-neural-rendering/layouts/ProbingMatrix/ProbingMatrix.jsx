@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
+import Media from '@core/stage/Media.jsx';
 import RoomView from '../flatland/RoomView.jsx';
 import { patchesToState } from '../flatland/diffuse.js';
 import { lightElementRoom } from '../flatland/lightElements.js';
@@ -98,8 +99,9 @@ const BAR = 18;
 
 /**
  * c = (Π ⊙ T) 1 as blocks: the probing matrix Π drawn as its pattern of
- * ones (dark) and zeros (blank) for the current panel, T and the vectors
- * as plain outlines. A block diagram, not a picture of T's values.
+ * ones (dark) and zeros (blank) for the current panel, T as a faint
+ * filled block, and the vectors as plain outlines. A block diagram, not a
+ * picture of T's values.
  */
 function ProbeBlocks({ kept }) {
   const cells = 16;
@@ -122,7 +124,7 @@ function ProbeBlocks({ kept }) {
         <rect x={x.c} y={0} width={BAR} height={BLOCK} className="probing-block" />
         <rect x={x.pi} y={0} width={BLOCK} height={BLOCK} className="probing-block" />
         {ones}
-        <rect x={x.t} y={0} width={BLOCK} height={BLOCK} className="probing-block" />
+        <rect x={x.t} y={0} width={BLOCK} height={BLOCK} className="probing-block probing-block--matrix" />
         <rect x={x.one} y={0} width={BAR} height={BLOCK} className="probing-block" />
         <text x={BAR + gap / 2} y={BLOCK / 2 + 9} className="probing-block-sign">=</text>
         <text x={x.pi + BLOCK + gap / 2} y={BLOCK / 2 + 9} className="probing-block-sign">⊙</text>
@@ -136,6 +138,42 @@ function ProbeBlocks({ kept }) {
 }
 
 /**
+ * The same split in photographs of real scenes, over the renders and the
+ * product from its step on: a table with a column per part (scene =
+ * direct + global, captioned on top), a row per scene (named on the
+ * left), and a short label under it.
+ */
+function RealScenes({ real, shown }) {
+  const rows = real.rows.map((row, r) => ({ ...row, figures: real.figures.slice(3 * r, 3 * r + 3) }));
+  return (
+    <motion.div
+      className="probing-real"
+      initial={false}
+      animate={{ opacity: shown ? 1 : 0 }}
+      transition={{ duration: 0.35 }}
+      style={{ pointerEvents: shown ? 'auto' : 'none' }}
+      aria-hidden={!shown}
+    >
+      <span />
+      {real.captions.map((caption, column) => (
+        <span key={caption} className="probing-real-caption" style={{ gridColumn: 2 + 2 * column }}><Text>{caption}</Text></span>
+      ))}
+      {rows.map((row) => [
+        <span key={`${row.label}-name`} className="probing-real-row" style={{ gridColumn: 1 }}>
+          <span className="probing-real-name">{row.label}</span>
+          {row.detail && <span className="probing-real-detail">{row.detail}</span>}
+        </span>,
+        ...row.figures.flatMap((item, column) => [
+          column > 0 && <span key={`${item.src}-sign`} className="probing-real-sign">{column === 1 ? '=' : '+'}</span>,
+          <div key={item.src} className="probing-real-media"><Media item={item} /></div>,
+        ]).filter(Boolean),
+      ])}
+      {real.label && <p className="probing-real-label"><Text>{real.label}</Text></p>}
+    </motion.div>
+  );
+}
+
+/**
  * Light transport probing with a projector that shares the camera's 64
  * pixels (flatland/projector.js). Three renders of the room, one per build
  * step: the ordinary photo (Π = 11ᵀ), direct light only (Π = I: each
@@ -144,14 +182,22 @@ function ProbeBlocks({ kept }) {
  * (Π ⊙ T)1 under it. The check: how much indirect light the direct-only
  * photo keeps (the diagonal of T's indirect part), and the indirect share
  * of the photo. Under the renders: `equations`, the product drawn as
- * blocks with the current step's Π, and short `labels` defining the
- * symbols.
+ * blocks with the current step's Π, and optional short `labels`.
  *
- * Content fields: `title`, `subtitle`, `equations`, `labels`, and three
- * `buildSteps`.
+ * Optional `real`: `{ step, rows, figures, captions, label }`, the same
+ * split in photographs of real scenes, shown over the renders from build
+ * step `step` on: `rows` names each scene (`{ label, detail? }`),
+ * `figures` holds three media items per row (scene, direct, global), and
+ * `captions` names the three columns.
+ *
+ * Content fields: `title`, `subtitle`, `equations`, optional `labels`,
+ * optional `real`, and `buildSteps` (three, and one more for `real`).
  */
 export default function ProbingMatrix({ slide, buildStep }) {
-  if (!Array.isArray(slide.equations) || !Array.isArray(slide.labels)) throw new Error('probingMatrix: `equations` and `labels` are required');
+  if (!Array.isArray(slide.equations)) throw new Error('probingMatrix: `equations` is required');
+  if (slide.real && (slide.real.figures?.length !== 3 * slide.real.rows?.length || slide.real.captions?.length !== 3)) {
+    throw new Error('probingMatrix: `real` needs three figures per row and three captions');
+  }
   const env = lightElementRoom();
   const result = useMemo(() => probing(env), [env]);
   const gains = useMemo(() => ({
@@ -168,6 +214,7 @@ export default function ProbingMatrix({ slide, buildStep }) {
   return (
     <div className="slide--probing-matrix">
       <SlideTitle title={slide.title} subtitle={slide.subtitle} />
+      <div className="probing-stage">
       <div className="probing-row">
         {PANELS.map((panel, i) => (
           <motion.figure
@@ -210,9 +257,13 @@ export default function ProbingMatrix({ slide, buildStep }) {
           {slide.equations.map((line) => <div key={line}><Text>{line}</Text></div>)}
         </div>
         <ProbeBlocks kept={PANELS[step].kept} />
-        <div className="probing-labels">
-          {slide.labels.map((line) => <p key={line}><Text>{line}</Text></p>)}
-        </div>
+        {slide.labels?.length > 0 && (
+          <div className="probing-labels">
+            {slide.labels.map((line) => <p key={line}><Text>{line}</Text></p>)}
+          </div>
+        )}
+      </div>
+      {slide.real && <RealScenes real={slide.real} shown={buildStep >= slide.real.step} />}
       </div>
     </div>
   );

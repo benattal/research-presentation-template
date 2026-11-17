@@ -4,17 +4,18 @@ import Text from '@core/stage/Text.jsx';
 import { ease, useStepTransition } from '../canvas/canvas.js';
 import RoomView from '../flatland/RoomView.jsx';
 import {
-  ELEMENT_EMISSION, angleBetween, dominantEigenvector, elementReturns, lightElementRoom, oneHot, powerIteration,
+  angleBetween, dominantEigenvector, elementReturns, lightElementRoom, oneHot, powerIteration,
 } from '../flatland/lightElements.js';
 import { derived, SURFACE_GAIN } from '../flatland/pictures.js';
 import { ROOM_VIEW, drawRoom } from '../flatland/render.js';
 import {
-  Strip, drawElements, elementAt, exposures, patternPicture,
+  drawElements, elementAt, exposures, patternPicture,
 } from '../TransportMatrix/elementViews.jsx';
 import './OpticalComputing.css';
 
 const ROOM = ROOM_VIEW;
-const STRIP_SIZE = [228, 26];
+/** Size of a pattern's bar profile, in stage pixels. */
+const PROFILE = [228, 30];
 /** Patterns are drawn with this total weight, so every photo is equally bright. */
 const DISPLAY_TOTAL = 2;
 
@@ -24,14 +25,20 @@ function displayed(p) {
   return p.map((value) => (value * DISPLAY_TOTAL) / total);
 }
 
-/** A pattern as a 1D image of the elements' light, RGB per element, its brightest element at 1. */
-function patternImage(p) {
+/** A pattern as a bar profile: one bar per element, its height the element's weight relative to the largest. */
+function PatternProfile({ p }) {
+  const [width, height] = PROFILE;
   const largest = Math.max(...p);
-  const image = new Float64Array(p.length * 3);
-  p.forEach((value, k) => {
-    for (let c = 0; c < 3; c += 1) image[k * 3 + c] = (value / largest) * (ELEMENT_EMISSION[c] / ELEMENT_EMISSION[0]);
-  });
-  return image;
+  const slot = width / p.length;
+  return (
+    <svg className="optical-profile" width={width} height={height} aria-hidden="true">
+      {Array.from(p, (value, k) => {
+        const h = largest > 0 ? (height - 1) * (value / largest) : 0;
+        return <rect key={k} x={k * slot + 1} y={height - 1 - h} width={slot - 2} height={h} className="optical-profile-bar" />;
+      })}
+      <line x1={0} x2={width} y1={height - 0.5} y2={height - 0.5} className="optical-profile-axis" />
+    </svg>
+  );
 }
 
 /** The glow drawn on a ceiling element lit at `w` of the brightest one. */
@@ -44,7 +51,7 @@ const elementGlow = (w) => `rgba(255, 241, 201, ${(0.1 + 0.9 * w).toFixed(3)})`;
  * build step `{ photos: t }` lights the room with p_t, the pattern after t
  * photos, p_{t+1} = Tp_t / ‖Tp_t‖, starting from one element (`start`,
  * default 1, left to right from 0). Beside the room: each step's pattern
- * as a strip of light, its angle to the dominant eigenvector v_1 of T
+ * as a bar profile (one bar per element), its angle to the dominant eigenvector v_1 of T
  * (computed from the full matrix), and the count of photos against the
  * number of elements. Clicking an element on the ceiling restarts from it.
  *
@@ -64,7 +71,6 @@ export default function OpticalComputing({ slide, buildStep }) {
   const patterns = useMemo(() => powerIteration(T, oneHot(K, start), Math.max(...counts)), [T, K, start, counts.join(',')]);
   const step = Math.min(buildStep, counts.length - 1);
   const gains = useMemo(() => exposures(env, displayed(v1)), [env, v1]);
-  const stripGain = 1.6;
 
   const fromStep = useStepTransition(step);
   const from = fromStep !== null ? patterns[counts[fromStep]] : null;
@@ -88,6 +94,10 @@ export default function OpticalComputing({ slide, buildStep }) {
     const k = elementAt(env, point, ROOM);
     if (k >= 0) setStart(k);
   };
+  // Only the ceiling's elements respond to a click, so only they show the pointer.
+  const hover = (event, point) => {
+    event.currentTarget.style.cursor = elementAt(env, point, ROOM) >= 0 ? 'pointer' : 'default';
+  };
 
   return (
     <div className="slide--optical-computing">
@@ -102,6 +112,7 @@ export default function OpticalComputing({ slide, buildStep }) {
             duration={from ? 900 : 0}
             className="optical-room"
             onPointerDown={pick}
+            onPointerMove={hover}
           />
         </div>
         <div className="optical-side">
@@ -115,13 +126,13 @@ export default function OpticalComputing({ slide, buildStep }) {
             {counts.map((t, i) => (
               <li key={t} className={i === step ? 'optical-current' : (i < step ? '' : 'optical-later')}>
                 <span className="optical-name"><Text>{`$p_{${t}}$`}</Text></span>
-                <Strip image={patternImage(patterns[t])} gain={stripGain} width={STRIP_SIZE[0]} height={STRIP_SIZE[1]} />
+                <PatternProfile p={patterns[t]} />
                 <span className="optical-angle">{i <= step ? `${angleBetween(patterns[t], v1).toFixed(1)}°` : ''}</span>
               </li>
             ))}
             <li className="optical-eigenvector">
               <span className="optical-name"><Text>{'$v_1$'}</Text></span>
-              <Strip image={patternImage(v1)} gain={stripGain} width={STRIP_SIZE[0]} height={STRIP_SIZE[1]} />
+              <PatternProfile p={v1} />
               <span className="optical-angle" />
             </li>
           </ol>

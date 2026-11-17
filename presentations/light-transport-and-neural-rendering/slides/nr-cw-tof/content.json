@@ -3,6 +3,11 @@
   "sectionLabel": "Neural rendering",
   "title": "Continuous-wave time of flight",
   "subtitle": "Distance from the phase of modulated light",
+  "figure": {
+    "type": "image",
+    "src": "/slides/nr-cw-tof/emitted-and-received-sinusoids.png",
+    "alt": "An ultrafast light source emits a sinusoidally modulated signal (input) toward a bunny; the sensor receives a delayed sinusoid (output)"
+  },
   "buildSteps": [
     {
       "frequencyMHz": 30,
@@ -15,6 +20,12 @@
     {
       "frequencyMHz": 50,
       "mirror": true
+    }
+  ],
+  "credits": [
+    {
+      "source": "csc2529-tof",
+      "what": "p. 28"
     }
   ]
 }

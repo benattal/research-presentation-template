@@ -6,25 +6,25 @@
   "figures": [
     {
       "type": "image",
-      "src": "/slides/vol-media/fog.jpg",
+      "src": "/slides/vol-media/fog-4x3.jpg",
       "alt": "Sunlight through fog over a forest",
       "caption": "Fog"
     },
     {
       "type": "image",
-      "src": "/slides/vol-media/cloud.jpg",
+      "src": "/slides/vol-media/cloud-4x3.jpg",
       "alt": "A cumulus cloud",
       "caption": "Cloud"
     },
     {
       "type": "image",
-      "src": "/slides/vol-media/smoke.jpg",
+      "src": "/slides/vol-media/smoke-4x3.jpg",
       "alt": "Black smoke over the sea",
       "caption": "Smoke"
     },
     {
       "type": "image",
-      "src": "/slides/vol-media/jade.jpg",
+      "src": "/slides/vol-media/jade-4x3.jpg",
       "alt": "A translucent jade carving of horses",
       "caption": "Jade"
     }

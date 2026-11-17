@@ -11,5 +11,6 @@
     {},
     {}
   ],
-  "light": "spot"
+  "light": "spot",
+  "history": true
 }

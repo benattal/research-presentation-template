@@ -126,21 +126,27 @@ export function frameTex(frame) {
 /**
  * The frames a mode steps through, one per build step.
  *
- * - construct: the source, then G, then S, then the same light named A = SG;
+ * - construct: the source, then G, then S, then the same light named A = SG
+ *   (with `mergeNamed`, A is named on the S step: three frames instead of
+ *   four, since the last two show the same light);
  * - iterate: the source and its bounces A^k (k = 1…4);
  * - sum: the partial sums of the Neumann series (k = 0…4), then the exact solve.
  */
-export function scriptedFrames(mode, direction, { transport, source, exact }) {
+export function scriptedFrames(mode, direction, { transport, source, exact, mergeNamed = false }) {
   const start = sourceFrame(direction, source);
   if (mode === 'construct') {
     const propagated = applyOperator(transport, start, DIRECTIONS[direction].operators.A.letters[1]);
     const scattered = applyOperator(transport, propagated, DIRECTIONS[direction].operators.A.letters[0]);
-    const op0 = DIRECTIONS[direction].operators;
-    // Before A is named, the scattered light reads S G e (G^T S^T q), not A e.
-    scattered.displayTex = `\\htmlClass{${termClass(direction, op0.A.letters)}}{${op0[op0.A.letters[0]].tex}\\, ${op0[op0.A.letters[1]].tex}\\, ${DIRECTIONS[direction].source}}`;
-    const named = { ...applyOperator(transport, start, 'A'), state: scattered.state };
     const op = DIRECTIONS[direction].operators;
-    named.exactTex = `\\htmlClass{${termClass(direction, op.A.letters)}}{${op.A.tex}\\, ${DIRECTIONS[direction].source} = ${op[op.A.letters[0]].tex}\\, ${op[op.A.letters[1]].tex}\\, ${DIRECTIONS[direction].source}}`;
+    const namedTex = `\\htmlClass{${termClass(direction, op.A.letters)}}{${op.A.tex}\\, ${DIRECTIONS[direction].source} = ${op[op.A.letters[0]].tex}\\, ${op[op.A.letters[1]].tex}\\, ${DIRECTIONS[direction].source}}`;
+    if (mergeNamed) {
+      scattered.displayTex = namedTex;
+      return [start, propagated, scattered];
+    }
+    // Before A is named, the scattered light reads S G e (G^T S^T q), not A e.
+    scattered.displayTex = `\\htmlClass{${termClass(direction, op.A.letters)}}{${op[op.A.letters[0]].tex}\\, ${op[op.A.letters[1]].tex}\\, ${DIRECTIONS[direction].source}}`;
+    const named = { ...applyOperator(transport, start, 'A'), state: scattered.state };
+    named.exactTex = namedTex;
     return [start, propagated, scattered, named];
   }
   if (mode === 'iterate') {

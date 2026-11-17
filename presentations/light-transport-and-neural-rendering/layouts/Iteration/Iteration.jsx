@@ -95,7 +95,7 @@ function IterationState({ system, size, weight, initial }) {
           <div><Text>{`$A \\in \\mathbb{R}^{${texNumber(size)} \\times ${texNumber(size)}}$`}</Text></div>
           <div><Text>{`$(Av)_i = ${weight}\\,(v_{i-1} + v_{i+1})$`}</Text></div>
           <div><Text>{'$x_0 = b, \\quad x_{k+1} = b + A\\,x_k$'}</Text></div>
-          <div><Text>{'$\\|x - x_k\\| \\le \\frac{\\|A\\|^{k+1}}{1 - \\|A\\|}\\, \\|b\\|$'}</Text></div>
+          <div><Text>{`$\\|x - x_k\\| \\le \\frac{\\|A\\|^{k+1}}{1 - \\|A\\|}\\, \\|b\\|, \\quad \\|A\\|_\\infty = ${norm}$`}</Text></div>
         </div>
         <Slider label="$k$" value={k} min={0} max={MAX_TERMS} step={1} onChange={setK} format={(v) => v.toFixed(0)} />
         <Plot

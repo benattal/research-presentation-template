@@ -5,12 +5,12 @@
   "subtitle": "Along one ray, the transfer equation is solved by an integral",
   "buildSteps": [
     {
-      "label": "Along the ray $\\mathbf{x} - t\\omega$, $DL = g$ reads",
+      "label": "Along one ray, $DL = g$ with $g = KL + Q$",
       "equation": "$$-\\frac{dL}{dt} + \\sigma_t L = g$$"
     },
     {
-      "label": "Multiply by $T(t) = e^{-\\int_0^t \\sigma_t\\,ds}$",
-      "equation": "$$\\frac{d}{dt}\\big(T L\\big) = -T g$$"
+      "label": "Multiply by $T(t)$",
+      "equation": "$$\\frac{d}{dt}\\big(T L\\big) = -T g, \\quad T(t) = e^{-\\int_0^t \\sigma_t\\,ds}$$"
     },
     {
       "label": "Integrate from $0$ to $d$",

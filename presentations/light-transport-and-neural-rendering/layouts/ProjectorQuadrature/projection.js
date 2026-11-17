@@ -166,7 +166,7 @@ export function cameraSamples(scene, floorX, count) {
 
 /**
  * The structured-light quadrature for one camera ray: each sample's
- * Tᵢ αᵢ aᵢ P(xᵢ) Tᵖᵢ / |xᵢ − xₚ|², with Tᵢ and αᵢ as in NeRF. Returns per
+ * Tᵢ αᵢ ρᵢ P(xᵢ) Tᵖᵢ / |xᵢ − xₚ|², with Tᵢ and αᵢ as in NeRF. Returns per
  * sample `{ weight: Tᵢαᵢ, pattern, toProjector: Tᵖᵢ, contribution,
  * unshadowed }` (unshadowed sets Tᵖᵢ = 1), and the pixel both ways.
  */

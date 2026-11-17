@@ -48,3 +48,32 @@
   order: 3;
   width: 100%;
 }
+
+.projector-quadrature-terms {
+  position: relative;
+}
+
+.projector-quadrature-terms svg {
+  display: block;
+}
+
+.projector-quadrature-term {
+  fill: var(--ink-light-1);
+}
+
+.projector-quadrature-axis {
+  stroke: var(--text-muted);
+  stroke-width: 1;
+}
+
+.projector-quadrature-terms-label {
+  position: absolute;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.projector-quadrature-terms-label--axis {
+  transform: translate(-100%, -50%);
+}

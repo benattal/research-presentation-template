@@ -4,32 +4,32 @@
   "title": "Phasor quadrature",
   "subtitle": "Volume rendering of a phasor",
   "frequencyMHz": 30,
-  "recipe": "$\\hat C = \\sum_i T_i\\,\\alpha_i\\,a_i, \\quad \\alpha_i = 1 - e^{-\\sigma_i\\delta_i}, \\quad T_i = \\prod_{j<i}(1-\\alpha_j)$",
-  "fourierLabel": "$m = \\int h(\\tau)\\, e^{\\mathrm{j} 2\\pi f \\tau}\\, d\\tau$, a Fourier coefficient of the transient $h$",
+  "lines": [
+    {
+      "label": "phasor = Fourier coefficient of the transient",
+      "tex": "$m = \\int h(\\tau)\\, e^{\\mathrm{j} 2\\pi f \\tau}\\, d\\tau$"
+    },
+    {
+      "label": "same weights $w_i$",
+      "tex": "$\\hphantom{m} = \\sum_i w_i\\, \\htmlClass{term-operator}{e^{\\mathrm{j} 4\\pi f t_i / c}}$"
+    },
+    {
+      "label": "one surface",
+      "tex": "$m = \\dfrac{\\rho}{d^2}\\, e^{\\mathrm{j} 4\\pi f d / c}$"
+    }
+  ],
   "buildSteps": [
     {
-      "weights": "compositing",
       "phase": false,
-      "fog": true,
-      "equation": "$\\hat C = \\sum_i T_i\\,\\alpha_i\\,a_i$"
+      "fog": true
     },
     {
-      "weights": "collocated",
-      "phase": false,
-      "fog": true,
-      "equation": "$I = \\sum_i \\htmlClass{term-medium}{T_i^2}\\,\\alpha_i\\,\\dfrac{a_i}{\\htmlClass{term-bounce-1}{t_i^2}}$"
-    },
-    {
-      "weights": "collocated",
       "phase": true,
-      "fog": true,
-      "equation": "$m = \\sum_i T_i^2\\,\\alpha_i\\,\\dfrac{a_i}{t_i^2}\\,\\htmlClass{term-operator}{e^{\\,\\mathrm{j} 4\\pi f t_i/c}}$"
+      "fog": true
     },
     {
-      "weights": "collocated",
       "phase": true,
-      "fog": false,
-      "equation": "$m = \\dfrac{a}{d^2}\\,e^{\\,\\mathrm{j} 4\\pi f d/c}$"
+      "fog": false
     }
   ],
   "credits": [

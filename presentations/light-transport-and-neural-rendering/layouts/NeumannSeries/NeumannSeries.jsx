@@ -38,7 +38,7 @@ function besideTip(tip, u, gap = 8) {
  * eigenvectors v1, v2 map to (1 + λ + … + λ^k) v_i on their own lines, the
  * scalar geometric series for a = λ_i, labelled with that factor. Beside
  * it, the slide's equations, one more per build step, and a key to the
- * curves.
+ * curves; over the plane's top left corner, the step's k.
  *
  * Slide data: `eigenvectors` [v1, v2], `lambda` [λ1, λ2]; build steps
  * `{ terms, equation }` (`terms` is k, or "all" for the limit).
@@ -112,6 +112,7 @@ export default function NeumannSeries({ slide, buildStep }) {
               </g>
             ))}
           </VectorPlane>
+          <div className="neumann-terms"><Text>{k === Infinity ? '$k \\to \\infty$' : `$k = ${k}$`}</Text></div>
           {factorLabels.map((label, i) => (
             <div key={i} className={`neumann-factor ${label.className}`} style={{ left: label.left, top: label.top }}>
               <Text>{label.text}</Text>

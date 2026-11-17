@@ -4,7 +4,7 @@ All three samplers are random and use the same budget of 32 samples, so the comp
 
 - Step 1, random: 32 independent, uniformly random positions. Some stretches of the ray get several samples, others none, and the surface is often missed.
 - Step 2, stratified: the ray is cut into 32 equal intervals with one random sample in each. No stretch is left empty, and the error halves. NeRF trains with stratified samples: they move at every iteration, so over many iterations the samples cover every point of the ray.
-- Step 3, hierarchical, as in NeRF: 16 stratified coarse samples (rings) locate the light; the dashed steps are the coarse weights per gap between samples. 16 fine samples (dots) are drawn from those weights, and the estimate uses all 32.
+- Step 3, hierarchical, as in NeRF: 16 stratified coarse samples (rings) are used to locate the light; the dashed steps are the coarse weights per gap between samples. 16 fine samples (dots) are drawn from those weights, and the estimate is computed from all 32.
 - The bars on the right are the RMS error over 64 rays across the cloud, so the luck of one ray's sample positions averages out.
 
 The sentence to remember: with a fixed number of samples, put them where the weights are.

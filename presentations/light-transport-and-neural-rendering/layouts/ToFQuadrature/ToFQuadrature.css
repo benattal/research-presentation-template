@@ -13,19 +13,18 @@
 .tof-quadrature-left {
   display: flex;
   flex-direction: column;
+  gap: 22px;
+  flex-shrink: 0;
 }
 
-.tof-quadrature-recipe {
-  font-size: 22px;
-  color: var(--text-muted);
-}
-
-.tof-quadrature-equation {
-  display: flex;
-  align-items: center;
-  min-height: 84px;
-  font-size: 30px;
+.tof-quadrature-left .tof-quadrature-stack {
+  gap: 12px;
+  font-size: 27px;
   color: var(--text-primary);
+}
+
+.tof-quadrature-left .tof-quadrature-stack .equation-stack-label {
+  font-size: 19px;
 }
 
 .tof-quadrature-panel {
@@ -33,15 +32,15 @@
   border-radius: 6px;
 }
 
-.tof-quadrature-fourier {
-  margin-top: 14px;
-  font-size: 22px;
-  color: var(--text-primary);
-}
-
 .tof-quadrature-right {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
+}
+
+/* The readout keeps its left edge while its values and labels change between steps. */
+.tof-quadrature-right .active-sensing-readout {
+  align-self: stretch;
+  padding-left: 52px;
 }

@@ -7,8 +7,8 @@ const toneColor = (tone) => (tone === 'text' ? 'var(--text-primary)' : `var(--in
 /** Pixels between the plot's edge and the dashed reference circle. */
 const MARGIN = 34;
 
-/** Distance from an arrow to its label, in stage pixels. */
-const LABEL_GAP = 22;
+/** Distance from an arrow to the nearest edge of its label, in stage pixels. */
+const LABEL_GAP = 9;
 
 /**
  * The complex plane on white: thin axes through the center, a dashed circle
@@ -85,18 +85,26 @@ export default function PhasorPlane({ width, height, radius, arrows, rays = [], 
   );
 }
 
-/** Where an arrow's label goes, in plot pixels: past its tip, or beside its middle. */
+/**
+ * Where an arrow's label goes, in plot pixels: past its tip, or beside its
+ * middle. The anchor is LABEL_GAP from the arrow, and the label's box
+ * extends away from the arrow (to the right of an anchor on the arrow's
+ * right, below one under it), so a label of any length keeps clear of it.
+ */
 function labelPosition({ start, end, labelAt = 'tip' }) {
   const dx = end[0] - start[0];
   const dy = end[1] - start[1];
   const length = Math.hypot(dx, dy) || 1;
   const [ux, uy] = [dx / length, dy / length];
-  if (labelAt === 'tip') return { left: end[0] + ux * LABEL_GAP, top: end[1] + uy * LABEL_GAP };
   // Screen y points down, so (uy, −ux) is the left of the arrow's direction.
   const side = labelAt === 'left' ? 1 : -1;
+  const [anchor, [nx, ny]] = labelAt === 'tip'
+    ? [end, [ux, uy]]
+    : [[(start[0] + end[0]) / 2, (start[1] + end[1]) / 2], [side * uy, -side * ux]];
   return {
-    left: (start[0] + end[0]) / 2 + side * uy * LABEL_GAP,
-    top: (start[1] + end[1]) / 2 - side * ux * LABEL_GAP,
+    left: anchor[0] + nx * LABEL_GAP,
+    top: anchor[1] + ny * LABEL_GAP,
+    transform: `translate(${-50 + 50 * nx}%, ${-50 + 50 * ny}%)`,
   };
 }
 

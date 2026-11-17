@@ -2,7 +2,7 @@
   "layout": "emissionAbsorption",
   "sectionLabel": "Volume rendering",
   "title": "Emission–absorption model",
-  "subtitle": "The model behind NeRF: emission and absorption only",
+  "subtitle": "Emission and absorption without scattering",
   "surfaceWidth": 0.12,
   "coreDensity": 0.8,
   "pixel": 8,
@@ -13,9 +13,6 @@
   "equations": [
     "$$C = \\int_0^d T(t)\\,\\sigma(t)\\,c(t)\\,dt$$",
     "$$T(t) = e^{-\\int_0^t \\sigma(s)\\,ds}$$"
-  ],
-  "remarks": [
-    "$c$ includes every bounce"
   ],
   "buildSteps": [
     {

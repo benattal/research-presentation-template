@@ -1,15 +1,20 @@
 {
-  "layout": "figures",
+  "layout": "figurePanel",
   "sectionLabel": "Operator light transport",
   "title": "Dual photography",
   "subtitle": "Swapping the camera and the projector",
-  "figures": [
+  "figure": {
+    "type": "image",
+    "src": "/slides/lt-dual/primal-dual-configurations.png",
+    "alt": "Primal configuration c = Tp and dual configuration p = T transpose c",
+    "width": 580
+  },
+  "equations": [
     {
-      "type": "image",
-      "src": "/slides/lt-dual/primal-dual-configurations.png",
-      "alt": "Primal configuration c = Tp and dual configuration p = T transpose c",
-      "caption": "primal and dual"
-    },
+      "tex": "$\\langle c, \\mathbf{T}p \\rangle = \\langle \\mathbf{T}^\\top c, p \\rangle$"
+    }
+  ],
+  "figures": [
     {
       "type": "image",
       "src": "/slides/lt-dual/card-camera-view.jpg",
@@ -25,6 +30,7 @@
       "step": 1
     }
   ],
+  "rowHeight": 370,
   "buildSteps": [
     {},
     {}

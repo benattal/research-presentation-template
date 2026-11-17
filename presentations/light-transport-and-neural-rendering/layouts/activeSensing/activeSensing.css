@@ -48,14 +48,6 @@
   pointer-events: none;
 }
 
-.active-sensing-plane-label--left {
-  transform: translate(0, -50%);
-}
-
-.active-sensing-plane-label--right {
-  transform: translate(-100%, -50%);
-}
-
 .active-sensing-slider {
   display: flex;
   align-items: center;

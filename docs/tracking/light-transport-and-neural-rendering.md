@@ -2,12 +2,45 @@
 
 [Plan](../plans/light-transport-and-neural-rendering.md)
 
-Current state: the sections are being built in parallel by agents; the
-framework additions (math, citations, audience layout, bundled fonts), the
-flatland engine, the operator explorer, the adjoint views, section 1, and
-the time-of-flight slides have landed. Resume: when the remaining section
-agents report, capture the whole deck and start the review cycles (plan
-todo 12) with the brief in the session scratchpad (`review-brief.md`).
+Current state: every slide is built; review cycle 2 is done and committed;
+the assets are in the bucket. Resume: review cycle 3 (content reviewers by
+part, a layout, text, and UI vetter), with the brief in the session
+scratchpad (`review-brief-3.md`), then fixes, capture, commit, push, and an
+assets push.
+
+## 2026-11-17 23:30 — review cycle 2 done
+
+User directions this cycle (2026-11-17), quoted: "Again, high level
+explanations over things that are too technical. No anthropomorphizing",
+and of the adjoint divider, "The "Adjoint light transport" title slide has
+these words split between two lines. That's not nice". Both are in
+docs/style/slide-review.md.
+
+- Reviews: two content reviewers (opening to the aside; volume to the
+  closing), comparing with CMU 15-468, CMU 15-463, and CSC2529 decks, and a
+  layout, text, and UI vetter that drove every slide and 88 controls in Edge
+  at two window sizes.
+- Structure: the aside is shorter (`lt-direct-global` folded into
+  `lt-probing`; it and `lt-primal-dual` moved to the appendix; `lt-epipolar`
+  ends on Episcan3D); new `nr-inverse` (analysis by synthesis, CMU 15-468)
+  opens neural rendering; `adj-quadrature` (the volume rendering gradient,
+  with a new visual) moved into the adjoint section before
+  `adj-radiative-backprop`.
+- Content: the adjoint derivation is one equation stack in $\theta$; the
+  adjoint is derived through the Neumann series
+  ($\langle q, \sum_k A^k z\rangle = \langle (I - A^\top)^{-1} q, z\rangle$); the
+  time-of-flight weights are derived on the transient slide and the phasor
+  slide starts from the transient; albedo is $\rho_i$ throughout; per-bounce
+  labels and the measured ratio ($\approx 0.64 \to \rho(A) = 0.69$, a test
+  pins both); the one-sample path-tracing estimator; the direct/global
+  identity on the probing slide.
+- Layout and UI: one thumbnail size on the bounce columns; derivation
+  stacks top-aligned; borrowed figures without panel letters; aligned
+  figure rows; slider focus fixed; the explorer's bounce step is a 0.9 s
+  cross-fade; the spectral plot no longer refits between steps.
+- Framework (on `main`): `npm run check` reports LaTeX whose backslash JSON
+  read as an escape (`"\theta"` loads as a TAB); the slide-style rule
+  against section numbers; two checklist items.
 
 ## 2026-11-17 16:45 — assets in the bucket; review cycle 2 running
 

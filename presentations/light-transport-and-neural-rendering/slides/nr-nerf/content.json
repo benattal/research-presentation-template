@@ -8,12 +8,13 @@
       "figures": [
         {
           "type": "image",
-          "src": "/slides/nr-nerf/nerf-pipeline.png",
+          "src": "/slides/nr-nerf/nerf-pipeline-unlabelled.png",
           "alt": "NeRF pipeline: sample points along camera rays, query a network for color and density, volume render, and compare with the photograph",
           "labels": [
             "$\\sigma_s = 0$: $A = 0$, $x = b$",
-            "$c$ includes every bounce"
-          ]
+            "$c$: all bounces"
+          ],
+          "caption": "NeRF: sample, query, composite, compare"
         }
       ]
     }

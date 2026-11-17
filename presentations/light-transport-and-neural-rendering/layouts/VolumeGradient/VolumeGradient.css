@@ -1,0 +1,70 @@
+.slide--volume-gradient {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.volume-gradient-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 36px;
+}
+
+.volume-gradient-figure {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.volume-gradient-canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+}
+
+.volume-gradient-label,
+.volume-gradient-axis {
+  position: absolute;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--text-primary);
+  pointer-events: none;
+}
+
+.volume-gradient-label {
+  left: 0;
+  text-align: right;
+}
+
+/* The name of the staircase, inside the terms plot just under its first step. */
+.volume-gradient-note {
+  position: absolute;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--text-primary);
+  pointer-events: none;
+}
+
+.volume-gradient-label--adjoint {
+  color: var(--ink-adjoint);
+}
+
+.volume-gradient-lines {
+  width: 430px;
+  flex-shrink: 0;
+  padding-top: 20px;
+  gap: 30px;
+  font-size: 26px;
+  color: var(--text-primary);
+}
+
+.volume-gradient-lines .katex-display {
+  margin: 4px 0 0;
+  text-align: left;
+}
+
+.volume-gradient-lines .katex-display > .katex {
+  text-align: left;
+}

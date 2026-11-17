@@ -182,16 +182,21 @@ function drawSurfaces(ctx, room, transform, surfaces, gain, palette) {
   ctx.restore();
 }
 
+/**
+ * A pixel's wedge on the canvas: the camera's position and the two points
+ * where the pixel's edge rays (image coordinates [s0, s1]) hit the room,
+ * in the canvas coordinates of `transform`.
+ */
+export function pixelWedge(room, transform, [s0, s1]) {
+  const ends = [s0, s1].map((s) => transform.toCanvas(castRay(room, CAMERA.position, cameraRay(CAMERA, s)).point));
+  return { camera: transform.toCanvas(CAMERA.position), ends };
+}
+
 function drawCamera(ctx, room, transform, pixel) {
   const [cx, cy] = transform.toCanvas(CAMERA.position);
   ctx.save();
   if (pixel) {
-    const [s0, s1] = pixel;
-    const ends = [s0, s1].map((s) => {
-      const d = cameraRay(CAMERA, s);
-      const hit = castRay(room, CAMERA.position, d);
-      return transform.toCanvas(hit.point);
-    });
+    const { ends } = pixelWedge(room, transform, pixel);
     ctx.fillStyle = 'rgba(76, 201, 240, 0.16)';
     ctx.strokeStyle = 'rgba(76, 201, 240, 0.7)';
     ctx.lineWidth = 1;

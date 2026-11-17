@@ -4,19 +4,6 @@
   height: 100%;
 }
 
-.transient-quadrature-equation-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 64px;
-  margin-bottom: 8px;
-}
-
-.transient-quadrature-equation {
-  font-size: 28px;
-  color: var(--text-primary);
-}
-
 .transient-quadrature-body {
   display: flex;
   justify-content: space-between;
@@ -26,6 +13,8 @@
 .transient-quadrature-figures {
   display: flex;
   flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
 }
 
 .transient-quadrature-panel {
@@ -78,19 +67,28 @@
 
 .transient-quadrature-side {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 40px;
-  padding-bottom: 60px;
+  gap: 22px;
 }
 
-.transient-quadrature-side .active-sensing-slider {
+.transient-quadrature-side .transient-quadrature-stack {
+  gap: 12px;
+  font-size: 25px;
+  color: var(--text-primary);
+}
+
+.transient-quadrature-side .transient-quadrature-stack .equation-stack-label {
+  font-size: 19px;
+}
+
+.transient-quadrature-control .active-sensing-slider {
   flex-wrap: wrap;
   gap: 8px 12px;
 }
 
-.transient-quadrature-side .active-sensing-slider input[type='range'] {
+.transient-quadrature-control .active-sensing-slider input[type='range'] {
   order: 3;
   width: 100%;
 }

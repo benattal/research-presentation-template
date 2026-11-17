@@ -4,10 +4,29 @@
   height: 100%;
 }
 
+/* The room and the side column; under them, optional short labels on one baseline. */
 .operator-main {
-  display: flex;
-  gap: 28px;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 28px;
+  row-gap: 10px;
+  align-items: start;
+}
+
+.operator-room-label,
+.operator-column-note {
+  margin: 0;
+  font-size: 1.3rem;
+  color: var(--text-primary);
+}
+
+.operator-room-label {
+  grid-column: 1;
+}
+
+.operator-column-note {
+  grid-column: 2;
+  color: var(--text-secondary);
 }
 
 .operator-render {
@@ -62,7 +81,6 @@
 }
 
 .operator-side {
-  flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -84,21 +102,38 @@
   color: var(--text-muted);
 }
 
+/* Thumbnail, term, and share in three aligned columns; each row's <li> only groups its cells. */
 .operator-column {
   list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: start;
+  align-items: center;
+  column-gap: 16px;
+  row-gap: 10px;
   margin: 0;
   padding: 0;
+  font-size: 1.3rem;
+  color: var(--text-muted);
 }
 
 .operator-column li {
-  display: flex;
-  align-items: center;
+  display: contents;
+}
+
+.operator-column-label {
+  grid-column: 2 / 4;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.operator-column .operator-column-header {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+}
+
+.operator-history {
   gap: 14px;
-  font-size: 1.3rem;
-  color: var(--text-muted);
 }
 
 .operator-column .operator-column--current {
@@ -119,11 +154,15 @@
   font-size: 1.7rem;
 }
 
+/* One line under the column: ⟨q, x⟩ and ⟨y, e⟩ with their values. */
 .operator-check {
+  grid-column: 2;
   display: grid;
-  grid-template-columns: auto auto;
-  gap: 4px 16px;
-  margin-top: 8px;
+  grid-template-columns: repeat(4, auto);
+  justify-content: start;
+  align-items: baseline;
+  gap: 4px 14px;
+  margin: 0;
   font-size: 1.15rem;
   color: var(--text-secondary);
 }
@@ -134,11 +173,13 @@
   color: var(--text-primary);
 }
 
+/* Wide enough for "100%", so a share appearing never widens the column. */
 .operator-share {
-  margin-left: auto;
+  min-width: 48px;
+  text-align: right;
   font-family: var(--font-mono);
-  font-size: 1rem;
-  color: var(--text-muted);
+  font-size: 18px;
+  color: var(--text-secondary);
 }
 
 .operator-equation--small {
@@ -171,5 +212,16 @@
 
 .operator-column .math,
 .operator-equation .math {
+  white-space: nowrap;
+}
+
+/* An equation shown over the side column on every step (content field `header`). */
+.operator-header {
+  padding-bottom: 6px;
+  font-size: 1.7rem;
+  color: var(--text-primary);
+}
+
+.operator-header .math {
   white-space: nowrap;
 }

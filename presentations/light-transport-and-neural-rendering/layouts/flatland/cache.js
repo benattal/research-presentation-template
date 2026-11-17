@@ -12,14 +12,14 @@ import { bounce, addVectors } from './transport.js';
 
 /**
  * The views that observed the room: positions, the points they look at,
- * and fields of view (radians). Together they see every surface except the
- * box's left face and the floor beside it: behind the box.
+ * and fields of view (radians), all on the right of the box. Together they
+ * see every surface except what the box hides from them: its left face and
+ * the floor from x ≈ 2.5 to the box.
  */
 export const CACHE_VIEWS = [
   CAMERA,
   { position: [9.5, 0.5], lookAt: [2.6, 6], fov: 1.1 },
   { position: [8.8, 0.4], lookAt: [9.6, 6], fov: 1.2 },
-  { position: [6.8, 5.9], lookAt: [2.5, 0], fov: 0.9 },
   { position: [7.2, 5.6], lookAt: [9.6, 0.4], fov: 1.0 },
 ];
 

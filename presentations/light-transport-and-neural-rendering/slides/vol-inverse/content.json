@@ -1,8 +1,8 @@
 {
   "layout": "inverseOperator",
   "sectionLabel": "Volume rendering",
-  "title": "Inverse operator",
-  "subtitle": "Recovering the sources is a local computation",
+  "title": "Integral and differential forms",
+  "subtitle": "Recovering sources requires derivatives",
   "equations": [
     {
       "label": "integral form: integrals, Monte Carlo",
@@ -18,11 +18,6 @@
       "label": "on this ray, without scattering",
       "equation": "$$Q = -\\frac{dL}{dt} + \\sigma_t L$$",
       "step": 1
-    },
-    {
-      "label": "NeRF: $Q$ fit to the camera's $L(0)$",
-      "equation": "$$L(0) = \\int_0^d T\\,Q\\,dt$$",
-      "step": 2
     }
   ],
   "buildSteps": [

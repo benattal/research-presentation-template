@@ -1,4 +1,4 @@
-Transition: the transfer equation has the same structure as the rendering equation. Grouping its terms into operators makes that visible.
+Transition: the transfer equation has the same structure as the rendering equation. With its terms grouped into operators, the structure is the same.
 
 - Step 1: both loss terms move to the left, with the extinction $\sigma_t = \sigma_a + \sigma_s$.
 - Step 2: $D = \omega\cdot\nabla + \sigma_t$ collects streaming and extinction. It is a differential operator, and it is local along each ray: $(DL)(\mathbf{x}, \omega)$ depends on $L$ only at and next to $\mathbf{x}$, on the ray through $\mathbf{x}$ in direction $\omega$ (top drawing).

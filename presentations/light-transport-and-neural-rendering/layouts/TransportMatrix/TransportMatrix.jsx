@@ -79,8 +79,8 @@ function paintRoom(ctx, env, gains, view, progress) {
 /**
  * One column of T, drawn small: the room lit by element k alone. The
  * column is the same photo whatever the pattern; its exposure follows the
- * weight p_k (relative to the largest), and it stays visible, dimmed, when
- * the element is off.
+ * weight p_k (relative to the largest), and when the element is off it
+ * stays visible, faded (`matrix-thumb--off`).
  */
 function ColumnThumb({ env, k, weight, gain, onToggle }) {
   const [ref, ratio] = useStageCanvas();
@@ -100,7 +100,7 @@ function ColumnThumb({ env, k, weight, gain, onToggle }) {
   return (
     <canvas
       ref={ref}
-      className="matrix-thumb"
+      className={weight > 0 ? 'matrix-thumb' : 'matrix-thumb matrix-thumb--off'}
       width={Math.round(THUMB[0] * ratio)}
       height={Math.round(THUMB[1] * ratio)}
       style={{ width: THUMB[0], height: THUMB[1] }}
@@ -193,8 +193,8 @@ function formatSmall(value) {
  * Content fields: `title`, `subtitle`, `mode`, `buildSteps`, `equations`
  * (display lines beside the room, at every step), optional `labels` (short
  * lines under them), optional `figure` (relight: a media item with
- * `caption` and `step`; from that step it takes the check's place), and
- * optional `exposureStep` (the
+ * `caption` and `step`; from that step it is shown at full size in the
+ * room's place, and the check is hidden), and optional `exposureStep` (the
  * build step whose lighting sets the exposure; 0).
  */
 export default function TransportMatrix({ slide, buildStep }) {
@@ -278,6 +278,19 @@ export default function TransportMatrix({ slide, buildStep }) {
             {...roomEvents}
           />
           <Strip image={image} gain={p ? gains.strip : gains.uniform.strip} width={ROOM[0]} highlight={entry.row} />
+          {figure && (
+            <motion.figure
+              className="matrix-figure"
+              initial={false}
+              animate={{ opacity: showFigure ? 1 : 0 }}
+              transition={{ duration: 0.35 }}
+              style={{ pointerEvents: showFigure ? 'auto' : 'none' }}
+              aria-hidden={!showFigure}
+            >
+              <Media item={figure} />
+              {figure.caption && <figcaption><Text>{figure.caption}</Text></figcaption>}
+            </motion.figure>
+          )}
         </div>
         <div className="matrix-side">
           {slide.equations.map((line) => (
@@ -308,17 +321,6 @@ export default function TransportMatrix({ slide, buildStep }) {
                   <Strip image={check.direct} gain={gains.strip} width={300} />
                   <span className="matrix-check-difference"><Text>{`$\\text{difference} \\; ${formatSmall(check.relative)}$`}</Text></span>
                 </div>
-              )}
-              {showFigure && (
-                <motion.figure
-                  className="matrix-figure"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.35 }}
-                >
-                  <Media item={figure} />
-                  {figure.caption && <figcaption><Text>{figure.caption}</Text></figcaption>}
-                </motion.figure>
               )}
             </>
           ) : (

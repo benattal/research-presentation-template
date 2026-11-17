@@ -10,6 +10,7 @@ import { describe, it } from 'node:test';
 import { simulateSlab } from '../layouts/BeamThroughMedium/photons.js';
 import { cloudBlobs, cloudRay, createCloud, renderCloud } from '../layouts/volume/cloud.js';
 import { createRandom, gaussian } from '../layouts/volume/random.js';
+import { densityGradients } from '../layouts/volume/gradient.js';
 import {
   applyTransport, cellsAround, composite, estimate, gapWeights, hierarchicalSamples, importanceSamples, referenceIntegral,
   randomSamples, relativeError, solveTransfer, stratifiedSamples, transferIntegral, uniformSamples,
@@ -245,5 +246,42 @@ describe('the differential form', () => {
     const scale = 0.001 * Math.max(...solved.radiance);
     const noisy = Array.from(solved.radiance, (value) => value + scale * gaussian(random));
     assert.ok(recover(noisy) > 10 * recover(Array.from(solved.radiance)));
+  });
+});
+
+describe('the volume rendering gradient', () => {
+  const cloud = lectureCloud(0.03);
+  const ray = cloudRay(cloud, 1 - 8.5 / 16);
+  const samples = uniformSamples(32, ray.near, ray.far);
+  const cells = cellsAround(samples, ray.near, ray.far);
+  const result = composite(ray, cells);
+  const gradients = densityGradients(result);
+  // The same quadrature with σ at sample i moved by h, every other value as before.
+  const perturbed = (i, h) => {
+    const densities = new Map(result.terms.map((term, k) => [term.t, term.density + (k === i ? h : 0)]));
+    return composite({ ...ray, density: (t) => densities.get(t) }, cells).color;
+  };
+
+  it('δᵢ(Tᵢ₊₁cᵢ − (Ĉ − Ĉ≤ᵢ)) is the derivative of Ĉ with respect to σᵢ', () => {
+    let largest = 0;
+    let worst = 0;
+    result.terms.forEach((term, i) => {
+      const h = 1e-5 * Math.max(1, term.density);
+      const plus = perturbed(i, h);
+      const minus = perturbed(i, -h);
+      for (let k = 0; k < 3; k += 1) {
+        const difference = (plus[k] - minus[k]) / (2 * h);
+        largest = Math.max(largest, Math.abs(difference));
+        worst = Math.max(worst, Math.abs(difference - gradients[i].gradient[k]));
+      }
+    });
+    assert.ok(worst < 1e-6 * largest, `largest ${largest}, worst error ${worst}`);
+  });
+
+  it('the color behind each sample is the running sum of the terms from the back', () => {
+    result.terms.forEach((_, i) => {
+      const behind = result.terms.slice(i + 1).reduce((sum, term) => sum.map((v, k) => v + term.weight * term.color[k]), [0, 0, 0]);
+      behind.forEach((v, k) => assert.ok(Math.abs(v - gradients[i].behind[k]) < 1e-12));
+    });
   });
 });

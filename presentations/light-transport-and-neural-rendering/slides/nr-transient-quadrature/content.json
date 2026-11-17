@@ -3,19 +3,47 @@
   "sectionLabel": "Neural rendering",
   "title": "Transient quadrature",
   "subtitle": "Volume rendering of a transient",
-  "equation": "$h(\\tau) = \\sum_i T_i^2\\,\\alpha_i\\,\\dfrac{a_i}{t_i^2}\\;\\htmlClass{term-operator}{g\\!\\left(\\tau - \\dfrac{2t_i}{c}\\right)}$",
+  "lines": [
+    {
+      "label": "NeRF's quadrature",
+      "tex": "$\\hat C = \\sum_i T_i\\,\\alpha_i\\,L_i$"
+    },
+    {
+      "label": "source at the camera",
+      "tex": "$L_i = \\rho_i\\,\\dfrac{T_i}{t_i^2}$"
+    },
+    {
+      "label": "intensity",
+      "tex": "$I = \\sum_i \\underbrace{T_i^2\\,\\alpha_i\\,\\dfrac{\\rho_i}{t_i^2}}_{w_i}$"
+    },
+    {
+      "label": "transient",
+      "tex": "$h(\\tau) = \\sum_i w_i\\; \\htmlClass{term-operator}{g\\!\\left(\\tau - \\dfrac{2t_i}{c}\\right)}$"
+    }
+  ],
   "buildSteps": [
     {
-      "fog": false,
-      "pulseWidthNs": 0.5
+      "terms": "nerf",
+      "label": "$T_i\\,\\alpha_i$"
     },
     {
-      "fog": true,
-      "pulseWidthNs": 0.5
+      "terms": "collocated",
+      "label": "$T_i\\,\\alpha_i\\,L_i$"
     },
     {
-      "fog": true,
-      "pulseWidthNs": 3
+      "terms": "collocated",
+      "intensity": true,
+      "label": "$w_i$"
+    },
+    {
+      "histogram": true,
+      "pulseWidthNs": 0.5,
+      "label": "$h(\\tau)$"
+    },
+    {
+      "histogram": true,
+      "pulseWidthNs": 3,
+      "label": "$h(\\tau)$"
     }
   ],
   "credits": [

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
 import { useAnimation } from '../canvas/canvas.js';
@@ -34,6 +34,40 @@ function edgePoint(view, direction, inset = 26) {
   return [dx * t, dy * t];
 }
 
+/** A step's spectrum, as a key: steps with the same spectrum share one view of the plane. */
+function spectrumKey(step) {
+  return step.complex ? `complex:${step.complex.modulus}:${step.complex.angle}` : `real:${step.lambda.join(',')}`;
+}
+
+/**
+ * The plane points a state draws (origin, b, x, the partial sums shown,
+ * and, for a real spectrum, both components of b and of x), for fitting
+ * the view to them.
+ */
+function statePoints(basis, spec, b, terms) {
+  const { A, eigenvalues } = spectralMatrix(basis, spec);
+  const x = solve(A, b);
+  const sums = partialSums(A, b, terms + 1);
+  const points = [[0, 0], b, x, ...sums.slice(0, terms + 1)];
+  if (spec.lambda) {
+    const coefficients = components(basis, b);
+    const factors = eigenvalues.map(amplification);
+    coefficients.forEach((c, i) => {
+      const unit = i === 0 ? [1, 0] : [0, 1];
+      points.push(combine(basis, unit.map((u) => u * c)), combine(basis, unit.map((u) => u * c * factors[i])));
+    });
+  }
+  return points;
+}
+
+/** True when every point lies inside `view`, at least `inset` stage pixels from its edges. */
+function fits(view, points, inset = 24) {
+  return points.every((p) => {
+    const [sx, sy] = view.toScreen(p);
+    return sx >= inset && sx <= view.width - inset && sy >= inset && sy <= view.height - inset;
+  });
+}
+
 /**
  * The Neumann series of a 2 × 2 matrix, seen through its spectrum. The
  * plane shows the eigenvector lines of A, a source b (draggable), and the
@@ -43,6 +77,11 @@ function edgePoint(view, direction, inset = 26) {
  * component, the thick one x's. Beside it, the decomposition, sliders for
  * the spectrum and k, and the error ‖x − x_k‖ after k terms, with each
  * eigencomponent's share.
+ *
+ * The view of the plane is fitted once to every build step with the same
+ * spectrum, so the axes stay put between those steps and while the
+ * sliders move; it is refitted only when an exploration ends (pointer
+ * released) with something outside it.
  *
  * Slide data: `eigenvectors` [v1, v2]; each build step `{ lambda: [λ1,
  * λ2] }` or `{ complex: { modulus, angle } }` (angle in degrees; v1, v2
@@ -68,8 +107,20 @@ function SpectralState({ slide, step }) {
   const [b, setB] = useState(() => combine(basis, step.b));
   const [terms, setTerms] = useState(step.terms);
   const [reveal, setReveal] = useState(0);
-  const dragView = useRef(null);
+  const dragging = useRef(false);
   useAnimation('chain', Math.min(2600, 500 + 110 * step.terms), setReveal);
+  const scriptedView = useMemo(() => {
+    const points = slide.buildSteps
+      .filter((other) => spectrumKey(other) === spectrumKey(step))
+      .flatMap((other) => statePoints(
+        basis,
+        other.complex ? { modulus: other.complex.modulus, angle: other.complex.angle } : { lambda: other.lambda },
+        combine(basis, other.b),
+        other.terms,
+      ));
+    return fitView(points, ...PLANE, 56);
+  }, [slide, step]);
+  const [view, setView] = useState(scriptedView);
 
   const spec = complex ? { modulus: first, angle: second } : { lambda: [first, second] };
   const { A, eigenvalues } = spectralMatrix(basis, spec);
@@ -81,8 +132,11 @@ function SpectralState({ slide, step }) {
   const parts = coefficients.map((c, i) => combine(basis, i === 0 ? [c, 0] : [0, c]));
   const error = (k) => Math.hypot(x[0] - sums[k][0], x[1] - sums[k][1]);
 
-  const fitted = fitView([[0, 0], b, x, ...sums.slice(0, terms + 1), ...(complex ? [] : [...scaled, ...parts])], ...PLANE, 56);
-  const view = dragView.current ?? fitted;
+  const shownPoints = [[0, 0], b, x, ...sums.slice(0, terms + 1), ...(complex ? [] : [...scaled, ...parts])];
+  /** At the end of an exploration, refit the view if what it shows no longer fits. */
+  const refit = () => {
+    if (!fits(view, shownPoints)) setView(fitView(shownPoints, ...PLANE, 56));
+  };
 
   const shown = reveal * terms;
   const chain = [];
@@ -105,15 +159,17 @@ function SpectralState({ slide, step }) {
       const scale = rect.width / PLANE[0];
       const distance = Math.hypot((event.clientX - rect.left) / scale - hx, (event.clientY - rect.top) / scale - hy);
       if (distance > 22) return;
-      dragView.current = view;
+      dragging.current = true;
       event.currentTarget.setPointerCapture(event.pointerId);
     },
     onPointerMove: (event) => {
-      if (dragView.current) setB(planePoint(event));
+      if (dragging.current) setB(planePoint(event));
     },
     onPointerUp: () => {
-      dragView.current = null;
+      if (!dragging.current) return;
+      dragging.current = false;
       setReveal(1);
+      refit();
     },
   };
 
@@ -160,7 +216,7 @@ function SpectralState({ slide, step }) {
             ? `$\\left|\\frac{1}{1-\\lambda}\\right| = ${formatNumber(factors[0])}$`
             : '$\\htmlClass{term-emission}{b} = \\sum_i c_i v_i \\;\\Rightarrow\\; x = \\sum_i \\frac{c_i}{1-\\lambda_i}\\, v_i$'}</Text>
         </div>
-        <div className="spectral-controls">
+        <div className="spectral-controls" onPointerUp={refit}>
           {complex ? (
             <>
               <Slider label="$|\lambda|$" value={first} min={0} max={0.98} step={0.01} onChange={setFirst} />

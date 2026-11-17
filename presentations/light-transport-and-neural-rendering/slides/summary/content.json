@@ -17,7 +17,7 @@
     },
     {
       "title": "Volume rendering",
-      "subtitle": "Surfaces and participating media share one operator equation",
+      "subtitle": "One operator equation for surfaces and participating media",
       "image": "/slides/summary/fog.jpg"
     },
     {
@@ -27,7 +27,7 @@
     },
     {
       "title": "Adjoint light transport ⚡",
-      "subtitle": "All gradients cost one extra transport solve",
+      "subtitle": "All gradients for the cost of one extra transport solve",
       "render": "importance"
     }
   ],

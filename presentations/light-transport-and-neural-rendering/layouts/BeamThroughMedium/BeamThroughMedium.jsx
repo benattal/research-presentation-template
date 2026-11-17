@@ -215,6 +215,10 @@ export default function BeamThroughMedium({ slide, buildStep }) {
       <div className="beam-equation">
         <span className="beam-term"><Text>{`$${slide.lhs}$`}</Text></span>
         <span className="beam-term"><Text>{'$=$'}</Text></span>
+        {/* With no term shown, the right side is 0, drawn where the first term will appear. */}
+        <span className="beam-zero-slot">
+          <span className="beam-zero" style={{ opacity: step.terms === 0 ? 1 : 0 }}><Text>{'$0$'}</Text></span>
+        </span>
         {slide.terms.map((term, i) => {
           const shown = i < step.terms;
           const newest = i === step.terms - 1;
@@ -226,7 +230,6 @@ export default function BeamThroughMedium({ slide, buildStep }) {
             >
               <Text>{`$${term.math}$`}</Text>
               <span className="beam-term-label">{term.label}</span>
-              {i === 0 && step.terms === 0 && <span className="beam-zero"><Text>{'$0$'}</Text></span>}
             </span>
           );
         })}

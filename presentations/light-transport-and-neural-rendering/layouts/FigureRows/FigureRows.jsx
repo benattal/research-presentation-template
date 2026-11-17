@@ -2,7 +2,9 @@
  * Borrowed figures arranged in rows under the title, for slides whose
  * figures differ in shape (a wide pipeline above a video, two wide method
  * figures stacked). `rows` is a list of `{ figures, weight? }`: `weight` is
- * the row's share of the height (default 1), and each figure is a media
+ * the row's share of the height (default 1), `align: 'bottom'` sets the
+ * row's figures on one bottom line (their captions in line) instead of
+ * centering each in its cell, and each figure is a media
  * item with an optional `caption` (a short label), `width` (its share of
  * the row's width, default 1), and `step` (the build step it appears at,
  * default 0). Each figure is scaled to fit its cell without cropping, with
@@ -30,7 +32,7 @@ export default function FigureRows({ slide, buildStep }) {
         {slide.rows.map((row, r) => (
           <div
             key={r}
-            className="figure-rows-row"
+            className={`figure-rows-row${row.align === 'bottom' ? ' figure-rows-row--bottom' : ''}`}
             style={{ gridTemplateColumns: tracks(row.figures.map((figure) => figure.width ?? 1)) }}
           >
             {row.figures.map((figure) => (

@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
+import EquationStack from '../equations/EquationStack.jsx';
 import {
   ease, stillFrames, useAnimation, useStageCanvas, useStepTransition,
 } from '../canvas/canvas.js';
@@ -22,6 +24,10 @@ const FULL = 12;
 /** How far light "just leaving" its surfaces is drawn, in room units. */
 const LEAVING = 2;
 const DURATIONS = { G: 2200, S: 1300, A: 3000, add: 900 };
+/** One bounce drawn with every ray at full length is a cross-fade from the light before to the light after, in ms. */
+const CROSSFADE = 900;
+/** Size of a bounce thumbnail beside the room, in stage pixels: one size for every column. */
+const THUMBNAIL = [108, 65];
 
 const KINDS = {
   outgoing: 'outgoing radiance',
@@ -129,7 +135,14 @@ function pictureAt(frame, progress, env, fullRays) {
   const { operators } = DIRECTIONS[frame.direction];
   const op = operators[frame.op];
   if (frame.op === 'A') {
-    if (fullRays) return scatterPicture(before, frame, progress, env, fullRays);
+    if (fullRays) {
+      const after = settledPicture(frame, env, fullRays);
+      const t = ease(progress);
+      return {
+        fluence: mix([before.fluence, 1 - t], [after.fluence, t]),
+        surfaces: mix([before.surfaces, 1 - t], [after.surfaces, t]),
+      };
+    }
     const firstKey = op.letters[1];
     const middle = derived(frame.from.state, `apply-${firstKey}`, () => applyOperator(env.transport, frame.from, firstKey));
     if (progress < 0.5) return pictureAt(middle, progress * 2, env, fullRays);
@@ -141,19 +154,20 @@ function pictureAt(frame, progress, env, fullRays) {
   return scatterPicture(before, frame, progress, env, fullRays);
 }
 
-function useFrames(mode, direction, env) {
+function useFrames(mode, direction, env, mergeNamed) {
   return useMemo(() => {
     const source = direction === 'forward' ? env.transport.emission : env.sensor;
     const exact = direction === 'forward' ? env.steady : env.importance;
-    return scriptedFrames(mode, direction, { transport: env.transport, source, exact });
-  }, [mode, direction, env]);
+    return scriptedFrames(mode, direction, { transport: env.transport, source, exact, mergeNamed });
+  }, [mode, direction, env, mergeNamed]);
 }
 
 /** The room, drawn as light, animating from one frame to the next. */
 function RoomCanvas({ frame, frameKey, animate, env, fullRays, size, adjoint }) {
   const [ref, ratio] = useStageCanvas();
   const [width, height] = size;
-  useAnimation(`${frameKey}|${ratio}|${width}`, animate ? (DURATIONS[frame.op] ?? 1200) : 0, (progress) => {
+  const duration = fullRays && frame.op === 'A' ? CROSSFADE : (DURATIONS[frame.op] ?? 1200);
+  useAnimation(`${frameKey}|${ratio}|${width}`, animate ? duration : 0, (progress) => {
     const canvas = ref.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -214,19 +228,27 @@ function BounceThumbnail({ state, env, adjoint, unlit, direct, size }) {
 
 /**
  * The bounces A^k e (iterate) or the terms of the Neumann series and their
- * sum (sum), one row each beside the room. Rows after the current step
- * stay unlit.
+ * sum (sum), one row each beside the room, with each row's share of the
+ * total light (by flux) and, when `shareLabel` is given, that label over
+ * the shares. Rows after the current step stay unlit. Importance rows
+ * (adjoint) show each term's own share of the measured pixel instead,
+ * ⟨(Aᵀ)^k q, e⟩ / m, and the exact row the whole pixel.
  */
-function BounceColumn({ mode, direction, env, step }) {
+function BounceColumn({ mode, direction, env, step, shareLabel }) {
   const adjoint = direction === 'adjoint';
   const source = adjoint ? env.sensor : env.transport.emission;
   const terms = useMemo(() => bounceTerms(env.transport, direction, source, 5), [env, direction, source]);
   const sum = mode === 'sum';
   const exact = adjoint ? env.importance : env.steady;
   const total = outgoingFlux(env.transport, exact);
+  // Importance terms are shares of the pixel, ⟨(Aᵀ)^k q, e⟩ / m (each equals the forward ⟨q, A^k e⟩ / m).
+  const measurement = env.sensor.reduce((sum, value, i) => sum + value * env.steady[i], 0);
+  const shareOf = (state) => (adjoint
+    ? state.reduce((sum, value, i) => sum + value * env.transport.emission[i], 0) / measurement
+    : outgoingFlux(env.transport, state) / total);
   let running = 0;
   const rows = terms.map((state, k) => {
-    const share = outgoingFlux(env.transport, state) / total;
+    const share = shareOf(state);
     running += share;
     const letters = DIRECTIONS[direction].operators.A.letters.repeat(k);
     const tex = `\\htmlClass{${termClass(direction, letters)}}{${termTex(direction, letters)}}`;
@@ -237,7 +259,7 @@ function BounceColumn({ mode, direction, env, step }) {
       shown: k <= step,
       current: sum ? k === step : k === Math.min(step, 4),
       direct: adjoint && k === 0,
-      share: sum ? running : share,
+      share: sum && !adjoint ? running : share,
     };
   });
   if (sum) {
@@ -251,14 +273,21 @@ function BounceColumn({ mode, direction, env, step }) {
       share: 1,
     });
   }
-  const size = sum ? [104, 62] : [140, 84];
+  // A grid of three columns (thumbnail, term, share); each row's cells are its <li>'s children.
   return (
     <ol className={`operator-column operator-column--${mode}`}>
+      {shareLabel && (
+        <li className="operator-column-header">
+          <span />
+          {/* Over the term and share columns, ending where the shares end. */}
+          <span className="operator-column-label"><Text>{shareLabel}</Text></span>
+        </li>
+      )}
       {rows.map((row) => (
         <li key={row.key} className={row.current ? 'operator-column--current' : (row.shown ? '' : 'operator-column--later')}>
-          <BounceThumbnail state={row.state} env={env} adjoint={adjoint} unlit={!row.shown} direct={row.direct} size={size} />
-          <Text>{`$${'{'}${row.tex}${'}'}$`}</Text>
-          {row.shown && <span className="operator-share">{`${Math.round(row.share * 100)}%`}</span>}
+          <BounceThumbnail state={row.state} env={env} adjoint={adjoint} unlit={!row.shown} direct={row.direct} size={THUMBNAIL} />
+          <span className="operator-term"><Text>{`$${'{'}${row.tex}${'}'}$`}</Text></span>
+          <span className="operator-share">{row.shown ? `${Math.round(row.share * 100)}%` : ''}</span>
         </li>
       ))}
     </ol>
@@ -283,7 +312,14 @@ function operationLabel(frame) {
  * optional `floor` ('diffuse', 'glossy', 'mirror'), optional `light`
  * ('lamp' in the ceiling, or 'spot', a narrow beam), and `buildSteps`, one
  * entry per frame of the mode (4 for construct, 5 for iterate, 6 for sum).
- * The slide carries only short labels; the explanation is in the notes.
+ * Optional short labels: a step's `label` (under the room, for that
+ * step), `shareLabel` (over the column's shares), `columnNote` (under the
+ * column), and, in construct mode, `history: true` (every frame's
+ * equation so far stays on the side, the earlier ones dimmed, instead of
+ * the current one alone). Optional `header` (slide text, such as the
+ * equation the frames build, shown over the side column on every step)
+ * and, in construct mode, `mergeNamed: true` (A is named on the step that
+ * completes it: 3 frames instead of 4). The explanation is in the notes.
  *
  * The clicker steps through the scripted frames. The buttons over the
  * room apply G, S, A, or add the source to whatever is shown (only when
@@ -295,7 +331,7 @@ export default function OperatorExplorer({ slide, buildStep }) {
   const adjoint = direction === 'adjoint';
   const [finish, setFinish] = useState(slide.floor ?? 'diffuse');
   const env = useMemo(() => flatlandRoom(finish, slide.light ?? 'lamp'), [finish, slide.light]);
-  const frames = useFrames(mode, direction, env);
+  const frames = useFrames(mode, direction, env, Boolean(slide.mergeNamed));
   const [explored, setExplored] = useState(null);
   const counter = useRef(0);
   const fromStep = useStepTransition(buildStep);
@@ -315,6 +351,9 @@ export default function OperatorExplorer({ slide, buildStep }) {
   const { operators, source } = DIRECTIONS[direction];
   const sourceState = adjoint ? env.sensor : env.transport.emission;
   const showEquation = mode === 'construct' || explored;
+  const showHistory = mode === 'construct' && slide.history && !explored;
+  const roomLabels = slide.buildSteps.map((entry) => entry.label ?? '');
+  const roomLabel = explored ? '' : roomLabels[step];
 
   return (
     <div className="slide--operator-explorer">
@@ -362,24 +401,49 @@ export default function OperatorExplorer({ slide, buildStep }) {
           )}
         </div>
         <div className="operator-side">
-          {showEquation ? (
+          {slide.header && <div className="operator-header"><Text>{slide.header}</Text></div>}
+          {showHistory ? (
+            <>
+              <EquationStack
+                lines={frames.map((f) => ({ tex: `$${'{'}${frameTex(f)}${'}'}$`, label: operationLabel(f) }))}
+                step={step}
+                className="operator-history"
+                lineClassName="operator-equation"
+              />
+              <p className="operator-kind">{KINDS[frame.kind]}</p>
+            </>
+          ) : showEquation ? (
             <>
               <div className="operator-equation"><Text>{`$${'{'}${frameTex(frame)}${'}'}$`}</Text></div>
               <p className="operator-label">{operationLabel(frame)}</p>
               <p className="operator-kind">{KINDS[frame.kind]}</p>
             </>
           ) : (
-            <BounceColumn mode={mode} direction={direction} env={env} step={step} />
-          )}
-          {adjoint && mode === 'sum' && step >= 5 && !explored && (
-            <dl className="operator-check">
-              <dt><Text>{'$\\langle q, x \\rangle$'}</Text></dt>
-              <dd>{env.sensor.reduce((s, v, i) => s + v * env.steady[i], 0).toFixed(5)}</dd>
-              <dt><Text>{'$\\langle y, e \\rangle$'}</Text></dt>
-              <dd>{env.importance.reduce((s, v, i) => s + v * env.transport.emission[i], 0).toFixed(5)}</dd>
-            </dl>
+            <BounceColumn mode={mode} direction={direction} env={env} step={step} shareLabel={slide.shareLabel} />
           )}
         </div>
+        {roomLabels.some(Boolean) && (
+          <p className="operator-room-label"><Text>{roomLabel || ' '}</Text></p>
+        )}
+        {/* Under the column, on the room label's line: the check that both solves give the same pixel. */}
+        {adjoint && mode === 'sum' && step >= 5 && !explored && (
+          <dl className="operator-check">
+            <dt><Text>{'$\\langle q, x \\rangle$'}</Text></dt>
+            <dd>{env.sensor.reduce((s, v, i) => s + v * env.steady[i], 0).toFixed(5)}</dd>
+            <dt><Text>{'$\\langle y, e \\rangle$'}</Text></dt>
+            <dd>{env.importance.reduce((s, v, i) => s + v * env.transport.emission[i], 0).toFixed(5)}</dd>
+          </dl>
+        )}
+        {slide.columnNote && (
+          <motion.p
+            className="operator-column-note"
+            initial={false}
+            animate={{ opacity: !explored && step >= (slide.columnNote.step ?? 0) ? 1 : 0 }}
+            transition={{ duration: 0.35 }}
+          >
+            <Text>{slide.columnNote.text}</Text>
+          </motion.p>
+        )}
       </div>
     </div>
   );

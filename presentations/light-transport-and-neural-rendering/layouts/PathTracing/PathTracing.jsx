@@ -17,7 +17,7 @@ import './PathTracing.css';
 
 const ROOM = ROOM_VIEW;
 const STRIP_SIZE = [620, 24];
-const CHART = [336, 280];
+const CHART = [336, 236];
 /** Camera pixels and evenly spaced rays per pixel (a path starts on one of them). */
 const PIXELS = 64;
 const RAYS_PER_PIXEL = 16;
@@ -74,7 +74,8 @@ function pathLength(path) {
  * against the exact image; beside it, each pixel's estimate against the
  * exact value, and the relative error for every n so far.
  *
- * Content fields: `title`, `subtitle`, `buildSteps` ({ paths } each).
+ * Content fields: `title`, `subtitle`, `buildSteps` ({ paths } each), and
+ * optional `equation` (the estimator, over the count).
  */
 export default function PathTracing({ slide, buildStep }) {
   const env = flatlandRoom('diffuse', 'lamp');
@@ -160,7 +161,8 @@ export default function PathTracing({ slide, buildStep }) {
           </div>
         </div>
         <div className="paths-side">
-          <div className="paths-count"><Text>{`$n = ${texCount(n)}$`}</Text> paths per pixel</div>
+          {slide.equation && <div className="paths-equation"><Text>{slide.equation}</Text></div>}
+          <div className="paths-count"><Text>{`$n = ${texCount(n)}$`}</Text>{n === 1 ? ' path per pixel' : ' paths per pixel'}</div>
           <Chart
             width={CHART[0]}
             height={CHART[1]}

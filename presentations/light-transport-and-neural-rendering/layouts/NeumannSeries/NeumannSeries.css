@@ -56,6 +56,14 @@
   flex-shrink: 0;
 }
 
+.neumann-terms {
+  position: absolute;
+  left: 16px;
+  top: 6px;
+  font-size: 28px;
+  color: var(--text-primary);
+}
+
 .neumann-factor {
   position: absolute;
   transform: translate(-50%, -50%);

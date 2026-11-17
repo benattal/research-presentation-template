@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import {
   SPEED_OF_LIGHT, ambiguityDistance, amplitudeOf, collocatedWeights, depthFromPhase, intensityQuadrature, phaseOf,
-  roundTripPhase, tofQuadrature, transientHistogram,
+  roundTripPhase, roundTripTime, tofQuadrature, transientHistogram,
 } from '../layouts/activeSensing/measurement.js';
 import { RAY_SCENE, raySamples } from '../layouts/activeSensing/rayScene.js';
 import { adjointBytes, formatBytes, tapeBytes, unitBytes } from '../layouts/MemoryMeter/memory.js';
@@ -39,7 +39,7 @@ describe('continuous-wave time of flight', () => {
     close(depthFromPhase(roundTripPhase(depth, frequency), frequency), depth - range, 1e-9, 'wrapped depth');
   });
 
-  it('models the wall return as a/d² with phase 4πfd/c', () => {
+  it('models the wall return as ρ/d² with phase 4πfd/c', () => {
     const { amplitude, phase } = directReturn(PHASOR_SCENE, 30e6);
     const { depth, albedo } = PHASOR_SCENE.wall;
     close(amplitude, albedo / depth ** 2, 1e-12, 'amplitude');
@@ -55,7 +55,7 @@ describe('continuous-wave time of flight', () => {
     assert.equal(mirrorReturn(PHASOR_SCENE, [depth / 2 + PHASOR_SCENE.mirror.halfLength + 0.01, -1], 30e6), null);
   });
 
-  it('gives a single opaque surface the amplitude a/d² and the phase 4πfd/c in the quadrature', () => {
+  it('gives a single opaque surface the amplitude ρ/d² and the phase 4πfd/c in the quadrature', () => {
     const frequency = 30e6;
     const samples = raySamples(RAY_SCENE, { fog: false });
     const { measurement } = tofQuadrature(samples, frequency);
@@ -64,7 +64,7 @@ describe('continuous-wave time of flight', () => {
     close(phaseOf(measurement), roundTripPhase(depth, frequency), 1e-9, 'phase');
   });
 
-  it('weights each sample by Tᵢ²αᵢaᵢ/tᵢ²', () => {
+  it('weights each sample by Tᵢ²αᵢρᵢ/tᵢ²', () => {
     const samples = [
       { t: 1, delta: 0.5, sigma: 1, albedo: 0.5 },
       { t: 2, delta: 0.5, sigma: 2, albedo: 0.8 },
@@ -95,6 +95,24 @@ describe('transient histogram', () => {
     const histogram = transientHistogram(samples, { binWidth, binCount: 120, pulseWidth: 0 });
     const peak = histogram.indexOf(Math.max(...histogram));
     assert.equal(peak, Math.floor((2 * RAY_SCENE.wall.depth) / SPEED_OF_LIGHT / binWidth));
+  });
+
+  it('has the phasor quadrature as its Fourier coefficient at the modulation frequency', () => {
+    // m = ∫h(τ) e^{j2πfτ} dτ for an impulse, on 1 ps bins: the binning error in phase is below 2πf·(1 ps).
+    const samples = raySamples(RAY_SCENE);
+    const frequency = 30e6;
+    const binWidth = 1e-12;
+    const histogram = transientHistogram(samples, { binWidth, binCount: Math.ceil(roundTripTime(RAY_SCENE.far) / binWidth), pulseWidth: 0 });
+    let [re, im] = [0, 0];
+    histogram.forEach((weight, bin) => {
+      const angle = 2 * Math.PI * frequency * (bin + 0.5) * binWidth;
+      re += weight * Math.cos(angle);
+      im += weight * Math.sin(angle);
+    });
+    const { measurement } = tofQuadrature(samples, frequency);
+    const size = amplitudeOf(measurement);
+    close(re, measurement[0], 1e-3 * size, 'real part');
+    close(im, measurement[1], 1e-3 * size, 'imaginary part');
   });
 });
 

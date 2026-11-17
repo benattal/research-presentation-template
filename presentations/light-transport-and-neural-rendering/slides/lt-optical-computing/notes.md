@@ -1,8 +1,12 @@
-We never need $\mathbf{T}$ itself to multiply by it: light the scene with pattern $p$ and take a photograph, and the photograph is $\mathbf{T}p$. Any algorithm that only needs products, like the iteration $x_{k+1} = e + Ax_k$ of the Neumann series, can run optically, one photograph per product. O'Toole and Kutulakos (SIGGRAPH Asia 2010) ran power iteration and Arnoldi iteration this way with a projector and a camera.
+We never need $\mathbf{T}$ itself to multiply by it: light the scene with pattern $p$ and take a photograph, and the photograph is $\mathbf{T}p$. One product is one photo. Any algorithm that only needs products, like the iteration $x_{k+1} = e + Ax_k$ of the Neumann series, can run optically, one photograph per product. O'Toole and Kutulakos (SIGGRAPH Asia 2010) ran power iteration and Arnoldi iteration this way with a projector and a camera.
 
-An eigenvector of $\mathbf{T}$ is a pattern that, projected onto the scene, comes back in the photograph unchanged up to a scale: $\mathbf{T}v_1 = \lambda_1 v_1$. Power iteration finds the one with the largest eigenvalue: project $p$, capture $\mathbf{T}p$, normalize, and project the result again.
+Why this matters: for a real projector and camera with a million pixels each, $\mathbf{T}$ is $10^6 \times 10^6$, $10^{12}$ entries (CMU 15-463, pp. 36 and 57). Measuring it entry by entry is out of reach; a few products are not.
 
-The setup here: each of the 19 light elements also measures the light that arrives back at it, like a projector and a camera that share pixels. Then $\mathbf{T}$ is square (19 × 19), and $\mathbf{T}_{jk}$ is the light element $j$ receives when element $k$ is lit.
+An eigenvector of $\mathbf{T}$ is a pattern that, projected onto the scene, comes back in the photograph unchanged up to a scale: $\mathbf{T}v_1 = \lambda_1 v_1$. The principal eigenvector is a fixed point of the sequence $l, \mathbf{T}l, \mathbf{T}^2 l, \ldots$ after normalizing (15-463, p. 44): the fixed-point view of the first linear algebra slide. Power iteration converges to the one with the largest eigenvalue: project $p$, capture $\mathbf{T}p$, normalize, and project the result again. As on the spectral-view slide, the component along the largest eigenvalue dominates after a few products.
+
+The setup here: each of the 19 light elements emits and senses, like a projector and a camera that share pixels. Then $\mathbf{T}$ is square (19 × 19), and $\mathbf{T}_{jk}$ is the light element $j$ receives when element $k$ is lit.
+
+The bars beside the room are the patterns, one bar per element, each scaled to its largest entry.
 
 - **$p_0$**: one element on, at the left.
 - **$p_1$**: one photograph. The light returned to the ceiling is spread out, brightest near the first element.

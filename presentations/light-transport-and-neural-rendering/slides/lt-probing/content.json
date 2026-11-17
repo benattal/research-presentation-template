@@ -4,15 +4,8 @@
   "title": "Light transport probing",
   "subtitle": "Selecting light paths with coded illumination and masks",
   "equations": [
-    "$c = \\sum_k q_k \\odot \\mathbf{T}\\,p_k$",
+    "$c = \\sum_k q_k \\odot \\mathbf{T}\\,p_k = (\\Pi \\odot \\mathbf{T})\\,\\mathbf{1}$",
     "$\\Pi = \\sum_k q_k\\, p_k^\\top$"
-  ],
-  "labels": [
-    "$p_k$: projector pattern",
-    "$q_k$: camera mask",
-    "$\\mathbf{1}$: all ones",
-    "one exposure over all $k$",
-    "64 pixels each, coaxial"
   ],
   "buildSteps": [
     {
@@ -23,6 +16,9 @@
     },
     {
       "caption": "indirect"
+    },
+    {
+      "caption": "real scenes"
     }
   ],
   "credits": [
@@ -33,6 +29,61 @@
     {
       "source": "cmu15463-probing",
       "what": "after pp. 3–16"
+    },
+    {
+      "source": "nayar2006",
+      "what": "Fig. 6"
     }
-  ]
+  ],
+  "real": {
+    "step": 3,
+    "rows": [
+      {
+        "label": "eggs",
+        "detail": "interreflections"
+      },
+      {
+        "label": "peppers",
+        "detail": "subsurface scattering"
+      }
+    ],
+    "figures": [
+      {
+        "type": "image",
+        "src": "/slides/lt-probing/eggs-scene.jpg",
+        "alt": "Eggs on a paper napkin: the scene"
+      },
+      {
+        "type": "image",
+        "src": "/slides/lt-probing/eggs-direct.jpg",
+        "alt": "Eggs: direct component"
+      },
+      {
+        "type": "image",
+        "src": "/slides/lt-probing/eggs-global.jpg",
+        "alt": "Eggs: global component"
+      },
+      {
+        "type": "image",
+        "src": "/slides/lt-probing/peppers-scene.jpg",
+        "alt": "Peppers: the scene"
+      },
+      {
+        "type": "image",
+        "src": "/slides/lt-probing/peppers-direct.jpg",
+        "alt": "Peppers: direct component"
+      },
+      {
+        "type": "image",
+        "src": "/slides/lt-probing/peppers-global.jpg",
+        "alt": "Peppers: global component"
+      }
+    ],
+    "captions": [
+      "scene",
+      "direct $L_d$",
+      "global $L_g$"
+    ],
+    "label": "$L_{\\max} = L_d + \\tfrac12 L_g, \\quad L_{\\min} = \\tfrac12 L_g$"
+  }
 }

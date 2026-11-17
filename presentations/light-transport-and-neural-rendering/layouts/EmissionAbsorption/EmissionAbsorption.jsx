@@ -151,10 +151,10 @@ export default function EmissionAbsorption({ slide, buildStep }) {
   });
   useLayoutEffect(draw, [draw]);
 
+  // The pixel under the pointer, from its height on the cloud panel (the element the handlers sit on).
   const pickRay = (event) => {
-    const box = canvasRef.current.getBoundingClientRect();
-    const y = (event.clientY - box.top) / (box.height / canvasRef.current.offsetHeight);
-    const index = Math.floor(((y - geometry.panel.y) / geometry.panel.height) * PIXELS);
+    const box = event.currentTarget.getBoundingClientRect();
+    const index = Math.floor(((event.clientY - box.top) / box.height) * PIXELS);
     if (index >= 0 && index < PIXELS) setPixel(index);
   };
 
@@ -177,16 +177,20 @@ export default function EmissionAbsorption({ slide, buildStep }) {
             width={Math.round(geometry.width * ratio)}
             height={Math.round(geometry.height * ratio)}
             style={{ width: geometry.width, height: geometry.height }}
-            onPointerDown={(event) => {
-              dragRef.current = true;
-              event.currentTarget.setPointerCapture(event.pointerId);
-              pickRay(event);
-            }}
-            onPointerMove={(event) => dragRef.current && pickRay(event)}
-            onPointerUp={() => { dragRef.current = false; }}
           />
           {geometry.width > 0 && (
             <>
+              <div
+                className="emission-pick"
+                style={{ left: 0, top: geometry.panel.y, width: geometry.panel.x + geometry.panel.width, height: geometry.panel.height }}
+                onPointerDown={(event) => {
+                  dragRef.current = true;
+                  event.currentTarget.setPointerCapture(event.pointerId);
+                  pickRay(event);
+                }}
+                onPointerMove={(event) => dragRef.current && pickRay(event)}
+                onPointerUp={() => { dragRef.current = false; }}
+              />
               {label('density', '$\\sigma$', 'emission-label--density', geometry.upper.y + 4)}
               {label('transmittance', '$T$', '', geometry.upper.y + 34)}
               {label('contribution', '$T\\sigma c$', '', geometry.lower.y + 4)}

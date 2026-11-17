@@ -3,7 +3,7 @@ import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
 import { Readout, Slider } from '../activeSensing/Controls.jsx';
 import {
-  clearPanel, dashedLine, drawDevice, drawSurface, glowLine, glowSpot, panelLabel, rgba, sceneTransform, themeColors,
+  clearPanel, dashedLine, drawDevice, drawSurface, glowLine, panelLabel, rgba, sceneTransform, themeColors,
 } from '../activeSensing/draw.js';
 import { useAnimation, useStageCanvas } from '../canvas/canvas.js';
 import {
@@ -29,6 +29,9 @@ const SAMPLE_COUNT = 40;
 
 /** Faint scattering by the air (1/m), so the projector's beams show. */
 const AIR_SCATTERING = 0.01;
+
+/** The plot of the quadrature's terms beside the panel, in stage pixels. */
+const TERMS_PLOT = { width: 280, height: 190, top: 34, bottom: 30, left: 6 };
 
 const PROJECTIONS = ['none', 'one', 'all'];
 const COLORS = ['render-bg', 'bg-elevated', 'text-muted', 'light-0', 'adjoint', 'medium'];
@@ -77,7 +80,9 @@ function drawLight(ctx, scratch, values, columns, rows, color, gain) {
  * projector light inside the model; the picture of the light has it).
  * Build steps (`buildSteps` entries `{ cameraRay, projection }`) show the
  * pattern, one sample's projection to the projector, then every sample's
- * term; sliders set the stripe count and the camera pixel. The light image
+ * term: each sample's dot is sized by its term, and a bar plot beside the
+ * panel shows the terms in order along the ray, which sum to the pixel I.
+ * Sliders set the stripe count and the camera pixel. The light image
  * covers the whole panel with the scene's own mapping, so the beams start
  * at the projector. Steps fade in when the slide moves between them, not
  * when it is entered.
@@ -186,19 +191,25 @@ export default function ProjectorQuadrature({ slide, buildStep }) {
       dashedLine(ctx, projectorAt, toCanvas(samples[highlighted].point), colors['bg-elevated'], { alpha: 0.75 * fade, width: 1.2, dash: [5, 5] });
     }
 
+    // Each sample is a dot on the camera ray; with every term shown, its area grows with its term.
     const brightest = Math.max(...quadrature.terms.map((term) => term.unshadowed), 1e-12);
     samples.forEach(({ point }, i) => {
       const p = toCanvas(point);
       const term = quadrature.terms[i];
+      const share = step.projection === 'all' ? term.unshadowed / brightest : 0;
+      const radius = 2 + fade * 7 * Math.sqrt(share);
       ctx.save();
-      ctx.fillStyle = rgba(colors.adjoint, 0.6 * rayFade);
+      if (share > 0.02) {
+        ctx.fillStyle = rgba(colors['render-bg'], 0.7 * rayFade);
+        ctx.beginPath();
+        ctx.arc(...p, radius + 1.5, 0, 2 * Math.PI);
+        ctx.fill();
+      }
+      ctx.fillStyle = rgba(colors.adjoint, (share > 0.02 ? 0.95 : 0.6) * rayFade);
       ctx.beginPath();
-      ctx.arc(...p, 2, 0, 2 * Math.PI);
+      ctx.arc(...p, radius, 0, 2 * Math.PI);
       ctx.fill();
       ctx.restore();
-      if (step.projection === 'none') return;
-      const share = term.unshadowed / brightest;
-      if (step.projection === 'all' && share > 0.02) glowSpot(ctx, p, colors['light-0'], 4 + 8 * Math.sqrt(share), fade * (0.25 + 0.5 * share));
       if (step.projection === 'one' && i === highlighted) {
         ctx.save();
         ctx.strokeStyle = rgba(colors['bg-elevated'], 0.9 * fade);
@@ -212,8 +223,12 @@ export default function ProjectorQuadrature({ slide, buildStep }) {
   });
 
   const term = quadrature.terms[highlighted];
+  const largestTerm = Math.max(...quadrature.terms.map((entry) => entry.unshadowed), 1e-12);
+  const barPitch = (TERMS_PLOT.width - TERMS_PLOT.left) / samples.length;
+  const barBase = TERMS_PLOT.height - TERMS_PLOT.bottom;
   const checks = {
-    none: [],
+    // Before the camera ray, the readout keeps its place empty, so nothing below it moves.
+    none: [{ label: '$P(\\mathbf{x}_i)$', value: term.pattern.toFixed(2), hidden: true }],
     one: [{ label: '$P(\\mathbf{x}_i)$', value: term.pattern.toFixed(2) }],
     all: [{ label: '$I$', value: quadrature.pixelUnshadowed.toFixed(4) }],
   }[step.projection];
@@ -232,6 +247,31 @@ export default function ProjectorQuadrature({ slide, buildStep }) {
         />
         <div className="projector-quadrature-side">
           <Readout columns={1} items={checks} />
+          <div
+            className="projector-quadrature-terms"
+            style={{ width: TERMS_PLOT.width, height: TERMS_PLOT.height, opacity: step.projection === 'all' ? fade : 0 }}
+            aria-hidden={step.projection !== 'all'}
+          >
+            <svg width={TERMS_PLOT.width} height={TERMS_PLOT.height}>
+              {quadrature.terms.map((entry, i) => {
+                const top = barBase - (entry.unshadowed / largestTerm) * (barBase - TERMS_PLOT.top);
+                return (
+                  <rect
+                    key={samples[i].t}
+                    className="projector-quadrature-term"
+                    x={TERMS_PLOT.left + i * barPitch + 0.75}
+                    y={top}
+                    width={Math.max(1, barPitch - 1.5)}
+                    height={barBase - top}
+                  />
+                );
+              })}
+              <line className="projector-quadrature-axis" x1={TERMS_PLOT.left} y1={barBase} x2={TERMS_PLOT.width} y2={barBase} />
+              <line className="projector-quadrature-axis" x1={TERMS_PLOT.left} y1={TERMS_PLOT.top - 10} x2={TERMS_PLOT.left} y2={barBase} />
+            </svg>
+            <span className="projector-quadrature-terms-label" style={{ left: TERMS_PLOT.left + 10, top: TERMS_PLOT.top - 22 }}>terms</span>
+            <span className="projector-quadrature-terms-label projector-quadrature-terms-label--axis" style={{ left: TERMS_PLOT.width, top: barBase + 16 }}><Text>{'$t$'}</Text></span>
+          </div>
           <div className="projector-quadrature-sliders">
             <Slider label="stripes" value={stripes} min={4} max={20} step={2} onChange={setStripes} format={(count) => `${count}`} />
             <Slider label="camera ray" value={floorX} min={0.9} max={3.7} step={0.05} onChange={setFloorX} format={() => ''} />

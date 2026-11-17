@@ -1,44 +1,36 @@
 {
-  "layout": "figureRows",
+  "layout": "figures",
   "sectionLabel": "Neural rendering",
   "title": "Applications",
   "subtitle": "The same approach for time of flight, lidar, and structured light",
-  "rows": [
+  "figures": [
     {
-      "figures": [
-        {
-          "type": "video",
-          "src": "/slides/nr-applications/torf-rgb-and-depth.webm",
-          "alt": "TöRF: color and depth rendered from a time-of-flight radiance field of a dynamic scene",
-          "caption": "Time of flight",
-          "width": 2.475
-        },
-        {
-          "type": "image",
-          "src": "/slides/nr-applications/transient-nerf-lidar-novel-view.png",
-          "alt": "Transient NeRF: lidar measurements, time slices, and depth from a novel viewpoint, reference and rendered",
-          "caption": "Lidar",
-          "width": 1.919
-        }
-      ]
+      "type": "video",
+      "src": "/slides/nr-applications/torf-rgb-and-depth.webm",
+      "alt": "TöRF: color and depth rendered from a time-of-flight radiance field of a dynamic scene",
+      "caption": "Time of flight",
+      "fit": {
+        "aspect": 2.683,
+        "position": "center bottom"
+      }
     },
     {
-      "figures": [
-        {
-          "type": "video",
-          "src": "/slides/nr-applications/flying-with-photons-light-in-flight.mp4",
-          "alt": "Flying with Photons: a pulse of light propagating through a scene, rendered from a novel viewpoint",
-          "caption": "Propagating light",
-          "width": 1.0
-        },
-        {
-          "type": "video",
-          "src": "/slides/nr-applications/nfsl-structured-light-novel-view.mp4",
-          "alt": "Neural fields for structured lighting: a structured light image rendered from novel viewpoints",
-          "caption": "Structured light",
-          "width": 1.767
-        }
-      ]
+      "type": "image",
+      "src": "/slides/nr-applications/transient-nerf-lidar-novel-view.png",
+      "alt": "Transient NeRF: lidar measurements, time slices, and depth from a novel viewpoint, reference and rendered",
+      "caption": "Lidar"
+    },
+    {
+      "type": "video",
+      "src": "/slides/nr-applications/flying-with-photons-light-in-flight.mp4",
+      "alt": "Flying with Photons: a pulse of light propagating through a scene, rendered from a novel viewpoint",
+      "caption": "Propagating light"
+    },
+    {
+      "type": "video",
+      "src": "/slides/nr-applications/nfsl-structured-light-novel-view.mp4",
+      "alt": "Neural fields for structured lighting: a structured light image rendered from novel viewpoints",
+      "caption": "Structured light"
     }
   ],
   "credits": [

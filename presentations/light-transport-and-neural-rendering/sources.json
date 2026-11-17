@@ -1,6 +1,7 @@
 {
   "cmu15468-rendering": { "authors": "Gkioulekas, after Jarosz", "title": "Rendering equation and path tracing", "venue": "CMU 15-468", "year": 2026, "url": "https://imaging.cs.cmu.edu/15-468/lectures/lecture_11.pdf" },
   "cmu15468-media": { "authors": "Gkioulekas, after Jarosz", "title": "Participating media", "venue": "CMU 15-468", "year": 2026, "url": "https://imaging.cs.cmu.edu/15-468/lectures/lecture_12.pdf" },
+  "cmu15468-diffrender": { "authors": "Gkioulekas, after Zhao, Li, and Bangaru", "title": "Inverse and differentiable rendering", "venue": "CMU 15-468", "year": 2026, "url": "https://imaging.cs.cmu.edu/15-468/lectures/lecture_17.pdf" },
   "cmu15463-transport": { "authors": "Gkioulekas, after O'Toole", "title": "Light transport matrices", "venue": "CMU 15-463", "year": 2020, "url": "https://imaging.cs.cmu.edu/15-463/2020_fall/lectures/lecture25.pdf" },
   "cmu15463-probing": { "authors": "Gkioulekas", "title": "Light transport probing", "venue": "CMU 15-463", "year": 2018, "url": "https://imaging.cs.cmu.edu/15-463/2018_fall/lectures/lecture19b.pdf" },
   "otoole2016": { "authors": "O'Toole", "title": "Optical linear algebra for computational light transport", "venue": "PhD thesis, University of Toronto", "year": 2016, "url": "https://www.cs.cmu.edu/~motoole2/files/OToole_Matthew_P_201604_PhD_thesis.pdf" },
@@ -28,6 +29,7 @@
   "malik2023": { "authors": "Malik et al.", "title": "Transient neural radiance fields for lidar view synthesis and 3D reconstruction", "venue": "NeurIPS", "year": 2023, "url": "https://anaghmalik.com/TransientNeRF/" },
   "malik2024": { "authors": "Malik et al.", "title": "Flying with photons: rendering novel views of propagating light", "venue": "ECCV", "year": 2024, "url": "https://anaghmalik.com/FlyingWithPhotons/" },
   "shandilya2023": { "authors": "Shandilya et al.", "title": "Neural fields for structured lighting", "venue": "ICCV", "year": 2023, "url": "https://imaging.cs.cmu.edu/nfsl/" },
+  "csc2529-tof": { "authors": "Lindell, after O'Toole, Wetzstein, and Gkioulekas", "title": "Time-of-flight imaging & single-photon imaging", "venue": "CSC2529, University of Toronto", "url": "https://www.cs.toronto.edu/~lindell/teaching/2529/2023/slides/lecture9.pdf" },
   "otoole2014tf": { "authors": "O'Toole et al.", "title": "Temporal frequency probing for 5D transient analysis of global light transport", "venue": "SIGGRAPH", "year": 2014, "url": "https://www.cs.cmu.edu/~motoole2/temporalprobing.html" },
   "otoole2018": { "authors": "O'Toole et al.", "title": "Confocal non-line-of-sight imaging based on the light-cone transform", "venue": "Nature", "year": 2018, "url": "http://www.computationalimaging.org/publications/confocal-non-line-of-sight-imaging-based-on-the-light-cone-transform/" },
   "attal2024": { "authors": "Attal et al.", "title": "Flash Cache: reducing bias in radiance cache based inverse rendering", "venue": "ECCV", "year": 2024, "url": "https://benattal.github.io/flash-cache/" },

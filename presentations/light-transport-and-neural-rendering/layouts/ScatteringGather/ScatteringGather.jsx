@@ -36,7 +36,7 @@ function startPoint(room) {
 function equation(step) {
   const term = (on, cls, tex) => `\\htmlClass{${on ? cls : 'term-muted'}}{${tex}}`;
   return `$L_o = ${term(step >= 3, 'term-bounce-1', 'L_e')} + ${term(step >= 3, 'term-bounce-1', '\\int')}`
-    + `${term(step >= 2, 'term-operator', 'f')}\\, ${term(step >= 1, 'term-bounce-1', 'L_i')}`
+    + `${term(step >= 2, 'term-operator', 'f_r')}\\, ${term(step >= 1, 'term-bounce-1', 'L_i')}`
     + `\\, ${term(step >= 2, 'term-operator', '\\cos\\theta')}\\, ${term(step === 0, 'term-bounce-1', 'd\\theta')}$`;
 }
 
@@ -47,7 +47,7 @@ function equation(step) {
  * L_i), the rays weighted by the BRDF and cosine, and their sum, the
  * point's outgoing light L_o, against L_o of its patch from the solve of
  * x = e + Ax. A plot
- * beside the room shows L_i(θ) and f L_i cos θ over the directions.
+ * beside the room shows L_i(θ) and f_r L_i cos θ over the directions.
  * Clicking a surface moves the point.
  *
  * Content fields: `title`, `subtitle`, and four `buildSteps`.
@@ -82,7 +82,7 @@ export default function ScatteringGather({ slide, buildStep }) {
     if (step === 0) drawHalfCircle(ctx, transform, patch, gather.point, progress);
     if (step >= 1) {
       const reach = step === 1 ? progress : 1;
-      // From step 2 on, each ray is scaled by f cos θ relative to its largest value, 2 f = ρ
+      // From step 2 on, each ray is scaled by f_r cos θ relative to its largest value, 2 f_r = ρ
       // (blended in as step 2 animates); the sum dims the rays under the point's own light.
       const blend = step === 2 ? progress : 1;
       const dim = step === 3 ? 1 - 0.55 * progress : 1;
@@ -108,7 +108,8 @@ export default function ScatteringGather({ slide, buildStep }) {
   const pick = (event, [x, y]) => {
     if (event.button !== 0) return;
     const transform = roomTransform({ x: 0, y: 0, width: ROOM[0], height: ROOM[1] });
-    const hit = nearestSurfacePoint(env.room, transform.toRoom([x, y]));
+    // A click anywhere picks the nearest surface point, so every click moves the point.
+    const hit = nearestSurfacePoint(env.room, transform.toRoom([x, y]), Infinity);
     if (hit && hit.patch.finish === 'diffuse') setPoint({ patch: hit.patch.index, u: hit.u });
   };
 
@@ -169,7 +170,7 @@ function noteLabels(step, incident, weighted) {
   notes.push({ x: ix, y: iy, text: '$L_i$', dx: ix > 40 ? -10 : 10, dy: -14, align: ix > 40 ? 'right' : 'left', className: 'gather-note-incident' });
   if (step >= 2) {
     const [wx, wy] = peak(weighted);
-    notes.push({ x: wx, y: wy, text: '$f L_i \\cos\\theta$', dx: wx > 0 ? -12 : 12, dy: -16, align: wx > 0 ? 'right' : 'left', className: 'gather-note-weighted' });
+    notes.push({ x: wx, y: wy, text: '$f_r L_i \\cos\\theta$', dx: wx > 0 ? -12 : 12, dy: -16, align: wx > 0 ? 'right' : 'left', className: 'gather-note-weighted' });
   }
   return notes;
 }

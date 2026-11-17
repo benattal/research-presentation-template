@@ -1,0 +1,108 @@
+/* The adjoint section's room views: a room (or two) with captions, equations beside or below. */
+.adjoint-views-room {
+  position: relative;
+}
+
+/* The "q" beside the measured pixel's wedge, in the render's importance color. */
+.adjoint-views-wedge {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  line-height: 1;
+  color: var(--adjoint);
+  pointer-events: none;
+}
+
+.adjoint-views-caption {
+  min-height: 1.7em;
+  margin: 8px 0 0;
+  font-size: 1.3rem;
+  color: var(--text-primary);
+}
+
+.adjoint-views-side {
+  gap: 16px;
+}
+
+.adjoint-views-header {
+  padding-bottom: 6px;
+  font-size: 1.75rem;
+  color: var(--text-primary);
+}
+
+.adjoint-views-given {
+  margin: 0;
+  font-size: 1.3rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.adjoint-views-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  font-size: 1.75rem;
+  color: var(--text-primary);
+}
+
+.adjoint-views-lines .equation-stack-label {
+  white-space: nowrap;
+}
+
+.adjoint-views-header .math,
+.adjoint-views-lines .math {
+  white-space: nowrap;
+}
+
+/* The forward and adjoint check, at the size of the labels beside it. */
+.adjoint-views-side .operator-check,
+.adjoint-views-check {
+  font-size: 1.3rem;
+}
+
+.adjoint-views-legend--gained {
+  color: var(--ink-light-1);
+}
+
+.adjoint-views-legend--lost {
+  color: var(--ink-adjoint);
+}
+
+/* The gradient view: x and y side by side, the gradient below. */
+.adjoint-views-pair {
+  display: flex;
+  gap: 28px;
+}
+
+.adjoint-views-gradient {
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+  margin-top: 10px;
+}
+
+.adjoint-views-gradient-equation {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 540px;
+  flex-shrink: 0;
+  font-size: 1.75rem;
+  color: var(--text-primary);
+}
+
+.adjoint-views-bars {
+  width: 300px;
+  margin: 0;
+  padding: 0;
+  gap: 6px;
+  font-size: 1.3rem;
+  line-height: 26px;
+}
+
+.adjoint-views-bars li {
+  grid-template-columns: 124px 1fr;
+}
+
+.adjoint-views-check {
+  margin-top: 0;
+}

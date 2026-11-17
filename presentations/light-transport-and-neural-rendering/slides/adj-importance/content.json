@@ -8,7 +8,9 @@
   "buildSteps": [
     {},
     {},
-    {},
     {}
-  ]
+  ],
+  "header": "$\\htmlClass{term-adjoint}{y} = \\htmlClass{term-adjoint}{q} + A^\\top \\htmlClass{term-adjoint}{y}$",
+  "mergeNamed": true,
+  "history": true
 }

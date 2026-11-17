@@ -13,6 +13,7 @@
 }
 
 .matrix-left {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -57,6 +58,12 @@
   display: block;
   border-radius: 3px;
   cursor: pointer;
+  transition: opacity 0.35s ease;
+}
+
+/* A column whose element is off: faded, so the lit columns stand out. */
+.matrix-thumb--off {
+  opacity: 0.25;
 }
 
 .matrix-check {
@@ -130,18 +137,26 @@
   transform: none;
 }
 
+/* A borrowed figure shown at full size in the room's place, over the room and its strip. */
 .matrix-figure {
-  margin: 4px 0 0;
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--bg-slide);
 }
 
 .matrix-figure img {
   display: block;
   width: 100%;
-  border-radius: 3px;
+  min-height: 0;
+  object-fit: contain;
+  border-radius: 4px;
 }
 
 .matrix-figure figcaption {
-  margin-top: 4px;
-  font-size: 18px;
+  font-size: 20px;
   color: var(--text-secondary);
 }

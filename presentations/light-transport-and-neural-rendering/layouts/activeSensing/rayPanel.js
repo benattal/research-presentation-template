@@ -9,8 +9,14 @@ import {
 } from './draw.js';
 import { fogDensity } from './rayScene.js';
 
-/** The part of the scene the panel shows by default, in meters. */
-export const RAY_PANEL_BOUNDS = { x0: -0.42, x1: 3.3, y0: -1.0, y1: 1.0 };
+/**
+ * The panel's size in stage pixels and the part of the scene it shows, in
+ * meters: a strip around the camera ray. The transient and the phasor
+ * quadrature slides draw the same ray, so they share both, and the panel
+ * keeps its size from one slide to the next.
+ */
+export const RAY_PANEL = { width: 720, height: 270 };
+export const RAY_PANEL_BOUNDS = { x0: -0.42, x1: 3.3, y0: -0.7, y1: 0.7 };
 
 /** Theme colors the panel needs (`themeColors` names). */
 export const RAY_PANEL_COLORS = ['render-bg', 'bg-elevated', 'text-muted', 'light-0', 'light-1', 'light-2', 'medium'];

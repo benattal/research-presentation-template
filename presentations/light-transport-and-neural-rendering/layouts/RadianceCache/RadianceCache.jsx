@@ -15,7 +15,8 @@ import { patchRadiosity } from '../flatland/transport.js';
 import './RadianceCache.css';
 
 const ROOM = ROOM_VIEW;
-const THUMB = [130, 78];
+/** Thumbnail size, the same as the operator explorer's bounce thumbnails. */
+const THUMB = [108, 65];
 /** Exposure relative to the operator explorer's, and how much brighter the missing light is drawn. */
 const EXPOSURE = 0.45;
 const BIAS_EXPOSURE = 4;
