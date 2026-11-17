@@ -189,4 +189,12 @@ describe('the overflow report', { timeout: 60000 }, () => {
     }
     assert.deepEqual(page.errors, []);
   });
+
+  it('reports a title that runs onto a second line', async () => {
+    await page.goto(`${server.url}?mode=capture&slide=2&step=0`);
+    await page.waitForSelector('body[data-capture-ready="true"]');
+    const report = await page.evaluate(() => window.__captureReport);
+    assert.equal(report.slide, 'title-too-long');
+    assert.deepEqual(report.overflow.map((finding) => `${finding.kind}: ${finding.element.split(' ')[0]}`), ['title-wraps: h2.slide-title']);
+  });
 });

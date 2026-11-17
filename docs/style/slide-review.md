@@ -59,6 +59,10 @@ as the fix.
   not something that I like unless it is an implication in a set of
   equations". Write "the lit room is the sum of all bounces", not "the
   bounces give the lit room"; "gives" only between equations.
+  Sensors are not subjects either: "I don't like the phrase "what a pixel
+  measures" for the same reason"; the user's wording was "Describing the
+  measurement at a camera pixel". Name the quantity or the act of
+  describing it, not a camera, pixel, pattern, or method doing something.
 - **Little text.** "too busy with text. Sometimes having just a short label
   (which I can explain) is better", "Some lines of text are far too long",
   "you should try not make more than one point per bullet". Explanations go
