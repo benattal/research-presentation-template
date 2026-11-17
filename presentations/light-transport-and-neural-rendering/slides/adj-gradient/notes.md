@@ -1,4 +1,4 @@
-One forward solve gives $x$; one adjoint solve gives $y$. The derivative with respect to any parameter is $\partial_\theta m = \langle y, (\partial_\theta A)\, x \rangle$.
+We compute $x$ with one forward solve and $y$ with one adjoint solve. The derivative with respect to any parameter is $\partial_\theta m = \langle y, (\partial_\theta A)\, x \rangle$.
 
 - Step 1: the light $x$.
 - Step 2: the importance $y$ of the pixel.

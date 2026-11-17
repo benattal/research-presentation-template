@@ -54,7 +54,11 @@ as the fix.
   things that don't have agency", "Avoid weird anthropomorphizing metaphors
   like "the gradient is where the light and importance meet"", "this
   guidance can be applied a bit more broadly". Quantities, operators,
-  cameras, and networks do not see, meet, give, turn, or carry.
+  cameras, and networks do not see, meet, give, turn, or carry. Repeated
+  later ("all bounces together give the lit room"), with: ""X gives Y" is
+  not something that I like unless it is an implication in a set of
+  equations". Write "the lit room is the sum of all bounces", not "the
+  bounces give the lit room"; "gives" only between equations.
 - **Little text.** "too busy with text. Sometimes having just a short label
   (which I can explain) is better", "Some lines of text are far too long",
   "you should try not make more than one point per bullet". Explanations go
@@ -62,6 +66,10 @@ as the fix.
 - **The simplest natural wording.** ""each bounce of light, one at a time"
   can just be "one bounce of light at a time"". Prefer the shortest phrase
   that reads naturally; no restated subject or appended clause.
+- **No awkward stock phrases.** "Try to avoid things like "the lit room".
+  That's an awkward phrase. Just say "The sum of all bounces" for this
+  slide." Name the quantity ("the sum of all bounces"), not a scene
+  description of it.
 - **A summary gives the talk's takeaways.** "The final summary slide looks
   too disorganzed. The bullets aren't really the key takeaways here
   either. Again, too low level." and "The subtitle for summary is also bad,

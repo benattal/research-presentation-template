@@ -1,6 +1,6 @@
 Transition: NeRF models a photograph. The same approach works for any sensor whose measurement we can write as an integral along rays.
 
-- Time of flight (TöRF, Attal et al., NeurIPS 2021): a continuous-wave time-of-flight camera measures a phasor per pixel. Rendering the raw phasors, not derived depth, gives color and depth of a dynamic scene from new viewpoints.
+- Time of flight (TöRF, Attal et al., NeurIPS 2021): a continuous-wave time-of-flight camera measures a phasor per pixel. TöRF renders the raw phasors, not derived depth, and reconstructs color and depth of a dynamic scene from new viewpoints.
 - Lidar (Transient NeRF, Malik et al., NeurIPS 2023): a single-photon lidar measures a histogram of photon arrival times per pixel. Those histograms are rendered from the learned volume; the figure compares measured and rendered lidar data from a new viewpoint, as time slices and depth.
 - Propagating light (Flying with Photons, Malik et al., ECCV 2024): from multi-view transient measurements, it renders videos of a light pulse moving through the scene, from viewpoints that were never captured.
 - Structured light (Shandilya et al., ICCV 2023): the raw images of a structured-light depth camera (an infrared dot pattern), rendered from new viewpoints; from them come depth, normals, and the direct and indirect components of the light.

@@ -5,7 +5,7 @@ Transition: time-resolved measurements contain more than depth. Light that bounc
 
 The sentence to remember: three-bounce light, resolved in time, contains the geometry of objects outside the line of sight.
 
-Confocal scanning (O'Toole et al., Nature 2018) gives the reconstruction a closed form, the light-cone transform, which needs far less computation and memory than earlier methods.
+With confocal scanning (O'Toole et al., Nature 2018), the reconstruction has a closed form, the light-cone transform, which needs far less computation and memory than earlier methods.
 
 Optional slide: skip it if the talk runs long.
 

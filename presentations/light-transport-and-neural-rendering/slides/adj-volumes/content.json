@@ -2,7 +2,7 @@
   "layout": "figures",
   "sectionLabel": "Adjoint light transport ⚡",
   "title": "Differentiable volumes",
-  "subtitle": "Volume reconstruction needs unbiased gradient estimators",
+  "subtitle": "Unbiased gradient estimators for volume reconstruction",
   "figures": [
     {
       "type": "image",

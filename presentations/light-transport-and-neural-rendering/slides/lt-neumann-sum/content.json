@@ -4,7 +4,7 @@
   "mode": "sum",
   "direction": "forward",
   "title": "Global illumination",
-  "subtitle": "All bounces together give the lit room",
+  "subtitle": "The sum of all bounces",
   "buildSteps": [
     {},
     {},

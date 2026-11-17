@@ -1,4 +1,4 @@
-Applying $A$ again and again gives the bounces one at a time: $A^k e$ is the light that has bounced exactly $k$ times.
+We apply $A$ again and again, one bounce at a time: $A^k e$ is the light that has bounced exactly $k$ times.
 
 - $e$: light leaving the lamp.
 - $Ae$: direct illumination.

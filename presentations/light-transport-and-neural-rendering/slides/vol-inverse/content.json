@@ -2,7 +2,7 @@
   "layout": "inverseOperator",
   "sectionLabel": "Volume rendering",
   "title": "Inverse operator",
-  "subtitle": "Recovering the sources from the light needs only local derivatives",
+  "subtitle": "Only local derivatives are needed to recover the sources",
   "equations": [
     {
       "label": "integral form: integrals, Monte Carlo",
