@@ -143,7 +143,7 @@ presentations/
   <id>/            presentation.json, slides/, layouts/, public/ and assets/
                    (both from the bucket, ignored by git)
 scripts/           command-line entry points (dev, build, serve, check, ...)
-tests/             node:test suites
+tests/             node:test suites; tests/ui/ drives the browser
 docs/
   implementation/  how the framework works
   style/           code, writing, and slide conventions
@@ -170,6 +170,7 @@ npm run new -- <id>                   # start a presentation
 npm run assets -- pull <id>           # fetch public/ and assets/ (DATA.md)
 npm run check                         # static checks of every presentation
 npm test                              # unit and repository tests
+npm run test:ui                       # browser tests of every view and core layout
 npm run capture -- <id>               # screenshot and check every slide
 ```
 
@@ -249,9 +250,8 @@ Use evidence proportional to risk:
    dependencies;
 3. `npm run capture -- <id>`, and a look at the frames, after any change
    that renders differently;
-4. a live-mode run (`npm run serve`, two browsers, a vote, the presenter
-   window) after changes to `core/server/`, `core/client/live/`, or the
-   presenter tools;
+4. `npm run test:ui` after any change under `core/` (it drives every view,
+   core layout, and live feature in a real browser);
 5. a clean checkout with assets pulled before a repository-wide change.
 
 ## Shell safety

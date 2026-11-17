@@ -1,0 +1,24 @@
+{
+  "layout": "progressiveBuild",
+  "title": "Three steps",
+  "buildSteps": [
+    {
+      "label": "One",
+      "description": "first"
+    },
+    {
+      "label": "Two",
+      "description": "second"
+    },
+    {
+      "label": "Three",
+      "description": "third",
+      "media": [
+        {
+          "type": "image",
+          "src": "/slides/media/panel-2.svg"
+        }
+      ]
+    }
+  ]
+}

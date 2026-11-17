@@ -1,0 +1,9 @@
+{
+  "layout": "discussion",
+  "title": "Discuss",
+  "prompts": [
+    "Why?",
+    "How?",
+    "What next?"
+  ]
+}

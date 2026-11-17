@@ -16,7 +16,7 @@ media item is `{ type: "image" | "gif" | "video", src, alt? }`.
 | `progressiveBuild` | `title`, `buildSteps`: `[{ label, description?, media? }]`, `className`? | step k shows the first k + 1 entries |
 | `diagram` | `title`, `description`?, `media`? (each with `caption`?), `example`? `{ positive, negative }` | an explanation beside figures |
 | `media` | `title`, `media` (up to four) | 2×2 grid; videos get controls |
-| `illustratedPoints` | `title`, `points`: `[{ text, visual }]`, `buildSteps` | each point appears with an illustration; `visual.type` is `imageCompare` (`fakeImg`, `realImg`), `chatCompare` (`bad`, `good`, each `{ messages }`), or `chatConversation` (`messages`); `**bold**` works in `text` |
+| `illustratedPoints` | `title`, `points`: `[{ text, visual }]`, `buildSteps` | each point appears with an illustration; `visual.type` is `imageCompare` (`fakeImg`, `realImg`), `chatCompare` (`bad`, `good`, each `{ messages }`), `chatConversation` (`messages`), or `image` (`src`); `**bold**` works in `text` |
 | `discussion` | `title`, `prompts` | numbered discussion prompts |
 | `colabLink` | `title`, `description`, `colabUrl`?, `steps`? `[{ text, url? }]`, `imageSrc`?, `note`? | button and QR code for a notebook; without `colabUrl` the button reads "Link Coming Soon" |
 | `presentationLinks` | `title`, `subtitle`?, `qrCode`? `{ url, label? }`, `links`: `[{ href, title, description?, icon? }]` | a menu of other presentations, for a landing presentation served at the gateway root; `href` is relative (`"../filtering/"`) |

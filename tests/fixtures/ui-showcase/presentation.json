@@ -1,0 +1,40 @@
+{
+  "title": "UI Showcase",
+  "backLink": "../",
+  "sections": [
+    {
+      "id": "structure",
+      "title": "Structure",
+      "slides": [
+        "title",
+        "outline",
+        "content",
+        "progressive",
+        "diagram",
+        "media",
+        "illustrated",
+        "discussion",
+        "colab",
+        "colab-empty",
+        "links"
+      ]
+    },
+    {
+      "id": "live",
+      "title": "Live audience",
+      "slides": [
+        "poll",
+        "poll-results",
+        "numeric-poll"
+      ]
+    },
+    {
+      "id": "custom",
+      "title": "Custom layouts",
+      "slides": [
+        "step-counter",
+        "closing"
+      ]
+    }
+  ]
+}

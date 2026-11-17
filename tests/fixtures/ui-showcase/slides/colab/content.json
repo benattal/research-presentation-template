@@ -1,0 +1,16 @@
+{
+  "layout": "colabLink",
+  "title": "Notebook",
+  "description": "Open the notebook",
+  "colabUrl": "https://colab.research.google.com/",
+  "steps": [
+    {
+      "text": "Open it"
+    },
+    {
+      "text": "Run it",
+      "url": "https://example.com/"
+    }
+  ],
+  "note": "A note"
+}

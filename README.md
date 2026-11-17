@@ -80,6 +80,7 @@ and [docs/implementation/layouts.md](docs/implementation/layouts.md).
 | `npm run assets -- pull\|push\|check\|size <id>` | move assets between the checkout and the bucket |
 | `npm run extract-pptx -- <deck.pptx>` | pull text, media, and notes out of a PowerPoint deck |
 | `npm test` | unit and repository tests |
+| `npm run test:ui` | browser tests of every view, core layout, and live feature |
 
 Live mode needs `PRESENTER_PASSWORD` in `.env` (see `.env.example`).
 [Hosting](docs/implementation/hosting.md) covers both modes and deployment.
