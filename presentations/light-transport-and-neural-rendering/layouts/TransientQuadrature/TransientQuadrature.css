@@ -1,0 +1,96 @@
+.slide--transient-quadrature {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.transient-quadrature-equation-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 64px;
+  margin-bottom: 8px;
+}
+
+.transient-quadrature-equation {
+  font-size: 28px;
+  color: var(--text-primary);
+}
+
+.transient-quadrature-body {
+  display: flex;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.transient-quadrature-figures {
+  display: flex;
+  flex-direction: column;
+}
+
+.transient-quadrature-panel {
+  display: block;
+  border-radius: 6px;
+}
+
+.transient-quadrature-plot {
+  position: relative;
+}
+
+.transient-quadrature-plot svg {
+  display: block;
+}
+
+.transient-quadrature-axis {
+  stroke: var(--text-muted);
+  stroke-width: 1;
+}
+
+.transient-quadrature-guide {
+  stroke: var(--ink-light-1);
+  stroke-width: 1.2;
+  stroke-dasharray: 4 5;
+}
+
+.transient-quadrature-bar {
+  fill: var(--text-secondary);
+  opacity: 0.85;
+}
+
+.transient-quadrature-tick {
+  fill: var(--text-secondary);
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.transient-quadrature-label {
+  position: absolute;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.transient-quadrature-label--axis {
+  transform: translate(-100%, -50%);
+  font-size: 18px;
+}
+
+.transient-quadrature-side {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+  padding-bottom: 60px;
+}
+
+.transient-quadrature-side .active-sensing-slider {
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+.transient-quadrature-side .active-sensing-slider input[type='range'] {
+  order: 3;
+  width: 100%;
+}

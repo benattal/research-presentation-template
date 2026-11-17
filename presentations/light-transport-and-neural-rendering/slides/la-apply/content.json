@@ -1,0 +1,15 @@
+{
+  "layout": "iteration",
+  "sectionLabel": "Neumann series",
+  "title": "Iteration",
+  "subtitle": "Summing the series needs only matrix–vector products",
+  "size": 1000000,
+  "weight": 0.45,
+  "window": 12,
+  "buildSteps": [
+    { "k": 0 },
+    { "k": 2 },
+    { "k": 8 },
+    { "k": 30 }
+  ]
+}

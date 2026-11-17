@@ -1,0 +1,52 @@
+/* One beam in the room on the left; the states it goes through on the right. */
+.slide--floor-scattering {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.floor-scattering-main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.floor-scattering-room {
+  display: block;
+  flex-shrink: 0;
+  border-radius: 6px;
+}
+
+.floor-scattering-states {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  font-size: 1.45rem;
+  color: var(--text-muted);
+}
+
+.floor-scattering-states li {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  transition: color 0.25s ease;
+}
+
+.floor-scattering-states .floor-scattering-state--shown {
+  color: var(--text-secondary);
+}
+
+.floor-scattering-states .floor-scattering-state--current {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.floor-scattering-fraction {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--ink-light-1);
+}

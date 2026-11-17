@@ -1,0 +1,38 @@
+{
+  "layout": "figures",
+  "sectionLabel": "Operator light transport",
+  "title": "Dual photography",
+  "subtitle": "Swapping camera and projector transposes the transport matrix",
+  "figures": [
+    {
+      "type": "image",
+      "src": "/slides/lt-dual/primal-dual-configurations.png",
+      "alt": "Primal configuration c = Tp and dual configuration p = T transpose c",
+      "caption": "primal and dual"
+    },
+    {
+      "type": "image",
+      "src": "/slides/lt-dual/card-camera-view.jpg",
+      "alt": "The camera view: the back of a playing card in front of a book page",
+      "caption": "camera view",
+      "step": 1
+    },
+    {
+      "type": "image",
+      "src": "/slides/lt-dual/card-dual-image.png",
+      "alt": "The dual image: the face of the playing card, seen from the projector",
+      "caption": "dual image",
+      "step": 1
+    }
+  ],
+  "buildSteps": [
+    {},
+    {}
+  ],
+  "credits": [
+    {
+      "source": "sen2005",
+      "what": "Figs. 2, 16"
+    }
+  ]
+}

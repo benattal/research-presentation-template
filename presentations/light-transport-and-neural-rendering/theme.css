@@ -1,0 +1,94 @@
+@import '@fontsource-variable/source-serif-4';
+
+/*
+ * Light transport and neural rendering: plain white slides with black
+ * text. Renders of light (the flatland room) are dark figures on the
+ * slide, because they are pictures of light.
+ *
+ * Two palettes with the same meanings:
+ *   --light-0 … --light-4   inside renders: emission, then bounce 1, 2, 3, 4+
+ *   --ink-light-*           the same roles as text and lines on white
+ *   --adjoint / --ink-adjoint   importance, gradients, backward passes
+ *   --medium / --ink-medium     participating media, density, transmittance
+ *   --learned / --ink-learned   network outputs and measurements
+ *
+ * Equations color their terms with \htmlClass{term-…}{…} (classes below).
+ */
+:root {
+  --bg-primary: #ffffff;
+  --bg-slide: #ffffff;
+  --bg-elevated: #f4f5f7;
+  --bg-card: #f4f5f7;
+  --text-primary: #111317;
+  --text-secondary: #3d4350;
+  --text-muted: #7a808c;
+  --accent: #c2410c;
+  --accent-glow: rgba(194, 65, 12, 0.18);
+  --accent-secondary: #0369a1;
+  --accent-secondary-glow: rgba(3, 105, 161, 0.18);
+  --border: rgba(17, 19, 23, 0.1);
+  --border-light: rgba(17, 19, 23, 0.18);
+  --shadow: 0 2px 12px rgba(17, 19, 23, 0.08);
+
+  --light-0: #fff1c9;
+  --light-1: #ffd27a;
+  --light-2: #ff9f43;
+  --light-3: #ff6b3d;
+  --light-4: #e8475f;
+  --adjoint: #4cc9f0;
+  --medium: #9d7bff;
+  --learned: #6ee7b7;
+
+  --ink-light-0: #a16207;
+  --ink-light-1: #b45309;
+  --ink-light-2: #c2410c;
+  --ink-light-3: #be123c;
+  --ink-light-4: #9f1239;
+  --ink-adjoint: #0369a1;
+  --ink-medium: #6d28d9;
+  --ink-learned: #047857;
+
+  --render-bg: #07090f;
+  --font-display: 'Source Serif 4 Variable', 'Source Serif 4', Georgia, serif;
+}
+
+/* A title, one subtitle line, and the visual filling the rest of the slide. */
+.slide {
+  padding: 40px 56px 44px;
+}
+
+.slide .section-label {
+  display: none;
+}
+
+.slide-header {
+  margin-bottom: 16px;
+}
+
+.slide-title {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.term-emission { color: var(--ink-light-0); }
+.term-bounce-1 { color: var(--ink-light-1); }
+.term-bounce-2 { color: var(--ink-light-2); }
+.term-bounce-3 { color: var(--ink-light-3); }
+.term-bounce-4 { color: var(--ink-light-4); }
+.term-operator { color: var(--ink-light-2); }
+.term-adjoint { color: var(--ink-adjoint); }
+.term-medium { color: var(--ink-medium); }
+.term-learned { color: var(--ink-learned); }
+.term-muted { color: var(--text-muted); }
+
+/* Slides of the computational imaging aside carry a small "Aside" tag. */
+.slide[data-section="imaging-aside"]::before {
+  content: 'Aside';
+  position: absolute;
+  top: 16px;
+  right: 24px;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}

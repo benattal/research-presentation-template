@@ -1,0 +1,19 @@
+{
+  "layout": "figures",
+  "sectionLabel": "Operator light transport",
+  "title": "Structured light transport",
+  "subtitle": "Structured-light scans with probing are robust to indirect light",
+  "figures": [
+    {
+      "type": "image",
+      "src": "/slides/lt-structured-light/indirect-invariant-3d.jpg",
+      "alt": "Two scenes scanned with conventional and indirect-invariant structured light"
+    }
+  ],
+  "credits": [
+    {
+      "source": "otoole2014",
+      "what": "Fig. 9"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "layout": "figureRows",
+  "sectionLabel": "Neural rendering",
+  "title": "Applications",
+  "subtitle": "NeRF's approach extends to time of flight, lidar, and structured light",
+  "rows": [
+    {
+      "weight": 1,
+      "figures": [
+        {
+          "type": "video",
+          "src": "/slides/nr-applications/torf-rgb-and-depth.webm",
+          "alt": "TöRF: color and depth rendered from a time-of-flight radiance field of a dynamic scene",
+          "caption": "Time of flight",
+          "width": 2.475
+        },
+        {
+          "type": "image",
+          "src": "/slides/nr-applications/transient-nerf-lidar-novel-view.png",
+          "alt": "Transient NeRF: lidar measurements, time slices, and depth from a novel viewpoint, reference and rendered",
+          "caption": "Lidar",
+          "width": 1.919
+        }
+      ]
+    },
+    {
+      "weight": 1.55,
+      "figures": [
+        {
+          "type": "video",
+          "src": "/slides/nr-applications/flying-with-photons-light-in-flight.mp4",
+          "alt": "Flying with Photons: a pulse of light propagating through a scene, rendered from a novel viewpoint",
+          "caption": "Propagating light",
+          "width": 1.0
+        },
+        {
+          "type": "video",
+          "src": "/slides/nr-applications/nfsl-structured-light-novel-view.mp4",
+          "alt": "Neural fields for structured lighting: a structured light image rendered from novel viewpoints",
+          "caption": "Structured light",
+          "width": 1.767
+        }
+      ]
+    }
+  ],
+  "credits": [
+    {
+      "source": "attal2021",
+      "what": "project video"
+    },
+    {
+      "source": "malik2023",
+      "what": "Fig. 7"
+    },
+    {
+      "source": "malik2024",
+      "what": "project video"
+    },
+    {
+      "source": "shandilya2023",
+      "what": "project video"
+    }
+  ]
+}

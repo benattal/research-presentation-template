@@ -1,0 +1,89 @@
+.slide--spectral {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.spectral-body {
+  display: flex;
+  justify-content: space-between;
+  flex: 1;
+  min-height: 0;
+  align-items: center;
+}
+
+.spectral-plane {
+  cursor: default;
+}
+
+.spectral-eigenline {
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-dasharray: 6 6;
+  opacity: 0.55;
+}
+
+.spectral-scaled {
+  opacity: 0.28;
+}
+
+.spectral-parallelogram {
+  stroke: var(--text-muted);
+  stroke-width: 1.2;
+  stroke-dasharray: 4 5;
+}
+
+.spectral-handle {
+  fill: var(--bg-slide);
+  stroke: var(--ink-light-0);
+  stroke-width: 3;
+  cursor: grab;
+}
+
+.spectral-solution {
+  fill: none;
+  stroke: var(--text-primary);
+  stroke-width: 2.5;
+}
+
+.spectral-side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 440px;
+}
+
+.spectral-decomposition {
+  font-size: 26px;
+  color: var(--text-primary);
+}
+
+.spectral-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.spectral-factors {
+  display: flex;
+  gap: 32px;
+  font-size: 22px;
+}
+
+.spectral-component {
+  stroke: currentColor;
+  stroke-width: 1.5;
+}
+
+.spectral-error {
+  stroke: var(--text-primary);
+}
+
+.spectral-current {
+  fill: var(--ink-light-3);
+}
+
+.la-plot-note.spectral-note {
+  color: var(--ink-light-3);
+  font-variant-numeric: tabular-nums;
+}

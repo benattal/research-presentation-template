@@ -64,3 +64,5 @@ The measurable gates that close the plan.
 
 - [Template restructure](template-restructure.md), tracked in
   [its tracker](../tracking/template-restructure.md).
+- [Light transport and neural rendering](light-transport-and-neural-rendering.md),
+  tracked in [its tracker](../tracking/light-transport-and-neural-rendering.md).

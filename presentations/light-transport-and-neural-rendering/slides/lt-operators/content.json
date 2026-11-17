@@ -1,0 +1,15 @@
+{
+  "layout": "operatorExplorer",
+  "sectionLabel": "Operator light transport",
+  "mode": "construct",
+  "direction": "forward",
+  "title": "Transport operator",
+  "subtitle": "One bounce of light, split into propagation and scattering",
+  "buildSteps": [
+    {},
+    {},
+    {},
+    {}
+  ],
+  "light": "spot"
+}

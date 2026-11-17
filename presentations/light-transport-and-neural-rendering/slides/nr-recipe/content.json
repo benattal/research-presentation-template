@@ -1,0 +1,21 @@
+{
+  "layout": "derivation",
+  "sectionLabel": "Neural rendering",
+  "title": "Neural rendering recipe",
+  "subtitle": "Model the measurement, discretize it, and differentiate it",
+  "lines": [
+    {
+      "tex": "C(\\mathbf{r}) = \\int_0^d T(t)\\, \\htmlClass{term-learned}{\\sigma(t)}\\, \\htmlClass{term-learned}{c(t)}\\, dt",
+      "label": "measurement model"
+    },
+    {
+      "tex": "\\hat C(\\mathbf{r}) = \\sum_i T_i \\left(1 - e^{-\\htmlClass{term-learned}{\\sigma_i} \\delta_i}\\right) \\htmlClass{term-learned}{c_i}",
+      "label": "quadrature"
+    },
+    {
+      "tex": "\\htmlClass{term-learned}{\\theta} \\leftarrow \\htmlClass{term-learned}{\\theta} - \\eta\\, \\nabla_{\\theta} \\sum_{\\mathbf{r}} \\big\\| \\hat C(\\mathbf{r}) - \\tilde C(\\mathbf{r}) \\big\\|^2",
+      "label": "gradient descent"
+    }
+  ],
+  "buildSteps": [{}, {}, {}]
+}

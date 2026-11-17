@@ -1,0 +1,6 @@
+{
+  "layout": "lectureTitle",
+  "title": "Light transport and neural rendering",
+  "subtitle": "Benjamin Attal, Postdoc. with David Lindell",
+  "render": "light"
+}

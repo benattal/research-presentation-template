@@ -39,3 +39,5 @@ User direction (YYYY-MM-DD): "<quoted direction>".
 
 - [Template restructure](template-restructure.md), for
   [its plan](../plans/template-restructure.md).
+- [Light transport and neural rendering](light-transport-and-neural-rendering.md),
+  for [its plan](../plans/light-transport-and-neural-rendering.md).

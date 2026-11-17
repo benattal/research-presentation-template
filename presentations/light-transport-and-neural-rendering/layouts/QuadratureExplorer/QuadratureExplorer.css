@@ -1,0 +1,163 @@
+.slide--quadrature {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.quadrature-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 32px;
+}
+
+.quadrature-figure {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.quadrature-canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  touch-action: none;
+  cursor: ew-resize;
+}
+
+.quadrature-label,
+.quadrature-axis {
+  position: absolute;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--text-primary);
+  pointer-events: none;
+}
+
+.quadrature-label {
+  text-align: right;
+}
+
+.quadrature-side {
+  width: 292px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-top: 4px;
+}
+
+.quadrature-equation {
+  font-size: 25px;
+  color: var(--text-primary);
+}
+
+.quadrature-equation .math--display,
+.quadrature-equation .katex-display {
+  margin: 0;
+}
+
+.quadrature-count {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  font-size: 28px;
+  color: var(--text-primary);
+}
+
+.quadrature-sampler {
+  font-size: 22px;
+  color: var(--text-secondary);
+}
+
+.quadrature-check {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 22px;
+}
+
+.quadrature-pixel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.quadrature-swatch {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border-light);
+}
+
+.quadrature-error {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-left: 6px;
+}
+
+.quadrature-error-label {
+  font-size: 18px;
+  color: var(--text-muted);
+}
+
+.quadrature-error-value {
+  font-size: 26px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.quadrature-comparison {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quadrature-comparison-title {
+  font-size: 18px;
+  color: var(--text-muted);
+}
+
+.quadrature-bar-row {
+  display: grid;
+  grid-template-columns: 112px 1fr 58px;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  color: var(--text-secondary);
+}
+
+.quadrature-bar-row--current {
+  color: var(--text-primary);
+}
+
+.quadrature-bar-track {
+  height: 14px;
+}
+
+.quadrature-bar {
+  display: block;
+  height: 100%;
+  background: var(--ink-light-2);
+}
+
+.quadrature-bar-value {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.quadrature-slider {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: auto;
+  font-size: 18px;
+  color: var(--text-muted);
+}
+
+.quadrature-slider input {
+  width: 100%;
+  accent-color: var(--ink-medium);
+}

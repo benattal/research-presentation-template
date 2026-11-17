@@ -1,0 +1,43 @@
+.slide--light-paths {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.light-paths-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.light-paths-panel {
+  position: relative;
+  flex-shrink: 0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.light-paths-device {
+  position: absolute;
+  font-size: 20px;
+  color: rgba(215, 219, 228, 0.9);
+  white-space: nowrap;
+}
+
+.light-paths-label {
+  position: absolute;
+  font-size: 22px;
+  white-space: nowrap;
+}
+
+.light-paths-label--light-1 { color: var(--light-1); }
+.light-paths-label--light-2 { color: var(--light-2); }
+.light-paths-label--light-3 { color: var(--light-3); }
+.light-paths-label--medium { color: var(--medium); }
+
+.light-paths-side {
+  font-size: 40px;
+  color: var(--text-primary);
+}

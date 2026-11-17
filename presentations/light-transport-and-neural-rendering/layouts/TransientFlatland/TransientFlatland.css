@@ -1,0 +1,87 @@
+.slide--transient-flatland {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.transient-body {
+  display: flex;
+  gap: 30px;
+  flex: 1;
+  min-height: 0;
+  align-items: flex-start;
+}
+
+.transient-room {
+  flex-shrink: 0;
+}
+
+.transient-side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.transient-time {
+  font-size: 26px;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Light still to arrive, drawn faintly. */
+.chart-bars.transient-ghost rect { fill: var(--bg-elevated); stroke: var(--border-light); stroke-width: 0.5; }
+
+/* Direct light, the second bounce, and later bounces: far apart on the bounce ramp. */
+.chart-bars.transient-group-1 rect { fill: var(--ink-light-1); }
+.chart-bars.transient-group-2 rect { fill: var(--ink-light-3); }
+.chart-bars.transient-group-3 rect { fill: color-mix(in srgb, var(--ink-light-4) 45%, white); }
+
+.transient-legend {
+  display: flex;
+  gap: 18px;
+  margin: -6px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 18px;
+}
+
+.transient-legend--hidden {
+  visibility: hidden;
+}
+
+.transient-legend li::before {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 6px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+.transient-legend .transient-group-1 { color: var(--ink-light-1); }
+.transient-legend .transient-group-2 { color: var(--ink-light-3); }
+.transient-legend .transient-group-3 { color: color-mix(in srgb, var(--ink-light-4) 60%, white); }
+
+.chart-mark.transient-cursor {
+  stroke: var(--ink-adjoint);
+  stroke-dasharray: none;
+  stroke-width: 1.5;
+}
+
+.transient-check {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: start;
+  gap: 4px 22px;
+  margin: 0;
+  font-size: 21px;
+  color: var(--text-secondary);
+}
+
+.transient-check dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+}

@@ -1,0 +1,12 @@
+{
+  "layout": "geometricSeries",
+  "sectionLabel": "Neumann series",
+  "title": "Geometric series",
+  "subtitle": "Inverting a number with a power series",
+  "buildSteps": [
+    { "a": 0.5 },
+    { "a": 0.9 },
+    { "a": -0.8 },
+    { "a": 1.05 }
+  ]
+}

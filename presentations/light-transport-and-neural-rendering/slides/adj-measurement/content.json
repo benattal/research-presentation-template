@@ -1,0 +1,10 @@
+{
+  "layout": "adjointViews",
+  "sectionLabel": "Adjoint light transport",
+  "view": "measurement",
+  "title": "Measurement",
+  "subtitle": "What a pixel measures",
+  "buildSteps": [
+    {}
+  ]
+}

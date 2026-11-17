@@ -1,0 +1,46 @@
+{
+  "layout": "emissionAbsorption",
+  "sectionLabel": "Volume rendering",
+  "title": "Emission–absorption model",
+  "subtitle": "Without scattering, the integral is the one NeRF uses",
+  "surfaceWidth": 0.12,
+  "coreDensity": 0.8,
+  "pixel": 8,
+  "assumptions": [
+    "$\\sigma_s = 0$: $A = 0$, $x = b$",
+    "$\\sigma_t = \\sigma_a = \\sigma$, $L_e = c$, $L(0) = C$"
+  ],
+  "equations": [
+    "$$C = \\int_0^d T(t)\\,\\sigma(t)\\,c(t)\\,dt$$",
+    "$$T(t) = e^{-\\int_0^t \\sigma(s)\\,ds}$$"
+  ],
+  "remarks": [
+    "$c$ includes every bounce"
+  ],
+  "buildSteps": [
+    {
+      "curves": [
+        "density"
+      ]
+    },
+    {
+      "curves": [
+        "density",
+        "transmittance"
+      ]
+    },
+    {
+      "curves": [
+        "density",
+        "transmittance",
+        "contribution"
+      ]
+    }
+  ],
+  "credits": [
+    {
+      "source": "max1995",
+      "what": "emission–absorption model"
+    }
+  ]
+}

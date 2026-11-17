@@ -1,0 +1,12 @@
+{
+  "layout": "transientFlatland",
+  "sectionLabel": "Neural rendering",
+  "title": "Transient light transport",
+  "subtitle": "Light arrives in order of path length",
+  "buildSteps": [
+    { "time": 2.0 },
+    { "time": 6.6 },
+    { "time": 16.5 },
+    { "time": 36 }
+  ]
+}

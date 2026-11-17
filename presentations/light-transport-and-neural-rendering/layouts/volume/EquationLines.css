@@ -1,0 +1,25 @@
+.equation-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.equation-lines-label {
+  font-size: 20px;
+  color: var(--text-secondary);
+}
+
+.equation-lines-equation {
+  font-size: 28px;
+  color: var(--text-primary);
+}
+
+.equation-lines-equation .math--display,
+.equation-lines-equation .katex-display {
+  margin: 4px 0 0;
+  text-align: left;
+}
+
+.equation-lines-equation .katex-display > .katex {
+  text-align: left;
+}

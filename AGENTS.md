@@ -94,11 +94,13 @@ example with the project's presentations.
 
 ## This branch
 
-`guest-lecture`: one presentation, `presentations/guest-lecture/`, for a
-research guest lecture. It is presented locally with no server. The user
-(2026-11-17): "Please create a new branch called "guest-lecture" that I will
-be working from -- and which should just be hosted locally/with no
-associated server." So:
+`guest-lecture`: one presentation,
+`presentations/light-transport-and-neural-rendering/`, the guest lecture
+"Light transport and neural rendering"; its
+[plan](docs/plans/light-transport-and-neural-rendering.md) orders the work.
+It is presented locally with no server. The user (2026-11-17): "Please
+create a new branch called "guest-lecture" that I will be working from --
+and which should just be hosted locally/with no associated server." So:
 
 - present with `npm run dev` (the branch's only presentation, so no id is
   needed), or from a static build (`npm run build`, then `npm run preview`
@@ -106,8 +108,9 @@ associated server." So:
 - do not use the live gateway (`npm run serve`, `npm start`), add
   deployment configuration, or use layouts that need the server (`poll`,
   `pollResults`, `numericPoll`);
-- the lecture's media go in `presentations/guest-lecture/public/` and the
-  bucket (`npm run assets -- push guest-lecture`).
+- the lecture's media go in
+  `presentations/light-transport-and-neural-rendering/public/` and the
+  bucket (`npm run assets -- push light-transport-and-neural-rendering`).
 
 ## Project model
 

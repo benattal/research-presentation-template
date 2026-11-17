@@ -1,0 +1,20 @@
+{
+  "layout": "phasorToF",
+  "sectionLabel": "Neural rendering",
+  "title": "Continuous-wave time of flight",
+  "subtitle": "A continuous-wave camera measures path length as a phase",
+  "buildSteps": [
+    {
+      "frequencyMHz": 30,
+      "mirror": false
+    },
+    {
+      "frequencyMHz": 120,
+      "mirror": false
+    },
+    {
+      "frequencyMHz": 50,
+      "mirror": true
+    }
+  ]
+}

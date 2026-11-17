@@ -1,0 +1,93 @@
+.slide--optical-computing {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.optical-body {
+  display: flex;
+  gap: 30px;
+  flex: 1;
+  min-height: 0;
+  align-items: flex-start;
+}
+
+.optical-room {
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.optical-side {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+}
+
+.optical-equation {
+  font-size: 26px;
+  color: var(--text-primary);
+}
+
+.optical-patterns {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.optical-patterns li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 20px;
+  color: var(--text-secondary);
+}
+
+.optical-patterns .optical-later {
+  visibility: hidden;
+}
+
+.optical-patterns .optical-current {
+  color: var(--text-primary);
+}
+
+.optical-patterns .optical-eigenvector {
+  margin-top: 6px;
+  color: var(--text-primary);
+}
+
+.optical-name {
+  min-width: 30px;
+}
+
+.optical-angle {
+  min-width: 52px;
+  font-family: var(--font-mono);
+  font-size: 18px;
+  text-align: right;
+}
+
+.optical-count {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: start;
+  gap: 4px 18px;
+  margin: 0;
+  font-size: 20px;
+  color: var(--text-secondary);
+}
+
+.optical-count dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+}
+
+.optical-label {
+  margin: 0;
+  font-size: 20px;
+  color: var(--text-secondary);
+}

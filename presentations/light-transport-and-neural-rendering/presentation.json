@@ -1,0 +1,130 @@
+{
+  "title": "Light transport and neural rendering",
+  "defaultTransition": "fade",
+  "sections": [
+    {
+      "id": "opening",
+      "title": "Opening",
+      "slides": [
+        "title",
+        "hook",
+        "roadmap"
+      ]
+    },
+    {
+      "id": "neumann-series",
+      "title": "Neumann series",
+      "slides": [
+        "la-divider",
+        "la-fixed-point",
+        "la-geometric",
+        "la-neumann",
+        "la-spectral",
+        "la-apply"
+      ]
+    },
+    {
+      "id": "operator-light-transport",
+      "title": "Operator light transport",
+      "slides": [
+        "lt-divider",
+        "lt-rendering-equation",
+        "lt-gather",
+        "lt-operators",
+        "lt-iterate",
+        "lt-neumann-sum",
+        "lt-path-tracing"
+      ]
+    },
+    {
+      "id": "imaging-aside",
+      "title": "Aside: computational imaging",
+      "slides": [
+        "lt-aside",
+        "lt-transport",
+        "lt-matrix",
+        "lt-relighting",
+        "lt-dual",
+        "lt-optical-computing",
+        "lt-direct-global",
+        "lt-probing",
+        "lt-primal-dual",
+        "lt-epipolar"
+      ]
+    },
+    {
+      "id": "volume-rendering",
+      "title": "Volume rendering",
+      "slides": [
+        "vol-divider",
+        "vol-media",
+        "vol-rte",
+        "vol-operator",
+        "vol-integrating-factor",
+        "vol-vre",
+        "vol-inverse",
+        "vol-emission-absorption",
+        "vol-quadrature",
+        "vol-sampling"
+      ]
+    },
+    {
+      "id": "neural-rendering",
+      "title": "Neural rendering",
+      "slides": [
+        "nr-divider",
+        "nr-nerf",
+        "nr-applications",
+        "nr-recipe",
+        "nr-transient",
+        "nr-transient-quadrature",
+        "nr-cw-tof",
+        "nr-cw-tof-quadrature",
+        "nr-structured-light",
+        "nr-representation",
+        "nr-baked",
+        "nr-radiance-cache",
+        "nr-flash-cache",
+        "nr-memory"
+      ]
+    },
+    {
+      "id": "adjoint-light-transport",
+      "title": "Adjoint light transport ⚡",
+      "slides": [
+        "adj-divider",
+        "adj-measurement",
+        "adj-derivative",
+        "adj-operator-derivative",
+        "adj-adjoint",
+        "adj-importance",
+        "adj-neumann",
+        "adj-sensitivity",
+        "adj-gradient",
+        "adj-radiative-backprop"
+      ]
+    },
+    {
+      "id": "closing",
+      "title": "Closing",
+      "slides": [
+        "summary",
+        "credits",
+        "questions"
+      ]
+    },
+    {
+      "id": "appendix",
+      "title": "Appendix",
+      "slides": [
+        "lt-radiance",
+        "lt-three-point",
+        "lt-structured-light",
+        "lt-how-to-apply",
+        "nr-nlos",
+        "adj-quadrature",
+        "adj-volumes"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+.slide--path-tracing {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.paths-body {
+  display: flex;
+  gap: 30px;
+  flex: 1;
+  min-height: 0;
+  align-items: flex-start;
+}
+
+.paths-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.paths-strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 20px;
+  color: var(--text-primary);
+}
+
+.paths-strip-label {
+  width: 88px;
+  text-align: right;
+}
+
+.paths-side {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.paths-count {
+  font-size: 24px;
+  color: var(--text-primary);
+}
+
+.chart-dots.paths-estimate circle {
+  fill: var(--ink-light-2);
+}
+
+.chart-line.paths-exact {
+  stroke: var(--text-primary);
+  stroke-width: 1.8;
+}
+
+.chart-note.paths-note-estimate {
+  color: var(--ink-light-2);
+}
+
+.chart-note.paths-note-exact {
+  color: var(--text-primary);
+}
+
+.paths-errors {
+  border-collapse: collapse;
+  font-size: 20px;
+  color: var(--text-secondary);
+}
+
+.paths-errors th,
+.paths-errors td {
+  padding: 2px 0;
+  min-width: 96px;
+  text-align: right;
+  font-weight: 400;
+}
+
+.paths-errors th {
+  color: var(--text-muted);
+}
+
+.paths-errors .paths-errors-count {
+  font-family: var(--font-mono);
+}
+
+.paths-errors .paths-errors-value {
+  font-family: var(--font-mono);
+  text-align: right;
+  color: var(--text-primary);
+}
+
+.paths-errors .paths-errors-current td {
+  color: var(--ink-light-2);
+}
+
+.paths-errors .paths-errors-later {
+  visibility: hidden;
+}

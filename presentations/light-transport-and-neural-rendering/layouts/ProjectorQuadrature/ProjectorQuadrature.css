@@ -1,0 +1,50 @@
+.slide--projector-quadrature {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.projector-quadrature-equation {
+  display: flex;
+  align-items: center;
+  min-height: 64px;
+  margin-bottom: 8px;
+  font-size: 28px;
+  color: var(--text-primary);
+}
+
+.projector-quadrature-body {
+  display: flex;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.projector-quadrature-panel {
+  display: block;
+  flex-shrink: 0;
+  border-radius: 6px;
+}
+
+.projector-quadrature-side {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 0 4px;
+}
+
+.projector-quadrature-sliders {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.projector-quadrature-sliders .active-sensing-slider {
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+.projector-quadrature-sliders .active-sensing-slider input[type='range'] {
+  order: 3;
+  width: 100%;
+}

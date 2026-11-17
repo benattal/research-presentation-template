@@ -1,0 +1,12 @@
+{
+  "layout": "radianceCache",
+  "sectionLabel": "Neural rendering",
+  "title": "Radiance caching",
+  "subtitle": "Every bounce after the first is replaced by a cache $\\hat{x}$",
+  "buildSteps": [
+    { "caption": "cache" },
+    { "caption": "one bounce" },
+    { "caption": "solve" },
+    { "caption": "bias" }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "layout": "transportMatrix",
+  "sectionLabel": "Operator light transport",
+  "title": "Light transport matrix",
+  "subtitle": "With discrete lights and pixels, light transport is a matrix",
+  "mode": "matrix",
+  "equations": [
+    "$c = C\\,(I - A)^{-1} E\\,p$",
+    "$\\phantom{c} = \\mathbf{T}\\,p$"
+  ],
+  "labels": [
+    "$E$: elements $\\to$ emission $e$",
+    "$C$: radiance $x \\to$ pixels"
+  ],
+  "buildSteps": [
+    {
+      "elements": [
+        3
+      ]
+    },
+    {
+      "elements": [
+        12
+      ]
+    },
+    {
+      "row": 28
+    }
+  ]
+}

@@ -1,0 +1,116 @@
+/* The adjoint method: the derivation on the left, the count of solves on the right. */
+.slide--adjoint-solves {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.adjoint-solves-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 48px;
+}
+
+.adjoint-solves-lines {
+  flex: 1;
+  min-width: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  font-size: 1.6rem;
+  color: var(--text-muted);
+}
+
+.adjoint-solves-lines li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.adjoint-solves-lines .adjoint-solves-line--current {
+  color: var(--text-primary);
+}
+
+.adjoint-solves-math .katex-display {
+  margin: 0;
+  text-align: left;
+}
+
+.adjoint-solves-math .katex-display > .katex {
+  text-align: left;
+}
+
+.adjoint-solves-line-label {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+}
+
+/* The diagram: arrows in SVG, math labels positioned over it. */
+.adjoint-solves-diagram {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.adjoint-solves-diagram svg {
+  display: block;
+}
+
+.adjoint-solves-layer {
+  position: absolute;
+  inset: 0;
+}
+
+.adjoint-solves-solve line {
+  stroke: var(--ink-light-1);
+}
+
+.adjoint-solves-solve polygon {
+  fill: var(--ink-light-1);
+}
+
+.adjoint-solves-solve--adjoint line {
+  stroke: var(--ink-adjoint);
+}
+
+.adjoint-solves-solve--adjoint polygon {
+  fill: var(--ink-adjoint);
+}
+
+.adjoint-solves-dot line {
+  stroke: var(--text-muted);
+}
+
+.adjoint-solves-dot polygon {
+  fill: var(--text-muted);
+}
+
+.adjoint-solves-label {
+  position: absolute;
+  font-size: 22px;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--text-primary);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.adjoint-solves-label--left {
+  transform: translate(0, -50%);
+}
+
+.adjoint-solves-label--right {
+  transform: translate(-100%, -50%);
+}
+
+.adjoint-solves-label--adjoint {
+  color: var(--ink-adjoint);
+}
+
+.adjoint-solves-count {
+  font-size: 20px;
+  color: var(--text-secondary);
+}

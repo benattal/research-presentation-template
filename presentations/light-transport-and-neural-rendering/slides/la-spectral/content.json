@@ -1,0 +1,14 @@
+{
+  "layout": "spectralView",
+  "sectionLabel": "Neumann series",
+  "title": "Spectral view",
+  "subtitle": "Along each eigenvector, the series is a geometric series",
+  "eigenvectors": [[2, 1], [-1, 2]],
+  "buildSteps": [
+    { "lambda": [0.8, 0.3], "b": [1, 0], "terms": 8 },
+    { "lambda": [0.8, 0.3], "b": [0, 1], "terms": 8 },
+    { "lambda": [0.8, 0.3], "b": [0.7, 0.7], "terms": 8 },
+    { "lambda": [0.97, 0.3], "b": [0.7, 0.7], "terms": 8 },
+    { "complex": { "modulus": 0.85, "angle": 35 }, "b": [1, 0], "terms": 30 }
+  ]
+}

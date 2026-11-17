@@ -1,0 +1,16 @@
+{
+  "layout": "sectionTitle",
+  "sectionLabel": "Aside",
+  "title": "Aside: computational imaging",
+  "subtitle": "Measuring light transport with projectors and cameras",
+  "image": {
+    "type": "image",
+    "src": "/slides/lt-aside/coded-photo.jpg",
+    "alt": "A scene photographed with coded projector and camera masks"
+  },
+  "credits": [
+    {
+      "source": "otoole2012"
+    }
+  ]
+}

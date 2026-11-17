@@ -1,0 +1,38 @@
+{
+  "layout": "probingMatrix",
+  "sectionLabel": "Operator light transport",
+  "title": "Light transport probing",
+  "subtitle": "Masking the camera in sync with the projector selects light paths",
+  "equations": [
+    "$c = \\sum_k q_k \\odot \\mathbf{T}\\,p_k$",
+    "$\\Pi = \\sum_k q_k\\, p_k^\\top$"
+  ],
+  "labels": [
+    "$p_k$: projector pattern",
+    "$q_k$: camera mask",
+    "$\\mathbf{1}$: all ones",
+    "one exposure over all $k$",
+    "64 pixels each, coaxial"
+  ],
+  "buildSteps": [
+    {
+      "caption": "photo"
+    },
+    {
+      "caption": "direct"
+    },
+    {
+      "caption": "indirect"
+    }
+  ],
+  "credits": [
+    {
+      "source": "otoole2016",
+      "what": "Ch. 3, Eq. 3.1"
+    },
+    {
+      "source": "cmu15463-probing",
+      "what": "after pp. 3–16"
+    }
+  ]
+}

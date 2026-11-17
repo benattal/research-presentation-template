@@ -1,0 +1,47 @@
+{
+  "layout": "derivation",
+  "sectionLabel": "Operator light transport",
+  "title": "Rendering equation",
+  "subtitle": "Outgoing light is emission plus scattered incident light",
+  "lines": [
+    {
+      "tex": "\\underbrace{L_o(\\mathbf{x}, \\omega_o)}_{\\text{outgoing}} = \\underbrace{\\htmlClass{term-emission}{L_e(\\mathbf{x}, \\omega_o)}}_{\\text{emitted}} + \\underbrace{\\htmlClass{term-operator}{\\int_{H^2} f_r \\, L_i(\\mathbf{x}, \\omega_i) \\cos\\theta_i \\, d\\omega_i}}_{\\text{reflected}}"
+    },
+    {
+      "tex": "L_i(\\mathbf{x}, \\omega_i) = L_o(r(\\mathbf{x}, \\omega_i), -\\omega_i)",
+      "label": "ray tracing"
+    },
+    {
+      "tex": "L(\\mathbf{x}, \\omega) = \\htmlClass{term-emission}{L_e(\\mathbf{x}, \\omega)} + \\underbrace{\\htmlClass{term-operator}{\\int_{H^2} f_r \\, \\underbrace{L(r(\\mathbf{x}, \\omega'), -\\omega')}_{G L} \\cos\\theta' \\, d\\omega'}}_{S G L}"
+    },
+    {
+      "tex": "L = \\htmlClass{term-emission}{L_e} + \\htmlClass{term-operator}{A}\\, L",
+      "label": "$A = SG$"
+    },
+    {
+      "tex": "x = \\htmlClass{term-emission}{e} + \\htmlClass{term-operator}{A}\\, x",
+      "label": "discretized"
+    }
+  ],
+  "buildSteps": [
+    {},
+    {},
+    {},
+    {},
+    {}
+  ],
+  "figure": {
+    "type": "image",
+    "src": "/slides/lt-rendering-equation/incident-light.png",
+    "alt": "Direct and indirect light arriving at a point visible to the camera",
+    "caption": "light arriving at a visible point",
+    "width": 400
+  },
+  "credits": [
+    "kajiya1986",
+    {
+      "source": "cmu15468-rendering",
+      "what": "p. 5"
+    }
+  ]
+}

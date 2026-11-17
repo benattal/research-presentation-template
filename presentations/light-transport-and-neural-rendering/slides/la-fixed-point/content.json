@@ -1,0 +1,14 @@
+{
+  "layout": "fixedPoint",
+  "sectionLabel": "Neumann series",
+  "title": "Fixed-point equation",
+  "subtitle": "A linear system written as a fixed point",
+  "eigenvectors": [[2, 1], [-1, 2]],
+  "lambda": [0.8, 0.3],
+  "b": [0, 1],
+  "buildSteps": [
+    { "show": "source", "equation": "$(I - A)\\,x = \\htmlClass{term-emission}{b}$" },
+    { "show": "trial", "x": [1.6, 0.8], "equation": "$x \\;\\mapsto\\; \\htmlClass{term-emission}{b} + \\htmlClass{term-bounce-1}{Ax}$" },
+    { "show": "solution", "equation": "$x = \\htmlClass{term-emission}{b} + \\htmlClass{term-bounce-1}{Ax} \\iff x = (I - A)^{-1}\\, \\htmlClass{term-emission}{b}$" }
+  ]
+}

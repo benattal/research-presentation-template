@@ -1,0 +1,41 @@
+{
+  "layout": "tofQuadrature",
+  "sectionLabel": "Neural rendering",
+  "title": "Phasor quadrature",
+  "subtitle": "The time-of-flight measurement is a sum of phasors along the ray",
+  "frequencyMHz": 30,
+  "recipe": "$\\hat C = \\sum_i T_i\\,\\alpha_i\\,a_i, \\quad \\alpha_i = 1 - e^{-\\sigma_i\\delta_i}, \\quad T_i = \\prod_{j<i}(1-\\alpha_j)$",
+  "fourierLabel": "$m = \\int h(\\tau)\\, e^{\\mathrm{j} 2\\pi f \\tau}\\, d\\tau$, a Fourier coefficient of the transient $h$",
+  "buildSteps": [
+    {
+      "weights": "compositing",
+      "phase": false,
+      "fog": true,
+      "equation": "$\\hat C = \\sum_i T_i\\,\\alpha_i\\,a_i$"
+    },
+    {
+      "weights": "collocated",
+      "phase": false,
+      "fog": true,
+      "equation": "$I = \\sum_i \\htmlClass{term-medium}{T_i^2}\\,\\alpha_i\\,\\dfrac{a_i}{\\htmlClass{term-bounce-1}{t_i^2}}$"
+    },
+    {
+      "weights": "collocated",
+      "phase": true,
+      "fog": true,
+      "equation": "$m = \\sum_i T_i^2\\,\\alpha_i\\,\\dfrac{a_i}{t_i^2}\\,\\htmlClass{term-operator}{e^{\\,\\mathrm{j} 4\\pi f t_i/c}}$"
+    },
+    {
+      "weights": "collocated",
+      "phase": true,
+      "fog": false,
+      "equation": "$m = \\dfrac{a}{d^2}\\,e^{\\,\\mathrm{j} 4\\pi f d/c}$"
+    }
+  ],
+  "credits": [
+    {
+      "source": "attal2021",
+      "what": "Eqs. 5 and 6"
+    }
+  ]
+}

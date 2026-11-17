@@ -1,0 +1,19 @@
+{
+  "layout": "figures",
+  "sectionLabel": "Operator light transport",
+  "title": "Direct and global light",
+  "subtitle": "Direct and global light are separable with high-frequency patterns",
+  "figures": [
+    {
+      "type": "image",
+      "src": "/slides/lt-direct-global/separation-results.jpg",
+      "alt": "Eggs and peppers: scene, direct component, and global component"
+    }
+  ],
+  "credits": [
+    {
+      "source": "nayar2006",
+      "what": "Fig. 6"
+    }
+  ]
+}

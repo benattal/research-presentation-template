@@ -1,0 +1,115 @@
+.slide--probing-matrix {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.probing-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 18px;
+}
+
+.probing-panel {
+  position: relative;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.probing-sign {
+  position: absolute;
+  left: -35px;
+  top: 92px;
+  width: 35px;
+  text-align: center;
+  font-size: 36px;
+  color: var(--text-primary);
+}
+
+.probing-panel figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 4px;
+  font-size: 22px;
+  color: var(--text-primary);
+}
+
+.probing-name {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+
+.probing-mask {
+  font-size: 22px;
+}
+
+.probing-note {
+  font-size: 18px;
+  color: var(--text-secondary);
+}
+
+/* Under the renders: the equations, c = (Π ⊙ T) 1 as blocks, and the symbols' labels. */
+.probing-bottom {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.probing-equations {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-size: 28px;
+  color: var(--text-primary);
+}
+
+.probing-blocks {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.probing-blocks svg {
+  display: block;
+}
+
+.probing-block {
+  fill: var(--bg-elevated);
+  stroke: var(--text-muted);
+  stroke-width: 1.2;
+}
+
+.probing-block-one {
+  fill: var(--text-secondary);
+}
+
+.probing-block-sign {
+  font-size: 30px;
+  fill: var(--text-primary);
+  text-anchor: middle;
+}
+
+.probing-block-label {
+  position: absolute;
+  transform: translateX(-50%);
+  font-size: 24px;
+  color: var(--text-primary);
+}
+
+.probing-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.probing-labels p {
+  margin: 0;
+  font-size: 20px;
+  color: var(--text-secondary);
+}

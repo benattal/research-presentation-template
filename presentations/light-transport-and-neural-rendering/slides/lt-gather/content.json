@@ -1,0 +1,12 @@
+{
+  "layout": "scatteringGather",
+  "sectionLabel": "Operator light transport",
+  "title": "Scattering integral",
+  "subtitle": "Light leaving a point is a weighted integral of incident light",
+  "buildSteps": [
+    { "caption": "directions" },
+    { "caption": "incident light" },
+    { "caption": "BRDF and cosine" },
+    { "caption": "sum" }
+  ]
+}

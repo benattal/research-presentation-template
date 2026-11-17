@@ -1,0 +1,153 @@
+.slide--memory-meter {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.memory-meter-body {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.memory-meter-figure {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.memory-meter-plot {
+  display: block;
+}
+
+.memory-meter-axis {
+  stroke: var(--text-muted);
+  stroke-width: 1;
+}
+
+.memory-meter-grid {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.memory-meter-tick {
+  fill: var(--text-secondary);
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.memory-meter-gpu {
+  stroke: var(--text-primary);
+  stroke-width: 1.5;
+  stroke-dasharray: 7 6;
+}
+
+.memory-meter-gpu-label {
+  fill: var(--text-primary);
+  font-size: 20px;
+}
+
+.memory-meter-line {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+}
+
+.memory-meter-series-label {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.memory-meter-axis-label {
+  position: absolute;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.memory-meter-axis-label--x {
+  left: 339px;
+  top: 498px;
+  transform: translateX(-50%);
+}
+
+.memory-meter-axis-label--y {
+  left: 96px;
+  top: 4px;
+  transform: translateX(-50%);
+}
+
+.memory-meter-side {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 8px;
+}
+
+.memory-meter-formula {
+  font-size: 30px;
+  color: var(--text-primary);
+}
+
+.memory-meter-formula--adjoint {
+  color: var(--ink-adjoint);
+}
+
+.memory-meter-estimate {
+  margin-top: -8px;
+  font-size: 18px;
+  color: var(--text-muted);
+}
+
+.memory-meter-parameters {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 10px 0 6px;
+}
+
+.memory-meter-parameter {
+  display: grid;
+  grid-template-columns: 30px 1fr 120px 76px;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.memory-meter-symbol {
+  font-size: 22px;
+  color: var(--text-primary);
+}
+
+.memory-meter-name {
+  color: var(--text-secondary);
+}
+
+.memory-meter-parameter input[type='range'] {
+  width: 120px;
+  accent-color: var(--text-primary);
+  cursor: pointer;
+}
+
+.memory-meter-value {
+  text-align: right;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.memory-meter-total {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  font-size: 30px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.memory-meter-total-label {
+  font-size: 20px;
+  font-weight: 500;
+}

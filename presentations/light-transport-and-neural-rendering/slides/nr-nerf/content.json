@@ -1,0 +1,27 @@
+{
+  "layout": "figureRows",
+  "sectionLabel": "Neural rendering",
+  "title": "Neural radiance fields",
+  "subtitle": "A scene reconstructed from photographs by fitting a volume",
+  "rows": [
+    {
+      "figures": [
+        {
+          "type": "image",
+          "src": "/slides/nr-nerf/nerf-pipeline.png",
+          "alt": "NeRF pipeline: sample points along camera rays, query a network for color and density, volume render, and compare with the photograph",
+          "labels": [
+            "$\\sigma_s = 0$: $A = 0$, $x = b$",
+            "$c$ includes every bounce"
+          ]
+        }
+      ]
+    }
+  ],
+  "credits": [
+    {
+      "source": "mildenhall2020",
+      "what": "Fig. 2"
+    }
+  ]
+}

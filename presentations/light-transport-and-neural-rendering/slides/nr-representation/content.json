@@ -1,0 +1,38 @@
+{
+  "layout": "figureRows",
+  "sectionLabel": "Neural rendering",
+  "title": "Scene and measurement fields",
+  "subtitle": "A network can represent the scene or the measurement",
+  "rows": [
+    {
+      "figures": [
+        {
+          "type": "image",
+          "src": "/slides/nr-representation/transient-nerf-scene-field.png",
+          "alt": "Transient NeRF: density and color along a ray, rendered into a transient and convolved with the laser pulse",
+          "caption": "Scene field: density $\\sigma$ and color $c$"
+        }
+      ]
+    },
+    {
+      "figures": [
+        {
+          "type": "image",
+          "src": "/slides/nr-representation/flying-with-photons-transient-field.png",
+          "alt": "Flying with Photons: a transient and a density per sample, time-shifted and volume rendered",
+          "caption": "Measurement field: a transient at each point"
+        }
+      ]
+    }
+  ],
+  "credits": [
+    {
+      "source": "malik2023",
+      "what": "Fig. 2"
+    },
+    {
+      "source": "malik2024",
+      "what": "Fig. 2"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "layout": "integratingFactor",
+  "sectionLabel": "Volume rendering",
+  "title": "Integrating factor",
+  "subtitle": "Along one ray, the transfer equation is solved by an integral",
+  "buildSteps": [
+    {
+      "label": "Along the ray $\\mathbf{x} - t\\omega$, $DL = g$ reads",
+      "equation": "$$-\\frac{dL}{dt} + \\sigma_t L = g$$"
+    },
+    {
+      "label": "Multiply by $T(t) = e^{-\\int_0^t \\sigma_t\\,ds}$",
+      "equation": "$$\\frac{d}{dt}\\big(T L\\big) = -T g$$"
+    },
+    {
+      "label": "Integrate from $0$ to $d$",
+      "equation": "$$L(0) = \\int_0^d T g\\,dt + T(d)\\,L(d)$$",
+      "check": true
+    },
+    {
+      "label": "So $D^{-1}$ is an integral along rays",
+      "equation": "$$(D^{-1} g)(\\mathbf{x}, \\omega) = \\int_0^d T(t)\\, g(\\mathbf{x} - t\\omega, \\omega)\\,dt$$"
+    }
+  ]
+}

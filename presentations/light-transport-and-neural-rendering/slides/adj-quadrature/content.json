@@ -1,0 +1,21 @@
+{
+  "layout": "derivation",
+  "sectionLabel": "Adjoint light transport ⚡",
+  "title": "Volume rendering gradient",
+  "subtitle": "Each sample's gradient depends on the color behind it",
+  "lines": [
+    {
+      "tex": "\\hat C = \\sum_i T_i\\, \\alpha_i\\, c_i, \\qquad \\alpha_i = 1 - e^{-\\sigma_i \\delta_i}",
+      "label": "forward march"
+    },
+    {
+      "tex": "\\htmlClass{term-adjoint}{\\frac{\\partial \\hat C}{\\partial \\sigma_i}} = \\delta_i \\Big( T_{i+1}\\, c_i - \\big(\\hat C - \\hat C_{\\le i}\\big) \\Big)",
+      "label": "$\\hat C - \\hat C_{\\le i}$: color behind sample $i$"
+    },
+    {
+      "tex": "\\hat C_{\\le i} = \\hat C_{\\le i-1} + T_i\\, \\alpha_i\\, c_i",
+      "label": "second march, constant memory"
+    }
+  ],
+  "buildSteps": [{}, {}, {}]
+}

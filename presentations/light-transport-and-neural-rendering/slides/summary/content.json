@@ -1,0 +1,24 @@
+{
+  "layout": "pointList",
+  "sectionLabel": "Closing",
+  "title": "Summary",
+  "subtitle": "Every method here is a solve, inverse, or derivative of $x = e + Ax$",
+  "points": [
+    {
+      "text": "Light in steady state is a sum over bounces: $x = \\sum_k A^k e$"
+    },
+    {
+      "text": "$T$ can be measured and probed optically"
+    },
+    {
+      "text": "Volume rendering is the same equation in a medium"
+    },
+    {
+      "text": "In neural rendering, a scene is fit to measurements"
+    },
+    {
+      "text": "All gradients cost one adjoint solve with $A^\\top$"
+    }
+  ],
+  "render": "light"
+}

@@ -1,0 +1,39 @@
+{
+  "layout": "opticalComputing",
+  "sectionLabel": "Operator light transport",
+  "title": "Optical computing",
+  "subtitle": "Power iteration with photographs estimates the dominant eigenvector",
+  "equations": [
+    "$\\mathbf{T}\\,v_1 = \\lambda_1 v_1$",
+    "$p \\leftarrow \\dfrac{\\mathbf{T}p}{\\lVert \\mathbf{T}p \\rVert}$"
+  ],
+  "labels": [
+    "project $p$, capture $\\mathbf{T}p$, normalize",
+    "$\\mathbf{T}$: 19 × 19, elements also measure"
+  ],
+  "start": 1,
+  "buildSteps": [
+    {
+      "photos": 0
+    },
+    {
+      "photos": 1
+    },
+    {
+      "photos": 2
+    },
+    {
+      "photos": 4
+    }
+  ],
+  "credits": [
+    {
+      "source": "otoole2010",
+      "what": "optical power iteration"
+    },
+    {
+      "source": "cmu15463-transport",
+      "what": "after pp. 42–46"
+    }
+  ]
+}

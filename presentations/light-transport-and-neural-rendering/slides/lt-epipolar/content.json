@@ -1,0 +1,61 @@
+{
+  "layout": "figures",
+  "sectionLabel": "Operator light transport",
+  "title": "Epipolar imaging",
+  "subtitle": "Epipolar probing separates direct and indirect light at video rate",
+  "figures": [
+    {
+      "type": "image",
+      "src": "/slides/lt-epipolar/epipolar-direct.jpg",
+      "alt": "A direct path from projector to camera through the epipolar lines of both",
+      "caption": "direct"
+    },
+    {
+      "type": "image",
+      "src": "/slides/lt-epipolar/epipolar-indirect.jpg",
+      "alt": "Indirect paths, scattered and through a mirror, leaving the camera's epipolar line",
+      "caption": "indirect"
+    },
+    {
+      "type": "video",
+      "src": "/slides/lt-epipolar/direct-and-global-video.webm",
+      "alt": "Live single-bounce and multiple-bounce video",
+      "caption": "single and multiple bounces, live",
+      "step": 1,
+      "fit": {
+        "aspect": 2.53,
+        "position": "50% 38%"
+      }
+    },
+    {
+      "type": "video",
+      "src": "/slides/lt-epipolar/epipolar-tof-sunlight.mp4",
+      "alt": "Regular and epipolar time-of-flight depth outdoors in sunlight",
+      "caption": "time of flight in sunlight",
+      "step": 2,
+      "fit": {
+        "aspect": 2.31,
+        "position": "50% 16%"
+      }
+    }
+  ],
+  "buildSteps": [
+    {},
+    {},
+    {}
+  ],
+  "credits": [
+    {
+      "source": "cmu15463-transport",
+      "what": "pp. 82–83"
+    },
+    {
+      "source": "otoole2015",
+      "what": "Episcan3D video"
+    },
+    {
+      "source": "achar2017",
+      "what": "EpiToF video"
+    }
+  ]
+}

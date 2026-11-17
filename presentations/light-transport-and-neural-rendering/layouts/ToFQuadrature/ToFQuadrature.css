@@ -1,0 +1,47 @@
+.slide--tof-quadrature {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.tof-quadrature-body {
+  display: flex;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.tof-quadrature-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.tof-quadrature-recipe {
+  font-size: 22px;
+  color: var(--text-muted);
+}
+
+.tof-quadrature-equation {
+  display: flex;
+  align-items: center;
+  min-height: 84px;
+  font-size: 30px;
+  color: var(--text-primary);
+}
+
+.tof-quadrature-panel {
+  display: block;
+  border-radius: 6px;
+}
+
+.tof-quadrature-fourier {
+  margin-top: 14px;
+  font-size: 22px;
+  color: var(--text-primary);
+}
+
+.tof-quadrature-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}

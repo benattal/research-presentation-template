@@ -1,0 +1,30 @@
+{
+  "layout": "quadratureExplorer",
+  "sectionLabel": "Volume rendering",
+  "title": "Sampling",
+  "subtitle": "With the same number of samples, the error depends on where they are",
+  "surfaceWidth": 0.015,
+  "coreDensity": 30,
+  "compareSamplers": true,
+  "buildSteps": [
+    {
+      "sampler": "random",
+      "samples": 32
+    },
+    {
+      "sampler": "stratified",
+      "samples": 32
+    },
+    {
+      "sampler": "hierarchical",
+      "samples": 32,
+      "coarse": 16
+    }
+  ],
+  "credits": [
+    {
+      "source": "mildenhall2020",
+      "what": "hierarchical sampling"
+    }
+  ]
+}

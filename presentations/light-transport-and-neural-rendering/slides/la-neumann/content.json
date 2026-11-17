@@ -1,0 +1,14 @@
+{
+  "layout": "neumannSeries",
+  "sectionLabel": "Neumann series",
+  "title": "Neumann series",
+  "subtitle": "Inverting a matrix with a power series",
+  "eigenvectors": [[2, 1], [-1, 2]],
+  "lambda": [0.8, 0.3],
+  "buildSteps": [
+    { "terms": 1, "equation": "$S_k = I + A + A^2 + \\cdots + A^k$" },
+    { "terms": 2, "equation": "$(I - A)\\, S_k = I - A^{k+1}$" },
+    { "terms": 6, "equation": "$A^{k+1} \\to 0 \\;\\text{ if }\\; \\rho(A) = \\max_i |\\lambda_i| < 1$" },
+    { "terms": "all", "equation": "$(I - A)^{-1} = I + A + A^2 + \\cdots$" }
+  ]
+}

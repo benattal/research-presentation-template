@@ -1,0 +1,54 @@
+{
+  "layout": "sectionOutline",
+  "sectionLabel": "Opening",
+  "title": "Outline",
+  "sections": [
+    {
+      "title": "Neumann series",
+      "subtitle": "Solving linear equations with a power series"
+    },
+    {
+      "title": "Operator light transport",
+      "subtitle": "Light between surfaces, written with operators",
+      "render": "light"
+    },
+    {
+      "title": "Aside: computational imaging",
+      "subtitle": "Measuring light transport with projectors and cameras",
+      "image": "/slides/roadmap/coded-photo.jpg",
+      "aside": true
+    },
+    {
+      "title": "Volume rendering",
+      "subtitle": "Light inside scattering media",
+      "image": "/slides/roadmap/fog.jpg"
+    },
+    {
+      "title": "Neural rendering",
+      "subtitle": "Reconstructing scenes from measurements using a renderer",
+      "render": "pulse"
+    },
+    {
+      "title": "Adjoint light transport ⚡",
+      "subtitle": "Gradients of light transport",
+      "render": "importance"
+    }
+  ],
+  "buildSteps": [
+    {},
+    {},
+    {},
+    {},
+    {},
+    {}
+  ],
+  "credits": [
+    {
+      "source": "otoole2012"
+    },
+    {
+      "source": "cmu15468-media",
+      "what": "p. 5"
+    }
+  ]
+}

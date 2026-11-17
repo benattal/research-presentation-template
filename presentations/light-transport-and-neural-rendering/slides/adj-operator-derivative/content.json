@@ -1,0 +1,11 @@
+{
+  "layout": "adjointViews",
+  "sectionLabel": "Adjoint light transport",
+  "view": "operator",
+  "title": "Operator derivative",
+  "subtitle": "Changing a material and changing the geometry",
+  "buildSteps": [
+    {},
+    {}
+  ]
+}

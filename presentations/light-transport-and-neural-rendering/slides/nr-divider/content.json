@@ -1,0 +1,7 @@
+{
+  "layout": "sectionTitle",
+  "sectionLabel": "Neural rendering",
+  "title": "Neural rendering",
+  "subtitle": "Reconstructing scenes from measurements using a renderer",
+  "render": "pulse"
+}

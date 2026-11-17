@@ -1,0 +1,16 @@
+{
+  "layout": "operatorExplorer",
+  "sectionLabel": "Operator light transport",
+  "mode": "sum",
+  "direction": "forward",
+  "title": "Global illumination",
+  "subtitle": "All bounces together give the lit room",
+  "buildSteps": [
+    {},
+    {},
+    {},
+    {},
+    {},
+    {}
+  ]
+}

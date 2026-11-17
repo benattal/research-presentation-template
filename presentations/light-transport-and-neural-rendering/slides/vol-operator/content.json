@@ -1,0 +1,36 @@
+{
+  "layout": "operatorForm",
+  "sectionLabel": "Volume rendering",
+  "title": "Operator form",
+  "subtitle": "A medium's transport splits into terms along rays and over directions",
+  "stencils": [
+    {
+      "operator": "D",
+      "label": "$D$: along one ray",
+      "step": 1
+    },
+    {
+      "operator": "K",
+      "label": "$K$: from all directions",
+      "step": 2
+    }
+  ],
+  "buildSteps": [
+    {
+      "label": "with $\\sigma_t = \\sigma_a + \\sigma_s$",
+      "equation": "$$\\htmlClass{term-medium}{(\\omega \\cdot \\nabla) L + \\sigma_t L} = \\htmlClass{term-bounce-2}{\\sigma_s \\int f_p\\, L\\, d\\omega'} + \\htmlClass{term-emission}{\\sigma_a L_e}$$"
+    },
+    {
+      "label": "a derivative along each ray",
+      "equation": "$$\\htmlClass{term-medium}{D = \\omega \\cdot \\nabla + \\sigma_t}$$"
+    },
+    {
+      "label": "an integral over directions",
+      "equation": "$$\\htmlClass{term-bounce-2}{K L = \\sigma_s \\int f_p\\, L\\, d\\omega'}$$"
+    },
+    {
+      "label": "with $Q = \\sigma_a L_e$",
+      "equation": "$$(\\htmlClass{term-medium}{D} - \\htmlClass{term-bounce-2}{K})\\, L = \\htmlClass{term-emission}{Q}$$"
+    }
+  ]
+}

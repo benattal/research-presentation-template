@@ -1,0 +1,14 @@
+{
+  "layout": "operatorExplorer",
+  "sectionLabel": "Adjoint light transport",
+  "mode": "construct",
+  "direction": "adjoint",
+  "title": "Importance",
+  "subtitle": "The sensor's response, transported backward",
+  "buildSteps": [
+    {},
+    {},
+    {},
+    {}
+  ]
+}

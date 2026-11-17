@@ -1,0 +1,72 @@
+.slide--integrating-factor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.integrating-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 36px;
+}
+
+.integrating-derivation {
+  width: 470px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding-top: 6px;
+}
+
+.integrating-check {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: start;
+  column-gap: 20px;
+  row-gap: 6px;
+  margin-top: 6px;
+  font-size: 20px;
+}
+
+.integrating-check-label {
+  color: var(--text-muted);
+}
+
+.integrating-check-value {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.integrating-figure {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.integrating-canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  touch-action: none;
+  cursor: move;
+}
+
+.integrating-mark,
+.integrating-axis {
+  position: absolute;
+  font-size: 22px;
+  line-height: 1.1;
+  color: var(--text-primary);
+  pointer-events: none;
+}
+
+.integrating-mark {
+  text-align: right;
+}
+
+.integrating-mark--medium {
+  color: var(--ink-medium);
+}

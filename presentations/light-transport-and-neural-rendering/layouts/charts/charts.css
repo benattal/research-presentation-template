@@ -1,0 +1,80 @@
+/* Plots on white beside the renders: thin ink axes, labelled units. */
+.chart {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.chart-svg {
+  display: block;
+  overflow: visible;
+}
+
+.chart-svg--scrub {
+  cursor: ew-resize;
+  touch-action: none;
+  user-select: none;
+}
+
+.chart-axis {
+  stroke: var(--text-muted);
+  stroke-width: 1;
+}
+
+.chart-tick {
+  fill: var(--text-secondary);
+  font-family: var(--font);
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+}
+
+.chart-line {
+  fill: none;
+  stroke: var(--text-primary);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.chart-area {
+  fill: var(--border-light);
+  stroke: none;
+}
+
+.chart-dots circle {
+  fill: var(--text-primary);
+}
+
+.chart-bars rect {
+  fill: var(--text-secondary);
+}
+
+.chart-mark {
+  stroke: var(--text-muted);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+}
+
+.chart-label,
+.chart-note {
+  position: absolute;
+  color: var(--text-secondary);
+  font-size: 18px;
+  line-height: 1.2;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.chart-label--x {
+  text-align: center;
+}
+
+.chart-note--left {
+  transform: translate(0, -50%);
+}
+
+.chart-note--right {
+  transform: translate(-100%, -50%);
+}
+
+.chart-note--center {
+  transform: translate(-50%, -50%);
+}

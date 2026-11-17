@@ -1,0 +1,52 @@
+{
+  "layout": "derivation",
+  "sectionLabel": "Volume rendering",
+  "title": "Volume rendering equation",
+  "subtitle": "Light in a medium has the same fixed-point form as between surfaces",
+  "lines": [
+    {
+      "tex": "L = \\htmlClass{term-medium}{T(d)}\\, L(d) \\;+",
+      "label": "surface behind the medium"
+    },
+    {
+      "tex": "\\hphantom{L =}\\; \\htmlClass{term-medium}{D^{-1}}\\htmlClass{term-emission}{Q} \\;+",
+      "label": "emission"
+    },
+    {
+      "tex": "\\hphantom{L =}\\; \\htmlClass{term-medium}{D^{-1}}\\htmlClass{term-bounce-2}{K}\\, L",
+      "label": "in-scattering"
+    },
+    {
+      "tex": "x = \\htmlClass{term-emission}{b} + \\htmlClass{term-bounce-2}{A}\\, x",
+      "label": "$b = D^{-1}Q + T(d)\\,L(d)$"
+    },
+    {
+      "tex": "\\htmlClass{term-bounce-2}{A} = \\underbrace{\\htmlClass{term-medium}{D^{-1}}}_{\\text{like } G}\\, \\underbrace{\\htmlClass{term-bounce-2}{K}}_{\\text{like } S}",
+      "label": "one bounce"
+    },
+    {
+      "tex": "x = \\htmlClass{term-emission}{b} + \\htmlClass{term-bounce-1}{Ab} + \\htmlClass{term-bounce-2}{A^2 b} + \\htmlClass{term-bounce-3}{A^3 b} + \\cdots",
+      "label": "orders of scattering"
+    }
+  ],
+  "figure": {
+    "type": "image",
+    "src": "/slides/vol-vre/single-and-multiple-scattering.jpg",
+    "alt": "Two renders of glasses of juice, with single and with multiple scattering",
+    "caption": "Renders"
+  },
+  "buildSteps": [
+    {},
+    {},
+    {},
+    {},
+    {},
+    {}
+  ],
+  "credits": [
+    {
+      "source": "cmu15468-media",
+      "what": "p. 122"
+    }
+  ]
+}

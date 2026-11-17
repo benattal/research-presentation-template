@@ -1,0 +1,7 @@
+{
+  "layout": "sectionTitle",
+  "sectionLabel": "Adjoint light transport ⚡",
+  "title": "Adjoint light transport ⚡",
+  "subtitle": "Gradients of light transport",
+  "render": "importance"
+}

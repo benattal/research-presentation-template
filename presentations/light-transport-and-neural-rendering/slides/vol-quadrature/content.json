@@ -1,0 +1,33 @@
+{
+  "layout": "quadratureExplorer",
+  "sectionLabel": "Volume rendering",
+  "title": "Quadrature",
+  "subtitle": "Piecewise-constant quadrature of the integral is alpha compositing",
+  "surfaceWidth": 0.012,
+  "coreDensity": 30,
+  "equations": [
+    "$$\\hat C = \\sum_i T_i\\,\\alpha_i\\,c_i$$",
+    "$$\\alpha_i = 1 - e^{-\\sigma_i \\delta_i}$$",
+    "$$T_i = \\prod_{j<i} (1 - \\alpha_j)$$"
+  ],
+  "buildSteps": [
+    {
+      "sampler": "uniform",
+      "samples": 4
+    },
+    {
+      "sampler": "uniform",
+      "samples": 16
+    },
+    {
+      "sampler": "uniform",
+      "samples": 64
+    }
+  ],
+  "credits": [
+    {
+      "source": "tagliasacchi2022",
+      "what": "quadrature"
+    }
+  ]
+}

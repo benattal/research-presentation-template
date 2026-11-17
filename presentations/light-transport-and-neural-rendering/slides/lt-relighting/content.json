@@ -1,0 +1,87 @@
+{
+  "layout": "transportMatrix",
+  "sectionLabel": "Operator light transport",
+  "title": "Relighting",
+  "subtitle": "A photo under any lighting is a weighted sum of one-light photos",
+  "mode": "relight",
+  "equations": [
+    "$c = \\mathbf{T}p = \\sum_k p_k \\, \\mathbf{T}_{:,k}$"
+  ],
+  "exposureStep": 1,
+  "figure": {
+    "type": "image",
+    "src": "/slides/lt-relighting/light-stage-and-reflectance-field.jpg",
+    "alt": "Light stage 1.0 and the reflectance field of a face: one photo per light direction",
+    "caption": "a face, one photo per light direction",
+    "step": 3
+  },
+  "buildSteps": [
+    {
+      "elements": [
+        3
+      ]
+    },
+    {
+      "elements": [
+        3,
+        12
+      ]
+    },
+    {
+      "pattern": [
+        0.3,
+        0.283,
+        0.267,
+        0.25,
+        0.233,
+        0.217,
+        0.2,
+        0.183,
+        0.167,
+        0.15,
+        0.133,
+        0.117,
+        0.1,
+        0.083,
+        0.067,
+        0.05,
+        0.033,
+        0.017,
+        0.0
+      ]
+    },
+    {
+      "pattern": [
+        0.3,
+        0.283,
+        0.267,
+        0.25,
+        0.233,
+        0.217,
+        0.2,
+        0.183,
+        0.167,
+        0.15,
+        0.133,
+        0.117,
+        0.1,
+        0.083,
+        0.067,
+        0.05,
+        0.033,
+        0.017,
+        0.0
+      ]
+    }
+  ],
+  "credits": [
+    {
+      "source": "debevec2000",
+      "what": "light stage, reflectance field"
+    },
+    {
+      "source": "cmu15463-transport",
+      "what": "p. 29"
+    }
+  ]
+}

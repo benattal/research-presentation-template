@@ -1,0 +1,20 @@
+{
+  "layout": "figures",
+  "sectionLabel": "Adjoint light transport ⚡",
+  "title": "Differentiable volumes",
+  "subtitle": "Volume reconstruction needs unbiased gradient estimators",
+  "figures": [
+    {
+      "type": "image",
+      "src": "/slides/adj-volumes/differential-ratio-tracking.png",
+      "alt": "A scattering volume reconstructed with differential ratio tracking and with delta tracking, beside maps of the mean and variance of the density gradients",
+      "caption": "Reconstruction and density gradients: unbiased and biased estimators"
+    }
+  ],
+  "credits": [
+    {
+      "source": "nimierdavid2022",
+      "what": "Fig. 1"
+    }
+  ]
+}

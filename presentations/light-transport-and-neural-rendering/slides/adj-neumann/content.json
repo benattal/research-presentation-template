@@ -1,0 +1,16 @@
+{
+  "layout": "operatorExplorer",
+  "sectionLabel": "Adjoint light transport",
+  "mode": "sum",
+  "direction": "adjoint",
+  "title": "Adjoint Neumann series",
+  "subtitle": "Importance, computed bounce by bounce",
+  "buildSteps": [
+    {},
+    {},
+    {},
+    {},
+    {},
+    {}
+  ]
+}

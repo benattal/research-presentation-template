@@ -1,0 +1,12 @@
+{
+  "layout": "adjointViews",
+  "sectionLabel": "Adjoint light transport",
+  "view": "gradient",
+  "title": "Gradient",
+  "subtitle": "All derivatives from one forward and one adjoint solve",
+  "buildSteps": [
+    {},
+    {},
+    {}
+  ]
+}

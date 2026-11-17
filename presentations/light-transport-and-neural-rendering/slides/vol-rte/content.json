@@ -1,0 +1,22 @@
+{
+  "layout": "beamThroughMedium",
+  "sectionLabel": "Volume rendering",
+  "title": "Radiative transfer equation",
+  "subtitle": "In a medium, the radiance along a ray changes at every point",
+  "lhs": "(\\omega \\cdot \\nabla) L",
+  "terms": [
+    { "process": "absorption", "math": "-\\,\\sigma_a L", "label": "absorption", "className": "term-medium" },
+    { "process": "outScattering", "math": "-\\,\\sigma_s L", "label": "out-scattering", "className": "term-bounce-2" },
+    { "process": "emission", "math": "+\\,\\sigma_a L_e", "label": "emission", "className": "term-emission" },
+    { "process": "inScattering", "math": "+\\,\\sigma_s \\int f_p\\, L \\, d\\omega'", "label": "in-scattering", "className": "term-bounce-2" }
+  ],
+  "absorption": 0.8,
+  "scattering": 0.8,
+  "buildSteps": [
+    { "terms": 0 },
+    { "terms": 1 },
+    { "terms": 2 },
+    { "terms": 3 },
+    { "terms": 4 }
+  ]
+}

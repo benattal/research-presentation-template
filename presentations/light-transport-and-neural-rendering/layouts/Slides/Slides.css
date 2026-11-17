@@ -1,0 +1,248 @@
+/* Title slide and section dividers: text on the left and a picture on the
+   right, both centered vertically, so the title sits at the same height on
+   every divider. */
+.slide--lecture-title,
+.slide--section-title {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 48px;
+  height: 100%;
+}
+
+.lecture-title-text h1 {
+  font-family: var(--font-display);
+  font-size: 3.2rem;
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+}
+
+.lecture-title-text p {
+  margin-top: 20px;
+  font-size: 1.35rem;
+  color: var(--text-secondary);
+}
+
+.section-title-number {
+  margin-bottom: 12px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--ink-light-2);
+}
+
+.section-title-text h1 {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--text-primary);
+}
+
+.section-title-text p {
+  margin-top: 16px;
+  font-size: 1.35rem;
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+.section-title-visual {
+  width: 600px;
+}
+
+.section-title-image {
+  display: block;
+  width: 600px;
+  height: 360px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.series-plot {
+  display: block;
+  background: var(--bg-elevated);
+  border-radius: 6px;
+}
+
+.series-plot-limit {
+  stroke: var(--text-muted);
+  stroke-dasharray: 6 6;
+}
+
+.series-plot-axis {
+  stroke: var(--border-light);
+}
+
+.series-plot-term {
+  stroke: var(--ink-light-2);
+  stroke-width: 3;
+  opacity: 0.5;
+}
+
+.series-plot-dot {
+  fill: var(--ink-light-2);
+}
+
+/* Figures fill the area under the title. */
+.slide--figures {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.figures-grid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  gap: 20px;
+}
+
+.figures-grid--1 { grid-template-columns: 1fr; }
+.figures-grid--2 { grid-template-columns: 1fr 1fr; }
+.figures-grid--3 { grid-template-columns: 1fr 1fr 1fr; }
+.figures-grid--4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+
+/* The media box takes the image's own height (shrinking when the cell is
+   shorter), so a caption sits right under its figure. */
+.figures-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+  margin: 0;
+}
+
+.figures-media {
+  flex: 0 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.figures-media img,
+.figures-media video {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+/* A media item cropped to its content: a box of the content's aspect ratio, filled. */
+.figures-fit {
+  width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.figures-media .figures-fit img,
+.figures-media .figures-fit video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+  object-position: var(--figures-fit-position);
+  border-radius: 0;
+}
+
+.figures-item figcaption {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+}
+
+/* Derivations: one display equation per step, the newest in full color. */
+.slide--derivation {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.derivation-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 40px;
+  align-items: center;
+}
+
+.derivation-lines {
+  flex: 1;
+  min-width: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  font-size: 1.6rem;
+  color: var(--text-muted);
+}
+
+/* Without a figure the equations are larger and centered, not left in one half. */
+.derivation-body:not(.derivation-body--figure) {
+  justify-content: center;
+}
+
+.derivation-body:not(.derivation-body--figure) .derivation-lines {
+  flex: 0 1 auto;
+  gap: 30px;
+  font-size: 2rem;
+}
+
+.derivation-lines li {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  align-items: center;
+  gap: 28px;
+}
+
+.derivation-label {
+  white-space: nowrap;
+}
+
+.derivation-lines .derivation-line--current {
+  color: var(--text-primary);
+}
+
+.derivation-math .katex-display {
+  margin: 0;
+}
+
+.derivation-label {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+}
+
+.derivation-figure {
+  flex: 0 0 46%;
+  margin: 0;
+}
+
+.derivation-figure img,
+.derivation-figure video {
+  width: 100%;
+  border-radius: 4px;
+}
+
+.derivation-figure figcaption {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+}
+
+
+/* The adjoint section's bolt, in the adjoint color. */
+.bolt {
+  display: inline-block;
+  height: 0.8em;
+  width: auto;
+  margin-left: 0.25em;
+  vertical-align: -0.05em;
+  fill: var(--ink-adjoint);
+}

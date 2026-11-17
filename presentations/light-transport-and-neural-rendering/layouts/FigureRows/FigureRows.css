@@ -1,0 +1,58 @@
+/* Rows of figures filling the area under the title. */
+.slide--figure-rows {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.figure-rows-body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  row-gap: 18px;
+}
+
+.figure-rows-row {
+  min-height: 0;
+  display: grid;
+  column-gap: 28px;
+}
+
+/* A column that centers the figure and its caption; the figure shrinks to the
+   height left after the caption and keeps its aspect ratio (object-fit). */
+.figure-rows-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+}
+
+.figure-rows-media {
+  flex: 0 1 auto;
+  min-height: 0;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.figure-rows-item figcaption {
+  margin-top: 6px;
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+}
+
+/* Short labels side by side under a figure (and its caption). */
+.figure-rows-labels {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 56px;
+  margin-top: 22px;
+}
+
+.figure-rows-label {
+  font-size: 24px;
+  color: var(--text-primary);
+}

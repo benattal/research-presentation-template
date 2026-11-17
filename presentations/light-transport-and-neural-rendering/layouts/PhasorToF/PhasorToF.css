@@ -1,0 +1,25 @@
+.slide--phasor-tof {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.phasor-tof-figures {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.phasor-tof-panel {
+  display: block;
+  flex-shrink: 0;
+  border-radius: 6px;
+  touch-action: none;
+}
+
+.phasor-tof-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+}

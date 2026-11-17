@@ -1,0 +1,15 @@
+{
+  "layout": "operatorExplorer",
+  "sectionLabel": "Operator light transport",
+  "mode": "iterate",
+  "direction": "forward",
+  "title": "Multiple bounces",
+  "subtitle": "Each bounce of light, one at a time",
+  "buildSteps": [
+    {},
+    {},
+    {},
+    {},
+    {}
+  ]
+}

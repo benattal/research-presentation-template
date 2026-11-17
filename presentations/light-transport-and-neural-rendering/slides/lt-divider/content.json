@@ -1,0 +1,7 @@
+{
+  "layout": "sectionTitle",
+  "sectionLabel": "Operator light transport",
+  "title": "Operator light transport",
+  "subtitle": "Light between surfaces, written with operators",
+  "render": "spot"
+}

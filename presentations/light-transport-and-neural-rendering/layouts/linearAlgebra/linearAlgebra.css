@@ -1,0 +1,185 @@
+/* Figures of the linear algebra slides: thin ink on white. */
+.la-plot {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.la-plot-svg {
+  display: block;
+  overflow: visible;
+}
+
+.la-plot-axis {
+  stroke: var(--text-muted);
+  stroke-width: 1;
+}
+
+.la-plot-tick {
+  fill: var(--text-secondary);
+  font-family: var(--font);
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+
+.la-plot-exact {
+  stroke: var(--text-primary);
+  stroke-width: 2.5;
+}
+
+.la-plot-whisker line {
+  stroke: var(--text-primary);
+  stroke-width: 1.5;
+}
+
+.la-plot-segment {
+  stroke: var(--bg-slide);
+  stroke-width: 1;
+}
+
+.la-plot-line {
+  fill: none;
+  stroke-width: 2;
+}
+
+.la-plot-label,
+.la-plot-note {
+  position: absolute;
+  color: var(--text-secondary);
+  font-size: 18px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.la-plot-label--x {
+  text-align: center;
+}
+
+/* The plane: vectors as arrows on a faint grid. */
+.la-plane {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.la-plane-svg {
+  display: block;
+  overflow: hidden;
+}
+
+.la-plane-grid {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.la-plane-axis {
+  stroke: var(--border-light);
+  stroke-width: 1.5;
+}
+
+.la-plane-label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 22px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.la-arrow-shaft {
+  stroke: currentColor;
+  stroke-linecap: round;
+}
+
+.la-arrow-head {
+  fill: currentColor;
+}
+
+/* Colors of plane figures: the source b, the terms of a series, the solution, and the two
+   eigendirections in neutral inks (the deck's colors carry other meanings, cyan importance). */
+.la-ink-emission { color: var(--ink-light-0); }
+.la-ink-1 { color: var(--ink-light-1); }
+.la-ink-2 { color: var(--ink-light-2); }
+.la-ink-3 { color: var(--ink-light-3); }
+.la-ink-4 { color: var(--ink-light-4); }
+.la-ink-solution { color: var(--text-primary); }
+.la-ink-first { color: var(--text-secondary); }
+.la-ink-second { color: var(--text-muted); }
+
+/* A labelled slider for exploring with the mouse. */
+.la-slider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 20px;
+  color: var(--text-secondary);
+}
+
+.la-slider-label {
+  min-width: 64px;
+}
+
+.la-slider input {
+  width: 200px;
+  accent-color: var(--ink-light-2);
+}
+
+.la-slider-value {
+  min-width: 56px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The graph of a small matrix, with paths and walks over its edges. */
+.la-graph {
+  display: block;
+  overflow: visible;
+}
+
+.la-graph-edge path {
+  fill: none;
+  stroke: var(--border-light);
+}
+
+.la-graph-edge polygon {
+  fill: var(--border-light);
+}
+
+.la-graph-path,
+.la-graph-walk {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+}
+
+.la-graph-walk {
+  stroke-width: 1.4;
+}
+
+.la-graph-walk--dark {
+  color: var(--text-muted);
+}
+
+.la-graph-node circle {
+  fill: var(--bg-slide);
+  stroke: var(--text-secondary);
+  stroke-width: 2;
+}
+
+.la-graph-node text {
+  fill: var(--text-primary);
+  font-family: var(--font);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.la-graph-node--source circle {
+  fill: var(--ink-light-0);
+  stroke: var(--ink-light-0);
+}
+
+.la-graph-node--source text {
+  fill: var(--bg-slide);
+}
+
+.la-graph-node--highlight circle {
+  stroke: var(--text-primary);
+  stroke-width: 3.5;
+}

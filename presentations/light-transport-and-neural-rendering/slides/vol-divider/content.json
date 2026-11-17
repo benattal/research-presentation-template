@@ -1,0 +1,17 @@
+{
+  "layout": "sectionTitle",
+  "sectionLabel": "Volume rendering",
+  "title": "Volume rendering",
+  "subtitle": "Light inside scattering media",
+  "image": {
+    "type": "image",
+    "src": "/slides/vol-divider/cloud.jpg",
+    "alt": "A cumulus cloud"
+  },
+  "credits": [
+    {
+      "source": "cmu15468-media",
+      "what": "p. 9"
+    }
+  ]
+}

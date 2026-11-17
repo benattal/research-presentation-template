@@ -1,0 +1,175 @@
+.slide--operator-explorer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.operator-main {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+}
+
+.operator-render {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.operator-room {
+  display: block;
+  border-radius: 6px;
+}
+
+/* Exploration controls sit faintly over the render until the pointer is on it. */
+.operator-controls {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.operator-render:hover .operator-controls {
+  opacity: 1;
+}
+
+.operator-controls button {
+  min-width: 36px;
+  padding: 2px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 5px;
+  background: rgba(10, 12, 18, 0.7);
+  color: #e9ecf2;
+  font: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.operator-controls button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.operator-controls .operator-controls--active {
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+.operator-controls-gap {
+  width: 12px;
+}
+
+.operator-side {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.operator-equation {
+  font-size: 2.2rem;
+  color: var(--text-primary);
+}
+
+.operator-label {
+  font-size: 1.4rem;
+  color: var(--text-primary);
+}
+
+.operator-kind {
+  font-size: 1.15rem;
+  color: var(--text-muted);
+}
+
+.operator-column {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+}
+
+.operator-column li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 1.3rem;
+  color: var(--text-muted);
+}
+
+.operator-column .operator-column--current {
+  color: var(--text-primary);
+}
+
+.operator-column .operator-column--later .math {
+  opacity: 0.3;
+}
+
+.operator-thumb {
+  display: block;
+  flex-shrink: 0;
+  border-radius: 4px;
+}
+
+.operator-equation--small {
+  font-size: 1.7rem;
+}
+
+.operator-check {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 4px 16px;
+  margin-top: 8px;
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+}
+
+.operator-check dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+}
+
+.operator-share {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.operator-equation--small {
+  font-size: 1.45rem;
+}
+
+.operator-bars {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+}
+
+.operator-bars li {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  align-items: center;
+  gap: 10px;
+}
+
+.operator-bar {
+  display: block;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--ink-adjoint);
+}
+
+.operator-column .math,
+.operator-equation .math {
+  white-space: nowrap;
+}

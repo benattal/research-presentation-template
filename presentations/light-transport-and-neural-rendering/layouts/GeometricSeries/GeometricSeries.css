@@ -1,0 +1,85 @@
+.slide--geometric {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.geometric-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+  min-height: 0;
+  justify-content: center;
+}
+
+.geometric-controls {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+
+.geometric-identity {
+  width: 560px;
+  font-size: 28px;
+  color: var(--text-primary);
+}
+
+.geometric-controls .la-slider-label {
+  min-width: 0;
+}
+
+.geometric-limit {
+  font-size: 24px;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.geometric-panels {
+  display: flex;
+  justify-content: space-between;
+}
+
+.geometric-edge {
+  stroke: var(--text-muted);
+  stroke-width: 1.2;
+}
+
+.geometric-polynomial {
+  stroke: var(--text-muted);
+  stroke-width: 1.3;
+  opacity: 0.7;
+}
+
+.geometric-function {
+  stroke: var(--text-primary);
+  stroke-width: 3;
+}
+
+.geometric-marker {
+  stroke: var(--ink-light-2);
+  stroke-width: 1.5;
+}
+
+.geometric-limit-line {
+  stroke: var(--text-primary);
+  stroke-width: 1.5;
+}
+
+.geometric-terms line {
+  stroke-width: 6;
+  stroke-linecap: butt;
+}
+
+.geometric-sums circle {
+  fill: var(--text-primary);
+}
+
+.la-plot-note.geometric-note-function {
+  color: var(--text-primary);
+  font-size: 24px;
+}
+
+.la-plot-note.geometric-note-polynomial {
+  color: var(--text-muted);
+}

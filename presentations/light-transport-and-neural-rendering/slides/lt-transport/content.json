@@ -1,0 +1,37 @@
+{
+  "layout": "lightPaths",
+  "sectionLabel": "Operator light transport",
+  "title": "Light transport",
+  "subtitle": "Light transport is the map from light sources to measurements",
+  "equation": "$c = \\mathbf{T}\\,p$",
+  "projectorLabel": "projector $p$",
+  "cameraLabel": "camera $c$",
+  "buildSteps": [
+    {
+      "path": "direct",
+      "label": "direct"
+    },
+    {
+      "path": "interreflection",
+      "label": "interreflection"
+    },
+    {
+      "path": "subsurface",
+      "label": "subsurface"
+    },
+    {
+      "path": "volumetric",
+      "label": "volumetric"
+    }
+  ],
+  "credits": [
+    {
+      "source": "nayar2006",
+      "what": "after Fig. 2"
+    },
+    {
+      "source": "cmu15463-transport",
+      "what": "after pp. 77–81"
+    }
+  ]
+}

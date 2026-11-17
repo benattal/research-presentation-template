@@ -1,0 +1,11 @@
+{
+  "layout": "adjointViews",
+  "sectionLabel": "Adjoint light transport",
+  "view": "sensitivity",
+  "title": "Sensitivity",
+  "subtitle": "How much a pixel changes when light is added",
+  "buildSteps": [
+    {},
+    {}
+  ]
+}

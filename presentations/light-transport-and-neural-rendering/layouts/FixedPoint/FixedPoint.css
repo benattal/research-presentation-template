@@ -1,0 +1,55 @@
+.slide--fixed-point {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.fixed-point-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  min-height: 0;
+}
+
+.fixed-point-equations {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 540px;
+}
+
+.fixed-point-data {
+  margin-bottom: 14px;
+  font-size: 26px;
+  color: var(--text-primary);
+}
+
+.fixed-point-equation {
+  font-size: 30px;
+  color: var(--text-primary);
+}
+
+.fixed-point-plane {
+  cursor: default;
+}
+
+.fixed-point-gap {
+  stroke: var(--text-muted);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 5;
+}
+
+.fixed-point-handle {
+  fill: none;
+  stroke: var(--text-primary);
+  stroke-width: 2.5;
+  cursor: grab;
+}
+
+.fixed-point-solution {
+  fill: none;
+  stroke: var(--text-primary);
+  stroke-width: 2.5;
+  cursor: grab;
+}

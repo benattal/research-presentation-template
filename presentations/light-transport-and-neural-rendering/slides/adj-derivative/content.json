@@ -1,0 +1,13 @@
+{
+  "layout": "adjointViews",
+  "sectionLabel": "Adjoint light transport",
+  "view": "derivative",
+  "title": "Differential light transport",
+  "subtitle": "How the light changes when the scene changes",
+  "buildSteps": [
+    {},
+    {},
+    {},
+    {}
+  ]
+}

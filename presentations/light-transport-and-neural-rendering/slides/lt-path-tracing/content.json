@@ -1,0 +1,12 @@
+{
+  "layout": "pathTracing",
+  "sectionLabel": "Operator light transport",
+  "title": "Path tracing",
+  "subtitle": "Path tracing is a random-walk estimate of the same sum",
+  "buildSteps": [
+    { "paths": 1 },
+    { "paths": 16 },
+    { "paths": 256 },
+    { "paths": 4096 }
+  ]
+}

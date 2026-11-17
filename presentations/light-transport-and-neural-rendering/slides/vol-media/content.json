@@ -1,0 +1,13 @@
+{
+  "layout": "figures",
+  "sectionLabel": "Volume rendering",
+  "title": "Participating media",
+  "subtitle": "In fog, clouds, smoke, and jade, light interacts along the whole ray",
+  "figures": [
+    { "type": "image", "src": "/slides/vol-media/fog.jpg", "alt": "Sunlight through fog over a forest", "caption": "Fog" },
+    { "type": "image", "src": "/slides/vol-media/cloud.jpg", "alt": "A cumulus cloud", "caption": "Cloud" },
+    { "type": "image", "src": "/slides/vol-media/smoke.jpg", "alt": "Black smoke over the sea", "caption": "Smoke" },
+    { "type": "image", "src": "/slides/vol-media/jade.jpg", "alt": "A translucent jade carving of horses", "caption": "Jade" }
+  ],
+  "credits": [{ "source": "cmu15468-media", "what": "pp. 5, 9, 16, 17" }]
+}

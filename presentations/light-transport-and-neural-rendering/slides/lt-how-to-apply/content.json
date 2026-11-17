@@ -1,0 +1,50 @@
+{
+  "layout": "figureRows",
+  "sectionLabel": "Operator light transport",
+  "title": "Computing $Tp$",
+  "subtitle": "$Tp$ is computable from a stored $T$, by simulation, or optically",
+  "rows": [
+    {
+      "figures": [
+        {
+          "type": "image",
+          "src": "/slides/lt-how-to-apply/precomputed-transport.jpg",
+          "alt": "A statue relit in real time from precomputed light transport",
+          "caption": "stored",
+          "width": 1
+        },
+        {
+          "type": "image",
+          "src": "/slides/lt-how-to-apply/simulated-room.png",
+          "alt": "The flatland room, simulated",
+          "caption": "simulated",
+          "width": 1.45,
+          "step": 1
+        },
+        {
+          "type": "image",
+          "src": "/slides/lt-how-to-apply/projector-camera-setup.jpg",
+          "alt": "A projector, a beam splitter, and a camera aimed at a scene",
+          "caption": "measured optically",
+          "width": 0.75,
+          "step": 2
+        }
+      ]
+    }
+  ],
+  "buildSteps": [
+    {},
+    {},
+    {}
+  ],
+  "credits": [
+    {
+      "source": "ng2003",
+      "what": "Fig. 1"
+    },
+    {
+      "source": "cmu15463-transport",
+      "what": "p. 47"
+    }
+  ]
+}

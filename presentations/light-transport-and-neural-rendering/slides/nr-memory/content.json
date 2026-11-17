@@ -1,0 +1,11 @@
+{
+  "layout": "content",
+  "sectionLabel": "Neural rendering",
+  "title": "Memory",
+  "subtitle": "Differentiating through a renderer is limited by memory",
+  "bullets": [
+    "Automatic differentiation stores every intermediate value",
+    "Memory grows with samples, secondary rays, and bounces",
+    "An adjoint method recomputes values instead of storing them"
+  ]
+}

@@ -1,0 +1,108 @@
+/* Shared pieces of the active-sensing figures: the complex plane, sliders, and the check line. */
+
+.active-sensing-plane {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.active-sensing-plane svg {
+  display: block;
+}
+
+.active-sensing-axis {
+  stroke: var(--text-muted);
+  stroke-width: 1;
+}
+
+.active-sensing-circle {
+  fill: none;
+  stroke: var(--border-light);
+  stroke-width: 1;
+  stroke-dasharray: 4 5;
+}
+
+.active-sensing-guide {
+  stroke-width: 1.5;
+  stroke-dasharray: 5 5;
+  opacity: 0.8;
+}
+
+.active-sensing-arc {
+  fill: none;
+  stroke-width: 1.5;
+}
+
+.active-sensing-axis-label {
+  fill: var(--text-muted);
+  font-size: 18px;
+  font-style: italic;
+  font-family: var(--font-display);
+}
+
+.active-sensing-plane-label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.active-sensing-plane-label--left {
+  transform: translate(0, -50%);
+}
+
+.active-sensing-plane-label--right {
+  transform: translate(-100%, -50%);
+}
+
+.active-sensing-slider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 18px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.active-sensing-slider input[type='range'] {
+  width: 170px;
+  accent-color: var(--text-primary);
+  cursor: pointer;
+}
+
+.active-sensing-slider-value {
+  min-width: 5.2em;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.active-sensing-readout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 30px;
+  font-size: 19px;
+  line-height: 1.35;
+}
+
+.active-sensing-readout-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.active-sensing-readout-label {
+  color: var(--text-secondary);
+}
+
+.active-sensing-readout-value {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.active-sensing-readout--grid {
+  display: grid;
+  gap: 6px 36px;
+}
