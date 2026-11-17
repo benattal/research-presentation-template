@@ -17,6 +17,15 @@ const OPTIONS = {
 const MATH = /(?<!\\)\$\$([\s\S]+?)(?<!\\)\$\$|(?<!\\)\$((?:\\.|[^$\\])+?)(?<!\\)\$/g;
 
 /**
+ * In JSON, `\t`, `\b`, `\f`, `\r`, and `\n` are escapes, so a LaTeX command
+ * written with one backslash becomes a control character: `"\theta"` is a
+ * TAB followed by "heta", and `"\nabla"` a newline followed by "abla".
+ * Slide text has no other use for a control character, nor for a newline
+ * inside an inline formula.
+ */
+const CONTROL_CHARACTER = /[\u0000-\u0009\u000B-\u001F]/;
+
+/**
  * Split text into segments: `{ text }` for plain text (with `\$`
  * unescaped) and `{ math, display }` for formulas, in order.
  */
@@ -39,20 +48,29 @@ export function renderMath(source, display = false) {
 
 /**
  * Every malformed formula in any string inside `value` (a slide's content,
- * walked recursively), as messages prefixed with `where`.
+ * walked recursively), as messages prefixed with `where`. A string with a
+ * control character, or an inline formula with a newline, is malformed too:
+ * a backslash is missing (see CONTROL_CHARACTER).
  */
 export function mathProblems(value, where) {
   if (typeof value === 'string') {
-    return splitMath(value)
+    const control = value.match(CONTROL_CHARACTER);
+    const escapes = control
+      ? [`${where}: the text ${JSON.stringify(value)} contains the control character U+${control[0].charCodeAt(0).toString(16).toUpperCase().padStart(4, '0')}; in JSON, write a LaTeX backslash as \\\\ ("\\\\theta", not "\\theta").`]
+      : [];
+    return escapes.concat(splitMath(value)
       .filter((segment) => segment.math !== undefined)
       .flatMap((segment) => {
+        if (!segment.display && segment.math.includes('\n')) {
+          return [`${where}: the inline formula ${JSON.stringify(segment.math)} contains a newline; in JSON, write a LaTeX backslash as \\\\ ("\\\\nabla", not "\\nabla").`];
+        }
         try {
           renderMath(segment.math, segment.display);
           return [];
         } catch (error) {
           return [`${where}: the formula "${segment.math}" does not render (${error.message.replace(/^KaTeX parse error: /, '')}).`];
         }
-      });
+      }));
   }
   if (Array.isArray(value)) return value.flatMap((item) => mathProblems(item, where));
   if (value && typeof value === 'object') return Object.values(value).flatMap((item) => mathProblems(item, where));

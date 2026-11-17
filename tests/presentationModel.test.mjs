@@ -73,6 +73,24 @@ describe('buildPresentation', () => {
     });
   });
 
+  it('reports a LaTeX command whose backslash JSON read as an escape', () => {
+    const problems = (slideContents) => {
+      try {
+        build({ slideContents: { intro: { layout: 'title' }, body: { layout: 'content' }, end: { layout: 'title' }, ...slideContents } });
+        return [];
+      } catch (error) {
+        return error.problems;
+      }
+    };
+    assert.deepEqual(problems({ end: { layout: 'title', label: '$\\theta$', lines: [{ tex: 'F_\\theta' }] } }), []);
+    const tab = problems({ end: { layout: 'title', lines: [{ tex: 'F_\theta' }] } });
+    assert.equal(tab.length, 1);
+    assert.match(tab[0], /slide "end".*U\+0009/);
+    const newline = problems({ end: { layout: 'title', title: 'Gradient $\nabla f$' } });
+    assert.equal(newline.length, 1);
+    assert.match(newline[0], /inline formula .* contains a newline/);
+  });
+
   it('does not share content objects between builds', () => {
     const slideContents = { intro: { layout: 'title', nested: { a: 1 } } };
     const manifest = { title: 'T', sections: [{ id: 's', slides: ['intro'] }] };
