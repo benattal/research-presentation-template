@@ -4,6 +4,7 @@ import Media from '@core/stage/Media.jsx';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
 import { useStageCanvas } from '../canvas/canvas.js';
+import EquationStack from '../equations/EquationStack.jsx';
 import RoomView from '../flatland/RoomView.jsx';
 import {
   MATRIX_PIXELS, lightElementRoom, oneHot, relightingCheck, weightedSum,
@@ -11,6 +12,10 @@ import {
 import { drawPixelWedge, drawRoomCamera } from '../flatland/overlays.js';
 import { SURFACE_GAIN } from '../flatland/pictures.js';
 import { ROOM_VIEW, drawRoom } from '../flatland/render.js';
+import { themeColors } from '../volume/draw.js';
+import {
+  drawElementShares, drawPixelRays, drawRowPaths, pixelRays, rowPaths,
+} from './columnsAndRows.js';
 import {
   BAR_COLORS, Strip, drawElementBars, drawElements, elementAt, elementPictures, exposures, patternPicture,
 } from './elementViews.jsx';
@@ -20,39 +25,45 @@ const ROOM = ROOM_VIEW;
 const THUMB = [74, 44];
 /** Exposure of a column photo whose element is off, relative to one that is fully on. */
 const DIMMED = 0.3;
+/** Theme colors of a row's paths, by bounce count: emission, then bounce 1, 2, 3 (the terms I, A, A², ⋯). */
+const PATH_COLORS = ['light-0', 'light-1', 'light-2', 'light-3'];
+/** The cyan pixel marker of the row view, as the strip outlines the same pixel. */
+const PIXEL_MARK = [76, 201, 240];
 
 const luminance = (v, j) => 0.2126 * v[j * 3] + 0.7152 * v[j * 3 + 1] + 0.0722 * v[j * 3 + 2];
 
 /** True when p has a weight other than 0 or 1, so its bars say more than which elements are on. */
 const graded = (p) => p.some((value) => value > 0 && value < 1);
 
-/** The room and its camera image under pattern p (or a row's view: the pixel and each element's share). */
-function paintRoom(ctx, env, gains, view, progress) {
-  const rect = { x: 0, y: 0, width: ROOM[0], height: ROOM[1] };
-  if (view.row !== undefined) {
-    const all = patternPicture(env, new Float64Array(env.elements.length).fill(1));
-    const transform = drawRoom(ctx, env.room, rect, {
-      table: env.table,
-      fluence: all.fluence,
-      fluenceGain: gains.uniform.room * 0.4,
-      surfaces: all.surfaces,
-      surfaceGain: gains.uniform.room * 0.4 * SURFACE_GAIN,
-    });
-    drawPixelWedge(ctx, env.room, transform, [view.row / MATRIX_PIXELS, (view.row + 1) / MATRIX_PIXELS], [76, 201, 240]);
-    drawRoomCamera(ctx, transform);
-    const shares = env.images.map((image) => luminance(image, view.row));
-    drawElements(ctx, transform, env.elements);
-    drawElementBars(ctx, transform, env.elements, shares.map((share) => share * progress), BAR_COLORS.importance, Math.max(...shares));
-    return;
-  }
+/**
+ * Row j in the dark room: each element glowing with its share T_jk, the
+ * light paths from the elements to pixel j drawn `progress` of the way,
+ * and pixel j's wedge to the camera.
+ */
+function paintRow(ctx, env, j, colors, progress) {
+  const transform = drawRoom(ctx, env.room, { x: 0, y: 0, width: ROOM[0], height: ROOM[1] }, {});
+  drawRowPaths(ctx, transform, rowPaths(env, j), PATH_COLORS.map((name) => colors[name]), progress);
+  drawElementShares(ctx, transform, env.elements, env.images.map((image) => luminance(image, j)), colors['light-0']);
+  drawPixelWedge(ctx, env.room, transform, [j / MATRIX_PIXELS, (j + 1) / MATRIX_PIXELS], PIXEL_MARK);
+  drawRoomCamera(ctx, transform);
+  drawElements(ctx, transform, env.elements);
+}
+
+/**
+ * The room under pattern p, brightening with `progress`; with `view.rays`,
+ * each camera pixel's ray in the color of its value in `image` (the column
+ * view), and with `view.bars`, the pattern's weights as bars.
+ */
+function paintPattern(ctx, env, gains, view, image, progress) {
   const picture = patternPicture(env, view.p.map((value) => value * progress));
-  const transform = drawRoom(ctx, env.room, rect, {
+  const transform = drawRoom(ctx, env.room, { x: 0, y: 0, width: ROOM[0], height: ROOM[1] }, {
     table: env.table,
     fluence: picture.fluence,
     fluenceGain: gains.room,
     surfaces: picture.surfaces,
     surfaceGain: gains.room * SURFACE_GAIN,
   });
+  if (view.rays) drawPixelRays(ctx, transform, pixelRays(env), image, gains.strip, progress);
   drawRoomCamera(ctx, transform);
   drawElements(ctx, transform, env.elements);
   if (view.bars) drawElementBars(ctx, transform, env.elements, view.p.map((value) => value * progress), BAR_COLORS.light, Math.max(...view.p));
@@ -132,8 +143,6 @@ function BlockDiagram({ pixels, elements, column, row }) {
       <span className="matrix-block-label" style={{ left: cx + bar / 2, top: labelY - 18 }}><Text>{'$c$'}</Text></span>
       <span className="matrix-block-label" style={{ left: tx + tw / 2, top: labelY - 18 }}><Text>{'$\\mathbf{T}$'}</Text></span>
       <span className="matrix-block-label" style={{ left: px + bar / 2, top: top + elements * unit + 10 }}><Text>{'$p$'}</Text></span>
-      <span className="matrix-block-size" style={{ left: cx - 4, top: top + height / 2 - 12 }}>{pixels}</span>
-      <span className="matrix-block-size matrix-block-size--right" style={{ left: px + bar + 4, top: top + elements * unit / 2 - 12 }}>{elements}</span>
     </div>
   );
 }
@@ -148,43 +157,41 @@ function stepPattern(env, entry) {
   return p;
 }
 
-function formatSmall(value) {
-  if (value === 0) return '0';
-  const exponent = Math.floor(Math.log10(value));
-  const mantissa = value / 10 ** exponent;
-  return `${mantissa.toFixed(1)} \\times 10^{${exponent}}`;
-}
-
 /**
- * The light transport matrix of the room: 19 light elements on the
- * ceiling, a camera of 64 pixels, c = Tp.
+ * The light transport matrix of the room: light elements on the ceiling
+ * (the pattern p), a camera of MATRIX_PIXELS pixels (the image c), c = Tp.
  *
  * - `mode: 'matrix'`: build steps `{ elements: [k] }` show column k (the
- *   room and the camera's image lit by element k alone), and `{ row: j }`
- *   shows row j (each element's share of pixel j, as bars hanging from
- *   the elements). Beside
- *   the room, c = Tp is drawn as blocks to scale, with that column or row
- *   marked.
+ *   room lit by element k alone, every camera pixel's ray in the color it
+ *   measures, and the camera's image), and `{ row: j }` shows row j (the
+ *   light paths from every element that end at pixel j, colored by their
+ *   number of bounces, and each element glowing with its share T_jk).
+ *   Beside the room, c = Tp is drawn as blocks to scale, with that column
+ *   or row marked.
  * - `mode: 'relight'`: build steps `{ elements: [...] }` or `{ pattern:
- *   [19 weights] }` light the room with p; the columns of T sit beside
- *   the room (each a photo, dimmed when its element is off), a graded
- *   pattern hangs from the ceiling as bars, and the photo as the sum of
- *   the weighted columns is checked against the photo rendered directly.
- *   Clicking a column or dragging across the ceiling switches elements on
- *   and off.
+ *   [one weight per element] }` light the room with p; the columns of T
+ *   sit beside the room (each a photo, dimmed when its element is off), a
+ *   graded pattern hangs from the ceiling as bars, and the photo as the
+ *   sum of the weighted columns is shown beside the photo rendered
+ *   directly. Clicking a column or dragging across the ceiling switches
+ *   elements on and off.
  *
  * Content fields: `title`, `subtitle`, `mode`, `buildSteps`, `equations`
- * (display lines beside the room, at every step), optional `labels` (short
- * lines under them), optional `figure` (relight: a media item with
- * `caption` and `step`; from that step it is shown at full size in the
- * room's place, and the check is hidden), and optional `exposureStep` (the
- * build step whose lighting sets the exposure; 0).
+ * (EquationStack lines beside the room: `{ tex, step? }`, each from its
+ * step on, its place kept from the first step), optional `figure`
+ * (relight: a media item with `caption` and `step`; from that step it is
+ * shown at full size in the room's place, and the check is hidden), and
+ * optional `exposureStep` (the build step whose lighting sets the
+ * exposure; 0).
  */
 export default function TransportMatrix({ slide, buildStep }) {
   const env = lightElementRoom();
   const relight = slide.mode === 'relight';
   if (!relight && slide.mode !== 'matrix') throw new Error(`transportMatrix: unknown mode "${slide.mode}"`);
-  if (!Array.isArray(slide.equations)) throw new Error('transportMatrix: `equations` is required');
+  if (!Array.isArray(slide.equations) || slide.equations.some((line) => typeof line.tex !== 'string')) {
+    throw new Error('transportMatrix: `equations` must be lines `{ tex, step? }`');
+  }
+  const colorsRef = useRef(null);
   const entry = slide.buildSteps[Math.min(buildStep, slide.buildSteps.length - 1)];
   const scripted = useMemo(() => (entry.row === undefined ? stepPattern(env, entry) : null), [env, entry]);
   const [painted, setPainted] = useState(null);
@@ -210,8 +217,16 @@ export default function TransportMatrix({ slide, buildStep }) {
     return { ...fixed, room: Math.min(fixed.room, own.room), strip: Math.min(fixed.strip, own.strip) };
   }, [env, fixed, painted]);
 
-  const view = entry.row === undefined ? { p, bars: relight && graded(p) } : { row: entry.row };
+  const view = entry.row === undefined ? { p, bars: relight && graded(p), rays: !relight } : { row: entry.row };
   const image = weightedSum(env.images, p ?? uniform);
+  const paint = (ctx, progress) => {
+    if (view.row === undefined) {
+      paintPattern(ctx, env, gains, view, image, progress);
+      return;
+    }
+    colorsRef.current ??= themeColors(ctx.canvas, PATH_COLORS);
+    paintRow(ctx, env, view.row, colorsRef.current, progress);
+  };
   const check = useMemo(() => (relight && p ? relightingCheck(env, p) : null), [env, relight, p]);
   const largest = p ? Math.max(...p) : 0;
 
@@ -256,7 +271,7 @@ export default function TransportMatrix({ slide, buildStep }) {
           <RoomView
             width={ROOM[0]}
             height={ROOM[1]}
-            paint={(ctx, progress) => paintRoom(ctx, env, gains, view, progress)}
+            paint={paint}
             animationKey={`${buildStep}`}
             duration={700}
             redrawKey={p ? Array.from(p).join(',') : `row${entry.row}`}
@@ -279,12 +294,7 @@ export default function TransportMatrix({ slide, buildStep }) {
           )}
         </div>
         <div className="matrix-side">
-          {slide.equations.map((line) => (
-            <div key={line} className="matrix-equation"><Text>{line}</Text></div>
-          ))}
-          {(slide.labels ?? []).map((line) => (
-            <p key={line} className="matrix-label matrix-label--muted"><Text>{line}</Text></p>
-          ))}
+          <EquationStack lines={slide.equations} step={buildStep} dimEarlier={false} lineClassName="matrix-equation" />
           {relight ? (
             <>
               <div className="matrix-thumbs" data-no-swipe onMouseDown={(event) => event.preventDefault()}>
@@ -305,7 +315,6 @@ export default function TransportMatrix({ slide, buildStep }) {
                   <Strip image={check.summed} gain={gains.strip} width={300} />
                   <span className="matrix-check-label">rendered directly</span>
                   <Strip image={check.direct} gain={gains.strip} width={300} />
-                  <span className="matrix-check-difference"><Text>{`$\\text{difference} \\; ${formatSmall(check.relative)}$`}</Text></span>
                 </div>
               )}
             </>
@@ -313,7 +322,7 @@ export default function TransportMatrix({ slide, buildStep }) {
             <>
               <BlockDiagram pixels={MATRIX_PIXELS} elements={env.elements.length} column={k} row={entry.row} />
               <p className="matrix-label">
-                <Text>{entry.row === undefined ? `column $k = ${k + 1}$: $p = \\delta_k$` : `row $j = ${entry.row + 1}$: pixel $j$`}</Text>
+                <Text>{entry.row === undefined ? 'column $k$: $p = \\delta_k$' : 'row $j$: pixel $j$'}</Text>
               </p>
             </>
           )}

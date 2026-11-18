@@ -18,10 +18,10 @@
     },
     {
       "tex": "x = \\htmlClass{term-emission}{b} + \\htmlClass{term-bounce-2}{A}\\, x",
-      "label": "$b = D^{-1}Q + T(d)\\,L(d)$"
+      "label": "$x = L$, $b = D^{-1}Q + T(d)\\,L(d)$"
     },
     {
-      "tex": "\\htmlClass{term-bounce-2}{A} = \\underbrace{\\htmlClass{term-medium}{D^{-1}}}_{\\text{like } G}\\, \\underbrace{\\htmlClass{term-bounce-2}{K}}_{\\text{like } S}",
+      "tex": "\\htmlClass{term-bounce-2}{A} = \\underbrace{\\htmlClass{term-medium}{D^{-1}}}_{\\text{propagation}}\\, \\underbrace{\\htmlClass{term-bounce-2}{K}}_{\\text{scattering}}",
       "label": "one bounce"
     },
     {

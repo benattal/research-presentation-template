@@ -194,6 +194,11 @@ Use build steps to pace an argument: each click adds one idea the speaker is
 about to talk about. A slide's last step is what the audience sees when the
 speaker moves on, so it must stand on its own.
 
+An equation can be a question: its left side first, with a question mark
+over the equals sign, and its right side one step later, so the speaker can
+ask the audience before showing it. Use it where the step is worth working
+out, not on every equation. The user (2026-11-17): "Putting a question mark
+over the equality before showing the RHS could also be an option."
 Motion shows something new or not at all. The user (2026-11-17): "it's a
 bit awkward when animations repeat when cycling from one slide to the next.
 Sometimes this is legitimate but please just watch out for it" and, of an

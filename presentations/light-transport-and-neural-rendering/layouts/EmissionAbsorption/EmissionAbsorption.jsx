@@ -158,8 +158,6 @@ export default function EmissionAbsorption({ slide, buildStep }) {
     if (index >= 0 && index < PIXELS) setPixel(index);
   };
 
-  const opacity = pixels && 1 - pixels[pixel].transmittance;
-  const weightSum = pixels?.[pixel].opacity;
   const label = (curve, math, className, top) => (
     <span className={`emission-label ${className}`} style={{ top, width: geometry.gutter - 12, visibility: shown.has(curve) ? 'visible' : 'hidden' }}>
       <Text>{math}</Text>
@@ -210,17 +208,6 @@ export default function EmissionAbsorption({ slide, buildStep }) {
           {slide.remarks?.map((label) => (
             <div key={label} className="emission-side-label"><Text>{label}</Text></div>
           ))}
-          {pixels && (
-            <div className="emission-check" style={{ visibility: shown.has('contribution') ? 'visible' : 'hidden' }}>
-              <span className="emission-swatch" style={{ background: radianceCss(pixels[pixel].color, PIXEL_GAIN) }} />
-              <div className="emission-numbers">
-                <Text>{'$\\int_0^d T\\sigma\\,dt$'}</Text>
-                <span className="emission-value">{weightSum.toFixed(3)}</span>
-                <Text>{'$1 - T(d)$'}</Text>
-                <span className="emission-value">{opacity.toFixed(3)}</span>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>

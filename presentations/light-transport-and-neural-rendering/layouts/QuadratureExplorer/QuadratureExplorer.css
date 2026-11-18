@@ -58,12 +58,23 @@
   margin: 0;
 }
 
+.quadrature-remark,
+.quadrature-note {
+  font-size: 20px;
+  color: var(--text-secondary);
+}
+
 .quadrature-count {
   display: flex;
   align-items: baseline;
   gap: 14px;
-  font-size: 28px;
+  font-size: 26px;
   color: var(--text-primary);
+}
+
+/* The note says what the step's sampler does; it sits under the count it describes. */
+.quadrature-note {
+  margin-top: -10px;
 }
 
 .quadrature-sampler {
@@ -91,24 +102,6 @@
   border: 1px solid var(--border-light);
 }
 
-.quadrature-error {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-left: 6px;
-}
-
-.quadrature-error-label {
-  font-size: 18px;
-  color: var(--text-muted);
-}
-
-.quadrature-error-value {
-  font-size: 26px;
-  font-variant-numeric: tabular-nums;
-  color: var(--text-primary);
-}
-
 .quadrature-comparison {
   display: flex;
   flex-direction: column;
@@ -122,7 +115,7 @@
 
 .quadrature-bar-row {
   display: grid;
-  grid-template-columns: 112px 1fr 58px;
+  grid-template-columns: 112px 1fr;
   align-items: center;
   gap: 8px;
   font-size: 18px;
@@ -141,11 +134,6 @@
   display: block;
   height: 100%;
   background: var(--ink-light-2);
-}
-
-.quadrature-bar-value {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
 }
 
 .quadrature-slider {

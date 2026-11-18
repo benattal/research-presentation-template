@@ -9,7 +9,7 @@
   min-height: 0;
   display: flex;
   align-items: center;
-  gap: 40px;
+  gap: 32px;
 }
 
 .light-paths-panel {
@@ -38,6 +38,14 @@
 .light-paths-label--medium { color: var(--medium); }
 
 .light-paths-side {
-  font-size: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.light-paths-equation {
+  font-size: 28px;
   color: var(--text-primary);
+  white-space: nowrap;
 }

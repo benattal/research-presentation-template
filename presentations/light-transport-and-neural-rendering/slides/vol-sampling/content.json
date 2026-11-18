@@ -9,16 +9,19 @@
   "buildSteps": [
     {
       "sampler": "random",
-      "samples": 32
+      "samples": 32,
+      "note": "anywhere on the ray"
     },
     {
       "sampler": "stratified",
-      "samples": 32
+      "samples": 32,
+      "note": "one in each equal interval"
     },
     {
       "sampler": "hierarchical",
       "samples": 32,
-      "coarse": 16
+      "coarse": 16,
+      "note": "rings: coarse, dots: fine"
     }
   ],
   "credits": [

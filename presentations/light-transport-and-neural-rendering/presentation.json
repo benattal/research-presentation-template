@@ -58,7 +58,6 @@
         "vol-operator",
         "vol-integrating-factor",
         "vol-vre",
-        "vol-inverse",
         "vol-emission-absorption",
         "vol-quadrature",
         "vol-sampling"
@@ -122,7 +121,8 @@
         "lt-how-to-apply",
         "lt-primal-dual",
         "nr-nlos",
-        "adj-volumes"
+        "adj-volumes",
+        "vol-inverse"
       ]
     }
   ]

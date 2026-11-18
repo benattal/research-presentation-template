@@ -9,4 +9,6 @@ A projector lights the scene with a pattern $p$ (one value per projector pixel),
 
 The last three are global (indirect) light. One camera pixel measures the sum of all of them. Light adds linearly, so the image is a linear function of the pattern: $c = \mathbf{T}p$, with $\mathbf{T}$ the light transport matrix. Bold $\mathbf{T}$, so that plain $T$ stays free for transmittance later.
 
+Each kind of path is a term of the previous section's series. The emission is a linear function of the pattern, $e = Ep$, and the image a linear function of the radiance, $c = Cx$; with $x = (I - A)^{-1}e$, the map is $\mathbf{T} = C(I + A + A^2 + \cdots)E$ (the next slide derives it). Direct paths reflect once: the $A$ term, in the bounce-1 color. Interreflection reflects twice: $A^2$, in the bounce-2 color. Subsurface paths scatter many times inside the material: the higher terms. Volumetric paths scatter in a medium on the way; with media, $A$ also includes scattering in the medium (the volume rendering section). The $I$ term is light from the projector straight into the camera, which this figure does not have.
+
 To remember: light transport is the linear map from the light sources (projector pixels) to the measurements (camera pixels). The rest of this part is about that map: what its columns and rows are, and what we can compute with it optically.
