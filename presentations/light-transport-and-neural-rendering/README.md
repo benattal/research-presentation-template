@@ -6,6 +6,49 @@ adjoint light transport. It is presented locally, with no server. The plan
 is [docs/plans/light-transport-and-neural-rendering.md](../../docs/plans/light-transport-and-neural-rendering.md);
 its status is in the [tracker](../../docs/tracking/light-transport-and-neural-rendering.md).
 
+## Setting up a new machine
+
+Once per machine, in this order:
+
+1. **Node.js 22 or newer**, with npm, and git (`node --version` checks
+   the version).
+2. **rclone**: `winget install Rclone.Rclone` on Windows,
+   `brew install rclone` on macOS, or the system's package manager. On
+   Windows, open a new terminal afterwards so `rclone` is on `PATH`; if
+   a shell still does not find it, set `RCLONE` to the full path of
+   `rclone.exe` for `npm run assets`.
+3. **Bucket credentials.** Copy the `cloudflare/` folder
+   (`cloudflare-tokens.txt` and `rclone.conf`) from `~/Downloads/` on the
+   main workstation through a private channel: it is in neither the
+   repository nor the bucket. Point rclone at it and check the `tcig`
+   remote:
+
+   ```bash
+   export RCLONE_CONFIG="$HOME/Downloads/cloudflare/rclone.conf"
+   rclone lsd tcig:tcig-projects && echo "remote OK"
+   ```
+
+   In PowerShell, set it with
+   `$env:RCLONE_CONFIG = "$HOME\Downloads\cloudflare\rclone.conf"`. The
+   variable lasts for one shell: set it in each new one, set it once for
+   good with `setx RCLONE_CONFIG "%USERPROFILE%\Downloads\cloudflare\rclone.conf"`
+   on Windows, or write the remote into rclone's default configuration as
+   [DATA.md](../../DATA.md), "Setup", shows.
+4. **The repository, on the `guest-lecture` branch:**
+
+   ```bash
+   git clone git@github.com:benattal/research-presentation-template.git
+   cd research-presentation-template
+   git checkout guest-lecture
+   ```
+
+5. The steps under "Assets" below: `npm install`, pull the assets,
+   check, present.
+
+To screenshot and check the slides (`npm run capture`), Edge or Chrome must
+be installed (`--channel msedge`), or run `npx playwright install chromium`
+once.
+
 ## Assets: pull them before presenting
 
 The slides' media and the source material are not in git. Their durable copy
@@ -13,8 +56,8 @@ is the R2 bucket `tcig-projects` ([DATA.md](../../DATA.md)), under
 
 ```text
 tcig-projects/research-presentation-template/presentations/light-transport-and-neural-rendering/
-  public/    figures, photos, and videos the slides show (about 35 MB)
-  assets/    source decks, papers, and their extracted pages (about 410 MB)
+  public/    figures, photos, and videos the slides show (about 38 MB)
+  assets/    source decks, papers, and their extracted pages (about 455 MB)
 ```
 
 On a fresh checkout:
@@ -26,10 +69,10 @@ npm run check -- light-transport-and-neural-rendering         # reports any asse
 npm run dev                                                    # present at http://localhost:5173/
 ```
 
-rclone and its `tcig` remote are set up once per machine, as
-[DATA.md](../../DATA.md) describes (`winget install Rclone.Rclone`, then
-point rclone at the configuration next to the bucket credentials). The
-interactive slides need no assets: they render the 2D room in the browser.
+`npm run assets` needs rclone and its `tcig` remote, set up once per
+machine (above), and `RCLONE_CONFIG` set in the shell if the remote is not in
+rclone's default configuration. The interactive slides need no assets: they
+render the 2D room in the browser.
 A slide whose media are missing shows a broken image, and `npm run check`
 lists it.
 
