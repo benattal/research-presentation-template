@@ -35,7 +35,7 @@ const STEPS = [
   { key: 'cache', tex: '\\htmlClass{term-learned}{\\hat{x}}', label: 'NeRF as cache' },
   { key: 'estimate', tex: 'e + A\\htmlClass{term-learned}{\\hat{x}}', label: 'one bounce' },
   { key: 'exact', tex: 'x', label: 'solve' },
-  { key: 'missing', tex: 'A(\\htmlClass{term-learned}{\\hat{x}} - x)', label: 'bias' },
+  { key: 'missing', tex: 'A(x - \\htmlClass{term-learned}{\\hat{x}})', label: 'missing light' },
 ];
 
 /** The room under one of the four states, with the views and the unobserved surfaces on the cache. */
@@ -114,8 +114,9 @@ function Thumb({ env, result, stepKey }) {
  * zero behind the box, where none did (flatland/cache.js), then one
  * physically based bounce over the cached light, e + Ax̂. Build steps show
  * the cache (with the views and the unobserved surfaces), the one-bounce
- * estimate, the full solve x, and the bias (e + Ax̂) − x = A(x̂ − x), drawn
- * as the light it removes. A column beside the room keeps every step.
+ * estimate, the full solve x, and the light the estimate misses,
+ * x − (e + Ax̂) = A(x − x̂), the bias with its sign turned so the render
+ * shows it as light. A column beside the room keeps every step.
  *
  * Content fields: `title`, `subtitle`, and four `buildSteps`.
  */

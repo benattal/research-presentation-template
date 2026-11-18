@@ -1,19 +1,14 @@
-Transition: the last slide's cache was exact where observed. A real radiance cache is a network queried for the light arriving at a point from a direction, in place of tracing a path further. Earlier radiance-cache methods, in the paper's words, "rely on approximations that introduce bias into the renderings and, more importantly, into the gradients used for optimization": a NeRF rendered at "only a single evaluation along each camera ray" gives a biased estimate of the volume rendering integral, and a low-capacity cache of the incoming light gives a biased estimate of the reflection integral.
+Transition: A real radiance cache is a network queried for the light arriving at a point. Earlier caches add bias on top of the cache's own $A(\hat{x} - x)$: some evaluate the NeRF at one point per camera ray, and some use a small network for the incoming light.
 
-Flash Cache (Attal et al., ECCV 2024) "avoids these approximations while remaining computationally efficient". The cache is a high-quality NeRF, and the rendering is made affordable by variance reduction for unbiased estimators. From left to right in the figure:
+- Step 1: In Flash Cache, we keep a high-quality NeRF as the cache and make the bounce affordable without adding bias. Left to right: a few samples per ray, drawn by the quadrature weights. Importance sampling of the incident light. And a control variate: a fast cache on many rays, plus a few rays through the NeRF for the difference, the identity under the figure. The video compares the two caches at one point.
 
-- Volume rendering with a few samples per ray, drawn in proportion to the quadrature weights (Eq. 11): "its expected value equals the quadrature value", and only those samples need physically based shading.
-- Importance sampling: a mixture of von Mises–Fisher lobes per point, trained to match the NeRF cache's incident light. It accounts for occlusion: "if a light source is occluded from the perspective of one surface point, then the model can 'turn off' the lobe for that light source."
-- A control variate: a fast cache, supervised "to match the incoming radiance of the expensive, NeRF-based cache", is evaluated on many rays ($M'$), and a few more rays ($M \ll M'$) estimate the difference between the NeRF cache and the fast cache; the two estimates are added (Eq. 9). In the notation of the last slide, $A\hat x = A\hat x_{\text{fast}} + A(\hat x - \hat x_{\text{fast}})$.
+Remember: with a fast cache as a control variate, many cheap rays and a few expensive ones give an estimate whose expected value is that of the NeRF cache.
 
-The video: the light arriving at one point of the hotdog scene, from the NeRF cache (left) and from the fast cache (right). The fast cache is close but blurrier; the difference is the correction term, estimated with the few rays through the NeRF cache.
+Stop (optional): the fast cache is wrong. Why does its error not bias the result? Answer: it appears twice, with opposite signs. It adds noise, but the only bias left is the NeRF cache's own, $A(\hat{x} - x)$.
 
-Question to the class: the fast cache is wrong. Why does its error not bias the result? Because it appears twice with opposite signs: once in $A\hat x_{\text{fast}}$ and once subtracted in $A(\hat x - \hat x_{\text{fast}})$. Its error adds noise to each estimate, but the expected value is that of the NeRF cache. In the paper's words, the sum is "an unbiased estimator of the rendering equation (provided that incoming illumination from the NeRF cache is correct)" (Section C.1): the only bias left is the NeRF cache's own, $A(\hat x - x)$. It costs $M$ evaluations of the NeRF cache and $M + M'$ of the fast cache, for "the quality of using $M'$ incoming rays from the accurate NeRF-based cache".
-
-The sentence to remember: with the fast cache as a control variate, many cheap rays and a few expensive ones give an estimate whose expected value is that of the NeRF cache.
-
-With this, geometry, materials, and lighting are recovered with every bounce in the rendering model, and the result can be relit.
-
-Next: what differentiating through all of this costs in memory.
-
-Figure 2 and the video from the project page.
+If asked:
+- Which bias does Flash Cache reduce? The bias earlier caches add on top of $A(\hat{x} - x)$: from a NeRF evaluated at one point per ray, and from a low-capacity cache of the incoming light. Both also bias the gradients.
+- How are the samples chosen? Along each ray, in proportion to the quadrature weights, so only those samples are shaded. For the incident light, from lobes trained to match the cache.
+- What does it cost? $M$ evaluations of the NeRF cache and $M + M'$ of the fast cache, for about the quality of $M'$ rays through the NeRF cache.
+- What does it recover? Geometry, materials, and lighting, with every bounce in the rendering model, so the result can be relit.
+- Source? Attal et al., ECCV 2024: Fig. 2 and the project video.

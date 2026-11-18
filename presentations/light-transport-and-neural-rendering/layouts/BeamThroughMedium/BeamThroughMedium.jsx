@@ -38,6 +38,17 @@ function panelGeometry({ width, height }) {
   return { panel: { x: 0, y: 0, width: panelWidth, height: panelWidth / aspect }, width: panelWidth, height };
 }
 
+/**
+ * The slab's transmittance with the loss terms shown so far: e^{−σₐd} with
+ * absorption alone, e^{−(σₐ + σₛ)d} once out-scattering is shown too, as
+ * the simulation's extinction is.
+ */
+function transmittanceTex(active) {
+  const losses = [active.absorption && '\\sigma_a', active.outScattering && '\\sigma_s'].filter(Boolean);
+  const exponent = losses.length > 1 ? `(${losses.join(' + ')})` : (losses[0] ?? '\\sigma_a');
+  return `$T = e^{-${exponent}\\, d}$`;
+}
+
 /** The trail style of segment `i` of a photon. */
 function trailOf(photon, i, inScatteringShown) {
   if (inScatteringShown && photon.inScattered >= 0 && i >= photon.inScattered) return TRAILS.inScattered;
@@ -50,8 +61,9 @@ function trailOf(photon, i, inScatteringShown) {
  * equation per build step: absorbed photons end in the medium, out-scattered
  * ones turn away, the medium emits new ones, and a lamp's light scatters
  * into the beam. Trails add up like a long exposure. Once a loss term is
- * shown, the side states the slab's transmittance, e^{−(σₐ + σₛ)d}; the
- * simulation's beam matches it (tests/volume.test.mjs).
+ * shown, the side states the slab's transmittance with the losses shown
+ * so far, e^{−σₐd} and then e^{−(σₐ + σₛ)d}; the simulation's beam matches
+ * it (tests/volume.test.mjs).
  *
  * Slide fields: `lhs` (math) and its optional short `lhsLabel`, `terms`
  * (`[{ process, math, label, className }]`, process one of absorption,
@@ -257,7 +269,7 @@ export default function BeamThroughMedium({ slide, buildStep }) {
           {/* Space reserved from the first step, so nothing moves when the losses appear. */}
           <div className="beam-transmittance" style={{ visibility: active.absorption || active.outScattering ? 'visible' : 'hidden' }}>
             <span className="beam-transmittance-label">transmittance</span>
-            <Text>{'$T = e^{-(\\sigma_a + \\sigma_s)\\, d}$'}</Text>
+            <Text>{transmittanceTex(active)}</Text>
           </div>
           {/* Symbols the terms introduce, each from its build step; their space is reserved, so nothing moves. */}
           <div className="beam-definitions">

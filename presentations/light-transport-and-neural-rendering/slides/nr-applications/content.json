@@ -2,7 +2,7 @@
   "layout": "figures",
   "sectionLabel": "Neural rendering",
   "title": "Applications",
-  "subtitle": "The same approach for lidar, time of flight, and structured light",
+  "subtitle": "The same approach for other sensors",
   "figures": [
     {
       "type": "image",
@@ -30,7 +30,11 @@
       "type": "video",
       "src": "/slides/nr-applications/flying-with-photons-light-in-flight.mp4",
       "alt": "Flying with Photons: a pulse of light propagating through a scene, rendered from a novel viewpoint",
-      "caption": "Propagating light"
+      "caption": "Propagating light",
+      "fit": {
+        "aspect": 1.4,
+        "position": "center 55%"
+      }
     }
   ],
   "credits": [

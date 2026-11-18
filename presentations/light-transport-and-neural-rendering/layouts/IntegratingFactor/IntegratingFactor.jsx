@@ -22,6 +22,12 @@ const SOURCE_RATIO = 0.35;
 const LAMP = 1;
 const PIXEL_GAIN = 2.4;
 const STEPS = 400;
+/**
+ * The integrand T·(KL + Q) is drawn on its own vertical scale, its peak at
+ * this share of the plot's height: the plot has no values, and the shaded
+ * area stands for the integral of step 3.
+ */
+const INTEGRAND_PEAK = 0.62;
 
 function extinction(bump) {
   return (t) => BASE_EXTINCTION + bump.height * Math.exp(-(((t - bump.center) / BUMP_WIDTH) ** 2) / 2);
@@ -37,17 +43,45 @@ function figureGeometry({ width, height }) {
   return { gutter, strip, plot, width, height };
 }
 
+/** An arrow of light on the strip, pointing from `from` to `to` (canvas pixels), with a label before its head. */
+function drawLightArrow(ctx, from, to, color, label) {
+  const head = 9;
+  const direction = Math.sign(to[0] - from[0]);
+  ctx.save();
+  ctx.strokeStyle = rgba(color, 0.9);
+  ctx.fillStyle = rgba(color, 0.9);
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(...from);
+  ctx.lineTo(to[0] - direction * head, to[1]);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(...to);
+  ctx.lineTo(to[0] - direction * head, to[1] - head / 2);
+  ctx.lineTo(to[0] - direction * head, to[1] + head / 2);
+  ctx.closePath();
+  ctx.fill();
+  ctx.font = `18px ${getComputedStyle(ctx.canvas).fontFamily}`;
+  ctx.textAlign = direction < 0 ? 'right' : 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(label, to[0] + direction * 8, to[1]);
+  ctx.restore();
+}
+
 /**
  * The transport operator D = ω·∇ + σₜ inverted along a ray by its
  * integrating factor: the derivation, one line per build step, beside a
  * ray from the camera to a lamp through a bump of medium. The strip shows the light travelling to the
  * camera, L(t), from stepping the ODE (it agrees with the integrating
- * factor's formula: tests/volume.test.mjs); the plot shows σₜ(t) and the
- * transmittance T(t).
+ * factor's formula: tests/volume.test.mjs), with t, the distance from the
+ * camera, increasing to the right and the light travelling to the left;
+ * the plot shows σₜ(t) and the transmittance T(t).
  *
  * Each build step is `{ label, equation }`, shown with every earlier one.
- * The transmittance curve appears from the second step. Drag the bump's
- * handle to move it (horizontally) and change its height (vertically).
+ * The transmittance curve appears from the second step; from the third,
+ * the plot shades the integrand T·(KL + Q) and marks T(d)L(d) at t = d,
+ * the two terms of L(0). Drag the bump's handle to move it (horizontally)
+ * and change its height (vertically).
  */
 export default function IntegratingFactor({ slide, buildStep }) {
   const lines = slide.buildSteps;
@@ -55,6 +89,7 @@ export default function IntegratingFactor({ slide, buildStep }) {
     throw new Error(`integratingFactor: every build step of "${slide.id}" needs an "equation"`);
   }
   const showTransmittance = buildStep >= 1;
+  const showIntegral = buildStep >= 2;
 
   const [bump, setBump] = useState({ center: 0.55, height: 6 });
   const [colors, setColors] = useState(null);
@@ -86,6 +121,7 @@ export default function IntegratingFactor({ slide, buildStep }) {
       t,
       density: t.map(density),
       transmittance,
+      integrand: t.map((value, k) => transmittance[k] * ray.source(value)),
       radiance: t.map((value) => stepped.radiance[Math.round((value / DEPTH) * 2000)]),
     };
   }, [bump]);
@@ -103,6 +139,9 @@ export default function IntegratingFactor({ slide, buildStep }) {
     drawRayStrip(ctx, strip, { ...solution, densityMax: EXTINCTION_MAX }, colors, 0.9);
     const middle = strip.y + strip.height / 2;
     glowDot(ctx, [strip.x + strip.width - 10, middle], colors['light-0'], 6);
+    // The light travels from the lamp toward the camera, against t.
+    const arrowY = strip.y + 20;
+    drawLightArrow(ctx, [strip.x + strip.width - 40, arrowY], [strip.x + strip.width - 130, arrowY], colors['light-0'], 'light');
 
     // The camera's pixel: L(0).
     const pixel = 30;
@@ -112,14 +151,26 @@ export default function IntegratingFactor({ slide, buildStep }) {
     ctx.lineWidth = 1.5;
     ctx.strokeRect(geometry.gutter - pixel - 14, middle - pixel / 2, pixel, pixel);
 
-    // The plot: σₜ(t) and, from the second step, T(t).
+    // The plot: σₜ(t); from the second step T(t); from the third the integrand T·(KL + Q), shaded, and T(d)L(d).
     const sigma = plotScale(plot, [0, DEPTH], [0, EXTINCTION_MAX]);
     const transmittance = plotScale(plot, [0, DEPTH], [0, 1.05]);
     fillSeries(ctx, sigma, solution.t, solution.density, rgba(colors['ink-medium'], 0.16));
     strokeSeries(ctx, sigma, solution.t, solution.density, { color: rgba(colors['ink-medium']), width: 2 });
+    if (showIntegral) {
+      const integrand = plotScale(plot, [0, DEPTH], [0, Math.max(...solution.integrand) / INTEGRAND_PEAK]);
+      const alpha = buildStep === 2 ? ease(progressRef.current) : 1;
+      fillSeries(ctx, integrand, solution.t, solution.integrand, rgba(colors['ink-light-0'], 0.3 * alpha));
+      strokeSeries(ctx, integrand, solution.t, solution.integrand, { color: rgba(colors['ink-light-0'], alpha), width: 2 });
+    }
     if (showTransmittance) {
       const count = Math.round((buildStep === 1 ? ease(progressRef.current) : 1) * solution.t.length);
       strokeSeries(ctx, transmittance, solution.t, solution.transmittance, { color: rgba(colors['text-primary']), width: 2.5 }, count);
+    }
+    if (showIntegral) {
+      ctx.fillStyle = rgba(colors['text-primary']);
+      ctx.beginPath();
+      ctx.arc(transmittance.x(DEPTH), transmittance.y(solution.transmittance.at(-1) * LAMP), 6, 0, 2 * Math.PI);
+      ctx.fill();
     }
     drawAxes(ctx, plot, colors['text-muted']);
     const handle = [sigma.x(bump.center), sigma.y(BASE_EXTINCTION + bump.height)];
@@ -127,7 +178,7 @@ export default function IntegratingFactor({ slide, buildStep }) {
     ctx.beginPath();
     ctx.arc(handle[0], handle[1], 7, 0, 2 * Math.PI);
     ctx.fill();
-  }, [canvasRef, colors, geometry, ratio, solution, bump, showTransmittance, buildStep]);
+  }, [canvasRef, colors, geometry, ratio, solution, bump, showTransmittance, showIntegral, buildStep]);
 
   useAnimation(buildStep, 900, (progress) => {
     progressRef.current = progress;
@@ -147,6 +198,10 @@ export default function IntegratingFactor({ slide, buildStep }) {
   };
 
   const { strip, plot } = geometry;
+  // Where the integrand peaks and where T(d)L(d) is marked, for their labels.
+  const peak = solution.integrand.indexOf(Math.max(...solution.integrand));
+  const peakX = plot.x + (solution.t[peak] / DEPTH) * plot.width;
+  const endY = plot.y + plot.height * (1 - (solution.transmittance.at(-1) * LAMP) / 1.05);
   return (
     <div className="slide--integrating-factor">
       <SlideTitle title={slide.title} subtitle={slide.subtitle} />
@@ -176,6 +231,22 @@ export default function IntegratingFactor({ slide, buildStep }) {
               </span>
               <span className="integrating-mark integrating-mark--end" style={{ left: strip.x + strip.width - 80, top: strip.height + 2, width: 80 }}>
                 <Text>{'$L(d)$'}</Text>
+              </span>
+              <span className="integrating-distance" style={{ left: strip.x + strip.width / 2, top: strip.height + 4 }}>
+                <span><Text>{'$t$: distance from the camera'}</Text></span>
+                <span className="integrating-distance-arrow" aria-hidden="true">→</span>
+              </span>
+              <span
+                className="integrating-plot-label integrating-plot-label--integrand"
+                style={{ left: peakX + 34, top: plot.y + plot.height * (1 - INTEGRAND_PEAK) + 6, visibility: showIntegral ? 'visible' : 'hidden' }}
+              >
+                <Text>{'$T\\,(KL + Q)$'}</Text>
+              </span>
+              <span
+                className="integrating-plot-label integrating-plot-label--end"
+                style={{ left: plot.x + plot.width - 10, top: endY - 40, visibility: showIntegral ? 'visible' : 'hidden' }}
+              >
+                <Text>{'$T(d)\\,L(d)$'}</Text>
               </span>
               <span className="integrating-mark integrating-mark--medium" style={{ left: 0, top: plot.y + 4, width: geometry.gutter - 12 }}>
                 <Text>{'$\\sigma_t$'}</Text>

@@ -1,0 +1,88 @@
+.slide--measurement-fields {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Two columns, one per field, each as wide as its panel. */
+.measurement-fields-body {
+  display: flex;
+  justify-content: space-between;
+}
+
+.measurement-fields-column {
+  display: flex;
+  flex-direction: column;
+  width: 560px;
+}
+
+.measurement-fields-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.measurement-fields-panel {
+  display: block;
+  border-radius: 6px;
+}
+
+.measurement-fields-outputs {
+  margin-top: 8px;
+  font-size: 20px;
+  color: var(--text-secondary);
+}
+
+.measurement-fields-plot {
+  position: relative;
+}
+
+.measurement-fields-plot svg {
+  display: block;
+}
+
+.measurement-fields-axis {
+  stroke: var(--text-muted);
+  stroke-width: 1;
+}
+
+.measurement-fields-bar {
+  fill: var(--text-secondary);
+  opacity: 0.85;
+}
+
+/* Light that bounced more than once, in the deck's color for the second bounce. */
+.measurement-fields-bar--later {
+  fill: var(--ink-light-2);
+}
+
+.measurement-fields-label {
+  position: absolute;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.measurement-fields-label--later {
+  transform: translateX(-100%);
+  font-size: 18px;
+  color: var(--ink-light-2);
+}
+
+.measurement-fields-label--axis {
+  transform: translate(-100%, -50%);
+  font-size: 18px;
+}
+
+.measurement-fields-equation {
+  font-size: 26px;
+  color: var(--text-primary);
+}
+
+.measurement-fields-equation-label {
+  font-size: 19px;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+}

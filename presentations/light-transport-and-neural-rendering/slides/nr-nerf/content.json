@@ -12,16 +12,16 @@
           "alt": "NeRF pipeline: sample points along camera rays, query a network for color and density, volume render, and compare with the photograph",
           "labels": [
             {
-              "text": "figure's $(\\theta, \\phi)$: direction",
+              "text": "$(\\theta, \\phi)$: viewing direction",
               "at": 0.18
             },
             {
               "text": "$c$: all bounces",
-              "at": 0.54
+              "at": 0.53
             },
             {
-              "text": "$\\sigma_s = 0$: $A = 0$, $x = b$",
-              "at": 0.775
+              "text": "no scattering:\nemission and absorption only",
+              "at": 0.8
             }
           ],
           "caption": "NeRF: sample, query, composite, compare"

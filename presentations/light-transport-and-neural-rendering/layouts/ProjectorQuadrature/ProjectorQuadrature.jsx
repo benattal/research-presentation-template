@@ -82,8 +82,8 @@ function drawLight(ctx, scratch, values, columns, rows, color, gain) {
  * show the pattern, one sample's projection to the projector, then every
  * sample's term: each sample's dot is sized by its term, and a bar plot
  * beside the panel shows the terms in order along the ray, which sum to
- * the pixel m. The slide's `equation` is shown over the panel, with an
- * optional short `equationLabel` beside it.
+ * the pixel m. The slide's `equation` is shown over the panel, with
+ * optional short `equationLabels` beside it, one per line.
  * Sliders set the stripe count and the camera pixel. The light image
  * covers the whole panel with the scene's own mapping, so the beams start
  * at the projector. Steps fade in when the slide moves between them, not
@@ -233,7 +233,11 @@ export default function ProjectorQuadrature({ slide, buildStep }) {
       <SlideTitle title={slide.title} subtitle={slide.subtitle} />
       <div className="projector-quadrature-equation">
         <Text>{slide.equation}</Text>
-        {slide.equationLabel && <span className="projector-quadrature-equation-label"><Text>{slide.equationLabel}</Text></span>}
+        {slide.equationLabels && (
+          <span className="projector-quadrature-equation-labels">
+            {slide.equationLabels.map((label) => <span key={label} className="projector-quadrature-equation-label"><Text>{label}</Text></span>)}
+          </span>
+        )}
       </div>
       <div className="projector-quadrature-body">
         <canvas

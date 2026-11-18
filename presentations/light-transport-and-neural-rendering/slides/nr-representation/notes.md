@@ -1,14 +1,13 @@
-Transition: on every slide so far, the network gave physical quantities (density, albedo), and a measurement model computed the pixel from them. The network can also give the measurement itself.
+Transition: So far the network output physical quantities, and a measurement model computed the pixel from them. The network can also output the measurement itself. Both columns show the ray of the transient quadrature.
 
-- Top, a scene field (Transient NeRF, Malik et al., NeurIPS 2023): the network gives density $\sigma$ and color $c$. The time-resolved measurement is computed from them with the measurement model: each sample's contribution goes into the time bin of its round-trip distance, and the result is convolved with the laser pulse. The physics is in the model, so the result can only be what the model allows: here, light reflected once.
-- Bottom, a measurement field (Flying with Photons, Malik et al., ECCV 2024): at every point the network gives a whole transient, the light leaving that point over time, along with a density. The transients are shifted by the travel time to the camera and composited. This field can represent any light transport, interreflections and caustics included, because no model of it is imposed.
+- Step 1: A scene field, as in Transient NeRF: at each sample, a density and an albedo. The transient comes from the measurement model, which assumes light reflected once, so it has only that light.
+- Step 2: A measurement field, as in Flying with Photons: at each sample, a density and a whole transient $h_i$, the light leaving that point toward the camera over time. Each $h_i$ is delayed to the camera and composited. It can hold light that bounced more than once: the orange part.
 
-The sentence to remember: a scene field needs a measurement model and generalizes through it; a measurement field is the measurement itself, with any effect represented, but has no physical parameters to edit.
+Remember: a scene field computes the measurement through a model; a measurement field represents the measurement itself.
 
-The question it invites: which would you use to relight the scene? The scene field: it has the physical quantities a new light acts on. The measurement field has only the light as captured. The cost differs too: in the scene field each sample adds to one time bin; in the measurement field each sample carries a transient of $N$ bins.
+Stop (optional), at step 2: which one can show interreflections or caustics? Answer: the measurement field. Its transients can hold any light transport, because no model of it is imposed.
 
-Both papers state what the figures show: Transient NeRF assumes light reflected once, with a laser and sensor on the same axis; Flying with Photons models interreflections, refraction, and caustics, which Transient NeRF cannot.
-
-Next: what a NeRF's color contains, and why changing the light is hard.
-
-Figure 2 of each paper.
+If asked:
+- What does each cost? In the scene field, each sample adds to one time bin. In the measurement field, each sample carries a whole transient of many bins.
+- What can the scene field do that the measurement field cannot? Its outputs are physical, density and albedo, so they can be edited. The measurement field has only the light as captured.
+- Is the orange part computed? No, it is an illustration of later light. The figures are redrawn after Fig. 2 of each paper (Malik et al., NeurIPS 2023 and ECCV 2024).

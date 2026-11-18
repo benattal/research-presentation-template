@@ -5,20 +5,12 @@
   "subtitle": "Light in a medium has the same fixed-point form as between surfaces",
   "lines": [
     {
-      "tex": "L = \\htmlClass{term-medium}{T(d)}\\, L(d) \\;+",
-      "label": "surface behind the medium"
-    },
-    {
-      "tex": "\\hphantom{L =}\\; \\htmlClass{term-medium}{D^{-1}}\\htmlClass{term-emission}{Q} \\;+",
-      "label": "emission"
-    },
-    {
-      "tex": "\\hphantom{L =}\\; \\htmlClass{term-medium}{D^{-1}}\\htmlClass{term-bounce-2}{K}\\, L",
-      "label": "in-scattering"
+      "tex": "L = \\underbrace{\\htmlClass{term-medium}{T(d)}\\, L(d)}_{\\text{background}} + \\underbrace{\\htmlClass{term-medium}{D^{-1}}\\htmlClass{term-emission}{Q}}_{\\text{emission}} + \\underbrace{\\htmlClass{term-medium}{D^{-1}}\\htmlClass{term-bounce-2}{K}\\, L}_{\\text{in-scattering}}",
+      "label": "from the integrating factor"
     },
     {
       "tex": "x = \\htmlClass{term-emission}{b} + \\htmlClass{term-bounce-2}{A}\\, x",
-      "label": "$x = L$, $b = D^{-1}Q + T(d)\\,L(d)$"
+      "label": "$x = L$, $b = T(d)\\,L(d) + D^{-1}Q$"
     },
     {
       "tex": "\\htmlClass{term-bounce-2}{A} = \\underbrace{\\htmlClass{term-medium}{D^{-1}}}_{\\text{propagation}}\\, \\underbrace{\\htmlClass{term-bounce-2}{K}}_{\\text{scattering}}",
@@ -34,11 +26,10 @@
     "src": "/slides/vol-vre/single-and-multiple-scattering.jpg",
     "alt": "Two renders of glasses of juice, with single and with multiple scattering",
     "caption": "Single and multiple scattering",
-    "width": 640
+    "width": 640,
+    "step": 3
   },
   "buildSteps": [
-    {},
-    {},
     {},
     {},
     {},

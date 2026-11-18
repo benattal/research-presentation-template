@@ -10,11 +10,13 @@
  * default 0). Each figure is scaled to fit its cell without cropping, with
  * its caption directly under it, and the pair is centered in the cell.
  *
- * A figure may also have `labels`, short lines of text or math under it
- * (and its caption), so they stay with the figure they annotate. A label
- * is a string, and the labels are set side by side, or `{ text, at }`,
- * centered at `at` (a fraction of the figure's width) to sit under the
- * part of the figure it is about.
+ * A figure may also have `labels`, short lines of text or math directly
+ * under it (above its caption), so they stay with the figure they
+ * annotate. A label is a string, and the labels are set side by side, or
+ * `{ text, at }`, centered at `at` (a fraction of the figure's width) to
+ * sit under the part of the figure it is about; a placed label's text may
+ * break into lines at "\n", and the labels' band is as tall as the
+ * longest.
  *
  * An optional `header` (`{ tex, label? }`, slide text with `$…$` math and
  * its short label above it) is one line in the band between the subtitle
@@ -32,8 +34,12 @@ const tracks = (shares) => shares.map((share) => `minmax(0, ${share}fr)`).join('
 /** A figure's labels: side by side, or each centered at its `at` along the figure. */
 function FigureLabels({ labels }) {
   const placed = labels.some((label) => typeof label === 'object');
+  const lines = Math.max(...labels.map((label) => (typeof label === 'object' ? label.text : label).split('\n').length));
   return (
-    <div className={`figure-rows-labels${placed ? ' figure-rows-labels--placed' : ''}`}>
+    <div
+      className={`figure-rows-labels${placed ? ' figure-rows-labels--placed' : ''}`}
+      style={placed ? { '--figure-rows-label-lines': lines } : undefined}
+    >
       {labels.map((label) => {
         const text = typeof label === 'object' ? label.text : label;
         const style = typeof label === 'object' ? { left: `${100 * label.at}%` } : undefined;
@@ -72,8 +78,8 @@ export default function FigureRows({ slide, buildStep }) {
                 transition={{ duration: 0.35 }}
               >
                 <Media item={figure} className="figure-rows-media" />
-                {figure.caption && <figcaption><Text>{figure.caption}</Text></figcaption>}
                 {figure.labels && <FigureLabels labels={figure.labels} />}
+                {figure.caption && <figcaption><Text>{figure.caption}</Text></figcaption>}
               </motion.figure>
             ))}
           </div>

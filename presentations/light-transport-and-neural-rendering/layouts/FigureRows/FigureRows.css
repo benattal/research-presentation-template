@@ -49,31 +49,35 @@
   color: var(--text-secondary);
 }
 
-/* Short labels side by side under a figure (and its caption). */
+/* Short labels side by side directly under a figure, above its caption. */
 .figure-rows-labels {
   display: flex;
   justify-content: center;
   align-items: baseline;
   gap: 56px;
-  margin-top: 22px;
+  margin-top: 12px;
 }
 
 .figure-rows-label {
   font-size: 24px;
+  line-height: 1.3;
   color: var(--text-primary);
 }
 
-/* Labels placed along the figure: each centered at its own fraction of the width. */
+/* Labels placed along the figure: each centered at its own fraction of the width, in as many
+   lines as the longest has. */
 .figure-rows-labels--placed {
   position: relative;
-  height: 36px;
+  font-size: 24px;
+  height: calc(1.3em * var(--figure-rows-label-lines, 1));
 }
 
 .figure-rows-labels--placed .figure-rows-label {
   position: absolute;
   top: 0;
   transform: translateX(-50%);
-  white-space: nowrap;
+  white-space: pre;
+  text-align: center;
 }
 
 /* One equation in the band under the subtitle, its label above it. */

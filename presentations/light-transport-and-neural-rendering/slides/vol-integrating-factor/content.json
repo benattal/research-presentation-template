@@ -5,20 +5,20 @@
   "subtitle": "Along one ray, the transfer equation is solved by an integral",
   "buildSteps": [
     {
-      "label": "Along one ray, $DL = KL + Q$",
-      "equation": "$$-\\frac{dL}{dt} + \\sigma_t L = \\underbrace{KL}_{\\text{in-scattering}} + \\underbrace{Q}_{\\text{emission}}$$"
+      "label": "Along one ray, $\\htmlClass{term-medium}{D}L = \\htmlClass{term-bounce-2}{K}L + \\htmlClass{term-emission}{Q}$",
+      "equation": "$$\\htmlClass{term-medium}{-\\frac{dL}{dt} + \\sigma_t L} = \\underbrace{\\htmlClass{term-bounce-2}{K}L}_{\\text{in-scattering}} + \\underbrace{\\htmlClass{term-emission}{Q}}_{\\text{emission}}$$"
     },
     {
       "label": "Multiply by $T(t) = e^{-\\int_0^t \\sigma_t\\,ds}$, with $T' = -\\sigma_t T$",
-      "equation": "$$\\frac{d}{dt}\\big(T L\\big) = -T\\,(KL + Q)$$"
+      "equation": "$$\\frac{d}{dt}\\big(T L\\big) = -T\\,(\\htmlClass{term-bounce-2}{K}L + \\htmlClass{term-emission}{Q})$$"
     },
     {
       "label": "Integrate from $0$ to $d$",
-      "equation": "$$L(0) = \\int_0^d T\\,(KL + Q)\\,dt + T(d)\\,L(d)$$"
+      "equation": "$$L(0) = \\int_0^d T\\,(\\htmlClass{term-bounce-2}{K}L + \\htmlClass{term-emission}{Q})\\,dt + T(d)\\,L(d)$$"
     },
     {
-      "label": "So $D^{-1}$ is an integral along rays",
-      "equation": "$$D^{-1}(KL + Q) = \\int_0^d T\\,(KL + Q)\\,dt$$"
+      "label": "So $\\htmlClass{term-medium}{D^{-1}}$ is an integral along rays",
+      "equation": "$$\\htmlClass{term-medium}{D^{-1}}(\\htmlClass{term-bounce-2}{K}L + \\htmlClass{term-emission}{Q}) = \\int_0^d T\\,(\\htmlClass{term-bounce-2}{K}L + \\htmlClass{term-emission}{Q})\\,dt$$"
     }
   ]
 }
