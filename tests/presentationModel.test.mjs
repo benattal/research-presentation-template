@@ -11,6 +11,7 @@ import {
   slideIdFromPath,
   stepCount,
 } from '../core/client/presentation/model.js';
+import { notesFormulas, notesMathProblems } from '../core/client/presentation/notesMath.js';
 
 const Layout = () => null;
 const layouts = { title: Layout, content: Layout };
@@ -138,6 +139,21 @@ describe('notes', () => {
     assert.equal(notesFileName(['notes.md', 'notes-1.md'], 1), 'notes-1.md');
     assert.equal(notesFileName(['notes.md', 'notes-1.md'], 2), 'notes.md');
     assert.equal(notesFileName([], 0), 'notes.md');
+  });
+
+  it('finds formulas as the Markdown parser does, with Markdown kept out of them', () => {
+    const notes = 'Step 1: $w_i = T_i\\,\\alpha_i$ and *emphasis*, then `$code$`:\n\n$$\nx = e + A_k x\n$$\n';
+    assert.deepEqual(notesFormulas(notes), [
+      { math: 'w_i = T_i\\,\\alpha_i', display: false },
+      { math: 'x = e + A_k x', display: true },
+    ]);
+  });
+
+  it('reports a notes formula that does not render', () => {
+    assert.deepEqual(notesMathProblems('fine $x^2$', 'n.md'), []);
+    const [problem, ...rest] = notesMathProblems('broken $\\frac{1}{$', 'slides/a/notes.md');
+    assert.equal(rest.length, 0);
+    assert.match(problem, /^slides\/a\/notes\.md: the formula "\\frac\{1\}\{" does not render/);
   });
 });
 

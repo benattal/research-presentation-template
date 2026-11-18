@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import Markdown from 'react-markdown';
+import NotesMarkdown from './NotesMarkdown.jsx';
 import { NOTES_WRITABLE, notesFor, saveNotes } from '../presentation/notes.js';
 import { stepCount } from '../presentation/model.js';
 import useKeyboardNavigation from '../navigation/useKeyboardNavigation.js';
@@ -99,7 +99,7 @@ function NotesPanel({ slide, step }) {
             autoFocus
           />
         ) : (
-          <Markdown>{notes || '*(No notes)*'}</Markdown>
+          <NotesMarkdown>{notes || '*(No notes)*'}</NotesMarkdown>
         )}
       </div>
     </div>

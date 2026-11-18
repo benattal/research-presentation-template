@@ -8,6 +8,7 @@ bucket. Ids use lowercase letters, digits, and hyphens.
 
 ```text
 presentations/<id>/
+  README.md                           what it is; how to pull and push its assets
   presentation.json
   layouts/index.js
   slides/<slide-id>/content.json
@@ -19,6 +20,10 @@ presentations/<id>/
   sources.json                        optional: citations of borrowed material
   layouts/<LayoutName>/...            optional, registered in layouts/index.js
 ```
+
+Every presentation has a `README.md` saying what it is and how to fetch
+its assets on a fresh checkout (`npm run assets -- pull <id>`) and push new
+ones; `npm run new` writes one, and `npm test` fails when one is missing.
 
 ## `presentation.json`
 
@@ -133,8 +138,14 @@ Jarosz").
 
 ## Presenter notes
 
-`notes.md` holds a slide's notes, in Markdown. A slide with build steps can
-add `notes-<step>.md` (0-based) for a step that needs its own notes; every
+`notes.md` holds a slide's notes, in Markdown, with math written as in
+slide text (`$…$` inline, `$$…$$` on its own lines). The presenter window
+finds formulas with the Markdown parser's math extension (remark-math), so
+Markdown escapes and emphasis never reach inside a formula, and renders
+them with the slides' KaTeX options
+(`core/client/presentation/notesMath.js`); `npm run check` reports a
+formula that does not render. A slide with build steps can add
+`notes-<step>.md` (0-based) for a step that needs its own notes; every
 other step shows `notes.md`. Under the development server the presenter
 window can edit notes and saves them to the file that was on screen; saving
 does not reload the audience view.

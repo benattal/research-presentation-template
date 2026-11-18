@@ -36,6 +36,12 @@ import { writeContactSheet } from '../core/tooling/contactSheet.js';
 /** Share of pixels that must differ before a frame counts as changed. */
 const CHANGED_PIXEL_RATIO = 0.001;
 const READY_TIMEOUT_MS = 30000;
+/**
+ * The first page load also has Vite transform every module of the app and
+ * the presentation, on demand, so it takes several times longer than the
+ * loads after it, and longer still on a busy or power-throttled machine.
+ */
+const FIRST_LOAD_TIMEOUT_MS = 300000;
 
 const { values, positionals } = parseArgs({
   allowPositionals: true,
@@ -107,9 +113,9 @@ page.on('response', (response) => {
   if (response.status() >= 400) log?.failedRequests.push(`${response.url()} (HTTP ${response.status()})`);
 });
 
-async function open(slideIndex, step) {
-  await page.goto(`${baseUrl}?mode=capture&slide=${slideIndex}&step=${step}`);
-  await page.waitForSelector('body[data-capture-ready="true"], [data-load-error]', { timeout: READY_TIMEOUT_MS });
+async function open(slideIndex, step, timeout = READY_TIMEOUT_MS) {
+  await page.goto(`${baseUrl}?mode=capture&slide=${slideIndex}&step=${step}`, { timeout });
+  await page.waitForSelector('body[data-capture-ready="true"], [data-load-error]', { timeout });
   return page.evaluate(() => ({
     loadError: document.querySelector('[data-load-error]')?.innerText ?? null,
     index: window.__presentationIndex ?? null,
@@ -121,7 +127,7 @@ const frames = [];
 let exitCode = 0;
 try {
   log = { consoleErrors: [], pageErrors: [], failedRequests: [] };
-  const first = await open(0, 0);
+  const first = await open(0, 0, FIRST_LOAD_TIMEOUT_MS);
   if (first.loadError) {
     console.error(`The presentation did not load:\n${first.loadError}`);
     exitCode = 1;
@@ -138,7 +144,14 @@ try {
           log.pageErrors.push(`capture timed out: ${error.message}`);
         }
         const file = `${String(slideIndex + 1).padStart(2, '0')}-${slide.id}-${step + 1}.png`;
-        await page.locator('.slide-stage').screenshot({ path: join(runDir, file), animations: 'disabled' });
+        // A frame that cannot be screenshot is that frame's error; the run goes on and its report is written.
+        let shot = true;
+        try {
+          await page.locator('.slide-stage').screenshot({ path: join(runDir, file), animations: 'disabled' });
+        } catch (error) {
+          shot = false;
+          log.pageErrors.push(`screenshot failed: ${error.message}`);
+        }
 
         const errors = [
           ...log.pageErrors,
@@ -147,7 +160,7 @@ try {
           ...(report?.mediaProblems ?? []),
         ];
         const warnings = (report?.overflow ?? []).map((finding) => `${finding.kind}: ${finding.element} (${finding.detail})`);
-        const diff = previousDir ? compareImages(join(runDir, file), join(previousDir, file), join(runDir, 'diff', file)) : null;
+        const diff = previousDir && shot ? compareImages(join(runDir, file), join(previousDir, file), join(runDir, 'diff', file)) : null;
         frames.push({
           file,
           slideIndex,

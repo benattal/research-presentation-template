@@ -649,6 +649,19 @@ kbd {
   font-weight: 700;
 }
 
+/* Display math in the notes: centered, with room above and below, scrolling sideways when wide. */
+.presenter-notes-content .math--display {
+  margin: 0.5em 0 0.75em;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* A formula KaTeX cannot render (typed into the editor): its source, in the login error color, with the message on hover. */
+.presenter-notes-math-error {
+  color: #e84393;
+  text-decoration: underline wavy;
+}
+
 .presenter-notes-content ul,
 .presenter-notes-content ol {
   padding-left: 1.5em;

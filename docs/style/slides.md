@@ -79,6 +79,23 @@ space is not used effectively in these slides".
   on a slide runs long.
 - **Every slide has a visual.** An equation-only slide gets a figure or
   larger equations.
+- **Every slide serves a purpose.** The user (2026-11-17): "This light
+  paths slide is also not particularly useful by itself, each slide should
+  serve a purpose." A slide that shows a picture without making a point
+  the talk needs is cut.
+- **The visual shows what the equations say.** The user (2026-11-17): "If
+  you could relate the content & equations more effectively to the visuals
+  that would be good." and "the visuals are again disconnected from the
+  content (this is a theme)". Each equation or label has a counterpart in
+  the visual, drawn in the same color and appearing at the same build
+  step; a part of the visual that nothing on the slide refers to is cut.
+  An own visual beats a borrowed one that makes the idea clunkier ("You
+  don't always need to borrow from existing decks if it makes it clunkier
+  to explain a concept").
+- **Numbers only when the speaker uses them.** The user (2026-11-17): "I
+  think the specific numerical values in many of these demos are
+  unnecessary". A demo shows a value, chart, or readout only when the
+  explanation refers to it.
 - **The visual fills the free space.** Size it to the space under the
   subtitle, with no awkward whitespace; a row of small images becomes a
   grid.
@@ -127,10 +144,20 @@ space is not used effectively in these slides".
   than the framework's body size without a reason.
 - Define a necessary technical term and spell out an abbreviation at first
   use, on the slide or in the notes.
+- **Terms are clear where they are used.** The user (2026-11-17): "When
+  you say "like G" and "like S" on the volume rendering slides, students
+  will not remember what these are. You have to make sure that terms you
+  use are clear." A symbol from an earlier slide is named in words where
+  it reappears ("propagation $G$"), unless the slide just before used it.
 
 ## Figures and media
 
 - A figure shows one thing; crop away what the point does not need.
+- **Redesign a borrowed figure that does not fit.** The user (2026-11-17):
+  "If a figure is simply cut from a paper or presentation, and doesn't
+  exactly fit, you are welcome to (and should) re-design while
+  citing/attributing." Draw it again for the slide's point and credit the
+  original ("after Gkioulekas, CMU 15-468").
 - **Each image shows the point it sits under.** Before placing a figure,
   read its own caption and panel labels in the source, and caption it with
   what it shows, not with what the method does. An image standing in for
@@ -167,6 +194,11 @@ Use build steps to pace an argument: each click adds one idea the speaker is
 about to talk about. A slide's last step is what the audience sees when the
 speaker moves on, so it must stand on its own.
 
+An equation can be a question: its left side first, with a question mark
+over the equals sign, and its right side one step later, so the speaker can
+ask the audience before showing it. Use it where the step is worth working
+out, not on every equation. The user (2026-11-17): "Putting a question mark
+over the equality before showing the RHS could also be an option."
 Motion shows something new or not at all. The user (2026-11-17): "it's a
 bit awkward when animations repeat when cycling from one slide to the next.
 Sometimes this is legitimate but please just watch out for it" and, of an

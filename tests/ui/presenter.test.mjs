@@ -58,6 +58,10 @@ describe('presenter window', { timeout: 180000 }, () => {
     assert.equal(await presenter.locator('.presenter-logout').count(), 0);
     assert.match(await notes(), /Notes for the title slide\./);
     assert.equal(await presenter.locator('.presenter-notes-content strong').innerText(), 'title');
+    // Math renders with KaTeX, inline and on its own lines, and no `$` delimiter is left as text.
+    assert.equal(await presenter.locator('.presenter-notes-content span.math .katex').count(), 1);
+    assert.equal(await presenter.locator('.presenter-notes-content div.math--display .katex-display').count(), 1);
+    assert.doesNotMatch(await notes(), /\$/);
     assert.equal(await presenter.locator('.presenter-next-col .preview-title').innerText(), SHOWCASE_SLIDES[1]);
     await presenter.frameLocator('.presenter-mobile-iframe').locator('.slide[data-slide-id="title"]').waitFor();
   });
