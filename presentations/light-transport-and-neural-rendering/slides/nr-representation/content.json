@@ -2,21 +2,23 @@
   "layout": "measurementFields",
   "sectionLabel": "Neural rendering",
   "title": "Scene and measurement fields",
-  "subtitle": "Representing the scene or the measurement",
+  "subtitle": "A network can represent the scene or the measurement",
   "columns": [
     {
       "field": "scene",
       "title": "Scene field",
-      "outputs": "at each depth $t_i$: density $\\sigma_i$, albedo $\\rho_i$",
+      "network": "$(\\htmlClass{term-learned}{\\sigma_i}, \\htmlClass{term-learned}{\\rho_i}) = \\htmlClass{term-learned}{F_\\theta}(\\mathbf{x}_i, \\omega)$",
+      "networkLabel": "network: density, albedo",
       "equationLabel": "weights $w_i$ at round-trip times, pulse $g$",
       "equation": "$h(\\tau) = \\sum_i w_i\\, g\\!\\left(\\tau - \\dfrac{2t_i}{c}\\right)$"
     },
     {
       "field": "measurement",
       "title": "Measurement field",
-      "outputs": "at each depth $t_i$: density $\\sigma_i$, transient $h_i$",
+      "network": "$(\\htmlClass{term-learned}{\\sigma_i}, \\htmlClass{term-learned}{h_i}) = \\htmlClass{term-learned}{F_\\theta}(\\mathbf{x}_i, \\omega)$",
+      "networkLabel": "network: density, transient",
       "equationLabel": "NeRF's weights, each $h_i$ delayed to the camera",
-      "equation": "$h(\\tau) = \\sum_i T_i\\,\\alpha_i\\, h_i\\!\\left(\\tau - \\dfrac{t_i}{c}\\right)$",
+      "equation": "$h(\\tau) = \\sum_i T_i\\,\\alpha_i\\, \\htmlClass{term-learned}{h_i}\\!\\left(\\tau - \\dfrac{t_i}{c}\\right)$",
       "laterLabel": "later bounces"
     }
   ],

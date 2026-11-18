@@ -20,6 +20,20 @@ first. General slide rules are also in
 earlier directions are quoted in the dated entries below. Read this list
 before changing a slide.
 
+2026-11-18, after cycle 1:
+
+- "The neural rendering section is good overall, but I think there's too
+  little connection to the representation. In the scene and measurement
+  field slide, at least, you should make it clear that these quantities
+  are produced by an NN"
+
+- On `lt-path-tracing`'s "4,096 paths per pixel": first "Remove "4096
+  paths per pixel" that's totally arbitrary", then withdrawn: "Eh it's
+  actually okay, you don't need to change this -- it's tied to a specific
+  example". The label stays.
+- "Make sure that for long sessions the web page does not start lagging.
+  Perhaps there's some basic cache management/something you can do here?"
+
 2026-11-17, while resuming:
 
 - "Showing a justification below (why terms cancel), which then fades out

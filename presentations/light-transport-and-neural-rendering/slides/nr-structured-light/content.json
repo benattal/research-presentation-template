@@ -3,7 +3,7 @@
   "sectionLabel": "Neural rendering",
   "title": "Structured light",
   "subtitle": "Volume rendering with a projected pattern",
-  "equation": "$m = \\sum_i T_i\\,\\alpha_i\\,\\rho_i\\,T^{\\mathrm{p}}_i\\,\\dfrac{\\htmlClass{term-emission}{P(\\mathbf{x}_i)}}{\\|\\mathbf{x}_i - \\mathbf{x}_p\\|^2}$",
+  "equation": "$m = \\sum_i T_i\\,\\alpha_i\\,\\htmlClass{term-learned}{\\rho_i}\\,T^{\\mathrm{p}}_i\\,\\dfrac{\\htmlClass{term-emission}{P(\\mathbf{x}_i)}}{\\|\\mathbf{x}_i - \\mathbf{x}_p\\|^2}$",
   "equationLabels": [
     "$\\mathbf{x}_p$: projector",
     "$T^{\\mathrm{p}}_i$: transmittance toward the projector"

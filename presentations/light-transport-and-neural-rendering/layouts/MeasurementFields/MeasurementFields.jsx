@@ -39,6 +39,10 @@ const LATER_DELAY = 2.5e-9;
 const GLYPH_DEPTHS = [1.2, 1.5, 1.8, 2.6];
 const GLYPH = { width: 46, height: 26, gap: 18 };
 
+/** The depth (m) of the sample marked xᵢ on both panels, the one the network row names: in the fog, above one of the glyphs. */
+const MARKED_DEPTH = 1.5;
+const MARK_RADIUS = 7;
+
 const FIELDS = ['scene', 'measurement'];
 
 /**
@@ -98,18 +102,42 @@ function drawGlyph(ctx, colors, [x, y]) {
   ctx.restore();
 }
 
-/** One column: a field's panel, its network outputs, its transient, and its equation. */
+/**
+ * A small multilayer perceptron (2, 3, 3, 2 units), the sign for "a
+ * network computes this", in the network outputs' color.
+ */
+function NetworkGlyph() {
+  const layers = [2, 3, 3, 2];
+  const [width, height] = [62, 36];
+  const nodes = layers.map((count, l) => Array.from({ length: count }, (_, k) => [
+    4 + (l * (width - 8)) / (layers.length - 1),
+    height / 2 + (k - (count - 1) / 2) * 11.5,
+  ]));
+  return (
+    <svg className="measurement-fields-network-glyph" width={width} height={height} aria-hidden="true">
+      {nodes.slice(1).flatMap((layer, l) => layer.flatMap((to, k) => nodes[l].map((from, j) => (
+        <line key={`${l}:${j}:${k}`} x1={from[0]} y1={from[1]} x2={to[0]} y2={to[1]} />
+      ))))}
+      {nodes.flat().map(([x, y]) => <circle key={`${x}:${y}`} cx={x} cy={y} r={3.6} />)}
+    </svg>
+  );
+}
+
+/** One column: a field's panel, the network's outputs at a sample, its transient, and its equation. */
 function FieldColumn({ column, samples, transient, scale, shown }) {
   const [canvasRef, ratio] = useStageCanvas();
   const measurement = column.field === 'measurement';
   const returns = useMemo(() => collocatedWeights(samples), [samples]);
+  const { toCanvas } = sceneTransform(BOUNDS, { x: 0, y: 0, ...PANEL });
+  const marked = samples.reduce((best, sample) => (Math.abs(sample.t - MARKED_DEPTH) < Math.abs(best.t - MARKED_DEPTH) ? sample : best));
+  const markedAt = toCanvas([marked.t, 0]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-    const colors = themeColors(canvas, [...RAY_PANEL_COLORS, 'light-2']);
-    const { toCanvas } = drawRayPanel(ctx, colors, PANEL, {
+    const colors = themeColors(canvas, [...RAY_PANEL_COLORS, 'light-2', 'learned']);
+    drawRayPanel(ctx, colors, PANEL, {
       scene: RAY_SCENE, samples, returns, fog: 1, bounds: BOUNDS,
     });
     if (measurement) {
@@ -118,9 +146,14 @@ function FieldColumn({ column, samples, transient, scale, shown }) {
         drawGlyph(ctx, colors, [x, y + GLYPH.gap + GLYPH.height]);
       }
     }
+    // The sample the network row names, ringed in the network outputs' color.
+    ctx.strokeStyle = rgba(colors.learned, 0.95);
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(markedAt[0], markedAt[1], MARK_RADIUS, 0, 2 * Math.PI);
+    ctx.stroke();
   });
 
-  const { toCanvas } = sceneTransform(BOUNDS, { x: 0, y: 0, ...PANEL });
   const xOfTime = (time) => toCanvas([(time * SPEED_OF_LIGHT) / 2, 0])[0];
   const baseline = PLOT.height - PLOT.bottom;
   const height = baseline - PLOT.top;
@@ -137,14 +170,23 @@ function FieldColumn({ column, samples, transient, scale, shown }) {
       transition={{ duration: 0.35 }}
     >
       <div className="measurement-fields-title"><Text>{column.title}</Text></div>
-      <canvas
-        ref={canvasRef}
-        className="measurement-fields-panel"
-        width={PANEL.width * ratio}
-        height={PANEL.height * ratio}
-        style={{ width: PANEL.width, height: PANEL.height }}
-      />
-      <div className="measurement-fields-outputs"><Text>{column.outputs}</Text></div>
+      <div className="measurement-fields-panel-frame" style={{ width: PANEL.width, height: PANEL.height }}>
+        <canvas
+          ref={canvasRef}
+          className="measurement-fields-panel"
+          width={PANEL.width * ratio}
+          height={PANEL.height * ratio}
+          style={{ width: PANEL.width, height: PANEL.height }}
+        />
+        <span className="measurement-fields-sample" style={{ left: markedAt[0], top: markedAt[1] - MARK_RADIUS - 4 }}>
+          <Text>{'$\\mathbf{x}_i$'}</Text>
+        </span>
+      </div>
+      <div className="measurement-fields-network">
+        <NetworkGlyph />
+        <Text>{column.network}</Text>
+        <span className="measurement-fields-network-label"><Text>{column.networkLabel}</Text></span>
+      </div>
       <div className="measurement-fields-plot" style={{ width: PLOT.width, height: PLOT.height }}>
         <svg width={PLOT.width} height={PLOT.height} aria-hidden="true">
           {[...transient.single].map((single, bin) => {
@@ -193,19 +235,24 @@ function FieldColumn({ column, samples, transient, scale, shown }) {
  * transient below on the same horizontal axis and one vertical scale; the
  * measurement field's transient adds the later light of every sample (an
  * illustration, LATER_SHARE and LATER_DELAY), drawn in the next bounce's
- * color, and its panel shows a few samples' own transients.
+ * color, and its panel shows a few samples' own transients. Each panel
+ * rings one sample xᵢ, and the row under it shows the network that gives
+ * that sample's outputs: a perceptron glyph, the column's `network`
+ * equation, and its `networkLabel`.
  *
- * Slide fields: `columns`, two of `{ field, title, outputs, equationLabel,
- * equation, laterLabel? }` with field 'scene' or 'measurement' (`outputs`
- * names the network's outputs per sample; `laterLabel` labels the later
+ * Slide fields: `columns`, two of `{ field, title, network, networkLabel,
+ * equationLabel, equation, laterLabel? }` with field 'scene' or
+ * 'measurement' (`network` is the network's equation at the ringed sample,
+ * `networkLabel` names its outputs in words; `laterLabel` labels the later
  * light), and `buildSteps`, each `{ columns: n }`, showing the first n
  * columns (their space is kept from the first step).
  */
 export default function MeasurementFields({ slide, buildStep }) {
   const columns = slide.columns ?? [];
+  const required = ['title', 'network', 'networkLabel', 'equationLabel', 'equation'];
   if (columns.length !== 2 || columns.some((column) => !FIELDS.includes(column.field)
-    || ['title', 'outputs', 'equationLabel', 'equation'].some((key) => typeof column[key] !== 'string'))) {
-    throw new Error(`measurementFields: slide "${slide.id}" needs two "columns", each with "field" (${FIELDS.join(' or ')}), "title", "outputs", "equationLabel", and "equation"`);
+    || required.some((key) => typeof column[key] !== 'string'))) {
+    throw new Error(`measurementFields: slide "${slide.id}" needs two "columns", each with "field" (${FIELDS.join(' or ')}), ${required.map((key) => `"${key}"`).join(', ')}`);
   }
   const step = slide.buildSteps?.[buildStep];
   if (!Number.isInteger(step?.columns)) {

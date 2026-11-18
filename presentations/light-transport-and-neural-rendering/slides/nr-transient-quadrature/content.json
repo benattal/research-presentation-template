@@ -9,12 +9,12 @@
       "tex": "$\\hat C = \\sum_i T_i\\,\\alpha_i\\,L_i$"
     },
     {
-      "label": "source at the camera; albedo $\\rho_i$",
-      "tex": "$L_i = \\rho_i\\,\\dfrac{T_i}{t_i^2}$"
+      "label": "source at the camera; the network's albedo $\\htmlClass{term-learned}{\\rho_i}$",
+      "tex": "$L_i = \\htmlClass{term-learned}{\\rho_i}\\,\\dfrac{T_i}{t_i^2}$"
     },
     {
       "label": "intensity",
-      "tex": "$m = \\sum_i \\underbrace{T_i^2\\,\\alpha_i\\,\\dfrac{\\rho_i}{t_i^2}}_{w_i}$"
+      "tex": "$m = \\sum_i \\underbrace{T_i^2\\,\\alpha_i\\,\\dfrac{\\htmlClass{term-learned}{\\rho_i}}{t_i^2}}_{w_i}$"
     },
     {
       "label": "transient; pulse shape $g$",

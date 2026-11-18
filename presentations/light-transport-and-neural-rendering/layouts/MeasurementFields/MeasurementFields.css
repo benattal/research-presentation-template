@@ -23,14 +23,46 @@
   margin-bottom: 8px;
 }
 
+.measurement-fields-panel-frame {
+  position: relative;
+}
+
 .measurement-fields-panel {
   display: block;
   border-radius: 6px;
 }
 
-.measurement-fields-outputs {
-  margin-top: 8px;
+/* The label of the ringed sample, above the ring, in the network outputs' color on the dark panel. */
+.measurement-fields-sample {
+  position: absolute;
+  transform: translate(-50%, -100%);
   font-size: 20px;
+  line-height: 1;
+  color: var(--learned);
+}
+
+/* The network at the ringed sample: glyph, equation, outputs in words. */
+.measurement-fields-network {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+  font-size: 22px;
+  color: var(--text-primary);
+}
+
+.measurement-fields-network-glyph line {
+  stroke: var(--ink-learned);
+  stroke-width: 1;
+  opacity: 0.55;
+}
+
+.measurement-fields-network-glyph circle {
+  fill: var(--ink-learned);
+}
+
+.measurement-fields-network-label {
+  font-size: 18px;
   color: var(--text-secondary);
 }
 
