@@ -2,11 +2,11 @@
 
 [Plan](../plans/light-transport-and-neural-rendering.md)
 
-Current state: the four section agents' work and the numbers pass are
-merged and pushed (72bb3e6). Next: the remaining edits and cycle 1 by
-section agents, then vetting agents; the core abstractions and the
-framework sync to `main` between cycles. Resume from the plan's "User
-edits after cycle 3".
+Current state: cycle 1 (a) is merged, all four section passes. Cycle 1
+(b) is running: one vetting agent per section group. Next: consolidate
+their findings and fix them (cycle 1 (c)), then cycles 2 and 3. Move the
+core abstractions and sync the framework to `main` between cycles.
+Resume from the newest entry below.
 
 ## Standing directions
 
@@ -142,6 +142,51 @@ before changing a slide.
   high level topics that the lecture will cover. This light paths slide is
   also not particularly useful by itself, each slide should serve a
   purpose."
+
+## 2026-11-18 08:00 — cycle 1 (a) merged; vetting running
+
+The last two section passes are merged:
+
+**Volume and neural rendering** (1c922fa):
+- `nr-inverse` is redrawn as the flatland room recovering the red wall's
+  albedo by gradient descent. Its strips are $\hat C$, $\tilde C$ and
+  $\partial_\theta\hat C$, plus a row of the iterates $\theta_k$; it asks
+  $\nabla_\theta\ell \overset{?}{=}$.
+- `nr-cw-tof`'s cut-out figure is redrawn as the emitted and received
+  waves, with the phase as a delay.
+- `vol-rte` defines $\omega$, $f_p$ and $\omega'$.
+- `vol-quadrature` asks for $\alpha_i$ before showing it.
+- `nr-transient` has no tick values.
+- Questions and pauses are in the notes of both sections.
+
+**Operator light transport and aside** (1f95651):
+- `lt-divider` shows the room in five labelled slices, by number of
+  bounces.
+- `lt-rendering-equation` draws propagation in a neutral tone.
+- `lt-path-tracing` asks why one random direction is unbiased, and shows
+  the justification under the line.
+- `lt-transport` builds $\mathbf T = C(I + A + A^2 + \cdots)E$ term by
+  term with its paths.
+- `lt-matrix` starts from one lit element, $p = \delta_k$; the row view
+  builds over three steps.
+- `lt-probing`'s masks are $s_k$, so they no longer clash with the
+  sensor $q$.
+- `lt-neumann-sum`'s notes explain why it starts at $x_0 = e$.
+- `EquationStack` lines can grow term by term (`parts`).
+
+Open questions for the user from these passes:
+- `nr-nerf`, `nr-representation` and `nr-memory`: redraw them, or give
+  them a picture?
+- The label wording on `nr-baked`, `nr-recipe` and
+  `nr-transient-quadrature`.
+- `nr-inverse`'s blue channel stops at 0.148 against the true 0.13.
+- `lt-transport`'s path order and its orange volumetric path.
+- $C$ and $E$ appear on `lt-transport` before `lt-matrix` defines them.
+- The added question steps on `lt-matrix`, `lt-transport` and
+  `lt-path-tracing`.
+- $s_k$ next to the scattering $S$.
+- Unused figures: `public/slides/nr-inverse/analysis-by-synthesis.jpg`
+  and `public/slides/nr-cw-tof/*.png`.
 
 ## 2026-11-18 06:30 — cycle 1 (a): two of four section passes merged
 
