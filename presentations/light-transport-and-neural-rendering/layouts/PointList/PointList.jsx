@@ -10,10 +10,11 @@ const RENDER_SIZE = [440, 264];
 
 /**
  * Short lines under the title, one statement each, large enough to read
- * from the back: the outline (each section's name and its form of
- * x = e + Ax) and the summary. `points` is a list of `{ label?, text }`:
- * `label` sits in a first column (a section's name), `text` may hold math.
- * With `buildSteps`, point i appears at step i; without, all show at once.
+ * from the back, starting at the top. `points` is a list of
+ * `{ label?, text }`: `label` sits in a first column (such as a method's
+ * name; a point without one continues the labelled point above it), and
+ * `text` may hold math. With `buildSteps`, point i appears at step i;
+ * without, all show at once.
  * An optional `render` (a RoomStill kind) draws the lit room beside them.
  */
 export default function PointList({ slide, buildStep }) {

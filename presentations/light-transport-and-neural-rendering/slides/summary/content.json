@@ -22,7 +22,7 @@
     },
     {
       "title": "Neural rendering",
-      "subtitle": "Scenes are reconstructed by fitting this model to measurements",
+      "subtitle": "Scenes are reconstructed by fitting a rendering model to measurements",
       "render": "pulse"
     },
     {

@@ -5,8 +5,38 @@
   "subtitle": "Distance from the phase of modulated light",
   "figure": {
     "type": "image",
-    "src": "/slides/nr-cw-tof/emitted-and-received-sinusoids.png",
-    "alt": "An ultrafast light source emits a sinusoidally modulated signal (input) toward a bunny; the sensor receives a delayed sinusoid (output)"
+    "src": "/slides/nr-cw-tof/emitted-and-received-sinusoids-unlabelled.png",
+    "alt": "An ultrafast light source emits a sinusoidally modulated signal (input) toward a bunny; the sensor receives a delayed sinusoid (output)",
+    "labels": [
+      {
+        "text": "Output",
+        "x": 0.035,
+        "y": 0.045
+      },
+      {
+        "text": "Input",
+        "x": 0.035,
+        "y": 0.862
+      },
+      {
+        "text": "time →",
+        "x": 0.195,
+        "y": 0.447,
+        "align": "center"
+      },
+      {
+        "text": "ultrafast\nsensor",
+        "x": 0.585,
+        "y": 0.33,
+        "align": "center"
+      },
+      {
+        "text": "ultrafast light source",
+        "x": 0.602,
+        "y": 0.885,
+        "align": "center"
+      }
+    ]
   },
   "buildSteps": [
     {

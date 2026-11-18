@@ -9,8 +9,8 @@
       "label": "forward mode: one solve per parameter"
     },
     {
-      "tex": "\\begin{aligned} \\langle \\htmlClass{term-adjoint}{q},\\, \\textstyle\\sum_k A^k z \\rangle &= \\textstyle\\sum_k \\langle (A^\\top)^k \\htmlClass{term-adjoint}{q},\\, z \\rangle \\\\ &= \\langle (I - A^\\top)^{-1} \\htmlClass{term-adjoint}{q},\\, z \\rangle \\end{aligned}",
-      "label": "$\\langle u, Az \\rangle = \\langle A^\\top u, z \\rangle$, $k$ times"
+      "tex": "\\begin{aligned} & \\langle u,\\, A z \\rangle = \\langle A^\\top u,\\, z \\rangle \\\\[12pt] & \\langle \\htmlClass{term-adjoint}{q},\\, \\textstyle\\sum_k A^k z \\rangle = \\textstyle\\sum_k \\langle (A^\\top)^k \\htmlClass{term-adjoint}{q},\\, z \\rangle \\\\ & \\hphantom{\\langle \\htmlClass{term-adjoint}{q},\\, \\textstyle\\sum_k A^k z \\rangle} = \\langle (I - A^\\top)^{-1} \\htmlClass{term-adjoint}{q},\\, z \\rangle \\end{aligned}",
+      "label": "adjoint $A^\\top$, applied $k$ times"
     },
     {
       "tex": "\\htmlClass{term-adjoint}{y} = (I - A^\\top)^{-1} \\htmlClass{term-adjoint}{q}",

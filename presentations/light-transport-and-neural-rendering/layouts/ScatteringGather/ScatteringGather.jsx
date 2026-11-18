@@ -23,7 +23,8 @@ const HALF_CIRCLE = 1.3;
 /** Rays stop this far (room units) from the point, so their sum does not saturate it. */
 const RAY_GAP = 0.2;
 
-const STEPS = ['directions', 'incident', 'weighted', 'sum'];
+/** The build steps: directions, incident light, weighted by the BRDF and cosine, and the sum. */
+const STEP_COUNT = 4;
 
 const luminance = (v) => 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
 
@@ -50,12 +51,14 @@ function equation(step) {
  * beside the room shows L_i(θ) and f_r L_i cos θ over the directions.
  * Clicking a surface moves the point.
  *
- * Content fields: `title`, `subtitle`, and four `buildSteps`.
+ * Content fields: `title`, `subtitle`, and four `buildSteps`, each with a
+ * short `label` shown under the room.
  */
 export default function ScatteringGather({ slide, buildStep }) {
+  if (slide.buildSteps?.length !== STEP_COUNT) throw new Error(`scatteringGather: needs ${STEP_COUNT} build steps`);
   const env = flatlandRoom('diffuse', 'lamp');
   const [point, setPoint] = useState(() => startPoint(env.room));
-  const step = Math.min(buildStep, STEPS.length - 1);
+  const step = Math.min(buildStep, STEP_COUNT - 1);
   const patch = env.room.patches[point.patch];
   const gather = useMemo(
     () => gatherAt(env.room, patch, point.u, env.steady, env.transport.emission),
@@ -77,12 +80,13 @@ export default function ScatteringGather({ slide, buildStep }) {
       surfaces: derived(env.steady, 'radiosity', () => patchRadiosity(env.transport, env.steady)),
       surfaceGain,
     });
+    // DRAWN_PER_BIN evenly spaced rays of each bin's GATHER_RAYS_PER_BIN.
     const every = Math.round(GATHER_RAYS_PER_BIN / DRAWN_PER_BIN);
-    const shown = gather.rays.filter((_, i) => i % every === Math.floor(every / 2));
+    const shown = gather.rays.filter((ray) => ray.k % every === Math.floor(every / 2) && ray.k < every * DRAWN_PER_BIN);
     if (step === 0) drawHalfCircle(ctx, transform, patch, gather.point, progress);
     if (step >= 1) {
       const reach = step === 1 ? progress : 1;
-      // From step 2 on, each ray is scaled by f_r cos θ relative to its largest value, 2 f_r = ρ
+      // From step 2 on, each ray is scaled by f_r cos θ relative to its largest value, 2 f_r = albedo
       // (blended in as step 2 animates); the sum dims the rays under the point's own light.
       const blend = step === 2 ? progress : 1;
       const dim = step === 3 ? 1 - 0.55 * progress : 1;
@@ -129,15 +133,18 @@ export default function ScatteringGather({ slide, buildStep }) {
     <div className="slide--scattering-gather">
       <SlideTitle title={slide.title} subtitle={slide.subtitle} />
       <div className="gather-body">
-        <RoomView
-          width={ROOM[0]}
-          height={ROOM[1]}
-          paint={paint}
-          animationKey={`${step}|${point.patch}|${point.u}`}
-          duration={[900, 1400, 900, 900][step]}
-          className="gather-room"
-          onPointerDown={pick}
-        />
+        <div className="gather-left">
+          <RoomView
+            width={ROOM[0]}
+            height={ROOM[1]}
+            paint={paint}
+            animationKey={`${step}|${point.patch}|${point.u}`}
+            duration={[900, 1400, 900, 900][step]}
+            className="gather-room"
+            onPointerDown={pick}
+          />
+          <p className="gather-room-label"><Text>{slide.buildSteps[step].label}</Text></p>
+        </div>
         <div className="gather-side">
           <div className="gather-equation"><Text>{equation(step)}</Text></div>
           <Chart

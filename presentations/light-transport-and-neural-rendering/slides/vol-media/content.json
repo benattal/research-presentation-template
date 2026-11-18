@@ -2,7 +2,7 @@
   "layout": "figures",
   "sectionLabel": "Volume rendering",
   "title": "Participating media",
-  "subtitle": "Light scattering throughout a volume",
+  "subtitle": "Absorption and scattering at every point",
   "figures": [
     {
       "type": "image",
@@ -34,5 +34,6 @@
       "source": "cmu15468-media",
       "what": "pp. 5, 9, 16, 17"
     }
-  ]
+  ],
+  "cellWidth": 300
 }

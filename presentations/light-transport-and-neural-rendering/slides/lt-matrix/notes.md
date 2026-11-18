@@ -4,7 +4,7 @@ The bridge to the rendering equation: the elements set the emission, $e = Ep$; t
 
 - **Column $k$.** Switch on one element, $p = \delta_k$: the photo is column $k$ of $\mathbf{T}$. The room is drawn lit by one element, including the light reflected by the walls; the strip under it is the camera's 1D photo, which is the column. In the blocks on the right, column $k$ of $\mathbf{T}$ and entry $k$ of $p$ are marked, and the whole of $c$ is that column.
 - **Another column.** An element above the box: a different photo, a different column. Measuring $\mathbf{T}$ this way takes one photo per element.
-- **Row $j$.** One pixel (the cyan wedge, on the floor beside the red wall). Row $j$ holds how much each element contributes to that pixel: the ceiling glows by that share. Elements near the red wall contribute most, through direct light and light reflected by the wall. So row $j$ is pixel $j$'s importance at the lights; the adjoint section returns to this.
+- **Row $j$.** One pixel (the cyan wedge, on the floor beside the red wall). Row $j$ holds how much each element contributes to that pixel: the bars hanging from the ceiling are those shares, scaled to the largest. Elements near the red wall contribute most, through direct light and light reflected by the wall. So row $j$ is pixel $j$'s importance at the lights; the adjoint section returns to this.
 
 One sentence: a column of $\mathbf{T}$ is the camera's image of one element's light after all bounces.
 

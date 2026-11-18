@@ -51,6 +51,17 @@
   color: var(--ink-adjoint);
 }
 
+/* "0" at the gradient plot's zero line, left of its axis, as a tick label. */
+.volume-gradient-zero {
+  position: absolute;
+  transform: translate(-100%, -50%);
+  font-size: 18px;
+  line-height: 1;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
 .volume-gradient-lines {
   width: 430px;
   flex-shrink: 0;

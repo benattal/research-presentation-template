@@ -78,7 +78,7 @@ describe('continuous-wave time of flight', () => {
 
 describe('transient histogram', () => {
   for (const pulseWidth of [0, 0.2e-9, 1e-9, 3e-9]) {
-    it(`integrates to the intensity quadrature for a ${pulseWidth * 1e9} ns pulse`, () => {
+    it(`integrates to the intensity m = Σ wᵢ for a ${pulseWidth * 1e9} ns pulse`, () => {
       const samples = raySamples(RAY_SCENE);
       const binWidth = 0.2e-9;
       const binCount = Math.ceil((2 * 4.5) / SPEED_OF_LIGHT / binWidth);
@@ -97,7 +97,7 @@ describe('transient histogram', () => {
   });
 
   it('has the phasor quadrature as its Fourier coefficient at the modulation frequency', () => {
-    // m = ∫h(τ) e^{j2πfτ} dτ for an impulse, on 1 ps bins: the binning error in phase is below 2πf·(1 ps).
+    // m_f = ∫h(τ) e^{j2πfτ} dτ for an impulse, on 1 ps bins: the binning error in phase is below 2πf·(1 ps).
     const samples = raySamples(RAY_SCENE);
     const frequency = 30e6;
     const binWidth = 1e-12;
@@ -133,6 +133,15 @@ describe('structured light', () => {
     assert.equal(filteredStripePattern(PROJECTOR_SCENE, 1.5, 10, 0.1), 0);
     // A filter straddling the edge of the image counts only the part inside it.
     assert.ok(filteredStripePattern(PROJECTOR_SCENE, 1, 10, 0.04) < stripePattern(PROJECTOR_SCENE, 0.99, 10));
+  });
+
+  it('gives the floor behind the box, in its shadow, no projector light', () => {
+    // The camera ray to floor point x = 2.2 m: the box (x up to 1.92 m, 0.62 m tall) shadows the floor up to x ≈ 2.45 m.
+    const samples = cameraSamples(PROJECTOR_SCENE, 2.2, 40);
+    const { terms } = structuredLightQuadrature(PROJECTOR_SCENE, samples, 10);
+    const floor = terms.filter((_, i) => samples[i].point[1] < 0);
+    assert.ok(floor.some((term) => term.unshadowed > 0), 'the floor sample is lit when shadows are ignored');
+    for (const term of floor) assert.ok(term.contribution < 1e-6 * term.unshadowed, `floor term ${term.contribution}`);
   });
 
   it('never makes a pixel brighter by accounting for shadows', () => {

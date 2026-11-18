@@ -3,7 +3,7 @@
   "sectionLabel": "Adjoint light transport",
   "view": "gradient",
   "title": "Gradient",
-  "subtitle": "All derivatives from one forward and one adjoint solve",
+  "subtitle": "Each derivative is an inner product of light and importance",
   "buildSteps": [
     {},
     {},

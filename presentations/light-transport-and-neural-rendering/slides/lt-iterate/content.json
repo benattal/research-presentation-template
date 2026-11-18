@@ -24,7 +24,10 @@
   ],
   "shareLabel": "share of $x$",
   "columnNote": {
-    "text": "ratio $\\approx 0.64 \\to \\rho(A) = 0.69 < 1$",
+    "lines": [
+      "albedo $< 1 \\Rightarrow \\rho(A) < 1$",
+      "ratio $\\approx 0.64 \\to 0.69$"
+    ],
     "step": 2
   }
 }

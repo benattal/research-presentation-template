@@ -9,7 +9,7 @@
   ],
   "labels": [
     "one product $\\mathbf{T}p$ = one photo",
-    "each element emits and senses",
+    "each element: a light and a pixel",
     "real $\\mathbf{T}$: $10^6 \\times 10^6$"
   ],
   "start": 1,

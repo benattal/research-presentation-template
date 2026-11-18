@@ -173,6 +173,7 @@ export default function TransientFlatland({ slide, buildStep }) {
             series={[...ghost, ...series]}
             marks={[{ x: ns(shownTime), className: 'transient-cursor' }]}
             onPointer={(value) => setScrubbed(value * METERS_PER_NS)}
+            className="transient-chart"
           />
           <ul className="transient-legend">
             {GROUP_NAMES.map((name, i) => (

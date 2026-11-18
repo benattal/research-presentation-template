@@ -24,6 +24,26 @@
   border-radius: 6px;
 }
 
+/* The figure's own labels, re-set at a legible size: `x`, `y` are fractions of the figure (top left, or top
+   center); a line break in a label starts a new line, as in the original. */
+.phasor-tof-figure-box {
+  position: relative;
+}
+
+.phasor-tof-figure-label {
+  position: absolute;
+  font-size: 16px;
+  line-height: 1.05;
+  white-space: pre;
+  color: var(--bg-elevated);
+  pointer-events: none;
+}
+
+.phasor-tof-figure-label--center {
+  transform: translateX(-50%);
+  text-align: center;
+}
+
 .phasor-tof-panel {
   display: block;
   border-radius: 6px;

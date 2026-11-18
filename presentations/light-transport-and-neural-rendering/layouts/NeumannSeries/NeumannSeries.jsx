@@ -10,25 +10,85 @@ import EquationStack from '../equations/EquationStack.jsx';
 const PLANE = [680, 520];
 const EIGEN_INKS = ['la-ink-first', 'la-ink-second'];
 const CIRCLE_POINTS = 160;
-/** Size of a factor label (stage pixels), for placing it clear of the ellipse and the eigenvector line. */
-const LABEL = [64, 30];
+/** Sizes of a factor label and of an eigenvector's label (stage pixels), for placing them clear of the curves. */
+const FACTOR_LABEL = [64, 30];
+const EIGEN_LABEL = [132, 30];
+/** The box of the step's k over the plane's top left corner (stage pixels). */
+const TERMS_BOX = { center: [70, 26], size: [116, 44] };
+/** How far a label stays from every curve, line, and other label (stage pixels). */
+const CLEAR = 8;
 
 function formatNumber(value) {
   return String(Number(value.toPrecision(3)));
 }
 
+/** Points about every `spacing` stage pixels along the polyline `points` (stage pixels). */
+function sample(points, spacing = 4) {
+  const out = [];
+  for (let i = 0; i + 1 < points.length; i += 1) {
+    const [a, b] = [points[i], points[i + 1]];
+    const count = Math.max(1, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / spacing));
+    for (let j = 0; j < count; j += 1) out.push([a[0] + (b[0] - a[0]) * j / count, a[1] + (b[1] - a[1]) * j / count]);
+  }
+  out.push(points[points.length - 1]);
+  return out;
+}
+
+/** The outline of a box `{ center, size }` as points, so a placed label is an obstacle for the next. */
+function boxPoints({ center: [cx, cy], size: [w, h] }) {
+  return sample([[cx - w / 2, cy - h / 2], [cx + w / 2, cy - h / 2], [cx + w / 2, cy + h / 2], [cx - w / 2, cy + h / 2], [cx - w / 2, cy - h / 2]]);
+}
+
+/** The smallest distance from any of `points` to the box of `size` centered at `center` (0 inside it). */
+function clearance(center, size, points) {
+  let best = Infinity;
+  for (const [px, py] of points) {
+    const dx = Math.max(Math.abs(px - center[0]) - size[0] / 2, 0);
+    const dy = Math.max(Math.abs(py - center[1]) - size[1] / 2, 0);
+    best = Math.min(best, Math.hypot(dx, dy));
+  }
+  return best;
+}
+
 /**
- * Where a label of size LABEL goes beside the tip `tip` (stage pixels) of
- * an arrow along the screen direction `u`: past the tip along u, so it
- * lies beyond the ellipse's tangent there, and to the side `n`, so the
- * eigenvector line does not cross it.
+ * Where a label of `size` goes: the first of `candidates` (box centers,
+ * most preferred first) inside the plane and at least CLEAR from every
+ * point of `obstacles`, or else the clearest one.
  */
-function besideTip(tip, u, gap = 8) {
-  const n = [u[1], -u[0]];
-  const extent = (d) => Math.abs(d[0]) * LABEL[0] / 2 + Math.abs(d[1]) * LABEL[1] / 2 + gap;
-  const forward = extent(u);
-  const side = extent(n);
-  return [tip[0] + u[0] * forward + n[0] * side, tip[1] + u[1] * forward + n[1] * side];
+function placeLabel(candidates, size, obstacles) {
+  const inside = candidates.filter(([x, y]) => x - size[0] / 2 >= 4 && x + size[0] / 2 <= PLANE[0] - 4
+    && y - size[1] / 2 >= 4 && y + size[1] / 2 <= PLANE[1] - 4);
+  const scored = inside.map((center) => ({ center, room: clearance(center, size, obstacles) }));
+  const clear = scored.find((entry) => entry.room >= CLEAR);
+  return (clear ?? scored.reduce((best, entry) => (entry.room > best.room ? entry : best))).center;
+}
+
+/** Box centers around `tip` (stage pixels), nearest first and, at each distance, closest to the screen direction `u` first. */
+function aroundTip(tip, u) {
+  const turns = [0];
+  for (let degrees = 15; degrees <= 180; degrees += 15) turns.push(degrees, -degrees);
+  return [36, 46, 58, 72, 88].flatMap((radius) => turns.map((degrees) => {
+    const a = (degrees * Math.PI) / 180;
+    const d = [u[0] * Math.cos(a) - u[1] * Math.sin(a), u[0] * Math.sin(a) + u[1] * Math.cos(a)];
+    return [tip[0] + d[0] * radius, tip[1] + d[1] * radius];
+  }));
+}
+
+/**
+ * Box centers beside the line through `origin` along the screen direction
+ * `u`, on its far half (−u), from the plane's edge inward, on either side
+ * of the line.
+ */
+function besideLineEnd(origin, u, size) {
+  const n = [-u[1], u[0]];
+  const across = Math.abs(n[0]) * size[0] / 2 + Math.abs(n[1]) * size[1] / 2 + CLEAR;
+  const along = Math.abs(u[0]) * size[0] / 2 + Math.abs(u[1]) * size[1] / 2;
+  const reach = Math.min(...[0, 1].map((axis) => (u[axis] === 0 ? Infinity : (u[axis] < 0 ? PLANE[axis] - origin[axis] : origin[axis]) / Math.abs(u[axis]))));
+  const out = [];
+  for (let t = reach - along - 12; t > along; t -= 10) {
+    for (const side of [1, -1]) out.push([origin[0] - u[0] * t + side * n[0] * across, origin[1] - u[1] * t + side * n[1] * across]);
+  }
+  return out;
 }
 
 /**
@@ -38,10 +98,12 @@ function besideTip(tip, u, gap = 8) {
  * eigenvectors v1, v2 map to (1 + λ + … + λ^k) v_i on their own lines, the
  * scalar geometric series for a = λ_i, labelled with that factor. Beside
  * it, the slide's equations, one more per build step, and a key to the
- * curves; over the plane's top left corner, the step's k.
+ * curves; over the plane's top left corner, the step's k. Every label is
+ * placed clear of the curves, the lines, and the other labels.
  *
  * Slide data: `eigenvectors` [v1, v2], `lambda` [λ1, λ2]; build steps
- * `{ terms, equation }` (`terms` is k, or "all" for the limit).
+ * `{ terms, equation, eigenvalues? }` (`terms` is k, or "all" for the
+ * limit; `eigenvalues: true` names each eigenvector line with its λ).
  */
 export default function NeumannSeries({ slide, buildStep }) {
   const steps = slide.buildSteps;
@@ -64,13 +126,30 @@ export default function NeumannSeries({ slide, buildStep }) {
   const factors = slide.lambda.map((l) => (k === Infinity ? 1 / (1 - l) : (1 - l ** (k + 1)) / (1 - l)));
   const tips = basis.map((v, i) => [v[0] * factors[i], v[1] * factors[i]]);
 
+  // Labels go where no curve, line, or earlier label is: first the eigenvector names (from the
+  // limit's curves only, so they stay put once shown), then the factors at the arrow tips.
   const origin = view.toScreen([0, 0]);
+  const directions = basis.map((v) => {
+    const [sx, sy] = view.toScreen(v);
+    const length = Math.hypot(sx - origin[0], sy - origin[1]);
+    return [(sx - origin[0]) / length, (sy - origin[1]) / length];
+  });
+  const lines = directions.flatMap((u) => sample([[origin[0] - 2000 * u[0], origin[1] - 2000 * u[1]], [origin[0] + 2000 * u[0], origin[1] + 2000 * u[1]]])
+    .filter(([x, y]) => x >= -20 && x <= PLANE[0] + 20 && y >= -20 && y <= PLANE[1] + 20));
+  const screenCurve = (points) => sample([...points, points[0]].map((p) => view.toScreen(p)));
+  const fixed = [...lines, ...screenCurve(final), ...screenCurve(circle), ...boxPoints(TERMS_BOX)];
+  const placed = [];
+  const eigenLabels = (step.eigenvalues ? basis : []).map((v, i) => {
+    const center = placeLabel(besideLineEnd(origin, directions[i], EIGEN_LABEL), EIGEN_LABEL, [...fixed, ...placed]);
+    placed.push(...boxPoints({ center, size: EIGEN_LABEL }));
+    return { left: center[0], top: center[1], text: `$v_${i + 1}$, $\\lambda_${i + 1} = ${formatNumber(slide.lambda[i])}$`, className: EIGEN_INKS[i] };
+  });
+  const arrows = tips.flatMap((tip, i) => sample([origin, view.toScreen(tip)]).concat(sample([origin, view.toScreen(basis[i])])));
   const factorLabels = tips.map((tip, i) => {
     const screen = view.toScreen(tip);
-    const length = Math.hypot(screen[0] - origin[0], screen[1] - origin[1]);
-    const u = [(screen[0] - origin[0]) / length, (screen[1] - origin[1]) / length];
-    const [left, top] = besideTip(screen, u);
-    return { left, top, text: `$\\times ${formatNumber(factors[i])}$`, className: EIGEN_INKS[i] };
+    const center = placeLabel(aroundTip(screen, directions[i]), FACTOR_LABEL, [...fixed, ...screenCurve(image), ...arrows, ...placed]);
+    placed.push(...boxPoints({ center, size: FACTOR_LABEL }));
+    return { left: center[0], top: center[1], text: `$\\times ${formatNumber(factors[i])}$`, className: EIGEN_INKS[i] };
   });
 
   return (
@@ -113,8 +192,8 @@ export default function NeumannSeries({ slide, buildStep }) {
             ))}
           </VectorPlane>
           <div className="neumann-terms"><Text>{k === Infinity ? '$k \\to \\infty$' : `$k = ${k}$`}</Text></div>
-          {factorLabels.map((label, i) => (
-            <div key={i} className={`neumann-factor ${label.className}`} style={{ left: label.left, top: label.top }}>
+          {[...eigenLabels, ...factorLabels].map((label) => (
+            <div key={label.text} className={`neumann-factor ${label.className}`} style={{ left: label.left, top: label.top }}>
               <Text>{label.text}</Text>
             </div>
           ))}

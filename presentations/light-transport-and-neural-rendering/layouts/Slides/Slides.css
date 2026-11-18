@@ -1,30 +1,17 @@
-/* Title slide and section dividers: text on the left and a picture on the
-   right, both centered vertically, so the title sits at the same height on
-   every divider. */
-.slide--lecture-title,
-.slide--section-title {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+/* The title slide: the title and speaker line centered, on one line each,
+   and the room centered below them; the whole composition centered
+   vertically. */
+.slide--lecture-title {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 48px;
+  justify-content: center;
+  gap: 32px;
   height: 100%;
 }
 
-/* The title slide: the title and speaker line across the top, on one line
-   each, and the room below them on the right. */
-.slide--lecture-title {
-  grid-template-rows: auto auto;
-  align-items: start;
-  align-content: center;
-  row-gap: 40px;
-}
-
 .lecture-title-text {
-  grid-column: 1 / -1;
-}
-
-.lecture-title-render {
-  grid-column: 2;
+  text-align: center;
 }
 
 .lecture-title-text h1 {
@@ -38,17 +25,20 @@
 }
 
 .lecture-title-text p {
-  margin-top: 20px;
+  margin-top: 16px;
   font-size: 1.35rem;
   color: var(--text-secondary);
 }
 
-.section-title-number {
-  margin-bottom: 12px;
-  font-size: 1.2rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  color: var(--ink-light-2);
+/* Section dividers: text on the left and a picture on the right, both
+   centered vertically, so the title sits at the same height on every
+   divider. */
+.slide--section-title {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 48px;
+  height: 100%;
 }
 
 /* A divider's title stays on one line. */
@@ -70,15 +60,12 @@
   text-wrap: balance;
 }
 
-.section-title-visual {
-  width: 520px;
-}
-
+/* An image fills the divider's picture box, cropped to it, as the renders do. */
 .section-title-image {
   display: block;
-  width: 520px;
-  height: 312px;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   border-radius: 6px;
 }
 
@@ -172,6 +159,17 @@
   border-radius: 0;
 }
 
+/* Uniform cells: each media box fills its cell above the caption, so a row's captions share one line. */
+.figures-grid--uniform .figures-media {
+  flex: 1 1 0;
+}
+
+.figures-grid--uniform .figures-media > img,
+.figures-grid--uniform .figures-media > video {
+  width: 100%;
+  height: 100%;
+}
+
 .figures-item figcaption {
   margin-top: 8px;
   text-align: center;
@@ -196,46 +194,82 @@
   padding-top: 20px;
 }
 
+/* Beside a figure the body is as tall as its taller column, and the lines are spread over that height. */
+.derivation-body--figure {
+  flex: 0 1 auto;
+  align-items: stretch;
+}
+
 .derivation-lines {
   flex: 1;
   min-width: 0;
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 22px;
-  font-size: 1.6rem;
+  gap: 16px;
+  font-size: 1.7rem;
   color: var(--text-muted);
 }
 
-/* Without a figure the equations are larger. */
-.derivation-body:not(.derivation-body--figure) .derivation-lines {
-  flex: 0 1 auto;
-  gap: 30px;
-  font-size: 2rem;
+.derivation-body--figure .derivation-lines {
+  justify-content: space-between;
 }
 
+/* A line: its label above its equation, both from the lines' left edge. */
 .derivation-lines li {
-  display: grid;
-  grid-template-columns: max-content max-content;
-  align-items: center;
-  gap: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
 }
 
 .derivation-label {
   white-space: nowrap;
+  font-size: 20px;
+  color: var(--text-muted);
+}
+
+/* Without a figure there is room beside the lines: the labels form a column on the left of larger equations. */
+.derivation-body:not(.derivation-body--figure) .derivation-lines {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  align-content: start;
+  column-gap: 56px;
+  row-gap: 34px;
+  font-size: 2.4rem;
+}
+
+.derivation-body:not(.derivation-body--figure) .derivation-lines li {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  gap: normal;
+  align-items: baseline;
+}
+
+.derivation-body:not(.derivation-body--figure) .derivation-math {
+  grid-column: 2;
+}
+
+.derivation-body:not(.derivation-body--figure) .derivation-label {
+  font-size: 26px;
 }
 
 .derivation-lines .derivation-line--current {
   color: var(--text-primary);
 }
 
-.derivation-math .katex-display {
-  margin: 0;
+.derivation-lines .derivation-line--current .derivation-label {
+  color: var(--text-secondary);
 }
 
-.derivation-label {
-  font-size: 1.1rem;
-  color: var(--text-muted);
+.derivation-math .katex-display {
+  margin: 0;
+  text-align: left;
+}
+
+.derivation-math .katex-display > .katex {
+  text-align: left;
 }
 
 .derivation-figure {
@@ -260,6 +294,16 @@
 .derivation-figure figcaption {
   margin-top: 8px;
   text-align: center;
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+}
+
+/* Short labels under the caption, side by side. */
+.derivation-figure-labels {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 4px;
   font-size: 1.05rem;
   color: var(--text-secondary);
 }

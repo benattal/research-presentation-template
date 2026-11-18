@@ -228,11 +228,12 @@ function BounceThumbnail({ state, env, adjoint, unlit, direct, size }) {
 
 /**
  * The bounces A^k e (iterate) or the terms of the Neumann series and their
- * sum (sum), one row each beside the room, with each row's share of the
- * total light (by flux) and, when `shareLabel` is given, that label over
- * the shares. Rows after the current step stay unlit. Importance rows
- * (adjoint) show each term's own share of the measured pixel instead,
- * ⟨(Aᵀ)^k q, e⟩ / m, and the exact row the whole pixel.
+ * sum (sum), one row each beside the room, and, when `shareLabel` is
+ * given, that label over the percentages. A bounce row shows its own
+ * share; a series row shows the sum so far, and a "+ ⋯" row stands for the
+ * terms after the fourth, before the exact row (100%). Shares of light are
+ * by flux; shares of importance (adjoint) are of the measured pixel,
+ * ⟨(Aᵀ)^k q, e⟩ / m. Rows after the current step stay unlit.
  */
 function BounceColumn({ mode, direction, env, step, shareLabel }) {
   const adjoint = direction === 'adjoint';
@@ -259,10 +260,19 @@ function BounceColumn({ mode, direction, env, step, shareLabel }) {
       shown: k <= step,
       current: sum ? k === step : k === Math.min(step, 4),
       direct: adjoint && k === 0,
-      share: sum && !adjoint ? running : share,
+      share: sum ? running : share,
     };
   });
   if (sum) {
+    rows.push({
+      key: 'more',
+      state: null,
+      tex: '+\\; \\cdots',
+      shown: step >= 5,
+      current: step >= 5,
+      direct: false,
+      share: null,
+    });
     rows.push({
       key: 'exact',
       state: adjoint ? env.importance : env.steady,
@@ -285,9 +295,11 @@ function BounceColumn({ mode, direction, env, step, shareLabel }) {
       )}
       {rows.map((row) => (
         <li key={row.key} className={row.current ? 'operator-column--current' : (row.shown ? '' : 'operator-column--later')}>
-          <BounceThumbnail state={row.state} env={env} adjoint={adjoint} unlit={!row.shown} direct={row.direct} size={THUMBNAIL} />
+          {row.state
+            ? <BounceThumbnail state={row.state} env={env} adjoint={adjoint} unlit={!row.shown} direct={row.direct} size={THUMBNAIL} />
+            : <span />}
           <span className="operator-term"><Text>{`$${'{'}${row.tex}${'}'}$`}</Text></span>
-          <span className="operator-share">{row.shown ? `${Math.round(row.share * 100)}%` : ''}</span>
+          <span className="operator-share">{row.shown && row.share !== null ? `${Math.round(row.share * 100)}%` : ''}</span>
         </li>
       ))}
     </ol>
@@ -313,8 +325,9 @@ function operationLabel(frame) {
  * ('lamp' in the ceiling, or 'spot', a narrow beam), and `buildSteps`, one
  * entry per frame of the mode (4 for construct, 5 for iterate, 6 for sum).
  * Optional short labels: a step's `label` (under the room, for that
- * step), `shareLabel` (over the column's shares), `columnNote` (under the
- * column), and, in construct mode, `history: true` (every frame's
+ * step), `shareLabel` (over the column's shares), `columnNote` (`{ lines,
+ * step }`: short lines under the column's rows, from build step `step`),
+ * and, in construct mode, `history: true` (every frame's
  * equation so far stays on the side, the earlier ones dimmed, instead of
  * the current one alone). Optional `header` (slide text, such as the
  * equation the frames build, shown over the side column on every step)
@@ -353,7 +366,9 @@ export default function OperatorExplorer({ slide, buildStep }) {
   const showEquation = mode === 'construct' || explored;
   const showHistory = mode === 'construct' && slide.history && !explored;
   const roomLabels = slide.buildSteps.map((entry) => entry.label ?? '');
-  const roomLabel = explored ? '' : roomLabels[step];
+  // Beside the history of equations, what the room shows (light leaving, importance arriving, …) is its caption.
+  const roomLabel = showHistory ? KINDS[frame.kind] : (explored ? '' : roomLabels[step]);
+  const roomCaptioned = showHistory || roomLabels.some(Boolean);
 
   return (
     <div className="slide--operator-explorer">
@@ -410,7 +425,6 @@ export default function OperatorExplorer({ slide, buildStep }) {
                 className="operator-history"
                 lineClassName="operator-equation"
               />
-              <p className="operator-kind">{KINDS[frame.kind]}</p>
             </>
           ) : showEquation ? (
             <>
@@ -421,8 +435,18 @@ export default function OperatorExplorer({ slide, buildStep }) {
           ) : (
             <BounceColumn mode={mode} direction={direction} env={env} step={step} shareLabel={slide.shareLabel} />
           )}
+          {slide.columnNote && (
+            <motion.div
+              className="operator-column-note"
+              initial={false}
+              animate={{ opacity: !explored && step >= (slide.columnNote.step ?? 0) ? 1 : 0 }}
+              transition={{ duration: 0.35 }}
+            >
+              {slide.columnNote.lines.map((line) => <p key={line}><Text>{line}</Text></p>)}
+            </motion.div>
+          )}
         </div>
-        {roomLabels.some(Boolean) && (
+        {roomCaptioned && (
           <p className="operator-room-label"><Text>{roomLabel || ' '}</Text></p>
         )}
         {/* Under the column, on the room label's line: the check that both solves give the same pixel. */}
@@ -433,16 +457,6 @@ export default function OperatorExplorer({ slide, buildStep }) {
             <dt><Text>{'$\\langle y, e \\rangle$'}</Text></dt>
             <dd>{env.importance.reduce((s, v, i) => s + v * env.transport.emission[i], 0).toFixed(5)}</dd>
           </dl>
-        )}
-        {slide.columnNote && (
-          <motion.p
-            className="operator-column-note"
-            initial={false}
-            animate={{ opacity: !explored && step >= (slide.columnNote.step ?? 0) ? 1 : 0 }}
-            transition={{ duration: 0.35 }}
-          >
-            <Text>{slide.columnNote.text}</Text>
-          </motion.p>
         )}
       </div>
     </div>

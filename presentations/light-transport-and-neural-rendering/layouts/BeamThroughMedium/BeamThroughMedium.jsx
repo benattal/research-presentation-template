@@ -253,7 +253,7 @@ export default function BeamThroughMedium({ slide, buildStep }) {
           {slider('$\\sigma_a$', absorption, setAbsorption, active.absorption)}
           {slider('$\\sigma_s$', scattering, setScattering, active.outScattering)}
           <div className="beam-check">
-            <span className="beam-check-label"><Text>{'$e^{-\\sigma_t d}$'}</Text></span>
+            <span className="beam-check-label"><Text>{'$T = e^{-\\sigma_t d}$'}</Text></span>
             <span className="beam-check-value">{check.expected.toFixed(2)}</span>
             <span className="beam-check-label">photons</span>
             <span className="beam-check-value">{`${check.fraction.toFixed(2)} ± ${check.standardError.toFixed(2)}`}</span>

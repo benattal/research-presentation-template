@@ -23,6 +23,8 @@ const MARCH_MS = 2400;
 const STEP = { forward: 0, gradient: 1, march: 2 };
 /** The top of the terms plot, as a multiple of Ĉ (luminance), so the color behind the first sample fits. */
 const TERMS_RANGE = 1.08;
+/** The gradient plot spans ± this multiple of the largest |∂Ĉ/∂σᵢ|, so no bar reaches its edge. */
+const GRADIENT_RANGE = 1.3;
 
 /**
  * The gradient of NeRF's quadrature on one ray, beside its derivation: the
@@ -132,7 +134,7 @@ export default function VolumeGradient({ slide, buildStep }) {
 
     // The gradient: ∂Ĉ/∂σᵢ, signed, about a zero line.
     if (buildStep >= STEP.gradient) {
-      const largest = 1.1 * Math.max(...scene.terms.map((term) => Math.abs(term.gradient)));
+      const largest = GRADIENT_RANGE * Math.max(...scene.terms.map((term) => Math.abs(term.gradient)));
       const gradient = plotScale(lower, xRange, [-largest, largest]);
       ctx.fillStyle = rgba(colors['ink-adjoint'], 0.85);
       for (const term of scene.terms) {
@@ -197,6 +199,13 @@ export default function VolumeGradient({ slide, buildStep }) {
                 style={{ top: lower.y + 4, width: geometry.gutter - 12, visibility: buildStep >= STEP.gradient ? 'visible' : 'hidden' }}
               >
                 <Text>{'$\\dfrac{\\partial \\hat C}{\\partial \\sigma_i}$'}</Text>
+              </span>
+              {/* The zero line of the symmetric gradient plot is its middle. */}
+              <span
+                className="volume-gradient-zero"
+                style={{ left: lower.x - 8, top: lower.y + lower.height / 2, visibility: buildStep >= STEP.gradient ? 'visible' : 'hidden' }}
+              >
+                0
               </span>
               <span className="volume-gradient-axis" style={{ left: geometry.width - 16, top: lower.y + lower.height + 2 }}>
                 <Text>{'$t$'}</Text>

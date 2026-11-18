@@ -5,13 +5,15 @@
   "subtitle": "Differentiating through a renderer is limited by memory",
   "points": [
     {
-      "text": "Automatic differentiation: every intermediate value stored"
+      "label": "Automatic differentiation",
+      "text": "every intermediate value stored"
     },
     {
-      "text": "Memory proportional to samples, secondary rays, and bounces"
+      "text": "memory grows with samples and bounces"
     },
     {
-      "text": "Adjoint method: values recomputed, not stored"
+      "label": "Adjoint method",
+      "text": "values recomputed, not stored"
     }
   ],
   "buildSteps": [

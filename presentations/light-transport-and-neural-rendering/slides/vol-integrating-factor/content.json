@@ -5,21 +5,21 @@
   "subtitle": "Along one ray, the transfer equation is solved by an integral",
   "buildSteps": [
     {
-      "label": "Along one ray, $DL = g$ with $g = KL + Q$",
-      "equation": "$$-\\frac{dL}{dt} + \\sigma_t L = g$$"
+      "label": "Along one ray, $DL = KL + Q$",
+      "equation": "$$-\\frac{dL}{dt} + \\sigma_t L = KL + Q$$"
     },
     {
-      "label": "Multiply by $T(t)$",
-      "equation": "$$\\frac{d}{dt}\\big(T L\\big) = -T g, \\quad T(t) = e^{-\\int_0^t \\sigma_t\\,ds}$$"
+      "label": "Multiply by $T(t) = e^{-\\int_0^t \\sigma_t\\,ds}$, with $T' = -\\sigma_t T$",
+      "equation": "$$\\frac{d}{dt}\\big(T L\\big) = -T\\,(KL + Q)$$"
     },
     {
       "label": "Integrate from $0$ to $d$",
-      "equation": "$$L(0) = \\int_0^d T g\\,dt + T(d)\\,L(d)$$",
+      "equation": "$$L(0) = \\int_0^d T\\,(KL + Q)\\,dt + T(d)\\,L(d)$$",
       "check": true
     },
     {
       "label": "So $D^{-1}$ is an integral along rays",
-      "equation": "$$(D^{-1} g)(\\mathbf{x}, \\omega) = \\int_0^d T\\, g(\\mathbf{x} - t\\omega)\\,dt$$"
+      "equation": "$$D^{-1}(KL + Q) = \\int_0^d T\\,(KL + Q)\\,dt$$"
     }
   ]
 }

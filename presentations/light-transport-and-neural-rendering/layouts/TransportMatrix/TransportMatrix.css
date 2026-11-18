@@ -20,10 +20,6 @@
   flex-shrink: 0;
 }
 
-.matrix-room--paint {
-  cursor: pointer;
-}
-
 .matrix-side {
   display: flex;
   flex-direction: column;

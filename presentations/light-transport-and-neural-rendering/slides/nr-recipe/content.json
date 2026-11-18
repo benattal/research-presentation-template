@@ -6,19 +6,19 @@
   "lines": [
     {
       "tex": "(\\htmlClass{term-learned}{\\sigma}, \\htmlClass{term-learned}{c}) = \\htmlClass{term-learned}{F_\\theta}(\\mathbf{x}, \\omega)",
-      "label": "network"
+      "label": "scene: a network"
     },
     {
       "tex": "C(\\mathbf{r}) = \\int_0^d T(t)\\, \\htmlClass{term-learned}{\\sigma(t)}\\, \\htmlClass{term-learned}{c(t)}\\, dt",
-      "label": "measurement model"
+      "label": "model the measurement"
     },
     {
       "tex": "\\hat C(\\mathbf{r}) = \\sum_i T_i \\left(1 - e^{-\\htmlClass{term-learned}{\\sigma_i} \\delta_i}\\right) \\htmlClass{term-learned}{c_i}",
-      "label": "quadrature"
+      "label": "discretize"
     },
     {
       "tex": "\\htmlClass{term-learned}{\\theta} \\leftarrow \\htmlClass{term-learned}{\\theta} - \\eta\\, \\nabla_{\\theta} \\sum_{\\mathbf{r}} \\big\\| \\hat C(\\mathbf{r}) - \\tilde C(\\mathbf{r}) \\big\\|^2",
-      "label": "gradient descent"
+      "label": "differentiate"
     }
   ],
   "buildSteps": [

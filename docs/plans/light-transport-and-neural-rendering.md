@@ -18,12 +18,16 @@ borrowed visual is credited on its slide and on a credits slide, every
 interactive slide can be driven with the clicker alone, the deck captures
 cleanly at every step, and it presents offline from a static build.
 
-**Status:** every slide is built (63 in the main talk, 8 in the appendix),
-with notes and credits; framework additions are on `main`; the assets are
-in the bucket. Review cycles 1 and 2 (content reviewers by part, a layout,
-text, and UI vetter; fixes by section) are done; cycle 3 is next (todo 12's
-gate: a cycle that finds nothing substantive). Open beyond the cycles: a
-timed rehearsal (todo 13).
+**Status (paused 2026-11-17, at the user's request):** every slide is
+built (63 in the main talk, 7 in the appendix), with notes and credits;
+framework additions are on `main`; the assets are in the bucket. Review
+cycles 1 and 2 are done. Review cycle 3 is half done: its three reviews
+are in, and its fixes were being applied by two agents that were stopped
+mid-run, so some fixes landed and are not yet checked frame by frame (see
+[Cycle 3: remaining work](#cycle-3-remaining-work)). The tree at the pause
+passes `npm run check`, the deck tests, and `npm test`, and every slide
+loads without errors; A full capture at the pause (run 20261118-000531) has 210 frames with 0 errors and 0 warnings; its frames are not yet reviewed. Open beyond cycle 3: a
+cycle-4 check (todo 12's gate) and a timed rehearsal (todo 13).
 
 ## Immediate todos
 
@@ -103,6 +107,94 @@ each section's draft as it lands; slide wording stays the user's to change.
     order, explanations, rigor, and visuals with the professors' decks in
     the source catalogue, and lists problems by slide; the problems are
     fixed and recaptured. Gate: a cycle that finds nothing substantive.
+### Cycle 3: remaining work
+
+The three cycle-3 reviews (2026-11-17): the opening to the aside had no
+substantive problems; volume to closing had five; the layout, text, and UI
+vetter had four must-fix items (all 107 controls worked, no console errors,
+the navigator centered at six window sizes). Decisions taken on them:
+lt-iterate shows each term's own share ("share of $x$"); lt-neumann-sum and
+adj-neumann show running totals ("sum so far") with a "+ ⋯" row; the title
+and questions slides use a centred composition; nr-flash-cache keeps its
+subtitle (the paper's title) and its notes quote the paper.
+
+To resume: check every item below in a capture and in the browser, finish
+what is missing, recapture the whole deck, commit, push, push assets, then
+run cycle 4 (one content reviewer for the whole deck and one layout and UI
+vetter) to confirm nothing substantive is left.
+
+Seen in the diff at the pause (verify the frames):
+
+- adj-neumann and lt-neumann-sum: running totals, "sum so far", "+ ⋯" row;
+  the % column at one x on lt-iterate, lt-neumann-sum, and adj-neumann.
+- adj-radiative-backprop: the line "one adjoint solve for the whole loss",
+  $y = (I - A^\top)^{-1} \sum_k \frac{\partial \ell}{\partial m_k} q_k$;
+  the unreadable speed-up chart dropped, the overview figure wider.
+- adj-gradient: the readout as two rows under "red wall"; bars on the left.
+- Subtitles: vol-inverse "Inverting transport by differentiating radiance",
+  vol-emission-absorption, vol-sampling, vol-media, nr-inverse ("Rendering
+  inside an optimization loop"), nr-baked, adj-gradient, la-spectral.
+- nr-memory: labelled points, top-aligned. nr-flash-cache and
+  nr-radiance-cache notes: checked against and quoting Attal et al. 2024.
+- adj-quadrature: plot range ±1.3·max; notes with the identity for equal
+  bars and the adjoint reading $\delta_i T_{i+1}(c_i - L_{i+1})$.
+- title: centred composition; dividers: images fill the picture box
+  (cover); the "Aside" tag inside the margins; dead `.section-title-number`
+  removed.
+- la-spectral: labels fixed once per spectrum, the derivation lines; the
+  side panel's row reserved (no 48 px jump at step 5).
+- lt-optical-computing label "each element: a light and a pixel";
+  lt-direct-global dropped from the appendix (it repeated lt-probing);
+  lt-three-point enlarged, its geometry term renamed $g$; lt-epipolar's
+  video header cropped; lt-gather's step captions.
+- Notation: the time-of-flight readout renamed from $I$ to $m$ (check
+  every ToF and structured-light slide and test); $g$ dropped from
+  vol-integrating-factor.
+
+Not confirmed at the pause (do or verify):
+
+- nr-divider: its subtitle wraps; every divider visual to 480×288, giving
+  a 640 px text column, the wording unchanged.
+- questions: the centred composition, like the title slide.
+- Derivation layout (nr-inverse, nr-baked, nr-recipe, vol-vre): no empty
+  quadrant: larger text, lines spread over the figure's height, labels in
+  one column, figures about 640 px wide.
+- adj-adjoint: $\langle u, Az\rangle = \langle A^\top u, z\rangle$ larger;
+  labels placed as on the other stacks; the stack and diagram top-aligned.
+- adj-importance: the "importance arriving/leaving" label as a caption
+  under the render.
+- One readout style (sans, tabular numbers) on nr-transient,
+  nr-radiance-cache, adj-neumann, adj-sensitivity, adj-gradient.
+- nr-cw-tof: the borrowed diagram's ~8 px labels (crop and enlarge, or
+  overlay 16 px labels). nr-cw-tof-quadrature: the readout reflows between
+  steps (a fixed 2×2 grid). nr-cw-tof-quadrature notes: several CW
+  frequencies together give the transient (CSC2529 p. 30).
+- nr-structured-light: the pixel is computed without shadowing while the
+  picture draws the box's shadow; move the slider into the shadow and fix
+  the cause.
+- nr-applications: reorder to lidar, time of flight, structured light,
+  propagating light; equal 230 px cells, captions on one line.
+- vol-media: center the 2×2 grid (column gap 32 px) or enlarge it.
+- nr-nerf: its labels under the matching parts of the figure, plus
+  "figure's $(\theta, \phi)$: direction"; nr-inverse: "figure's $m$: our
+  $\theta$", and the red X explained in the notes (15-468 p. 11).
+- vol-rte: the readout labelled $T = e^{-\sigma_t d}$;
+  vol-integrating-factor: "Multiply by $T(t)$, with $T' = -\sigma_t T$".
+  vol-vre notes: $L = D^{-1}(KL + Q) + T(d)L(d)$, and convergence from
+  $\sigma_s / \sigma_t < 1$.
+- nr-transient-quadrature: the label "NeRF's $c$ written $L_i$".
+- la-neumann: label the dashed lines "$v_1$, $\lambda_1 = 0.8$", "$v_2$,
+  $\lambda_2 = 0.3$"; the "×3.95" label off the ellipse.
+- lt-matrix and lt-optical-computing: bars per light element, not a
+  saturated ceiling glow; lt-relighting: pointer cursor only over the
+  ceiling; lt-path-tracing: rays over the "camera" label; lt-operators and
+  lt-iterate arrive in ~1.5 s against ~0.9 s elsewhere (find why).
+- la-fixed-point top-aligned; la-geometric "|a| ≥ 1: no limit" in KaTeX;
+  la-apply x-axis label; slider labels with a default cursor.
+- Appendix: nr-nlos caption (the GIF is the mannequin, not the bunny);
+  adj-volumes notes (the Adam/SGDm chart); lt-radiance's beam edges and
+  labels.
+
 13. **Rehearsal pass.** Notes for every slide; time a run-through with the
     presenter timer and cut the slides marked *optional* until it fits;
     full capture with no errors or warnings; `npm run build` and present
@@ -160,7 +252,7 @@ Plain linear algebra before any light: the user (2026-11-17), "You do not need t
 | `la-fixed-point` | Fixed-point equation | A linear system written as a fixed point | `fixedPoint` |
 | `la-geometric` | Geometric series | Inverting a number with a power series | `geometricSeries` |
 | `la-neumann` | Neumann series | Inverting a matrix with a power series | `neumannSeries` |
-| `la-spectral` | Spectral view | The matrix series, one eigenvector at a time | `spectralView` |
+| `la-spectral` | Spectral view | Along each eigenvector, a geometric series | `spectralView` |
 | `la-apply` | Iteration | Summing the series with matrix–vector products | `iteration` |
 
 ### Operator light transport
@@ -199,15 +291,15 @@ The radiative transfer equation in operator form, $(D - K)L = Q$, its integral f
 | Slide | Title | Subtitle | Visual |
 |---|---|---|---|
 | `vol-divider` | Volume rendering | Light inside scattering media | `sectionTitle`; credits `cmu15468-media` |
-| `vol-media` | Participating media | Light scattering throughout a volume | `figures`; credits `cmu15468-media` |
+| `vol-media` | Participating media | Absorption and scattering at every point | `figures`; credits `cmu15468-media` |
 | `vol-rte` | Radiative transfer equation | In a medium, the radiance along a ray changes at every point | `beamThroughMedium` |
 | `vol-operator` | Operator form | Transport along rays and scattering over directions | `operatorForm` |
 | `vol-integrating-factor` | Integrating factor | Along one ray, the transfer equation is solved by an integral | `integratingFactor` |
 | `vol-vre` | Volume rendering equation | Light in a medium has the same fixed-point form as between surfaces | `derivation`; credits `cmu15468-media` |
-| `vol-inverse` | Integral and differential forms | Recovering sources requires derivatives | `inverseOperator` |
-| `vol-emission-absorption` | Emission–absorption model | Emission and absorption without scattering | `emissionAbsorption`; credits `max1995` |
+| `vol-inverse` | Integral and differential forms | Inverting transport by differentiating radiance | `inverseOperator` |
+| `vol-emission-absorption` | Emission–absorption model | Emitted light along a ray, weighted by transmittance | `emissionAbsorption`; credits `max1995` |
 | `vol-quadrature` | Quadrature | Alpha compositing as a quadrature of the integral | `quadratureExplorer`; credits `tagliasacchi2022` |
-| `vol-sampling` | Sampling | The placement of samples along a ray | `quadratureExplorer`; credits `mildenhall2020` |
+| `vol-sampling` | Sampling | Sampling where the weights are large reduces the error | `quadratureExplorer`; credits `mildenhall2020` |
 
 ### Neural rendering
 
@@ -216,9 +308,9 @@ Reconstructing scenes from measurements using a renderer: NeRF, transients, cont
 | Slide | Title | Subtitle | Visual |
 |---|---|---|---|
 | `nr-divider` | Neural rendering | Reconstructing scenes from measurements using a renderer | `sectionTitle` |
-| `nr-inverse` | Inverse rendering | Recovering a scene by matching renderings to measurements | `derivation`; credits `cmu15468-diffrender` |
+| `nr-inverse` | Inverse rendering | Rendering inside an optimization loop | `derivation`; credits `cmu15468-diffrender` |
 | `nr-nerf` | Neural radiance fields | A scene reconstructed from photographs by fitting a volume | `figureRows`; credits `mildenhall2020` |
-| `nr-applications` | Applications | The same approach for time of flight, lidar, and structured light | `figures`; credits `attal2021`, `malik2023`, `malik2024`, `shandilya2023` |
+| `nr-applications` | Applications | The same approach for lidar, time of flight, and structured light | `figures`; credits `malik2023`, `attal2021`, `shandilya2023`, `malik2024` |
 | `nr-recipe` | Neural rendering recipe | Model the measurement, discretize it, and differentiate it | `derivation` |
 | `nr-transient` | Transient light transport | Light arrives in order of path length | `transientFlatland` |
 | `nr-transient-quadrature` | Transient quadrature | Volume rendering of a transient | `transientQuadrature`; credits `malik2023` |
@@ -226,7 +318,7 @@ Reconstructing scenes from measurements using a renderer: NeRF, transients, cont
 | `nr-cw-tof-quadrature` | Phasor quadrature | Volume rendering of a phasor | `tofQuadrature`; credits `attal2021` |
 | `nr-structured-light` | Structured light | Volume rendering with a projected pattern | `projectorQuadrature`; credits `shandilya2023` |
 | `nr-representation` | Scene and measurement fields | Representing the scene or the measurement | `figureRows`; credits `malik2023`, `malik2024` |
-| `nr-baked` | Baked illumination | Relighting a NeRF means separating the bounces in its colors | `derivation`; credits `nimierdavid2022` |
+| `nr-baked` | Baked illumination | A NeRF's colors include every bounce of the captured light | `derivation`; credits `nimierdavid2022` |
 | `nr-radiance-cache` | Radiance caching | A NeRF for the bounces after the first | `radianceCache` |
 | `nr-flash-cache` | Flash Cache | Reducing the bias of radiance caches | `figureRows`; credits `attal2024` |
 | `nr-memory` | Memory | Differentiating through a renderer is limited by memory | `pointList` |
@@ -245,7 +337,7 @@ Differential light transport in operator form and its adjoint, written with inne
 | `adj-importance` | Importance | The sensor's response, transported backward | `operatorExplorer` |
 | `adj-neumann` | Adjoint Neumann series | Importance, computed bounce by bounce | `operatorExplorer` |
 | `adj-sensitivity` | Sensitivity | How much a pixel changes when light is added | `adjointViews` |
-| `adj-gradient` | Gradient | All derivatives from one forward and one adjoint solve | `adjointViews` |
+| `adj-gradient` | Gradient | Each derivative is an inner product of light and importance | `adjointViews` |
 | `adj-quadrature` | Volume rendering gradient | Each sample's gradient depends on the color behind it | `volumeGradient` |
 | `adj-radiative-backprop` | Radiative backpropagation | The gradient of a rendering is computed by a second rendering | `figureRows`; credits `nimierdavid2020` |
 
@@ -269,7 +361,6 @@ Optional slides after "Questions", cut from the main talk for time.
 | `lt-three-point` | Three-point form | In area form, propagation and scattering are separate factors | `derivation`; credits `veach1997`, `arvo1995` |
 | `lt-structured-light` | Structured light transport | Structured-light scans with probing are robust to indirect light | `figures`; credits `otoole2014` |
 | `lt-how-to-apply` | Transport products | A product with the transport matrix is stored, simulated, or measured | `figureRows`; credits `ng2003`, `cmu15463-transport` |
-| `lt-direct-global` | Direct and global light | Direct and global light are separable with high-frequency patterns | `figures`; credits `nayar2006` |
 | `lt-primal-dual` | Primal-dual coding | Probing light transport in a single exposure | `figures`; credits `otoole2012` |
 | `nr-nlos` | Non-line-of-sight imaging | Objects around a corner are reconstructed from time-resolved light | `figureRows`; credits `otoole2018` |
 | `adj-volumes` | Differentiable volumes | Unbiased gradient estimators for volume reconstruction | `figures`; credits `nimierdavid2022` |

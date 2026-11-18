@@ -81,7 +81,7 @@ function SeriesPanels({ initial }) {
         <div className="geometric-identity"><Text>{'$\\frac{1}{1-a} = 1 + a + a^2 + a^3 + \\cdots$'}</Text></div>
         <Slider label="$a$" value={a} min={-1.2} max={1.2} step={0.01} onChange={setA} />
         <div className="geometric-limit">
-          <Text>{converges ? `$\\frac{1}{1-a} = ${formatNumber(limit)}$` : '$|a| \\ge 1$: no limit'}</Text>
+          <Text>{converges ? `$\\frac{1}{1-a} = ${formatNumber(limit)}$` : '$|a| \\ge 1{:}\\;\\text{no limit}$'}</Text>
         </div>
       </div>
       <div className="geometric-panels">

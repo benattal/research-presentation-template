@@ -48,13 +48,13 @@
   pointer-events: none;
 }
 
+/* Only the input is a control: the label and value keep the default cursor. */
 .active-sensing-slider {
   display: flex;
   align-items: center;
   gap: 12px;
   font-size: 18px;
   color: var(--text-secondary);
-  cursor: pointer;
 }
 
 .active-sensing-slider input[type='range'] {

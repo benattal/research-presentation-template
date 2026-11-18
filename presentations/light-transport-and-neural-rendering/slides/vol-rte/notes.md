@@ -10,6 +10,6 @@ Transition: in fog, skin, and clouds, light interacts with the medium everywhere
 
 The sentence to remember: along a ray, light is lost to absorption and out-scattering and gained from emission and in-scattering.
 
-Check: the fraction of beam photons that cross the slab without interacting matches $e^{-\sigma_t d}$ within its standard error (700 photons). At the defaults, $\sigma_a = \sigma_s = 0.8$ and $d = 1$, that is $e^{-1.6} = 0.20$.
+Check: the fraction of beam photons that cross the slab without interacting matches $T = e^{-\sigma_t d}$ within its standard error (700 photons). At the defaults, $\sigma_a = \sigma_s = 0.8$ and $d = 1$, that is $e^{-1.6} = 0.20$. $T$ is the transmittance: the losses alone give $dL/dt = -\sigma_t L$ along the beam, so after a distance $d$ of constant $\sigma_t$ the fraction $e^{-\sigma_t d}$ of the light is left (the Beer–Lambert law; Gkioulekas's 15-468 lecture calls it "fractional visibility between points"). The next slides use it as the integrating factor.
 
 Mouse: the sliders set $\sigma_a$ and $\sigma_s$. A slider is active once its term is on the slide.

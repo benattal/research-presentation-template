@@ -5,13 +5,15 @@
   height: 100%;
 }
 
+/* The lines and the diagram both start at the top, under the subtitle. */
 .adjoint-solves-body {
   flex: 1;
   min-height: 0;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 48px;
+  padding-top: 12px;
 }
 
 .adjoint-solves-lines {
@@ -20,8 +22,8 @@
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 26px;
-  font-size: 1.6rem;
+  gap: 24px;
+  font-size: 1.7rem;
   color: var(--text-muted);
 }
 
@@ -45,8 +47,12 @@
 }
 
 .adjoint-solves-line-label {
-  font-size: 1.1rem;
+  font-size: 20px;
   color: var(--text-muted);
+}
+
+.adjoint-solves-lines .adjoint-solves-line--current .adjoint-solves-line-label {
+  color: var(--text-secondary);
 }
 
 /* The diagram: arrows in SVG, math labels positioned over it. */

@@ -4,9 +4,10 @@
   height: 100%;
 }
 
+/* Top-aligned, so the equations start where the next slides' equations do. */
 .fixed-point-body {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   flex: 1;
   min-height: 0;
@@ -17,6 +18,7 @@
   flex-direction: column;
   gap: 30px;
   width: 540px;
+  padding-top: 16px;
 }
 
 .fixed-point-data {

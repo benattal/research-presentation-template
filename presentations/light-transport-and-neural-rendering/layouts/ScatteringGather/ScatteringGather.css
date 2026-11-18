@@ -12,9 +12,22 @@
   align-items: flex-start;
 }
 
-.gather-room {
+.gather-left {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   flex-shrink: 0;
+}
+
+.gather-room {
   cursor: crosshair;
+}
+
+/* The step's short label under the room, where the operator slides put theirs. */
+.gather-room-label {
+  margin: 0;
+  font-size: 1.3rem;
+  color: var(--text-primary);
 }
 
 .gather-side {

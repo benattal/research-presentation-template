@@ -1,4 +1,4 @@
-/* Lines filling the space under the title; an optional render on the right. */
+/* Lines under the title, from the top as on the outline and summary; an optional render on the right. */
 .slide--point-list {
   display: flex;
   flex-direction: column;
@@ -9,8 +9,9 @@
   flex: 1;
   min-height: 0;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 48px;
+  padding-top: 24px;
 }
 
 .point-list {
@@ -28,8 +29,8 @@
 .point-list--labelled {
   grid-template-columns: max-content 1fr;
   column-gap: 56px;
-  row-gap: 36px;
-  font-size: 1.7rem;
+  row-gap: 28px;
+  font-size: 1.75rem;
 }
 
 .point-list li {

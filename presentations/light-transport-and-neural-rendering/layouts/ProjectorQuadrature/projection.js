@@ -166,9 +166,12 @@ export function cameraSamples(scene, floorX, count) {
 
 /**
  * The structured-light quadrature for one camera ray: each sample's
- * Tᵢ αᵢ ρᵢ P(xᵢ) Tᵖᵢ / |xᵢ − xₚ|², with Tᵢ and αᵢ as in NeRF. Returns per
- * sample `{ weight: Tᵢαᵢ, pattern, toProjector: Tᵖᵢ, contribution,
- * unshadowed }` (unshadowed sets Tᵖᵢ = 1), and the pixel both ways.
+ * Tᵢ αᵢ ρᵢ Tᵖᵢ P(xᵢ) / |xᵢ − xₚ|², with Tᵢ and αᵢ as in NeRF and Tᵖᵢ the
+ * transmittance toward the projector. Returns per sample `{ weight: Tᵢαᵢ,
+ * pattern, toProjector: Tᵖᵢ, contribution, unshadowed }` and the pixel
+ * both ways: `unshadowed` and `pixelUnshadowed` set Tᵖᵢ = 1, the model of
+ * Shandilya et al. (the projector casts no shadows), which the speaker's
+ * notes compare with.
  */
 export function structuredLightQuadrature(scene, samples, stripes) {
   let transmittance = 1;

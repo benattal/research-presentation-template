@@ -76,12 +76,14 @@ function drawLight(ctx, scratch, values, columns, rows, color, gain) {
  * Structured light as a quadrature: a projector casts stripes on a scene
  * with an opaque box and a translucent blob; each sample of a camera ray
  * is lit by the projector pixel it projects to, P(xᵢ), with the 1/r²
- * falloff, as in the model of Shandilya et al. (no shadowing of the
- * projector light inside the model; the picture of the light has it).
- * Build steps (`buildSteps` entries `{ cameraRay, projection }`) show the
- * pattern, one sample's projection to the projector, then every sample's
- * term: each sample's dot is sized by its term, and a bar plot beside the
- * panel shows the terms in order along the ray, which sum to the pixel I.
+ * falloff and the transmittance Tᵖᵢ toward the projector, so the terms
+ * have the shadows the picture of the light has (Shandilya et al. set
+ * Tᵖᵢ = 1). Build steps (`buildSteps` entries `{ cameraRay, projection }`)
+ * show the pattern, one sample's projection to the projector, then every
+ * sample's term: each sample's dot is sized by its term, and a bar plot
+ * beside the panel shows the terms in order along the ray, which sum to
+ * the pixel m. The slide's `equation` is shown over the panel, with an
+ * optional short `equationLabel` beside it.
  * Sliders set the stripe count and the camera pixel. The light image
  * covers the whole panel with the scene's own mapping, so the beams start
  * at the projector. Steps fade in when the slide moves between them, not
@@ -192,11 +194,11 @@ export default function ProjectorQuadrature({ slide, buildStep }) {
     }
 
     // Each sample is a dot on the camera ray; with every term shown, its area grows with its term.
-    const brightest = Math.max(...quadrature.terms.map((term) => term.unshadowed), 1e-12);
+    const brightest = Math.max(...quadrature.terms.map((term) => term.contribution), 1e-12);
     samples.forEach(({ point }, i) => {
       const p = toCanvas(point);
       const term = quadrature.terms[i];
-      const share = step.projection === 'all' ? term.unshadowed / brightest : 0;
+      const share = step.projection === 'all' ? term.contribution / brightest : 0;
       const radius = 2 + fade * 7 * Math.sqrt(share);
       ctx.save();
       if (share > 0.02) {
@@ -223,20 +225,23 @@ export default function ProjectorQuadrature({ slide, buildStep }) {
   });
 
   const term = quadrature.terms[highlighted];
-  const largestTerm = Math.max(...quadrature.terms.map((entry) => entry.unshadowed), 1e-12);
+  const largestTerm = Math.max(...quadrature.terms.map((entry) => entry.contribution), 1e-12);
   const barPitch = (TERMS_PLOT.width - TERMS_PLOT.left) / samples.length;
   const barBase = TERMS_PLOT.height - TERMS_PLOT.bottom;
   const checks = {
     // Before the camera ray, the readout keeps its place empty, so nothing below it moves.
     none: [{ label: '$P(\\mathbf{x}_i)$', value: term.pattern.toFixed(2), hidden: true }],
     one: [{ label: '$P(\\mathbf{x}_i)$', value: term.pattern.toFixed(2) }],
-    all: [{ label: '$I$', value: quadrature.pixelUnshadowed.toFixed(4) }],
+    all: [{ label: '$m$', value: quadrature.pixel.toFixed(4) }],
   }[step.projection];
 
   return (
     <div className="slide--projector-quadrature">
       <SlideTitle title={slide.title} subtitle={slide.subtitle} />
-      <div className="projector-quadrature-equation"><Text>{slide.equation}</Text></div>
+      <div className="projector-quadrature-equation">
+        <Text>{slide.equation}</Text>
+        {slide.equationLabel && <span className="projector-quadrature-equation-label"><Text>{slide.equationLabel}</Text></span>}
+      </div>
       <div className="projector-quadrature-body">
         <canvas
           ref={canvasRef}
@@ -254,7 +259,7 @@ export default function ProjectorQuadrature({ slide, buildStep }) {
           >
             <svg width={TERMS_PLOT.width} height={TERMS_PLOT.height}>
               {quadrature.terms.map((entry, i) => {
-                const top = barBase - (entry.unshadowed / largestTerm) * (barBase - TERMS_PLOT.top);
+                const top = barBase - (entry.contribution / largestTerm) * (barBase - TERMS_PLOT.top);
                 return (
                   <rect
                     key={samples[i].t}

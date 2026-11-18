@@ -11,8 +11,18 @@
           "src": "/slides/nr-nerf/nerf-pipeline-unlabelled.png",
           "alt": "NeRF pipeline: sample points along camera rays, query a network for color and density, volume render, and compare with the photograph",
           "labels": [
-            "$\\sigma_s = 0$: $A = 0$, $x = b$",
-            "$c$: all bounces"
+            {
+              "text": "figure's $(\\theta, \\phi)$: direction",
+              "at": 0.18
+            },
+            {
+              "text": "$c$: all bounces",
+              "at": 0.54
+            },
+            {
+              "text": "$\\sigma_s = 0$: $A = 0$, $x = b$",
+              "at": 0.775
+            }
           ],
           "caption": "NeRF: sample, query, composite, compare"
         }

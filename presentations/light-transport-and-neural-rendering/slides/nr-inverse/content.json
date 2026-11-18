@@ -2,7 +2,7 @@
   "layout": "derivation",
   "sectionLabel": "Neural rendering",
   "title": "Inverse rendering",
-  "subtitle": "Recovering a scene by matching renderings to measurements",
+  "subtitle": "Rendering inside an optimization loop",
   "lines": [
     {
       "tex": "\\hat C = \\mathrm{render}(\\htmlClass{term-learned}{\\theta})",
@@ -22,7 +22,10 @@
     "src": "/slides/nr-inverse/analysis-by-synthesis.jpg",
     "alt": "Analysis by synthesis: measured images compared with a rendering of material m, and the derivative of the image with respect to the material computed by Monte Carlo rendering",
     "caption": "Analysis by synthesis",
-    "width": 600
+    "width": 640,
+    "labels": [
+      "figure's $m$: our $\\theta$"
+    ]
   },
   "buildSteps": [
     {},

@@ -4,7 +4,7 @@ Transition: so far the scene was known and the light was computed. In inverse re
 - Step 2, compare: the rendering is compared with the measurements $\tilde C$, here with a squared error.
 - Step 3, update: the parameters are updated by a gradient step on the loss, and the loop is repeated until the renderings match the measurements. This is analysis by synthesis.
 
-The figure (Gkioulekas, CMU 15-468, p. 12): recovering the material $m$ of a scattering medium (the figure's $m$ is our $\theta$). Rendering every candidate material and searching would take hours per rendering; instead the derivative of the image with respect to the material, $\partial\,\mathrm{image}(m)/\partial m$, is computed by Monte Carlo rendering, for gradient descent.
+The figure (Gkioulekas, CMU 15-468, p. 12): recovering the material $m$ of a scattering medium (the figure's $m$ is our $\theta$, the label under it). The red X is carried over from the slide before it in that lecture (p. 11), where the optimization is solved "by exhaustive search": render every candidate material, each rendering taking "several hours", and keep the one with the lowest loss, which is "not scalable". On p. 12 that route is crossed out, and the Monte Carlo renderer instead computes the image and its derivative with respect to the material, $\partial\,\mathrm{image}(m)/\partial m$, for gradient descent.
 
 The sentence to remember: inverse rendering is rendering inside an optimization loop, and it needs the derivative of the rendering with respect to the scene.
 

@@ -4,12 +4,27 @@
   height: 100%;
 }
 
+/* The derivation: one row under the header, its lines side by side. */
+.equation-stack.spectral-derivation {
+  flex-direction: row;
+  align-items: center;
+  gap: 64px;
+  height: 56px;
+  margin-bottom: 12px;
+  font-size: 24px;
+  color: var(--text-primary);
+}
+
+.spectral-derivation .math {
+  white-space: nowrap;
+}
+
 .spectral-body {
   display: flex;
   justify-content: space-between;
   flex: 1;
   min-height: 0;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .spectral-plane {
@@ -48,17 +63,10 @@
 
 /* Top-aligned with the plane, so it stays put whatever the step shows. */
 .spectral-side {
-  align-self: flex-start;
-  margin-top: 13px;
   display: flex;
   flex-direction: column;
   gap: 16px;
   width: 440px;
-}
-
-.spectral-decomposition {
-  font-size: 26px;
-  color: var(--text-primary);
 }
 
 .spectral-controls {
@@ -67,9 +75,12 @@
   gap: 6px;
 }
 
+/* A fixed height: the row holds two factors or, for a complex pair, one modulus. */
 .spectral-factors {
   display: flex;
+  align-items: center;
   gap: 32px;
+  height: 44px;
   font-size: 22px;
 }
 

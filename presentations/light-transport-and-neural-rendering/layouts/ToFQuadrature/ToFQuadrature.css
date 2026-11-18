@@ -39,8 +39,16 @@
   gap: 4px;
 }
 
-/* The readout keeps its left edge while its values and labels change between steps. */
+/* The readout is a fixed 2 x 2 grid from the first step: every label and value keeps its place while others appear. */
 .tof-quadrature-right .active-sensing-readout {
   align-self: stretch;
   padding-left: 52px;
+}
+
+.tof-quadrature-readout .active-sensing-readout-label {
+  min-width: 76px;
+}
+
+.tof-quadrature-readout .active-sensing-readout-value {
+  min-width: 4em;
 }

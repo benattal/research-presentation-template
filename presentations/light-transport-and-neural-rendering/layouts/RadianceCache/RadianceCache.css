@@ -92,6 +92,6 @@
 }
 
 .cache-errors td + td {
-  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
   color: var(--text-primary);
 }

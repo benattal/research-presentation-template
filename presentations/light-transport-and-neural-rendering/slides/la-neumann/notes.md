@@ -3,7 +3,7 @@ The same series for a matrix, with the same proof.
 - $S_k = I + A + \cdots + A^k$ is the partial sum of the Neumann series.
 - Multiplying by $I - A$, the middle terms cancel in pairs: $(I - A)S_k = I - A^{k+1}$.
 - If $A^{k+1} \to 0$, then $(I - A)S_k \to I$, so $S_k \to (I - A)^{-1}$.
-- $A^k \to 0$ exactly when every eigenvalue has $|\lambda| < 1$, that is, when the spectral radius $\rho(A) = \max_i |\lambda_i|$ is below 1. This holds for every matrix, through its Jordan form.
+- $A^k \to 0$ exactly when every eigenvalue has $|\lambda| < 1$, that is, when the spectral radius $\rho(A) = \max_i |\lambda_i|$ is below 1. This holds for every matrix, through its Jordan form. From this step on, the dashed eigenvector lines carry their eigenvalues: here $\rho(A) = 0.8$.
 - If $\rho(A) \ge 1$, the terms do not shrink and the series diverges, as for $|a| \ge 1$ on the last slide.
 - A sufficient condition that is easy to check: any matrix norm with $\|A\| < 1$, since $\rho(A) \le \|A\|$.
 - The picture uses the same $A$ as before. The gold circle is the set of unit vectors, the filled ellipse its image under $S_k$, and the dashed ellipse its image under $(I - A)^{-1}$.

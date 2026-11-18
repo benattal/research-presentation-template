@@ -18,8 +18,9 @@ const SPOT_EXPOSURE = 3;
  * it. Each build step is `{ floor, label }`: `floor` null draws the beam
  * alone (radiance unchanged along the ray); 'diffuse', 'glossy', or
  * 'mirror' adds the light that floor finish scatters once. Beside the
- * render, each step's label, and for each finish the fraction of the
- * beam's flux the floor reflects (the check: equal for every finish).
+ * render, each step's label, and for each finish, under the heading
+ * "reflected", the fraction of the beam's flux the floor reflects (the
+ * check: equal for every finish).
  */
 export default function FloorScattering({ slide, buildStep }) {
   const steps = slide.buildSteps;
@@ -58,16 +59,21 @@ export default function FloorScattering({ slide, buildStep }) {
           height={Math.round(height * ratio)}
           style={{ width, height }}
         />
+        {/* A grid of two columns (label, fraction); each row's <li> only groups its cells. */}
         <ol className="floor-scattering-states">
+          <li className="floor-scattering-header">
+            <span />
+            <span>reflected</span>
+          </li>
           {steps.map((s, i) => (
             <li
               key={s.label}
               className={i === buildStep ? 'floor-scattering-state--current' : i < buildStep ? 'floor-scattering-state--shown' : ''}
             >
               <span className="floor-scattering-label"><Text>{s.label}</Text></span>
-              {s.floor && i <= buildStep && (
-                <span className="floor-scattering-fraction">{`${Math.round(100 * fractions[s.floor])}%`}</span>
-              )}
+              <span className="floor-scattering-fraction">
+                {s.floor && i <= buildStep ? `${Math.round(100 * fractions[s.floor])}%` : ''}
+              </span>
             </li>
           ))}
         </ol>

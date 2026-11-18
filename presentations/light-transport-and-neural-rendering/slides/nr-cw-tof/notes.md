@@ -1,6 +1,6 @@
-Transition: a lidar's record is the whole transient $h(\tau)$ of each pixel. With a continuous-wave time-of-flight camera, the record is one complex number per pixel instead: the transient weighted by the modulation, $m = \int h(\tau)\, e^{\mathrm{j} 2\pi f \tau}\, d\tau$, a Fourier coefficient of the transient at the modulation frequency $f$. First, that number for one surface.
+Transition: a lidar's record is the whole transient $h(\tau)$ of each pixel. With a continuous-wave time-of-flight camera, the record is one complex number per pixel instead: the transient weighted by the modulation, $m_f = \int h(\tau)\, e^{\mathrm{j} 2\pi f \tau}\, d\tau$, a Fourier coefficient of the transient at the modulation frequency $f$. First, that number for one surface.
 
-- The figure (Lindell's CSC2529 lecture, after O'Toole, Wetzstein, and Gkioulekas, p. 28): the source's intensity is modulated as a sinusoid (input), and the light returning to the sensor is the same sinusoid, delayed by its travel time (output).
+- The figure (Lindell's CSC2529 lecture, after O'Toole, Wetzstein, and Gkioulekas, p. 28, with its labels re-set at the slide's size): the source's intensity is modulated as a sinusoid (input), and the light returning to the sensor is the same sinusoid, delayed by its travel time (output).
 - In the panel below it, the light source is beside the camera.
 - Light returning from depth $d$ has traveled $2d$, so its modulation is delayed by the phase $\phi = 4\pi f d / c$, with $c$ the speed of light.
 - The pixel's measurement is a phasor: an amplitude, $\rho/d^2$ for a surface of albedo $\rho$, and the phase $\phi$. For one surface the transient is one peak at $\tau = 2d/c$, and its Fourier coefficient has this phase, $2\pi f \cdot 2d/c$.

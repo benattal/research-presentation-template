@@ -13,8 +13,8 @@ import { bounce, patchRadiosity, solve } from '../flatland/transport.js';
 import './OperatorExplorer.css';
 import './AdjointViews.css';
 
-/** The two rooms of the gradient view, side by side, in stage pixels (the room's 10 × 6 aspect). */
-const PAIR_SIZE = [540, 324];
+/** The two rooms of the gradient view, side by side across the slide, in stage pixels (the room's 10 × 6 aspect). */
+const PAIR_SIZE = [568, 341];
 /** The wall whose albedo the derivative views differentiate. */
 const WALL = 'left wall';
 /** How far the geometry view moves the box, in room units. */
@@ -361,9 +361,10 @@ function wallGradients(env, gradients) {
 
 /**
  * The gradient from one forward and one adjoint solve: the light x and the
- * importance y as two rooms side by side (steps 0 and 1), then the
- * derivative of the pixel with respect to each surface's albedo as bars,
- * with the red wall's value checked against a finite difference (step 2).
+ * importance y as two rooms side by side (steps 0 and 1), then (step 2)
+ * the derivative of the pixel with respect to each surface's albedo as
+ * bars under x, and under y the red wall's value checked against a finite
+ * difference. Both values are computed here, not typed.
  */
 function GradientView({ slide, buildStep, env }) {
   const check = useMemo(() => {
@@ -381,33 +382,36 @@ function GradientView({ slide, buildStep, env }) {
       <div className="adjoint-views-pair">
         <div className="adjoint-views-pair-column">
           <AdjointRoom env={env} picture={steadyLight} size={PAIR_SIZE} />
-          <RoomCaption>{'$x = (I - A)^{-1} e$'}</RoomCaption>
+          <RoomCaption className="adjoint-views-caption--pair">{'$x = (I - A)^{-1} e$'}</RoomCaption>
+          <motion.div className="adjoint-views-gradient" {...fade(buildStep >= 2)}>
+            <div className="adjoint-views-gradient-equation">
+              <Text>{'$\\partial_\\theta m = \\langle \\htmlClass{term-adjoint}{y}, (\\partial_\\theta A)\\, x \\rangle$'}</Text>
+              <span className="adjoint-views-given"><Text>{"$\\theta$: a surface's albedo"}</Text></span>
+            </div>
+            <ul className="operator-bars adjoint-views-bars">
+              {check.walls.map((wall) => (
+                <li key={wall.label}>
+                  <span>{wall.label}</span>
+                  <span className="operator-bar" style={{ width: `${(100 * Math.abs(wall.value)) / check.largest}%` }} />
+                </li>
+              ))}
+            </ul>
+          </motion.div>
         </div>
         <motion.div className="adjoint-views-pair-column" {...fade(buildStep >= 1)}>
           <AdjointRoom env={env} picture={importancePicture} camera size={PAIR_SIZE} />
-          <RoomCaption>{'$\\htmlClass{term-adjoint}{y = (I - A^\\top)^{-1} q}$'}</RoomCaption>
+          <RoomCaption className="adjoint-views-caption--pair">{'$\\htmlClass{term-adjoint}{y = (I - A^\\top)^{-1} q}$'}</RoomCaption>
+          <motion.div className="adjoint-views-check" {...fade(buildStep >= 2)}>
+            <p className="adjoint-views-check-title">red wall</p>
+            <dl>
+              <dt>adjoint</dt>
+              <dd>{check.adjoint.toFixed(5)}</dd>
+              <dt>finite difference</dt>
+              <dd>{check.difference.toFixed(5)}</dd>
+            </dl>
+          </motion.div>
         </motion.div>
       </div>
-      <motion.div className="adjoint-views-gradient" {...fade(buildStep >= 2)}>
-        <div className="adjoint-views-gradient-equation">
-          <Text>{'$\\partial_\\theta m = \\langle \\htmlClass{term-adjoint}{y}, (\\partial_\\theta A)\\, x \\rangle$'}</Text>
-          <p className="adjoint-views-given"><Text>{"$\\theta$: a surface's albedo"}</Text></p>
-        </div>
-        <ul className="operator-bars adjoint-views-bars">
-          {check.walls.map((wall) => (
-            <li key={wall.label}>
-              <span>{wall.label}</span>
-              <span className="operator-bar" style={{ width: `${(100 * Math.abs(wall.value)) / check.largest}%` }} />
-            </li>
-          ))}
-        </ul>
-        <dl className="operator-check adjoint-views-check">
-          <dt>red wall, adjoint</dt>
-          <dd>{check.adjoint.toFixed(5)}</dd>
-          <dt>finite difference</dt>
-          <dd>{check.difference.toFixed(5)}</dd>
-        </dl>
-      </motion.div>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 Transition: time-resolved measurements contain more than depth. Light that bounces off a wall, then off a hidden object, then back off the wall arrives later than the direct reflection, and its arrival time encodes the path length.
 
 - Left: the setup. A pulsed laser scans points on a visible wall, and a single-photon detector records, at the same point (confocal), when photons return. The bunny is hidden behind the occluder.
-- Right: the measurements played back as a video show light returning to the wall from the hidden object; the reconstruction recovers its shape.
+- Right: the measurements played back as a video show light returning to the wall from the hidden object; the reconstruction recovers its shape. The video is a different hidden object from the bunny of the illustration: a retroreflective mannequin, measured with the real system (its title, "Retroreflective Mannequin Measurements", and the caption say so).
 
 The sentence to remember: three-bounce light, resolved in time, contains the geometry of objects outside the line of sight.
 

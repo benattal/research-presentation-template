@@ -8,7 +8,7 @@ Each path starts at the camera, through one pixel. At every surface the emission
 
 A pixel is $\langle q, x \rangle = \sum_k \langle q, A^k e \rangle$. A walk from the camera evaluates the same terms in the other order, starting from $q$ instead of $e$; the adjoint section returns to this.
 
-- **1 path per pixel.** Most paths (faint lines) never reach the lamp and contribute no light; the few that do are drawn in the color of their light (white from the lamp, orange after the red wall, green after the green wall). The image is mostly black with a few bright pixels.
+- **1 path per pixel.** Most paths (faint lines) never reach the lamp and contribute no light; the few that do are drawn in the color of their light (white from the lamp, red after the red wall, green after the green wall). The image is mostly black with a few bright pixels.
 - **16, 256, 4,096 paths per pixel.** The estimate (dots) converges to the exact image (line): the camera's image of the solution of $x = e + Ax$.
 
 The check is the relative error against that exact image: 196 %, 74 %, 18 %, 4 %. Each step has 16 times more paths and about a 4 times smaller error: the error of a Monte Carlo average falls as $1/\sqrt{n}$.

@@ -2,8 +2,14 @@
   "layout": "figures",
   "sectionLabel": "Neural rendering",
   "title": "Applications",
-  "subtitle": "The same approach for time of flight, lidar, and structured light",
+  "subtitle": "The same approach for lidar, time of flight, and structured light",
   "figures": [
+    {
+      "type": "image",
+      "src": "/slides/nr-applications/transient-nerf-lidar-novel-view.png",
+      "alt": "Transient NeRF: lidar measurements, time slices, and depth from a novel viewpoint, reference and rendered",
+      "caption": "Lidar"
+    },
     {
       "type": "video",
       "src": "/slides/nr-applications/torf-rgb-and-depth.webm",
@@ -15,40 +21,35 @@
       }
     },
     {
-      "type": "image",
-      "src": "/slides/nr-applications/transient-nerf-lidar-novel-view.png",
-      "alt": "Transient NeRF: lidar measurements, time slices, and depth from a novel viewpoint, reference and rendered",
-      "caption": "Lidar"
+      "type": "video",
+      "src": "/slides/nr-applications/nfsl-structured-light-novel-view.mp4",
+      "alt": "Neural fields for structured lighting: a structured light image rendered from novel viewpoints",
+      "caption": "Structured light"
     },
     {
       "type": "video",
       "src": "/slides/nr-applications/flying-with-photons-light-in-flight.mp4",
       "alt": "Flying with Photons: a pulse of light propagating through a scene, rendered from a novel viewpoint",
       "caption": "Propagating light"
-    },
-    {
-      "type": "video",
-      "src": "/slides/nr-applications/nfsl-structured-light-novel-view.mp4",
-      "alt": "Neural fields for structured lighting: a structured light image rendered from novel viewpoints",
-      "caption": "Structured light"
     }
   ],
   "credits": [
-    {
-      "source": "attal2021",
-      "what": "project video"
-    },
     {
       "source": "malik2023",
       "what": "Fig. 7"
     },
     {
-      "source": "malik2024",
+      "source": "attal2021",
       "what": "project video"
     },
     {
       "source": "shandilya2023",
       "what": "project video"
+    },
+    {
+      "source": "malik2024",
+      "what": "project video"
     }
-  ]
+  ],
+  "uniform": true
 }

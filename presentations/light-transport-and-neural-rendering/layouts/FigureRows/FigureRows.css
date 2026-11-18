@@ -62,3 +62,32 @@
   font-size: 24px;
   color: var(--text-primary);
 }
+
+/* Labels placed along the figure: each centered at its own fraction of the width. */
+.figure-rows-labels--placed {
+  position: relative;
+  height: 36px;
+}
+
+.figure-rows-labels--placed .figure-rows-label {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+/* One equation in the band under the subtitle, its label above it. */
+.figure-rows-header {
+  margin: 4px 0 18px;
+  font-size: 1.7rem;
+  color: var(--text-primary);
+}
+
+.figure-rows-header .math {
+  white-space: nowrap;
+}
+
+.figure-rows-header-label {
+  font-size: 20px;
+  color: var(--text-secondary);
+}

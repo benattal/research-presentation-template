@@ -8,7 +8,7 @@ import {
   cameraRays, exactImage, rayTable, relativeError, tracePaths,
 } from '../flatland/pathSamples.js';
 import { SURFACE_GAIN, derived, sceneGain } from '../flatland/pictures.js';
-import { ROOM_VIEW, autoGain, drawRoom } from '../flatland/render.js';
+import { RENDER_BACKGROUND, ROOM_VIEW, autoGain, drawRoom } from '../flatland/render.js';
 import { flatlandRoom } from '../flatland/rooms.js';
 import { CAMERA } from '../flatland/scene.js';
 import { patchRadiosity } from '../flatland/transport.js';
@@ -17,7 +17,7 @@ import './PathTracing.css';
 
 const ROOM = ROOM_VIEW;
 const STRIP_SIZE = [620, 24];
-const CHART = [336, 236];
+const CHART = [336, 262];
 /** Camera pixels and evenly spaced rays per pixel (a path starts on one of them). */
 const PIXELS = 64;
 const RAYS_PER_PIXEL = 16;
@@ -123,14 +123,18 @@ export default function PathTracing({ slide, buildStep }) {
     drawLightSegments(ctx, transform, dark, { width: 0.8, glow: 0 });
     drawLightSegments(ctx, transform, lit, { width: 2, glow: 8 });
     drawRoomCamera(ctx, transform);
+    // The label sits under the camera, outside its fan of rays, outlined in the render's
+    // background so the paths crossing it later stay behind it.
     const [cx, cy] = transform.toCanvas(CAMERA.position);
     ctx.save();
     ctx.font = "18px 'Inter Variable', Inter, sans-serif";
+    ctx.textAlign = 'center';
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = RENDER_BACKGROUND;
+    ctx.strokeText('camera', cx + 6, cy + 36);
     ctx.fillStyle = 'rgba(215, 219, 228, 0.95)';
-    ctx.shadowColor = 'rgba(7, 9, 15, 0.95)';
-    ctx.shadowBlur = 6;
-    ctx.textAlign = 'right';
-    ctx.fillText('camera', cx - 4, cy + 34);
+    ctx.fillText('camera', cx + 6, cy + 36);
     ctx.restore();
   };
 
@@ -167,7 +171,7 @@ export default function PathTracing({ slide, buildStep }) {
             width={CHART[0]}
             height={CHART[1]}
             x={{ min: 0, max: PIXELS, ticks: [0, 16, 32, 48, 64].map((v) => ({ value: v, label: String(v) })), label: 'pixel' }}
-            y={{ min: 0, max: top, ticks: [0, top / 2, top].map((v) => ({ value: v, label: String(v) })), label: 'radiance' }}
+            y={{ min: 0, max: top, ticks: [0, top / 2, top].map((v) => ({ value: v, label: String(v) })), label: 'radiance', labelAbove: true }}
             series={[
               { kind: 'dots', points: estimatePoints, className: 'paths-estimate', radius: 3.2 },
               { kind: 'line', points: exactPoints, className: 'paths-exact' },

@@ -16,8 +16,9 @@ export const GATHER_RAYS_PER_BIN = 16;
 
 /**
  * Gather at the point u ∈ [0, 1] along `patch`, from outgoing state `x`
- * and emission `e`. Returns the point, the rays (angle, hit point, incident
- * radiance, and its weighted contribution f L cos θ dθ, RGB), the emission,
+ * and emission `e`. Returns the point, the rays (angle, its index `k`
+ * within its bin, hit point, incident radiance, and its weighted
+ * contribution f L cos θ dθ, RGB), the emission,
  * the gathered sum, and the solved value of the patch's light, x.
  */
 export function gatherAt(room, patch, u, x, e, perBin = GATHER_RAYS_PER_BIN) {
@@ -40,7 +41,7 @@ export function gatherAt(room, patch, u, x, e, perBin = GATHER_RAYS_PER_BIN) {
       weighted.forEach((value, c) => {
         gathered[c] += value;
       });
-      rays.push({ theta, end: hit.point, radiance, weighted });
+      rays.push({ theta, k, end: hit.point, radiance, weighted });
     }
   }
   const out = stateIndex(patch.index, BINS / 2) * 3;

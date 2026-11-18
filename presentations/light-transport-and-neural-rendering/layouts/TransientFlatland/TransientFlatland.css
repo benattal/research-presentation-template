@@ -29,6 +29,11 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* The vertical axis's label sits above the plot area, so the time cursor never crosses it. */
+.transient-chart .chart-label--y {
+  transform: translateY(-8px);
+}
+
 /* Light still to arrive, drawn faintly. */
 .chart-bars.transient-ghost rect { fill: var(--bg-elevated); stroke: var(--border-light); stroke-width: 0.5; }
 
@@ -82,6 +87,6 @@
 
 .transient-check dd {
   margin: 0;
-  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
   color: var(--text-primary);
 }

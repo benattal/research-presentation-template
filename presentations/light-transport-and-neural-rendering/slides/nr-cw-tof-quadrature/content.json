@@ -7,15 +7,15 @@
   "lines": [
     {
       "label": "phasor = Fourier coefficient of the transient",
-      "tex": "$m = \\int h(\\tau)\\, e^{\\mathrm{j} 2\\pi f \\tau}\\, d\\tau$"
+      "tex": "$m_f = \\int h(\\tau)\\, e^{\\mathrm{j} 2\\pi f \\tau}\\, d\\tau$"
     },
     {
       "label": "same weights $w_i$",
-      "tex": "$\\hphantom{m} = \\sum_i w_i\\, \\htmlClass{term-operator}{e^{\\mathrm{j} 4\\pi f t_i / c}}$"
+      "tex": "$\\hphantom{m_f} = \\sum_i w_i\\, \\htmlClass{term-operator}{e^{\\mathrm{j} 4\\pi f t_i / c}}$"
     },
     {
       "label": "one surface",
-      "tex": "$m = \\dfrac{\\rho}{d^2}\\, e^{\\mathrm{j} 4\\pi f d / c}$"
+      "tex": "$m_f = \\dfrac{\\rho}{d^2}\\, e^{\\mathrm{j} 4\\pi f d / c}$"
     }
   ],
   "buildSteps": [

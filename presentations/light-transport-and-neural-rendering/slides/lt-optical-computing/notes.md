@@ -2,11 +2,11 @@ We never need $\mathbf{T}$ itself to multiply by it: light the scene with patter
 
 Why this matters: for a real projector and camera with a million pixels each, $\mathbf{T}$ is $10^6 \times 10^6$, $10^{12}$ entries (CMU 15-463, pp. 36 and 57). Measuring it entry by entry is out of reach; a few products are not.
 
-An eigenvector of $\mathbf{T}$ is a pattern that, projected onto the scene, comes back in the photograph unchanged up to a scale: $\mathbf{T}v_1 = \lambda_1 v_1$. The principal eigenvector is a fixed point of the sequence $l, \mathbf{T}l, \mathbf{T}^2 l, \ldots$ after normalizing (15-463, p. 44): the fixed-point view of the first linear algebra slide. Power iteration converges to the one with the largest eigenvalue: project $p$, capture $\mathbf{T}p$, normalize, and project the result again. As on the spectral-view slide, the component along the largest eigenvalue dominates after a few products.
+An eigenvector of $\mathbf{T}$ is a pattern that, projected onto the scene, comes back in the photograph unchanged up to a scale: $\mathbf{T}v_1 = \lambda_1 v_1$. The principal eigenvector is the fixed point of the sequence $p, \mathbf{T}p, \mathbf{T}^2 p, \ldots$ after normalizing (15-463, p. 44): the fixed-point view of the first linear algebra slide. Power iteration converges to the one with the largest eigenvalue: project $p$, capture $\mathbf{T}p$, normalize, and project the result again. As on the spectral-view slide, the component along the largest eigenvalue dominates after a few products.
 
-The setup here: each of the 19 light elements emits and senses, like a projector and a camera that share pixels. Then $\mathbf{T}$ is square (19 × 19), and $\mathbf{T}_{jk}$ is the light element $j$ receives when element $k$ is lit.
+The setup here: each of the 19 light elements is both a light and a pixel, like a projector and a camera that share pixels. Then $\mathbf{T}$ is square (19 × 19), and $\mathbf{T}_{jk}$ is the light element $j$ receives when element $k$ is lit.
 
-The bars beside the room are the patterns, one bar per element, each scaled to its largest entry.
+The bars hanging from the ceiling are the pattern lighting the room, one bar per element, scaled to its largest entry; the bars beside the room are the patterns of every step, drawn the same way.
 
 - **$p_0$**: one element on, at the left.
 - **$p_1$**: one photograph. The light returned to the ceiling is spread out, brightest near the first element.

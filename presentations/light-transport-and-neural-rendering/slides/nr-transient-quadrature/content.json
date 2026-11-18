@@ -5,7 +5,7 @@
   "subtitle": "Volume rendering of a transient",
   "lines": [
     {
-      "label": "NeRF's quadrature",
+      "label": "NeRF's quadrature, $c_i$ written $L_i$",
       "tex": "$\\hat C = \\sum_i T_i\\,\\alpha_i\\,L_i$"
     },
     {
@@ -14,7 +14,7 @@
     },
     {
       "label": "intensity",
-      "tex": "$I = \\sum_i \\underbrace{T_i^2\\,\\alpha_i\\,\\dfrac{\\rho_i}{t_i^2}}_{w_i}$"
+      "tex": "$m = \\sum_i \\underbrace{T_i^2\\,\\alpha_i\\,\\dfrac{\\rho_i}{t_i^2}}_{w_i}$"
     },
     {
       "label": "transient",

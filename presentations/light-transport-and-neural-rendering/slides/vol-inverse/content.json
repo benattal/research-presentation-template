@@ -2,7 +2,7 @@
   "layout": "inverseOperator",
   "sectionLabel": "Volume rendering",
   "title": "Integral and differential forms",
-  "subtitle": "Recovering sources requires derivatives",
+  "subtitle": "Inverting transport by differentiating radiance",
   "equations": [
     {
       "label": "integral form: integrals, Monte Carlo",

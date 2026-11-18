@@ -14,10 +14,15 @@ import { TextWithBolt } from './Bolt.jsx';
 import SeriesPlot from './SeriesPlot.jsx';
 import './Slides.css';
 
+/** Size of the title slide's room render, in stage pixels: the room's size on the slides that show it. */
+const TITLE_RENDER = [800, 480];
+/** Size of a divider's picture, in stage pixels (5 : 3, as the room), the same on every divider. */
+const DIVIDER_VISUAL = [480, 288];
+
 /**
- * The title slide: `title`, `subtitle` (the speaker line), and a render of
- * the room (`render`, default 'light') below them on the right. The title
- * spans the slide, so it stays on one line.
+ * The title slide (also the closing "Questions" slide): `title`, on one
+ * line, and `subtitle` (the speaker line, optional), centered, with a
+ * render of the room (`render`, default 'light') centered below them.
  */
 export function LectureTitle({ slide }) {
   return (
@@ -26,30 +31,31 @@ export function LectureTitle({ slide }) {
         <h1><Text>{slide.title}</Text></h1>
         {slide.subtitle && <p><Text>{slide.subtitle}</Text></p>}
       </div>
-      <RoomStill kind={slide.render ?? 'light'} width={720} height={432} className="lecture-title-render" />
+      <RoomStill kind={slide.render ?? 'light'} width={TITLE_RENDER[0]} height={TITLE_RENDER[1]} className="lecture-title-render" />
     </div>
   );
 }
 
 /**
- * A section divider: `number`, `title` (the section's name; a "⚡" in it is
- * drawn as an SVG bolt), `subtitle` (one line on what the section does),
- * and optionally, below them on the right, a room render (`render`:
- * 'light', 'spot', 'pulse', or 'importance') or an image (`image`, a media
- * item, credited with the slide's `credits`).
+ * A section divider: `title` (the section's name; a "⚡" in it is drawn as
+ * an SVG bolt), `subtitle` (one line on what the section does), and,
+ * beside them on the right, one picture of DIVIDER_VISUAL size: a room
+ * render (`render`: 'light', 'spot', 'pulse', or 'importance'), an image
+ * (`image`, a media item filling the box and cropped to it, credited with
+ * the slide's `credits`), or the series plot (`series: true`).
  */
 export function SectionTitle({ slide }) {
+  const [width, height] = DIVIDER_VISUAL;
   return (
     <div className="slide--section-title">
       <div className="section-title-text">
-        {slide.number && <div className="section-title-number">{slide.number}</div>}
         <h1><TextWithBolt>{slide.title}</TextWithBolt></h1>
         {slide.subtitle && <p><Text>{slide.subtitle}</Text></p>}
       </div>
-      <div className="section-title-visual">
-        {slide.render && <RoomStill kind={slide.render} width={520} height={312} className="section-title-render" />}
+      <div className="section-title-visual" style={{ width, height }}>
+        {slide.render && <RoomStill kind={slide.render} width={width} height={height} className="section-title-render" />}
         {slide.image && <img className="section-title-render section-title-image" src={slide.image.src} alt={slide.image.alt ?? ''} />}
-        {slide.series && <SeriesPlot width={520} height={312} />}
+        {slide.series && <SeriesPlot width={width} height={height} />}
       </div>
     </div>
   );
@@ -71,13 +77,25 @@ export function SectionTitle({ slide }) {
  * `column` and `row` (from 1) and the columns it covers, `span` (default
  * 1). Two figures in the same cells overlap: one can replace the other
  * in place, with `until` on the first and `step` on the second.
+ *
+ * With `uniform: true`, every figure's media fills its cell above the
+ * caption (scaled to fit, centered), so the captions of a row share one
+ * line whatever the media's shapes. An optional `cellWidth` (stage pixels)
+ * gives the columns that width and centers the grid, for media narrower
+ * than an equal share of the slide (4:3 photos in a 2 × 2 grid).
  */
 export function Figures({ slide, buildStep }) {
   const figures = slide.figures ?? [];
   const cells = figures.reduce((sum, figure) => sum + (figure.span ?? 1), 0);
-  const grid = slide.columns
-    ? { gridTemplateColumns: `repeat(${slide.columns}, 1fr)`, gridTemplateRows: `repeat(${slide.rows ?? Math.ceil(cells / slide.columns)}, 1fr)` }
-    : undefined;
+  const columns = slide.columns ?? (figures.length === 4 ? 2 : figures.length);
+  const grid = {
+    ...(slide.columns && {
+      gridTemplateColumns: `repeat(${slide.columns}, 1fr)`,
+      gridTemplateRows: `repeat(${slide.rows ?? Math.ceil(cells / slide.columns)}, 1fr)`,
+    }),
+    ...(slide.cellWidth && { gridTemplateColumns: `repeat(${columns}, ${slide.cellWidth}px)`, justifyContent: 'center', columnGap: 32 }),
+  };
+  const gridClass = `figures-grid figures-grid--${Math.min(figures.length, 4)}${slide.uniform ? ' figures-grid--uniform' : ''}`;
   const place = (figure) => {
     if (!figure.span && !figure.column && !figure.row) return undefined;
     const style = { gridColumn: `${figure.column ?? 'auto'} / span ${figure.span ?? 1}` };
@@ -88,7 +106,7 @@ export function Figures({ slide, buildStep }) {
   return (
     <div className="slide--figures">
       <SlideTitle title={slide.title} subtitle={slide.subtitle} />
-      <div className={`figures-grid figures-grid--${Math.min(figures.length, 4)}`} style={grid}>
+      <div className={gridClass} style={grid}>
         {figures.map((figure) => (
           <motion.figure
             key={figure.src}
@@ -118,14 +136,19 @@ export function Figures({ slide, buildStep }) {
 
 /**
  * A derivation: `lines`, each `{ tex, label? }`, appear one per build step;
- * the newest line is in full color and earlier ones are muted. An optional
- * `figure` (a media item with `caption`, and an optional `width` in stage
- * pixels; 46% of the slide without it) sits on the right. A figure made of
- * equal columns can label each one under it: `columnLabels` (short labels,
- * left to right) and `columnInset` (the fraction of the figure's width
- * left of the first column, such as the original's row labels). An
- * optional `fontSize` (a CSS length) sets the size of the lines, for long
- * lines beside a wide figure.
+ * the newest line is in full color and earlier ones are muted. A line's
+ * label sits above it, as in the deck's equation stacks, so labels share
+ * the lines' left edge. Every line takes its place from the first step.
+ *
+ * An optional `figure` (a media item with `caption`, and an optional
+ * `width` in stage pixels; 46% of the slide without it) sits on the right,
+ * and the lines are spread over its height: the first level with its top,
+ * the last with its caption. A figure made of equal columns can label each
+ * one under it: `columnLabels` (short labels, left to right) and
+ * `columnInset` (the fraction of the figure's width left of the first
+ * column, such as the original's row labels); `labels` are short lines
+ * under the caption, side by side. An optional `fontSize` (a CSS length)
+ * sets the size of the lines.
  */
 export function Derivation({ slide, buildStep }) {
   const lines = slide.lines ?? [];
@@ -142,8 +165,8 @@ export function Derivation({ slide, buildStep }) {
               animate={{ opacity: i <= buildStep ? 1 : 0 }}
               transition={{ duration: 0.35 }}
             >
-              <span className="derivation-math" dangerouslySetInnerHTML={{ __html: renderMath(line.tex, true) }} />
               {line.label && <span className="derivation-label"><Text>{line.label}</Text></span>}
+              <span className="derivation-math" dangerouslySetInnerHTML={{ __html: renderMath(line.tex, true) }} />
             </motion.li>
           ))}
         </ol>
@@ -162,6 +185,11 @@ export function Derivation({ slide, buildStep }) {
               </div>
             )}
             {slide.figure.caption && <figcaption><Text>{slide.figure.caption}</Text></figcaption>}
+            {slide.figure.labels && (
+              <div className="derivation-figure-labels">
+                {slide.figure.labels.map((label) => <span key={label}><Text>{label}</Text></span>)}
+              </div>
+            )}
           </figure>
         )}
       </div>

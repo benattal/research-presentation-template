@@ -42,7 +42,7 @@ const TERMS = ['nerf', 'collocated'];
 /**
  * A build step is either the quadrature's terms per sample, `{ terms,
  * label }` with terms 'nerf' (Tᵢαᵢ) or 'collocated' (wᵢ = Tᵢ²αᵢρᵢ/tᵢ²) and
- * an optional `intensity` (show the readout I), or the transient,
+ * an optional `intensity` (show the readout m), or the transient,
  * `{ histogram: true, pulseWidthNs, label }`. `label` names the plotted
  * quantity.
  */
@@ -70,13 +70,13 @@ function relativeTerms(step, terms) {
  * panel, and below it, on the same horizontal axis (depth t above
  * round-trip time 2t/c), a plot. The equations build up beside them
  * (`lines`, an EquationStack): NeRF's quadrature, a source at the camera,
- * the intensity I, and the transient h(τ). The first build steps plot each
+ * the intensity m, and the transient h(τ). The first build steps plot each
  * sample's term at its depth (NeRF's Tᵢαᵢ, then wᵢ = Tᵢ²αᵢρᵢ/tᵢ²); the
  * transient steps bin the same weights by round-trip time, spread by the
  * laser pulse. Moving forward animates from the previous step: the bars
  * change height, the histogram fills in arrival order, the pulse widens.
  * The slider sets the pulse width on the transient steps; the readout
- * checks the histogram's integral against I.
+ * checks the histogram's integral against m.
  */
 export default function TransientQuadrature({ slide, buildStep }) {
   const step = stepState(slide, buildStep);
@@ -197,7 +197,7 @@ export default function TransientQuadrature({ slide, buildStep }) {
           <Readout
             columns={2}
             items={[
-              { label: '$I$', value: intensity.toFixed(4), hidden: !(step.intensity || step.histogram) },
+              { label: '$m$', value: intensity.toFixed(4), hidden: !(step.intensity || step.histogram) },
               { label: '$\\int h\\,d\\tau$', value: integral.toFixed(4), hidden: !step.histogram },
             ]}
           />

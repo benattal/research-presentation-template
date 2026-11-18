@@ -6,7 +6,8 @@
  * products.
  *
  * Slide fields: `lines`, each `{ tex, label? }`, one per build step (the
- * newest in full color, earlier ones muted, as in the `derivation` layout),
+ * newest in full color, earlier ones muted, as in the `derivation` layout;
+ * a line's label above it, as in the deck's equation stacks),
  * and `diagram`: `{ adjointStep, dotStep }`, the build steps at which the
  * adjoint solve and the dot products appear. The forward route shows from
  * the first step.
@@ -130,8 +131,8 @@ export default function AdjointSolves({ slide, buildStep }) {
               className={i === current ? 'adjoint-solves-line--current' : ''}
               {...fade(i <= buildStep)}
             >
-              <span className="adjoint-solves-math" dangerouslySetInnerHTML={{ __html: renderMath(line.tex, true) }} />
               {line.label && <span className="adjoint-solves-line-label"><Text>{line.label}</Text></span>}
+              <span className="adjoint-solves-math" dangerouslySetInnerHTML={{ __html: renderMath(line.tex, true) }} />
             </motion.li>
           ))}
         </ol>

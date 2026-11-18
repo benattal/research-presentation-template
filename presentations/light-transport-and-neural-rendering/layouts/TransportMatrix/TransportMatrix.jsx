@@ -12,14 +12,12 @@ import { drawPixelWedge, drawRoomCamera } from '../flatland/overlays.js';
 import { SURFACE_GAIN } from '../flatland/pictures.js';
 import { ROOM_VIEW, drawRoom } from '../flatland/render.js';
 import {
-  Strip, drawElements, elementAt, elementPictures, exposures, patternPicture,
+  BAR_COLORS, Strip, drawElementBars, drawElements, elementAt, elementPictures, exposures, patternPicture,
 } from './elementViews.jsx';
 import './TransportMatrix.css';
 
 const ROOM = ROOM_VIEW;
 const THUMB = [74, 44];
-/** Longest bar of the pattern p hanging from the ceiling, in stage pixels. */
-const BAR = 70;
 /** Exposure of a column photo whose element is off, relative to one that is fully on. */
 const DIMMED = 0.3;
 
@@ -27,23 +25,6 @@ const luminance = (v, j) => 0.2126 * v[j * 3] + 0.7152 * v[j * 3 + 1] + 0.0722 *
 
 /** True when p has a weight other than 0 or 1, so its bars say more than which elements are on. */
 const graded = (p) => p.some((value) => value > 0 && value < 1);
-
-/** The pattern p as bars hanging from each element, their length proportional to p_k. */
-function drawPatternBars(ctx, transform, elements, p) {
-  const largest = Math.max(...p);
-  if (!(largest > 0)) return;
-  ctx.save();
-  ctx.fillStyle = 'rgba(255, 241, 201, 0.7)';
-  elements.forEach((patch, k) => {
-    if (p[k] <= 0) return;
-    const a = transform.toCanvas(patch.a);
-    const b = transform.toCanvas(patch.b);
-    const left = Math.min(a[0], b[0]);
-    const width = Math.abs(b[0] - a[0]);
-    ctx.fillRect(left + 0.36 * width, a[1] + 10, 0.28 * width, BAR * p[k] / largest);
-  });
-  ctx.restore();
-}
 
 /** The room and its camera image under pattern p (or a row's view: the pixel and each element's share). */
 function paintRoom(ctx, env, gains, view, progress) {
@@ -60,7 +41,8 @@ function paintRoom(ctx, env, gains, view, progress) {
     drawPixelWedge(ctx, env.room, transform, [view.row / MATRIX_PIXELS, (view.row + 1) / MATRIX_PIXELS], [76, 201, 240]);
     drawRoomCamera(ctx, transform);
     const shares = env.images.map((image) => luminance(image, view.row));
-    drawElements(ctx, transform, env.elements, shares, (w) => `rgba(76, 201, 240, ${(0.15 + 0.85 * w ** 1.5 * progress).toFixed(3)})`);
+    drawElements(ctx, transform, env.elements);
+    drawElementBars(ctx, transform, env.elements, shares.map((share) => share * progress), BAR_COLORS.importance, Math.max(...shares));
     return;
   }
   const picture = patternPicture(env, view.p.map((value) => value * progress));
@@ -72,8 +54,8 @@ function paintRoom(ctx, env, gains, view, progress) {
     surfaceGain: gains.room * SURFACE_GAIN,
   });
   drawRoomCamera(ctx, transform);
-  drawElements(ctx, transform, env.elements, view.p, null);
-  if (view.bars) drawPatternBars(ctx, transform, env.elements, view.p.map((value) => value * progress));
+  drawElements(ctx, transform, env.elements);
+  if (view.bars) drawElementBars(ctx, transform, env.elements, view.p.map((value) => value * progress), BAR_COLORS.light, Math.max(...view.p));
 }
 
 /**
@@ -179,7 +161,8 @@ function formatSmall(value) {
  *
  * - `mode: 'matrix'`: build steps `{ elements: [k] }` show column k (the
  *   room and the camera's image lit by element k alone), and `{ row: j }`
- *   shows row j (each element's share of pixel j, on the ceiling). Beside
+ *   shows row j (each element's share of pixel j, as bars hanging from
+ *   the elements). Beside
  *   the room, c = Tp is drawn as blocks to scale, with that column or row
  *   marked.
  * - `mode: 'relight'`: build steps `{ elements: [...] }` or `{ pattern:
@@ -252,7 +235,10 @@ export default function TransportMatrix({ slide, buildStep }) {
       setElement(k, paintValue.current);
     },
     onPointerMove: (event, point) => {
-      if (event.buttons && paintValue.current !== null) setElement(elementAt(env, point, ROOM), paintValue.current);
+      const k = elementAt(env, point, ROOM);
+      // Only the ceiling's elements respond to a click, so only they show the pointer.
+      event.currentTarget.style.cursor = k >= 0 ? 'pointer' : 'default';
+      if (event.buttons && paintValue.current !== null) setElement(k, paintValue.current);
     },
     onPointerUp: () => {
       paintValue.current = null;
@@ -274,7 +260,7 @@ export default function TransportMatrix({ slide, buildStep }) {
             animationKey={`${buildStep}`}
             duration={700}
             redrawKey={p ? Array.from(p).join(',') : `row${entry.row}`}
-            className={relight ? 'matrix-room matrix-room--paint' : 'matrix-room'}
+            className="matrix-room"
             {...roomEvents}
           />
           <Strip image={image} gain={p ? gains.strip : gains.uniform.strip} width={ROOM[0]} highlight={entry.row} />

@@ -9,7 +9,7 @@ import {
 import { derived, SURFACE_GAIN } from '../flatland/pictures.js';
 import { ROOM_VIEW, drawRoom } from '../flatland/render.js';
 import {
-  drawElements, elementAt, exposures, patternPicture,
+  BAR_COLORS, drawElementBars, drawElements, elementAt, exposures, patternPicture,
 } from '../TransportMatrix/elementViews.jsx';
 import './OpticalComputing.css';
 
@@ -41,16 +41,14 @@ function PatternProfile({ p }) {
   );
 }
 
-/** The glow drawn on a ceiling element lit at `w` of the brightest one. */
-const elementGlow = (w) => `rgba(255, 241, 201, ${(0.1 + 0.9 * w).toFixed(3)})`;
-
 /**
  * Power iteration as photographs: the light elements on the ceiling also
  * measure the light that returns to them, so lighting the room with
  * pattern p and reading the elements gives Tp in one photograph. Each
  * build step `{ photos: t }` lights the room with p_t, the pattern after t
  * photos, p_{t+1} = Tp_t / ‖Tp_t‖, starting from one element (`start`,
- * default 1, left to right from 0). Beside the room: each step's pattern
+ * default 1, left to right from 0), drawn as bars hanging from the
+ * elements (each relative to the largest). Beside the room: each step's pattern
  * as a bar profile (one bar per element), its angle to the dominant eigenvector v_1 of T
  * (computed from the full matrix), and the count of photos against the
  * number of elements. Clicking an element on the ceiling restarts from it.
@@ -87,7 +85,8 @@ export default function OpticalComputing({ slide, buildStep }) {
       surfaces: picture.surfaces,
       surfaceGain: gains.room * SURFACE_GAIN,
     });
-    drawElements(ctx, transform, env.elements, p, elementGlow);
+    drawElements(ctx, transform, env.elements);
+    drawElementBars(ctx, transform, env.elements, p, BAR_COLORS.light);
   };
 
   const pick = (event, point) => {

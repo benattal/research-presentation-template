@@ -30,9 +30,10 @@ export function decadeTicks(lo, hi) {
  * much around the stack's top. `top` is the value at the plot's top and
  * `label` the axis label; `names` (optional) labels the bars, an empty
  * name leaving a bar unlabelled; without it bars are numbered from 1.
+ * `xLabel` (optional) names the bars' axis, under the names.
  */
-export function Bars({ width, height, stacks, exact, errors, top, label, names }) {
-  const margin = { left: 64, right: 8, top: 30, bottom: 34 };
+export function Bars({ width, height, stacks, exact, errors, top, label, names, xLabel }) {
+  const margin = { left: 64, right: 8, top: 30, bottom: xLabel ? 48 : 34 };
   const plotWidth = width - margin.left - margin.right;
   const plotHeight = height - margin.top - margin.bottom;
   const slot = plotWidth / stacks.length;
@@ -84,12 +85,13 @@ export function Bars({ width, height, stacks, exact, errors, top, label, names }
                   <line x1={center - 6} x2={center + 6} y1={y(high)} y2={y(high)} />
                 </g>
               )}
-              <text x={center} y={height - 10} className="la-plot-tick" textAnchor="middle">{names ? names[i] : i + 1}</text>
+              <text x={center} y={height - margin.bottom + 24} className="la-plot-tick" textAnchor="middle">{names ? names[i] : i + 1}</text>
             </g>
           );
         })}
       </svg>
       {label && <div className="la-plot-label" style={{ left: margin.left - 4, top: 0 }}><Text>{label}</Text></div>}
+      {xLabel && <div className="la-plot-label la-plot-label--x" style={{ left: margin.left, right: margin.right, bottom: 0 }}><Text>{xLabel}</Text></div>}
     </div>
   );
 }

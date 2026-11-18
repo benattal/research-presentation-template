@@ -9,9 +9,17 @@
  * the row's width, default 1), and `step` (the build step it appears at,
  * default 0). Each figure is scaled to fit its cell without cropping, with
  * its caption directly under it, and the pair is centered in the cell.
- * A figure may also have `labels`: short lines of text or math set side by
- * side under it (and its caption), so they stay with the figure they
- * annotate. Borrowed figures are credited through the slide's `credits`.
+ *
+ * A figure may also have `labels`, short lines of text or math under it
+ * (and its caption), so they stay with the figure they annotate. A label
+ * is a string, and the labels are set side by side, or `{ text, at }`,
+ * centered at `at` (a fraction of the figure's width) to sit under the
+ * part of the figure it is about.
+ *
+ * An optional `header` (`{ tex, label? }`, slide text with `$…$` math and
+ * its short label above it) is one line in the band between the subtitle
+ * and the rows. Borrowed figures are credited through the slide's
+ * `credits`.
  */
 import { motion } from 'framer-motion';
 import Media from '@core/stage/Media.jsx';
@@ -21,6 +29,20 @@ import './FigureRows.css';
 
 const tracks = (shares) => shares.map((share) => `minmax(0, ${share}fr)`).join(' ');
 
+/** A figure's labels: side by side, or each centered at its `at` along the figure. */
+function FigureLabels({ labels }) {
+  const placed = labels.some((label) => typeof label === 'object');
+  return (
+    <div className={`figure-rows-labels${placed ? ' figure-rows-labels--placed' : ''}`}>
+      {labels.map((label) => {
+        const text = typeof label === 'object' ? label.text : label;
+        const style = typeof label === 'object' ? { left: `${100 * label.at}%` } : undefined;
+        return <span key={text} className="figure-rows-label" style={style}><Text>{text}</Text></span>;
+      })}
+    </div>
+  );
+}
+
 export default function FigureRows({ slide, buildStep }) {
   if (!Array.isArray(slide.rows) || slide.rows.length === 0) {
     throw new Error(`Slide "${slide.id}": the figureRows layout needs a non-empty "rows" list`);
@@ -28,6 +50,12 @@ export default function FigureRows({ slide, buildStep }) {
   return (
     <div className="slide--figure-rows">
       <SlideTitle title={slide.title} subtitle={slide.subtitle} />
+      {slide.header && (
+        <div className="figure-rows-header">
+          {slide.header.label && <div className="figure-rows-header-label"><Text>{slide.header.label}</Text></div>}
+          <Text>{slide.header.tex}</Text>
+        </div>
+      )}
       <div className="figure-rows-body" style={{ gridTemplateRows: tracks(slide.rows.map((row) => row.weight ?? 1)) }}>
         {slide.rows.map((row, r) => (
           <div
@@ -45,11 +73,7 @@ export default function FigureRows({ slide, buildStep }) {
               >
                 <Media item={figure} className="figure-rows-media" />
                 {figure.caption && <figcaption><Text>{figure.caption}</Text></figcaption>}
-                {figure.labels && (
-                  <div className="figure-rows-labels">
-                    {figure.labels.map((label) => <span key={label} className="figure-rows-label"><Text>{label}</Text></span>)}
-                  </div>
-                )}
+                {figure.labels && <FigureLabels labels={figure.labels} />}
               </motion.figure>
             ))}
           </div>

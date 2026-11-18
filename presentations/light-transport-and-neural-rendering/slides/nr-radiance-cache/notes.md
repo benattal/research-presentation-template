@@ -11,6 +11,6 @@ The table is the check: the cache's error is only on the unobserved surfaces; af
 
 One sentence: with a radiance cache, every bounce after the first comes from the cache, at the cost of a bias $A(\hat{x} - x)$ wherever the cache is wrong.
 
-Toward the next slide: in Flash Cache the bounce over the NeRF cache is written as a bounce over a fast cache plus a correction, $A\hat{x} = A\hat{x}_{\text{fast}} + A(\hat{x} - \hat{x}_{\text{fast}})$. This control variate removes the fast cache's bias relative to the NeRF cache $\hat{x}$; the NeRF cache's own bias, $A(\hat{x} - x)$, remains.
+Toward the next slide: Flash Cache uses a NeRF as this cache and estimates the bounce over it as a bounce over a fast cache plus a correction, $A\hat{x} = A\hat{x}_{\text{fast}} + A(\hat{x} - \hat{x}_{\text{fast}})$: a control variate. The paper shows this is "an unbiased estimator of the rendering equation (provided that incoming illumination from the NeRF cache is correct)" (Section C.1). So the fast cache adds noise but no bias, and the bias left is this slide's $A(\hat{x} - x)$, where the NeRF cache is wrong.
 
 No mouse interaction.

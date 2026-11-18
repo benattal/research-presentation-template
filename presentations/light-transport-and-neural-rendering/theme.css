@@ -81,13 +81,14 @@
 .term-learned { color: var(--ink-learned); }
 .term-muted { color: var(--text-muted); }
 
-/* Slides of the computational imaging aside carry a small "Aside" tag. */
+/* Slides of the computational imaging aside carry a small "Aside" tag, its right edge on the
+   slide's right margin. */
 .slide[data-section="imaging-aside"]::before {
   content: 'Aside';
   position: absolute;
-  top: 16px;
-  right: 24px;
-  font-size: 0.8rem;
+  top: 14px;
+  right: 56px;
+  font-size: 1rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-muted);

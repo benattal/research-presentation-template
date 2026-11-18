@@ -2,7 +2,7 @@
   "layout": "spectralView",
   "sectionLabel": "Neumann series",
   "title": "Spectral view",
-  "subtitle": "The matrix series, one eigenvector at a time",
+  "subtitle": "Along each eigenvector, a geometric series",
   "eigenvectors": [
     [
       2,
@@ -53,7 +53,7 @@
         0.3
       ],
       "b": [
-        0.7,
+        0.1,
         0.7
       ],
       "terms": 8

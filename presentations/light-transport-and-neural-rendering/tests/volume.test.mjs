@@ -284,4 +284,28 @@ describe('the volume rendering gradient', () => {
       behind.forEach((v, k) => assert.ok(Math.abs(v - gradients[i].behind[k]) < 1e-12));
     });
   });
+
+  it('is δᵢTᵢ₊₁(cᵢ − Lᵢ₊₁), with Lᵢ₊₁ the light from behind: the quadrature restarted after sample i', () => {
+    result.terms.forEach((term, i) => {
+      const next = term.transmittance * (1 - term.alpha);
+      if (next < 1e-9) return;
+      const fromBehind = result.terms.slice(i + 1)
+        .reduce((sum, back) => sum.map((v, k) => v + (back.transmittance / next) * back.alpha * back.color[k]), [0, 0, 0]);
+      fromBehind.forEach((light, k) => {
+        const adjoint = term.delta * next * (term.color[k] - light);
+        assert.ok(Math.abs(adjoint - gradients[i].gradient[k]) < 1e-12, `sample ${i}, channel ${k}`);
+      });
+    });
+  });
+
+  it('changes from one sample to the next by Tᵢ₊₁(cᵢ₊₁ − cᵢ), per unit δ: equal where the color is constant', () => {
+    for (let i = 0; i + 1 < result.terms.length; i += 1) {
+      const [term, back] = [result.terms[i], result.terms[i + 1]];
+      const next = term.transmittance * (1 - term.alpha);
+      for (let k = 0; k < 3; k += 1) {
+        const change = gradients[i + 1].gradient[k] / back.delta - gradients[i].gradient[k] / term.delta;
+        assert.ok(Math.abs(change - next * (back.color[k] - term.color[k])) < 1e-12, `samples ${i} and ${i + 1}`);
+      }
+    }
+  });
 });

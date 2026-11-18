@@ -4,9 +4,9 @@
   "title": "Scattering integral",
   "subtitle": "Light leaving a point is a weighted integral of incident light",
   "buildSteps": [
-    { "caption": "directions" },
-    { "caption": "incident light" },
-    { "caption": "BRDF and cosine" },
-    { "caption": "sum" }
+    { "label": "directions" },
+    { "label": "incident light" },
+    { "label": "BRDF and cosine" },
+    { "label": "sum" }
   ]
 }

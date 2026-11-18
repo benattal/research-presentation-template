@@ -8,6 +8,8 @@ import Text from '@core/stage/Text.jsx';
 import './charts.css';
 
 const MARGIN = { left: 58, right: 14, top: 18, bottom: 64 };
+/** Room above the plot area for a y label placed there (`labelAbove`), in stage pixels. */
+const LABEL_ROOM = 26;
 
 function scale({ min, max }, from, to) {
   return (value) => from + ((to - from) * (value - min)) / (max - min);
@@ -19,6 +21,9 @@ function pathOf(points, x, y) {
 
 /**
  * `x` and `y` are axes { min, max, ticks: [{ value, label }], label };
+ * the y label sits inside the plot area's top left corner, or above the
+ * plot area with `labelAbove: true` on the y axis (for data that reach
+ * the top);
  * `series` is a list of { kind: 'line' | 'dots' | 'bars' | 'area',
  * points: [[x, y], …], className, barWidth (x units), radius }; `marks`
  * are vertical lines { x, className }; `notes` are labels { x, y, text,
@@ -29,9 +34,10 @@ function pathOf(points, x, y) {
 export default function Chart({ width, height, x: xAxis, y: yAxis, series = [], marks = [], notes = [], onPointer, className = '' }) {
   const right = width - MARGIN.right;
   const bottom = height - MARGIN.bottom;
+  const top = MARGIN.top + (yAxis.labelAbove ? LABEL_ROOM : 0);
   const x = scale(xAxis, MARGIN.left, right);
-  const y = scale(yAxis, bottom, MARGIN.top);
-  const clampY = (v) => Math.min(bottom, Math.max(MARGIN.top, y(v)));
+  const y = scale(yAxis, bottom, top);
+  const clampY = (v) => Math.min(bottom, Math.max(top, y(v)));
 
   const scrub = onPointer && ((event) => {
     if (event.type === 'pointermove' && event.buttons === 0) return;
@@ -89,12 +95,16 @@ export default function Chart({ width, height, x: xAxis, y: yAxis, series = [], 
           throw new Error(`Unknown chart series kind "${s.kind}"`);
         })}
         {marks.map((mark, i) => (
-          <line key={`m${i}`} x1={x(mark.x)} x2={x(mark.x)} y1={MARGIN.top} y2={bottom} className={`chart-mark ${mark.className ?? ''}`} />
+          <line key={`m${i}`} x1={x(mark.x)} x2={x(mark.x)} y1={top} y2={bottom} className={`chart-mark ${mark.className ?? ''}`} />
         ))}
-        <line x1={MARGIN.left} x2={MARGIN.left} y1={MARGIN.top} y2={bottom} className="chart-axis" />
+        <line x1={MARGIN.left} x2={MARGIN.left} y1={top} y2={bottom} className="chart-axis" />
         <line x1={MARGIN.left} x2={right} y1={bottom} y2={bottom} className="chart-axis" />
       </svg>
-      {yAxis.label && <div className="chart-label chart-label--y" style={{ left: MARGIN.left + 8, top: 0 }}><Text>{yAxis.label}</Text></div>}
+      {yAxis.label && (
+        <div className="chart-label chart-label--y" style={{ left: yAxis.labelAbove ? MARGIN.left - 10 : MARGIN.left + 8, top: 0 }}>
+          <Text>{yAxis.label}</Text>
+        </div>
+      )}
       {xAxis.label && <div className="chart-label chart-label--x" style={{ left: MARGIN.left, width: right - MARGIN.left, top: bottom + 36 }}><Text>{xAxis.label}</Text></div>}
       {notes.map((note, i) => (
         <div

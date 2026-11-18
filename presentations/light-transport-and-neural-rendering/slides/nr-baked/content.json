@@ -2,7 +2,7 @@
   "layout": "derivation",
   "sectionLabel": "Neural rendering",
   "title": "Baked illumination",
-  "subtitle": "Relighting a NeRF means separating the bounces in its colors",
+  "subtitle": "A NeRF's colors include every bounce of the captured light",
   "lines": [
     {
       "tex": "\\htmlClass{term-learned}{c} = x = (I - A)^{-1}\\, \\htmlClass{term-emission}{e}",
@@ -26,7 +26,8 @@
       "scattering volume",
       "reference"
     ],
-    "columnInset": 0.042
+    "columnInset": 0.042,
+    "width": 640
   },
   "buildSteps": [
     {},
@@ -38,6 +39,5 @@
       "source": "nimierdavid2022",
       "what": "Fig. 12"
     }
-  ],
-  "fontSize": "1.45rem"
+  ]
 }

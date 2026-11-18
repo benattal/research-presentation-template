@@ -13,20 +13,25 @@
   align-items: start;
 }
 
-.operator-room-label,
-.operator-column-note {
+.operator-room-label {
+  grid-column: 1;
   margin: 0;
   font-size: 1.3rem;
   color: var(--text-primary);
 }
 
-.operator-room-label {
-  grid-column: 1;
+/* Short lines under the column's rows. */
+.operator-column-note {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 14px;
+  font-size: 1.2rem;
+  color: var(--text-secondary);
 }
 
-.operator-column-note {
-  grid-column: 2;
-  color: var(--text-secondary);
+.operator-column-note .math {
+  white-space: nowrap;
 }
 
 .operator-render {
@@ -102,12 +107,13 @@
   color: var(--text-muted);
 }
 
-/* Thumbnail, term, and share in three aligned columns; each row's <li> only groups its cells. */
+/* Thumbnail, term, and share in three aligned columns; each row's <li> only groups its cells.
+   The grid spans the side column and the term column takes what the others leave, so the
+   shares end at the same x on every slide whatever the terms are. */
 .operator-column {
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(3, auto);
-  justify-content: start;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   column-gap: 16px;
   row-gap: 10px;
@@ -169,15 +175,15 @@
 
 .operator-check dd {
   margin: 0;
-  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
   color: var(--text-primary);
 }
 
 /* Wide enough for "100%", so a share appearing never widens the column. */
 .operator-share {
-  min-width: 48px;
+  min-width: 56px;
   text-align: right;
-  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
   font-size: 18px;
   color: var(--text-secondary);
 }

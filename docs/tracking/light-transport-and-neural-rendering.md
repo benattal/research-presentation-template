@@ -2,11 +2,23 @@
 
 [Plan](../plans/light-transport-and-neural-rendering.md)
 
-Current state: every slide is built; review cycle 2 is done and committed;
-the assets are in the bucket. Resume: review cycle 3 (content reviewers by
-part, a layout, text, and UI vetter), with the brief in the session
-scratchpad (`review-brief-3.md`), then fixes, capture, commit, push, and an
-assets push.
+Current state: paused at the user's request in review cycle 3, with the
+work committed and pushed. Resume from the plan's "Cycle 3: remaining work".
+
+## 2026-11-18 00:40 — paused in review cycle 3
+
+User direction (2026-11-17): "Could you I ask you to pause, commit, and push
+-- noting remaining TODOs in the plan doc?" And: "Also make sure
+instructions for installing the assets for each lecture are available in
+that lecture folder".
+
+- Cycle 3 reviews are in (two content reviewers, one layout, text, and UI
+  vetter); the fixes were partly applied by two agents, stopped at the
+  pause. The tree passes `npm run check`, the deck tests, and `npm test`,
+  and every slide loads without errors. A full capture at the pause (run 20261118-000531) has 210 frames with 0 errors and 0 warnings; its frames are not yet reviewed.
+- Removed the layouts no slide uses (paths and random walks, matrix-free,
+  memory meter) and their helpers.
+- Remaining work: the plan's "Cycle 3: remaining work".
 
 ## 2026-11-17 23:30 — review cycle 2 done
 

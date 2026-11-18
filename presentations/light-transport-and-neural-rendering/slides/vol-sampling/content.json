@@ -2,7 +2,7 @@
   "layout": "quadratureExplorer",
   "sectionLabel": "Volume rendering",
   "title": "Sampling",
-  "subtitle": "The placement of samples along a ray",
+  "subtitle": "Sampling where the weights are large reduces the error",
   "surfaceWidth": 0.015,
   "coreDensity": 30,
   "compareSamplers": true,

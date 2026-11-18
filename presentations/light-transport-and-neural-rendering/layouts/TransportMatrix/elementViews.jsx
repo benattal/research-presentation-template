@@ -2,7 +2,8 @@
  * Pieces shared by the light element slides (TransportMatrix,
  * OpticalComputing): each element's light in the room, the room under a
  * pattern of elements as their weighted sum, the exposure for a pattern,
- * the elements drawn on the ceiling, and a 1D image as a strip of light.
+ * the elements drawn on the ceiling with a value per element as bars
+ * hanging from them, and a 1D image as a strip of light.
  */
 import { useEffect } from 'react';
 import { useStageCanvas } from '../canvas/canvas.js';
@@ -15,6 +16,10 @@ import { fluence, patchRadiosity } from '../flatland/transport.js';
 
 /** Height of a strip of light, in stage pixels. */
 export const STRIP = 30;
+/** Longest bar hanging from a ceiling element, in stage pixels. */
+const BAR = 70;
+/** Colors of the bars: light (a pattern of the elements) and importance (shares of one pixel). */
+export const BAR_COLORS = { light: 'rgba(255, 241, 201, 0.7)', importance: 'rgba(76, 201, 240, 0.8)' };
 
 /** Per element: its light as a full state vector and its fluence, computed once. */
 export function elementPictures(env) {
@@ -44,8 +49,8 @@ export function exposures(env, reference) {
   return { room: 0.16 * autoGain(picture.fluence), strip: 0.6 * autoGain(image, 0.9) };
 }
 
-/** Ticks between the light elements along the ceiling, and a glow on the lit ones. */
-export function drawElements(ctx, transform, elements, p, color) {
+/** Ticks between the light elements along the ceiling. */
+export function drawElements(ctx, transform, elements) {
   ctx.save();
   ctx.strokeStyle = 'rgba(215, 219, 228, 0.55)';
   ctx.lineWidth = 1;
@@ -58,24 +63,26 @@ export function drawElements(ctx, transform, elements, p, color) {
       ctx.stroke();
     }
   }
-  if (color) {
-    ctx.globalCompositeOperation = 'lighter';
-    ctx.lineWidth = Math.max(5, 0.14 * transform.scale);
-    ctx.lineCap = 'butt';
-    const largest = Math.max(...p);
-    elements.forEach((patch, k) => {
-      if (p[k] <= 0) return;
-      ctx.strokeStyle = color(p[k] / largest);
-      ctx.shadowColor = ctx.strokeStyle;
-      ctx.shadowBlur = 8;
-      const a = transform.toCanvas(patch.a);
-      const b = transform.toCanvas(patch.b);
-      ctx.beginPath();
-      ctx.moveTo(a[0] + 2, a[1] + ctx.lineWidth / 2 + 2);
-      ctx.lineTo(b[0] - 2, b[1] + ctx.lineWidth / 2 + 2);
-      ctx.stroke();
-    });
-  }
+  ctx.restore();
+}
+
+/**
+ * A value per element as a bar hanging from it, its length proportional
+ * to the value (the largest `scale` long, BAR stage pixels; `scale`
+ * defaults to the largest value), in `color` (BAR_COLORS).
+ */
+export function drawElementBars(ctx, transform, elements, values, color, scale = Math.max(...values)) {
+  if (!(scale > 0)) return;
+  ctx.save();
+  ctx.fillStyle = color;
+  elements.forEach((patch, k) => {
+    if (values[k] <= 0) return;
+    const a = transform.toCanvas(patch.a);
+    const b = transform.toCanvas(patch.b);
+    const left = Math.min(a[0], b[0]);
+    const width = Math.abs(b[0] - a[0]);
+    ctx.fillRect(left + 0.36 * width, a[1] + 10, 0.28 * width, BAR * Math.min(1, values[k] / scale));
+  });
   ctx.restore();
 }
 

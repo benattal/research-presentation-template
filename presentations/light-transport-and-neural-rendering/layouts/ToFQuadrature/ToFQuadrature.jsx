@@ -110,22 +110,18 @@ export default function ToFQuadrature({ slide, buildStep }) {
     arrows.push({ from: i === 0 ? [0, 0] : ends[i - 1], to: ends[i], tone: kind === 'wall' ? 'light-1' : 'medium', width: kind === 'wall' ? 3 : 2.6 });
   });
   if (frame.sum > 0.02) {
-    arrows.push({ from: [0, 0], to: measured, tone: 'text', width: 3.5, opacity: frame.sum, label: '$m$', labelAt: 'right' });
+    arrows.push({ from: [0, 0], to: measured, tone: 'text', width: 3.5, opacity: frame.sum, label: '$m_f$', labelAt: 'right' });
   }
 
+  // One 2 × 2 grid on every step: amplitude and phase on the left, a single surface's exact values beside them.
   const opaque = !step.fog && step.phase;
   const { depth, albedo } = RAY_SCENE.wall;
-  const checks = opaque
-    ? [
-      { label: '$|m|$', value: amplitudeOf(measured).toFixed(4) },
-      { label: '$\\rho/d^2$', value: (albedo / depth ** 2).toFixed(4) },
-      { label: '$\\arg m$', value: `${((phaseOf(measured) * 180) / Math.PI).toFixed(1)}°` },
-      { label: '$4\\pi f d/c$', value: `${((roundTripPhase(depth, frequency) * 180) / Math.PI).toFixed(1)}°` },
-    ]
-    : [
-      { label: step.phase ? '$|m|$' : '$\\int h\\,d\\tau$', value: amplitudeOf(measured).toFixed(4) },
-      { label: '$\\arg m$', value: `${((phaseOf(measured) * 180) / Math.PI).toFixed(1)}°`, hidden: !step.phase },
-    ];
+  const checks = [
+    { key: 'amplitude', label: step.phase ? '$|m_f|$' : '$\\int h\\,d\\tau$', value: amplitudeOf(measured).toFixed(4) },
+    { key: 'amplitude-exact', label: '$\\rho/d^2$', value: (albedo / depth ** 2).toFixed(4), hidden: !opaque },
+    { key: 'phase', label: '$\\arg m_f$', value: `${((phaseOf(measured) * 180) / Math.PI).toFixed(1)}°`, hidden: !step.phase },
+    { key: 'phase-exact', label: '$4\\pi f d/c$', value: `${((roundTripPhase(depth, frequency) * 180) / Math.PI).toFixed(1)}°`, hidden: !opaque },
+  ];
 
   return (
     <div className="slide--tof-quadrature">
@@ -149,7 +145,7 @@ export default function ToFQuadrature({ slide, buildStep }) {
             arrows={arrows}
             arc={frame.sum > 0.5 ? { angle: phaseOf(measured), tone: 'text', label: '$\\phi$' } : null}
           />
-          <Readout items={checks} columns={2} />
+          <Readout items={checks} columns="repeat(2, 166px)" className="tof-quadrature-readout" />
         </div>
       </div>
     </div>

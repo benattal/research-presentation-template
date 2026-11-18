@@ -76,7 +76,7 @@ function IterationState({ system, size, weight, initial }) {
   return (
     <div className="iteration-body">
       <div className="iteration-left">
-        <Bars width={BARS[0]} height={BARS[1]} stacks={stacks} exact={x} top={top} label={'$(x_k)_i$'} names={names} />
+        <Bars width={BARS[0]} height={BARS[1]} stacks={stacks} exact={x} top={top} label={'$(x_k)_i$'} names={names} xLabel="$i$" />
         <div className="iteration-key">
           {key.map((term, j) => (
             <span key={term} className="iteration-key-item">

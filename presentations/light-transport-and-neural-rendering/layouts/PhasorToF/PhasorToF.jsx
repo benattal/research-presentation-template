@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Media from '@core/stage/Media.jsx';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
+import Text from '@core/stage/Text.jsx';
 import { Readout, Slider } from '../activeSensing/Controls.jsx';
 import PhasorPlane from '../activeSensing/PhasorPlane.jsx';
 import {
@@ -188,7 +189,19 @@ export default function PhasorToF({ slide, buildStep }) {
       <SlideTitle title={slide.title} subtitle={slide.subtitle} />
       <div className="phasor-tof-body">
         <div className="phasor-tof-left" style={{ width: PANEL.width }}>
-          <Media item={slide.figure} className="phasor-tof-figure" />
+          {/* The borrowed figure, with its labels (`figure.labels`) set at the slide's size over it. */}
+          <div className="phasor-tof-figure-box">
+            <Media item={slide.figure} className="phasor-tof-figure" />
+            {(slide.figure.labels ?? []).map((label) => (
+              <span
+                key={label.text}
+                className={`phasor-tof-figure-label${label.align === 'center' ? ' phasor-tof-figure-label--center' : ''}`}
+                style={{ left: `${100 * label.x}%`, top: `${100 * label.y}%` }}
+              >
+                <Text>{label.text}</Text>
+              </span>
+            ))}
+          </div>
           <canvas
             ref={canvasRef}
             className="phasor-tof-panel"

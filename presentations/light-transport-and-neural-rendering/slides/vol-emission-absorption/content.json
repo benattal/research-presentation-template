@@ -2,7 +2,7 @@
   "layout": "emissionAbsorption",
   "sectionLabel": "Volume rendering",
   "title": "Emission–absorption model",
-  "subtitle": "Emission and absorption without scattering",
+  "subtitle": "Emitted light along a ray, weighted by transmittance",
   "surfaceWidth": 0.12,
   "coreDensity": 0.8,
   "pixel": 8,

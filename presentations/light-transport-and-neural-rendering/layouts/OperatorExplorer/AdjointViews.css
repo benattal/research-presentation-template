@@ -54,8 +54,7 @@
 }
 
 /* The forward and adjoint check, at the size of the labels beside it. */
-.adjoint-views-side .operator-check,
-.adjoint-views-check {
+.adjoint-views-side .operator-check {
   font-size: 1.3rem;
 }
 
@@ -67,42 +66,77 @@
   color: var(--ink-adjoint);
 }
 
-/* The gradient view: x and y side by side, the gradient below. */
+/* The gradient view: x and y side by side across the slide; under x the gradient's bars, under y its check. */
 .adjoint-views-pair {
   display: flex;
-  gap: 28px;
+  gap: 32px;
+}
+
+.adjoint-views-caption--pair {
+  min-height: 0;
+  margin-top: 6px;
 }
 
 .adjoint-views-gradient {
   display: flex;
-  align-items: flex-start;
-  gap: 28px;
-  margin-top: 10px;
-}
-
-.adjoint-views-gradient-equation {
-  display: flex;
   flex-direction: column;
   gap: 6px;
-  width: 540px;
-  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* The gradient and what theta is, on one line. */
+.adjoint-views-gradient-equation {
+  display: flex;
+  align-items: baseline;
+  gap: 28px;
   font-size: 1.75rem;
   color: var(--text-primary);
 }
 
+.adjoint-views-gradient-equation .adjoint-views-given {
+  font-size: 1.3rem;
+}
+
+/* A label column and a 250 px track. */
 .adjoint-views-bars {
-  width: 300px;
+  width: 384px;
   margin: 0;
   padding: 0;
-  gap: 6px;
-  font-size: 1.3rem;
-  line-height: 26px;
+  gap: 3px;
+  font-size: 1.15rem;
+  line-height: 19px;
 }
 
 .adjoint-views-bars li {
   grid-template-columns: 124px 1fr;
 }
 
+/* The red wall's derivative two ways: a title, then one row per method. */
 .adjoint-views-check {
-  margin-top: 0;
+  margin-top: 2px;
+  font-size: 1.3rem;
+  color: var(--text-secondary);
+}
+
+.adjoint-views-check-title {
+  margin: 0 0 2px;
+  color: var(--text-primary);
+}
+
+.adjoint-views-check dl {
+  display: grid;
+  grid-template-columns: 200px auto;
+  row-gap: 2px;
+  margin: 0;
+}
+
+.adjoint-views-check dt,
+.adjoint-views-check dd {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.adjoint-views-check dd {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
 }
