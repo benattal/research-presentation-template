@@ -7,7 +7,7 @@
 import { CAMERA, ROOM_HEIGHT, ROOM_WIDTH, cameraRay, castRay } from './scene.js';
 
 /** The color importance is drawn in (cyan), per unit luminance. */
-const IMPORTANCE_TINT = [0.3, 0.79, 0.94];
+export const IMPORTANCE_TINT = [0.3, 0.79, 0.94];
 
 /**
  * The size of the room render, in stage pixels, on every slide that shows

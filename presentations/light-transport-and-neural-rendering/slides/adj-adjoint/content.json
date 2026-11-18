@@ -18,7 +18,7 @@
     },
     {
       "tex": "\\partial_\\theta m = \\langle \\htmlClass{term-adjoint}{y},\\, (\\partial_\\theta A)\\, x \\rangle",
-      "label": "one dot product per parameter"
+      "label": "one inner product per parameter"
     }
   ],
   "diagram": {

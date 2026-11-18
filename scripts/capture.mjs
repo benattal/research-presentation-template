@@ -144,7 +144,14 @@ try {
           log.pageErrors.push(`capture timed out: ${error.message}`);
         }
         const file = `${String(slideIndex + 1).padStart(2, '0')}-${slide.id}-${step + 1}.png`;
-        await page.locator('.slide-stage').screenshot({ path: join(runDir, file), animations: 'disabled' });
+        // A frame that cannot be screenshot is that frame's error; the run goes on and its report is written.
+        let shot = true;
+        try {
+          await page.locator('.slide-stage').screenshot({ path: join(runDir, file), animations: 'disabled' });
+        } catch (error) {
+          shot = false;
+          log.pageErrors.push(`screenshot failed: ${error.message}`);
+        }
 
         const errors = [
           ...log.pageErrors,
@@ -153,7 +160,7 @@ try {
           ...(report?.mediaProblems ?? []),
         ];
         const warnings = (report?.overflow ?? []).map((finding) => `${finding.kind}: ${finding.element} (${finding.detail})`);
-        const diff = previousDir ? compareImages(join(runDir, file), join(previousDir, file), join(runDir, 'diff', file)) : null;
+        const diff = previousDir && shot ? compareImages(join(runDir, file), join(previousDir, file), join(runDir, 'diff', file)) : null;
         frames.push({
           file,
           slideIndex,

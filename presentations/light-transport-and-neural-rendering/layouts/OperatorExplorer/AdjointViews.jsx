@@ -8,9 +8,16 @@ import RoomView from '../flatland/RoomView.jsx';
 import { albedoGradients } from '../flatland/gradients.js';
 import { SURFACE_GAIN, cachedFluence, derived, sceneGain, subtract } from '../flatland/pictures.js';
 import { MEASURED_PIXEL, flatlandRoom } from '../flatland/rooms.js';
-import { ROOM_VIEW, autoGain, drawRoom, pixelWedge, roomTransform } from '../flatland/render.js';
-import { BINS, GROUPS, stateIndex } from '../flatland/scene.js';
-import { bounce, patchRadiosity, solve } from '../flatland/transport.js';
+import {
+  IMPORTANCE_TINT, ROOM_VIEW, autoGain, drawRoom, pixelWedge, roomTransform,
+} from '../flatland/render.js';
+import {
+  BINS, GROUPS, createRoom, stateIndex,
+} from '../flatland/scene.js';
+import {
+  bounce, bounceAdjoint, buildTransport, cameraImage, patchRadiosity, pixelResponse, solve,
+} from '../flatland/transport.js';
+import { Strip } from '../TransportMatrix/elementViews.jsx';
 import './OperatorExplorer.css';
 import './AdjointViews.css';
 
@@ -142,7 +149,7 @@ const GAIN_LEGEND = (
  */
 const VIEWS = {
   measurement: {
-    steps: [{ picture: steadyLight, camera: true }],
+    steps: [{ picture: steadyLight, camera: true, caption: 'light $x$' }],
     lines: [
       {
         tex: '$m = \\langle \\htmlClass{term-adjoint}{q}, x \\rangle = \\sum_j \\htmlClass{term-adjoint}{q_j}\\, x_j$',
@@ -151,23 +158,26 @@ const VIEWS = {
     ],
     note: '$j$: surfaces and directions',
   },
+  // The second line is a question to the class: its right side shows one step after its left side.
   derivative: {
     given: '$\\theta$: red wall albedo',
     steps: [
-      { picture: steadyLight, caption: '$x$' },
-      { picture: steadyLight, caption: '$x$' },
+      { picture: steadyLight, caption: 'light $x$' },
+      { picture: steadyLight, caption: 'light $x$' },
+      { picture: steadyLight, caption: 'light $x$' },
       { picture: wallLeaving, caption: '$(\\partial_\\theta A)\\, x$' },
       { picture: transportedDerivative, caption: '$\\partial_\\theta x$' },
     ],
     lines: [
-      { tex: '$x = e + Ax$' },
-      { tex: '$\\partial_\\theta x = (\\partial_\\theta A)\\, x + A\\, \\partial_\\theta x$' },
-      { tex: '$(I - A)\\, \\partial_\\theta x = (\\partial_\\theta A)\\, x$' },
-      { tex: '$\\partial_\\theta x = (I - A)^{-1} (\\partial_\\theta A)\\, x$' },
+      { tex: '$x = e + Ax$', label: 'emission $e$, one bounce $A$' },
+      { tex: '$\\partial_\\theta x$', rhs: '$(\\partial_\\theta A)\\, x + A\\, \\partial_\\theta x$' },
+      { tex: '$(I - A)\\, \\partial_\\theta x = (\\partial_\\theta A)\\, x$', step: 3 },
+      { tex: '$\\partial_\\theta x = (I - A)^{-1} (\\partial_\\theta A)\\, x$', step: 4 },
     ],
   },
   operator: {
     header: '$\\partial_\\theta A = (\\partial_\\theta S)\\, G + S\\, (\\partial_\\theta G)$',
+    given: 'scattering $S$, propagation $G$',
     steps: [
       { picture: wallLeaving },
       { picture: geometryPicture, caption: GAIN_LEGEND },
@@ -194,12 +204,15 @@ function WedgeLabel({ env, size }) {
 }
 
 /**
- * The room drawn as `picture(env)`, with the camera and the measured pixel
- * when `camera` is set, and a ring at `marker` (room coordinates). With
- * `pickAt` (room coordinates → a target or null), the cursor is a pointer
- * over a target and a click passes that target to `onPick`.
+ * The room drawn as `picture(env)`, with the camera and the wedge of
+ * `pixel` (the measured pixel by default; null for none) when `camera` is
+ * set, and a ring at `marker` (room coordinates). With `pickAt` (room
+ * coordinates → a target or null), the cursor is a pointer over a target
+ * and a click passes that target to `onPick`.
  */
-function AdjointRoom({ env, picture, camera = false, size = ROOM_VIEW, marker = null, pickAt = null, onPick = null }) {
+function AdjointRoom({
+  env, picture, camera = false, pixel = MEASURED_PIXEL, size = ROOM_VIEW, marker = null, pickAt = null, onPick = null,
+}) {
   const [ref, ratio] = useStageCanvas();
   const [width, height] = size;
   const [overTarget, setOverTarget] = useState(false);
@@ -211,7 +224,7 @@ function AdjointRoom({ env, picture, camera = false, size = ROOM_VIEW, marker = 
       table: table ?? env.table,
       ...shown,
       camera,
-      pixel: camera ? MEASURED_PIXEL : null,
+      pixel: camera ? pixel : null,
     });
     if (marker) {
       const [cx, cy] = transform.toCanvas(marker);
@@ -223,7 +236,7 @@ function AdjointRoom({ env, picture, camera = false, size = ROOM_VIEW, marker = 
         ctx.stroke();
       }
     }
-  }, [ref, ratio, env, picture, camera, marker, width, height]);
+  }, [ref, ratio, env, picture, camera, pixel, marker, width, height]);
   const targetOf = (event) => {
     const rect = event.currentTarget.getBoundingClientRect();
     const stage = [((event.clientX - rect.left) * width) / rect.width, ((event.clientY - rect.top) * height) / rect.height];
@@ -247,7 +260,7 @@ function AdjointRoom({ env, picture, camera = false, size = ROOM_VIEW, marker = 
         style={{ width, height, cursor: pickAt && overTarget ? 'pointer' : 'default' }}
         {...handlers}
       />
-      {camera && <WedgeLabel env={env} size={size} />}
+      {camera && pixel && <WedgeLabel env={env} size={size} />}
     </div>
   );
 }
@@ -315,11 +328,15 @@ const SENSITIVITY_LINES = [
   { tex: '$\\delta m = \\langle q, \\delta x \\rangle = \\langle \\htmlClass{term-adjoint}{y}, \\delta e \\rangle$', label: 'light $\\delta e$ added at one surface' },
 ];
 
+/** The importance picture beside the sensitivity view's room, in stage pixels: the side column's width. */
+const SENSITIVITY_THUMB = [340, 204];
+
 /**
  * Importance as sensitivity: step 0 shows y = ∂m/∂e; step 1 adds light δe
  * at one surface (click any surface to move it) and shows the light it
  * adds, δx = (I − A)⁻¹δe, whose effect on the pixel the equations beside it
- * state two ways, ⟨q, δx⟩ = ⟨y, δe⟩.
+ * state two ways, ⟨q, δx⟩ = ⟨y, δe⟩: the large room is δx with the pixel's
+ * wedge q, and the importance y under the equations has the same ring at δe.
  */
 function SensitivityView({ slide, buildStep, env }) {
   const [patchIndex, setPatchIndex] = useState(() => env.room.patches.find((patch) => patch.group === 'box' && patch.normal[1] > 0.5).index);
@@ -330,6 +347,7 @@ function SensitivityView({ slide, buildStep, env }) {
     return () => lightPicture(env, light, gain);
   }, [env, patchIndex]);
   const patchAt = (point) => nearestPatch(env, point)?.index ?? null;
+  const marker = step === 1 ? env.room.patches[patchIndex].center : null;
   return (
     <div className="slide--operator-explorer">
       <SlideTitle title={slide.title} subtitle={slide.subtitle} />
@@ -339,13 +357,18 @@ function SensitivityView({ slide, buildStep, env }) {
             env={env}
             picture={step === 0 ? importancePicture : added}
             camera
-            marker={step === 1 ? env.room.patches[patchIndex].center : null}
+            marker={marker}
             pickAt={step === 1 ? patchAt : null}
             onPick={setPatchIndex}
           />
           <RoomCaption>{step === 0 ? '$\\htmlClass{term-adjoint}{y}$' : '$\\delta x = (I - A)^{-1}\\, \\delta e$'}</RoomCaption>
         </div>
-        <SideEquations lines={SENSITIVITY_LINES} step={step} />
+        <SideEquations lines={SENSITIVITY_LINES} step={step}>
+          <motion.div className="adjoint-views-thumb" {...fade(step === 1)}>
+            <AdjointRoom env={env} picture={importancePicture} camera size={SENSITIVITY_THUMB} marker={marker} />
+            <RoomCaption className="adjoint-views-caption--pair">{'importance $\\htmlClass{term-adjoint}{y}$'}</RoomCaption>
+          </motion.div>
+        </SideEquations>
       </div>
     </div>
   );
@@ -356,10 +379,12 @@ function SensitivityView({ slide, buildStep, env }) {
  * ∂m/∂θ = ⟨y, (∂θA)x⟩ (flatland/gradients.js), as a brightness per unit
  * length from 0 to 1, and the surfaces ordered by their total, largest
  * first. All are positive: brighter surfaces only brighten the pixel.
+ * With `importance` the adjoint of a loss instead of the pixel's, the same
+ * for the loss (positive too, for the loss of the backprop view).
  */
-function surfaceGradients(env) {
-  return derived(env.importance, 'surface-gradients', () => {
-    const perPatch = albedoGradients(env.transport, env.steady, env.importance);
+function surfaceGradients(env, importance = env.importance) {
+  return derived(importance, 'surface-gradients', () => {
+    const perPatch = albedoGradients(env.transport, env.steady, importance);
     const density = env.room.patches.map((patch) => perPatch[patch.index] / patch.length);
     const largest = Math.max(...density);
     const total = (group) => env.room.patches.filter((patch) => patch.group === group).reduce((sum, patch) => sum + perPatch[patch.index], 0);
@@ -373,23 +398,28 @@ function surfaceGradients(env) {
 /**
  * The gradient picture: the light x, dimmed, with a band along each surface
  * on its lit side, more opaque the more its albedo changes the pixel and
- * scaled by `reveal(group)` (0 to 1), and the camera with its pixel.
+ * scaled by `reveal(group)` (0 to 1), and the camera with its pixel
+ * (`pixel`, none for a loss over every pixel). A band's opacity is its
+ * level to the power `exponent`, which keeps small gradients visible, and
+ * its width is `band` room units.
  */
-function paintGradient(ctx, env, gradients, reveal, [width, height]) {
+function paintGradient(ctx, env, gradients, reveal, [width, height], {
+  pixel = MEASURED_PIXEL, exponent = 1 / 3, band = GRADIENT_BAND,
+} = {}) {
   const transform = drawRoom(ctx, env.room, { x: 0, y: 0, width, height }, {
     table: env.table,
     fluence: cachedFluence(env.table, env.steady, Infinity, 'source'),
     fluenceGain: sceneGain(env, false) * GRADIENT_BACKDROP,
     palette: 'light',
     camera: true,
-    pixel: MEASURED_PIXEL,
+    pixel,
   });
   ctx.save();
   for (const patch of env.room.patches) {
-    // The floor the pixel sees directly has about 18 times the others' gradient; a cube root keeps them visible beside it.
-    const alpha = reveal(patch.group) * Math.cbrt(gradients.level[patch.index]);
+    // For one pixel, the floor it sees directly has about 18 times the others' gradient; a cube root keeps them visible beside it.
+    const alpha = reveal(patch.group) * gradients.level[patch.index] ** exponent;
     if (alpha < 0.02) continue;
-    const inward = (point) => [point[0] + GRADIENT_BAND * patch.normal[0], point[1] + GRADIENT_BAND * patch.normal[1]];
+    const inward = (point) => [point[0] + band * patch.normal[0], point[1] + band * patch.normal[1]];
     ctx.fillStyle = `rgba(${GRADIENT_INK}, ${alpha})`;
     ctx.beginPath();
     [patch.a, patch.b, inward(patch.b), inward(patch.a)].forEach((point, i) => {
@@ -476,6 +506,137 @@ function GradientView({ slide, buildStep, env }) {
   );
 }
 
+/** The reference image's room is this one with the red wall darker: its albedo scaled by this factor. */
+const REFERENCE_WALL = 0.6;
+/** Pixels of the camera image in the radiative backpropagation view, and camera rays per pixel of its sensors. */
+const IMAGE_PIXELS = 48;
+const SENSOR_SAMPLES = 16;
+/** Each room of the radiative backpropagation view, in stage pixels: three across the content width with 44 between. */
+const BACKPROP_ROOM = [360, 216];
+const BACKPROP_STRIP = 24;
+
+const imageLuminance = (image, k) => 0.2126 * image[k * 3] + 0.7152 * image[k * 3 + 1] + 0.0722 * image[k * 3 + 2];
+
+/**
+ * Radiative backpropagation in the room, for the loss ℓ = Σₖ ‖mₖ − m̃ₖ‖²
+ * between the camera image m and a reference image m̃ of the same room with
+ * a darker red wall: the residual ∂ℓ/∂m = 2(m − m̃) (positive in every
+ * pixel and channel, since the reference only has less light), the adjoint
+ * source Σₖ (∂ℓ/∂mₖ) qₖ over every pixel's sensor qₖ, and its importance
+ * y = (I − Aᵀ)⁻¹ Σₖ (∂ℓ/∂mₖ) qₖ, one adjoint solve. Computed once.
+ */
+function lossAdjoint(env) {
+  return derived(env.steady, 'loss-adjoint', () => {
+    const reference = createRoom({ floorFinish: env.room.floorFinish, light: env.room.light });
+    for (const patch of reference.patches) {
+      if (patch.group === WALL) patch.albedo = patch.albedo.map((value) => value * REFERENCE_WALL);
+    }
+    const referenceTransport = buildTransport(reference);
+    const referenceLight = solve(referenceTransport.emission, (v) => bounce(referenceTransport, v));
+    const image = cameraImage(env.transport, env.steady, IMAGE_PIXELS);
+    const target = cameraImage(referenceTransport, referenceLight, IMAGE_PIXELS);
+    const residual = image.map((value, i) => 2 * (value - target[i]));
+    const source = new Float64Array(env.room.size * 3);
+    for (let k = 0; k < IMAGE_PIXELS; k += 1) {
+      const sensor = pixelResponse(env.transport, k / IMAGE_PIXELS, (k + 1) / IMAGE_PIXELS, SENSOR_SAMPLES);
+      for (let i = 0; i < sensor.length; i += 1) if (sensor[i]) source[i] += residual[k * 3 + (i % 3)] * sensor[i];
+    }
+    const importance = solve(source, (v) => bounceAdjoint(env.transport, v));
+    // The residual as a strip in the importance color: its luminance, tinted.
+    const tinted = new Float64Array(IMAGE_PIXELS * 3);
+    for (let k = 0; k < IMAGE_PIXELS; k += 1) {
+      for (let c = 0; c < 3; c += 1) tinted[k * 3 + c] = imageLuminance(residual, k) * IMPORTANCE_TINT[c];
+    }
+    return {
+      image, target, residual: tinted, source, importance,
+      imageGain: autoGain(image, 0.9),
+      residualGain: autoGain(tinted, 0.95),
+    };
+  });
+}
+
+/**
+ * The loss's importance y, drawn as cyan light leaving the camera, as the
+ * pixel's in importancePicture. It fills most of the room (most of the
+ * room is in the camera's view), so it is exposed at half the auto
+ * exposure, which keeps the brighter importance near the red wall distinct.
+ */
+function lossImportancePicture(env) {
+  const { importance, source } = lossAdjoint(env);
+  const scattered = derived(importance, 'without-sensor', () => subtract(importance, source));
+  const fluence = cachedFluence(env.table, scattered, Infinity, 'source');
+  const gain = derived(scattered, 'gain', () => 0.5 * autoGain(fluence));
+  return {
+    fluence,
+    fluenceGain: gain,
+    surfaces: derived(importance, 'radiosity', () => patchRadiosity(env.transport, importance)),
+    surfaceGain: gain * SURFACE_GAIN,
+    palette: 'importance',
+  };
+}
+
+/** A strip of pixels with its label above it. */
+function LabelledStrip({ label, image, gain }) {
+  return (
+    <div className="adjoint-backprop-strip">
+      <span className="adjoint-backprop-strip-label"><Text>{label}</Text></span>
+      <Strip image={image} gain={gain} width={BACKPROP_ROOM[0]} height={BACKPROP_STRIP} />
+    </div>
+  );
+}
+
+/** The equation over the three rooms, as on the slide before: the gradient of a loss from one adjoint solve. */
+const BACKPROP_HEADER = [{
+  tex: '$\\partial_\\theta \\ell = \\langle \\htmlClass{term-adjoint}{y},\\, (\\partial_\\theta A)\\, x \\rangle, \\quad \\htmlClass{term-adjoint}{y} = (I - A^\\top)^{-1} \\sum_k \\dfrac{\\partial \\ell}{\\partial m_k}\\, \\htmlClass{term-adjoint}{q_k}$',
+  label: 'one adjoint solve for the whole loss',
+}];
+
+/**
+ * Radiative backpropagation, after Nimier-David et al. 2020 (Fig. 2), drawn
+ * in the room: three rooms side by side, one per build step. The primal
+ * rendering, the light x, with the camera's image m and the reference m̃
+ * under it (step 0); the residual ∂ℓ/∂m emitted from the camera and its
+ * importance y (step 1); the gradient of the loss with respect to each
+ * surface's albedo, ⟨y, (∂θA)x⟩, as bands (step 2), largest on the red
+ * wall, the surface the reference differs in.
+ */
+function BackpropView({ slide, buildStep, env }) {
+  const step = Math.min(buildStep, 2);
+  const loss = lossAdjoint(env);
+  const gradients = surfaceGradients(env, loss.importance);
+  // Linear opacity: the red wall's gradient, about twice the floor's per unit length, stands out.
+  const paint = (ctx) => paintGradient(ctx, env, gradients, () => 1, BACKPROP_ROOM, { pixel: null, exponent: 1, band: 0.3 });
+  return (
+    <div className="slide--operator-explorer">
+      <SlideTitle title={slide.title} subtitle={slide.subtitle} />
+      <div className="adjoint-backprop-header">
+        <EquationStack lines={BACKPROP_HEADER} step={0} />
+      </div>
+      <div className="adjoint-backprop">
+        <div className="adjoint-backprop-panel">
+          <AdjointRoom env={env} picture={steadyLight} camera pixel={null} size={BACKPROP_ROOM} />
+          <RoomCaption className="adjoint-views-caption--pair">{'light $x$'}</RoomCaption>
+          <LabelledStrip label="image $m$" image={loss.image} gain={loss.imageGain} />
+          <LabelledStrip label={'reference $\\tilde m$'} image={loss.target} gain={loss.imageGain} />
+        </div>
+        <motion.div className="adjoint-backprop-panel" {...fade(step >= 1)}>
+          <AdjointRoom env={env} picture={lossImportancePicture} camera pixel={null} size={BACKPROP_ROOM} />
+          <RoomCaption className="adjoint-views-caption--pair">{'importance $\\htmlClass{term-adjoint}{y}$'}</RoomCaption>
+          <LabelledStrip label={'$\\partial \\ell / \\partial m = 2(m - \\tilde m)$'} image={loss.residual} gain={loss.residualGain} />
+        </motion.div>
+        <motion.div className="adjoint-backprop-panel" {...fade(step >= 2)}>
+          <RoomView width={BACKPROP_ROOM[0]} height={BACKPROP_ROOM[1]} paint={paint} className="operator-room" />
+          <RoomCaption className="adjoint-views-caption--pair">{'gradient $\\partial_\\theta \\ell$'}</RoomCaption>
+          <p className="adjoint-views-given"><Text>{"$\\theta$: each surface's albedo"}</Text></p>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
+/** The views with their own component; every other view is a VIEWS entry, drawn by StepViews. */
+const SPECIAL_VIEWS = { sensitivity: SensitivityView, gradient: GradientView, backprop: BackpropView };
+
 /**
  * The adjoint section's views of the flatland room, chosen by `view`:
  *
@@ -491,15 +652,17 @@ function GradientView({ slide, buildStep, env }) {
  *   its albedo: the red wall, then every surface in turn;
  * - `sensitivity`: importance as y = ∂m/∂e, then the light δx added by
  *   light δe at one (clickable) surface, with the forward and adjoint
- *   changes of the pixel.
+ *   changes of the pixel, each beside its picture;
+ * - `backprop`: radiative backpropagation for a loss over the whole image:
+ *   the light and the image against a reference, the importance of the
+ *   loss, and the gradient for every surface's albedo.
  *
  * Content fields: `title`, `subtitle`, `view`, and `buildSteps` with one
- * entry per step of the view (1, 4, 2, 4, and 2).
+ * entry per step of the view (1, 5, 2, 4, 2, and 3).
  */
 export default function AdjointViews({ slide, buildStep }) {
   const env = flatlandRoom('diffuse', 'lamp');
-  if (slide.view === 'sensitivity') return <SensitivityView slide={slide} buildStep={buildStep} env={env} />;
-  if (slide.view === 'gradient') return <GradientView slide={slide} buildStep={buildStep} env={env} />;
-  return <StepViews slide={slide} buildStep={buildStep} env={env} />;
+  const View = SPECIAL_VIEWS[slide.view] ?? StepViews;
+  return <View slide={slide} buildStep={buildStep} env={env} />;
 }
 

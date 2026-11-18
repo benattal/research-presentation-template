@@ -37,9 +37,10 @@ const GRADIENT_RANGE = 1.3;
  * behind each sample, Ĉ − Ĉ≤ᵢ, the running sum of the terms from the back.
  *
  * Slide fields: `lines` (`{ tex, label? }`, slide text, one per build step,
- * kept in place by EquationStack), `samples` (how many evenly spaced
- * samples), `surfaceWidth` and `coreDensity` (the cloud, see `cloudBlobs`),
- * and three build steps.
+ * kept in place by EquationStack), optional `remarks` (short labels under
+ * them on every step, such as what the symbols are), `samples` (how many
+ * evenly spaced samples), `surfaceWidth` and `coreDensity` (the cloud, see
+ * `cloudBlobs`), and three build steps.
  */
 export default function VolumeGradient({ slide, buildStep }) {
   if (!(slide.samples > 0 && slide.surfaceWidth > 0 && slide.coreDensity > 0)) {
@@ -217,7 +218,10 @@ export default function VolumeGradient({ slide, buildStep }) {
             </>
           )}
         </div>
-        <EquationStack lines={slide.lines} step={buildStep} className="volume-gradient-lines" />
+        <div className="volume-gradient-side">
+          <EquationStack lines={slide.lines} step={buildStep} className="volume-gradient-lines" />
+          {slide.remarks?.map((remark) => <p key={remark} className="volume-gradient-remark"><Text>{remark}</Text></p>)}
+        </div>
       </div>
     </div>
   );

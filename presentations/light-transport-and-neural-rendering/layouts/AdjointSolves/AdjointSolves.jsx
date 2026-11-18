@@ -1,15 +1,15 @@
 /**
  * The adjoint method's derivation beside the count it is about: on the
  * right, the forward route (one solve with I − A per parameter, N thick
- * arrows) above the adjoint route (one solve with I − Aᵀ, then a cheap dot
- * product per parameter). Thick arrows are solves; thin arrows are dot
- * products.
+ * arrows) above the adjoint route (one solve with I − Aᵀ, then a cheap
+ * inner product per parameter). Thick arrows are solves; thin arrows are
+ * inner products.
  *
  * Slide fields: `lines`, each `{ tex, label? }`, one per build step (the
  * newest in full color, earlier ones muted, as in the `derivation` layout;
  * a line's label above it, as in the deck's equation stacks),
  * and `diagram`: `{ adjointStep, dotStep }`, the build steps at which the
- * adjoint solve and the dot products appear. The forward route shows from
+ * adjoint solve and the inner products appear. The forward route shows from
  * the first step.
  */
 import { motion } from 'framer-motion';
@@ -31,7 +31,7 @@ const FORWARD_ROWS = [{ y: 52, k: '1' }, { y: 100, k: '2' }, { y: 148, k: '3' },
 const FORWARD_LABEL_Y = 18;
 const FORWARD_COUNT_Y = 254;
 
-/** The adjoint route: one solve from q to y, then a fan of dot products. */
+/** The adjoint route: one solve from q to y, then a fan of inner products. */
 const ADJOINT_Y = 400;
 const ADJOINT_LABEL_Y = 366;
 const Y_NODE = 262;
