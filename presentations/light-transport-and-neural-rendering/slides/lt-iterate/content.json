@@ -22,6 +22,9 @@
       "label": "after 4 bounces"
     }
   ],
+  "iterate": {
+    "update": "$A^{k+1} e = A\\,(A^k e)$"
+  },
   "caption": "$(A^{k+1} e)(\\mathbf{x}, \\omega_o) = \\int_{H^2} f_r \\, (A^k e)(r(\\mathbf{x}, \\omega_i), -\\omega_i) \\cos\\theta_i \\, d\\omega_i$",
   "columnNote": {
     "lines": [

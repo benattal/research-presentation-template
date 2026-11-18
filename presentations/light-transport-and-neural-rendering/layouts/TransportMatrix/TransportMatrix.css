@@ -41,7 +41,7 @@
 
 .matrix-thumbs {
   display: grid;
-  grid-template-columns: repeat(4, auto);
+  grid-template-columns: repeat(3, auto);
   justify-content: start;
   gap: 6px;
 }
@@ -58,21 +58,28 @@
   opacity: 0.25;
 }
 
-.matrix-check {
-  display: grid;
-  grid-template-columns: auto;
-  gap: 4px;
-  font-size: 18px;
-  color: var(--text-secondary);
+/* The blocks, and beside them the iterates of the row steps. */
+.matrix-blocks-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
 }
 
-.matrix-check-label {
+.matrix-iterates {
+  gap: 14px;
   margin-top: 2px;
+  font-size: 22px;
+  color: var(--text-primary);
+}
+
+.matrix-iterates .math {
+  white-space: nowrap;
 }
 
 /* c = Tp as blocks drawn to scale: plain outlines, the step's column or row marked. */
 .matrix-blocks {
   position: relative;
+  flex-shrink: 0;
   margin-top: 6px;
 }
 

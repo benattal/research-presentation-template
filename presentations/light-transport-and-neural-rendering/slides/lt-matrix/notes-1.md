@@ -1,0 +1,1 @@
+- Step 2: Column $k$, the image under element $k$ alone. Each line is one pixel's ray, in the color of its value, as in the strip. The brightest rays end on the element itself: light straight into the camera, the $I$ term of $\mathbf{T} = C(I + A + \cdots)E$.

@@ -3,14 +3,21 @@ import Media from '@core/stage/Media.jsx';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
 import EquationStack from '@core/stage/EquationStack.jsx';
+import DualDiagram from './DualDiagram.jsx';
 import './FigurePanel.css';
 
+/** Figures drawn by the lecture rather than borrowed, by the name a slide's `figure.drawing` gives. */
+const DRAWINGS = {
+  dualPhotography: DualDiagram,
+};
+
 /**
- * One large figure on the left (a diagram, usually borrowed and credited
- * with the slide's `credits`) and, beside it, equations over a row of
+ * One large figure on the left and, beside it, equations over a row of
  * smaller figures that appear by build step.
  *
- * Content fields: `title`, `subtitle`, `figure` (a media item with
+ * Content fields: `title`, `subtitle`, `figure` (a media item, usually
+ * borrowed and credited with the slide's `credits`, or `{ drawing }`, a
+ * figure of DRAWINGS drawn again in the lecture's notation; either with
  * `width`, its width in stage pixels), `equations` (lines `{ tex, step? }`
  * as in EquationStack: every line keeps its place from the first step),
  * `figures` (media items with a short `caption` and the `step` they appear
@@ -20,12 +27,14 @@ import './FigurePanel.css';
 export default function FigurePanel({ slide, buildStep }) {
   if (!slide.figure?.width) throw new Error('figurePanel: `figure` with a `width` is required');
   if (!Array.isArray(slide.figures) || !(slide.rowHeight > 0)) throw new Error('figurePanel: `figures` and `rowHeight` are required');
+  const Drawing = slide.figure.drawing === undefined ? null : DRAWINGS[slide.figure.drawing];
+  if (slide.figure.drawing !== undefined && !Drawing) throw new Error(`figurePanel: unknown drawing "${slide.figure.drawing}"`);
   return (
     <div className="slide--figure-panel">
       <SlideTitle title={slide.title} subtitle={slide.subtitle} />
       <div className="figure-panel-body">
         <figure className="figure-panel-main" style={{ width: slide.figure.width }}>
-          <Media item={slide.figure} />
+          {Drawing ? <Drawing width={slide.figure.width} /> : <Media item={slide.figure} />}
           {slide.figure.caption && <figcaption><Text>{slide.figure.caption}</Text></figcaption>}
         </figure>
         <div className="figure-panel-side">

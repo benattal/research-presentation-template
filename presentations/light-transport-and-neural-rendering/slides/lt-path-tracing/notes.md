@@ -1,19 +1,20 @@
-The Neumann series applies $A$ to the whole light field, bounce after bounce: every point, every direction, the full integral each time. Path tracing estimates the same sum without forming $A$, one random direction at a time.
+Transition: The Neumann series applies $A$ to all of the light at once. Path tracing estimates the same sum one random direction at a time, and never forms $A$.
 
-- **Scattering integral.** At $\mathbf{x}$, the point imaged by one camera pixel (the gray ray), the reflected light is the integral over every direction: the rays, weighted by the cosine lobe, as on the rendering equation slide.
-- **One random direction.** Sample one direction $\omega_i$ with probability density $p(\omega_i)$ and divide by that density. A question for the class here (see the notes of this click).
-- **Why it is right on average.** The line under it: the expected value of the one-sample estimate is the integral, so the estimate is unbiased. Here $p$ is the cosine lobe itself, so the estimate is the albedo times the light arriving along $\omega_i$.
-- **Random walk.** $L_i(\mathbf{x}, \omega_i)$ is the light leaving the surface point $r(\mathbf{x}, \omega_i)$, itself unknown, so it is estimated the same way: one direction sampled there, then at the next surface, until a ray of the walk ends on the lamp. The walk is traced from the camera (gray); its value is the lamp's light times the weights of its scatterings. This walk ends on the lamp after three scatterings (at $\mathbf{x}$, the red wall, and the floor), so its light is a sample of the term $A^3 e$; each ray has the color of its term, $e$ leaving the lamp, then $Ae$, $A^2 e$, and $A^3 e$ toward the camera. A walk that ends on the lamp after $k$ scatterings is a sample of $A^k e$, so the average over walks estimates the whole sum, and $A$ is never stored.
-- **Paths per pixel.** Walks from every camera pixel: bright where they ended on the lamp (in the color of their light), faint where they ended without light. With 1 path per pixel the image is mostly black with a few bright pixels; with 64 it is noisy; with 4,096 it matches the exact image, the camera's image of the solution of $x = e + Ax$. The error of a Monte Carlo average falls as $1/\sqrt{n}$: 16 times more paths, 4 times less error.
+- Step 1: $\mathbf{x}$ is the point one camera pixel sees, along the dashed ray. Its reflected light is the scattering integral: the incident rays, weighted by the cosine lobe.
+- Step 2: Instead, sample one direction $\omega_i$ from a density $p(\omega_i)$, here the cosine lobe, and divide by that density.
+- Step 3: On average, the one-sample estimate is the integral.
+- Step 4: The light arriving along $\omega_i$ is unknown too, so it is estimated the same way, until a ray reaches the lamp. This walk scatters three times, so it is a sample of $A^3 e$, and each segment is labelled with its term.
+- Steps 5 to 7: walks from every pixel, each in the color of the term it samples; the faint ones found no light. One path per pixel is mostly black, 64 is noisy, and 4,096 matches the exact image. The error falls as $1/\sqrt{n}$: 64 times more paths, 8 times less error.
 
-To remember: path tracing estimates the Neumann series by averaging random walks through the scene.
+Remember: path tracing averages random walks, and a walk that reaches the light after $k$ scatterings is a sample of $A^k e$.
 
-If asked why one direction per bounce: with several directions at every surface point, the number of rays increases exponentially with the depth, and the deep bounces, which contribute the least light, get the most samples (CMU 15-468, pp. 36–37). One direction per bounce and many paths per pixel keep the cost per bounce constant.
+Stop (planned): at step 2, why divide by $p(\omega_i)$? Answer, shown on step 3: the expected value is $\int \frac{f_r L_i \cos\theta_i}{p(\omega_i)}\, p(\omega_i)\, d\omega_i$, the integral itself. The density cancels, for any $p$ that is positive wherever the integrand is.
 
-If asked how a walk ends: at every surface it either stops, with probability one minus the albedo (Russian roulette), or continues in a direction sampled from the BRDF and cosine. The walks here are on the room's discrete operator, so their average converges to the solution of the slides before, not to a slightly different answer.
+Pause for questions: after step 7, on operator light transport, before the aside.
 
-If asked about the order of the terms: a pixel is $\langle q, x \rangle = \sum_k \langle q, A^k e \rangle$. A walk from the camera evaluates the same terms starting from $q$ instead of $e$; the adjoint section returns to this.
-
-End of the section: pause for questions on operator light transport before the aside.
-
-No mouse interaction; the paths are seeded, so every showing is the same.
+If asked:
+- Why only one direction per bounce? With several at every point, the number of rays grows exponentially with depth, and the deep bounces, which carry the least light, get the most samples (CMU 15-468, pp. 36–37).
+- How does a walk end? At each surface it stops with probability one minus the albedo, Russian roulette, or continues in a direction sampled from the BRDF and the cosine.
+- Which density is best? The variance is smallest when $p$ follows the integrand. With the cosine lobe on this diffuse floor, the estimate is the albedo times the light along $\omega_i$.
+- Why are the long walks all one color? Walks of three or more scatterings share the color of $A^3 e$, as the terms after it share the color of the dots.
+- Why start the walks at the camera? A pixel needs $x$ only along its own ray, so walks from the camera estimate each term $A^k e$ for that pixel alone. The adjoint section returns to this.

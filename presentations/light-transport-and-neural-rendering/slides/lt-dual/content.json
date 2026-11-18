@@ -4,9 +4,7 @@
   "title": "Dual photography",
   "subtitle": "Swapping the camera and the projector",
   "figure": {
-    "type": "image",
-    "src": "/slides/lt-dual/primal-dual-configurations.png",
-    "alt": "Primal configuration c = Tp and dual configuration p = T transpose c",
+    "drawing": "dualPhotography",
     "width": 580
   },
   "equations": [
@@ -38,7 +36,7 @@
   "credits": [
     {
       "source": "sen2005",
-      "what": "Figs. 2, 16"
+      "what": "diagram after Fig. 2, photos Fig. 16"
     }
   ]
 }

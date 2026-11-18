@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
 import { ease, useStepTransition } from '@core/stage/canvas.js';
@@ -19,6 +19,7 @@ import {
   BINS, CAMERA, angleAt, binOf, castRay, direction, stateIndex,
 } from '../flatland/scene.js';
 import { fluence, patchRadiosity } from '../flatland/transport.js';
+import { rgba, themeColors } from '../volume/draw.js';
 import './RenderingEquation.css';
 
 const ROOM = ROOM_VIEW;
@@ -39,12 +40,12 @@ const TRACE_ANGLE = -0.2;
 const DIM = 0.3;
 
 /**
- * Render colors of the terms, the theme's --light-* roles (theme.css).
- * Propagation (ray tracing, r and G) is geometry, as the patches and bins
- * are: drawn neutral, as its symbols are uncolored in the equations.
+ * Render colors: the cosine lobe in the theme's --scattering, the color of
+ * S and the scattering integral (term-scattering). Propagation (ray
+ * tracing, r and G) is geometry, as the patches and bins are: drawn
+ * neutral, as its symbols are uncolored in the equations.
  */
-const EMISSION_LIGHT = 'rgb(255, 241, 201)';
-const SCATTER_COLOR = 'rgba(255, 159, 67, 0.95)';
+const THEME_COLORS = ['scattering'];
 const GEOMETRY_COLOR = 'rgba(232, 236, 244, 0.8)';
 const TRACE_COLOR = 'rgba(170, 182, 204, 0.95)';
 
@@ -166,7 +167,7 @@ function drawRing(ctx, transform, p, color, radius, alpha) {
  * by term, each term's picture drawn in the render color of its term's
  * class: the outgoing light L_o(x, ω_o) (white: x and the ray toward the
  * camera), the lamp's emitted light L_e (term-emission), the scattering
- * integral (term-operator: the incident light arriving at x from every
+ * integral (term-scattering: the incident light arriving at x from every
  * direction, in its own color, weighted by the dashed cosine lobe), the
  * ray-tracing function r(x, ω_i) (uncolored, drawn neutral as geometry:
  * one direction traced to the surface it reaches, marked by a ring, whose
@@ -209,6 +210,7 @@ export default function RenderingEquation({ slide, buildStep }) {
 
   const gain = sceneGain(env, false);
   const roomLight = cachedFluence(env.table, env.steady, Infinity, 'source');
+  const colorsRef = useRef(null);
 
   const paint = (ctx, progress) => {
     const state = overlaysAt(step, fromStep, progress);
@@ -269,7 +271,8 @@ export default function RenderingEquation({ slide, buildStep }) {
       for (const bin of scene.bins) drawRing(ctx, transform, bin.end, TRACE_COLOR, 4.5, state.hits * binAlpha);
     }
 
-    drawCosineLobe(ctx, transform, patch, x, LOBE, { color: SCATTER_COLOR, alpha: state.lobe, width: 3 });
+    colorsRef.current ??= themeColors(ctx.canvas, THEME_COLORS);
+    drawCosineLobe(ctx, transform, patch, x, LOBE, { color: rgba(colorsRef.current.scattering, 0.95), alpha: state.lobe, width: 3 });
 
     // One direction ω_i traced to r(x, ω_i), and the light leaving r(x, ω_i) toward x.
     if (state.trace > 0) {

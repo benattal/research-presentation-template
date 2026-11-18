@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
 import { ease, stillFrames, useStepTransition } from '@core/stage/canvas.js';
@@ -20,6 +20,7 @@ import {
 } from '../flatland/scene.js';
 import { patchRadiosity } from '../flatland/transport.js';
 import { Strip } from '../TransportMatrix/elementViews.jsx';
+import { rgba, themeColors } from '../volume/draw.js';
 import './PathTracing.css';
 
 const ROOM = ROOM_VIEW;
@@ -46,9 +47,18 @@ const WALK_SEED = 99;
 const WALK_SCATTERINGS = 3;
 /** Radius of the cosine lobe at x, in room units (as on the rendering equation slide). */
 const LOBE = 1.7;
-const SCATTER_COLOR = 'rgba(255, 159, 67, 0.95)';
-/** Render colors of light that has bounced 0, 1, 2, 3 times: the theme's --light-0 … --light-3. */
-const BOUNCE_COLORS = ['rgb(255, 241, 201)', 'rgb(255, 210, 122)', 'rgb(255, 159, 67)', 'rgb(255, 107, 61)'];
+/**
+ * Theme colors: the cosine lobe in --scattering (the color of the
+ * scattering integral), and light of the terms e, Ae, A²e, A³e (and the
+ * terms after A³e) in --term-light-0 … 3, the hues of the terms in the
+ * equation.
+ */
+const TERM_COLORS = ['term-light-0', 'term-light-1', 'term-light-2', 'term-light-3'];
+const THEME_COLORS = ['scattering', ...TERM_COLORS];
+/** The camera's ray to x, drawn dashed as a traced ray (geometry), as on the rendering equation slide. */
+const CAMERA_RAY = 'rgba(200, 206, 220, 0.85)';
+/** The walk's segments from the lamp to the camera, labelled by the term of the light along each. */
+const WALK_TERMS = ['$e$', '$Ae$', '$A^2 e$', '$A^3 e$'];
 
 const luminance = (v, j) => 0.2126 * v[j * 3] + 0.7152 * v[j * 3 + 1] + 0.0722 * v[j * 3 + 2];
 
@@ -91,19 +101,28 @@ function walkScene(env) {
 }
 
 /**
- * The color of a path's light (linear RGB) at exposure `gain`, keeping its
- * hue: the brightness is tone mapped as the renders map it, and the
- * channels keep their linear ratios. Tone mapping each channel on its own
- * would saturate bright green-wall light (green and blue both near 1) to
- * cyan, the color this lecture keeps for importance.
+ * The color of a path in its term's color `hue` (byte RGB), as bright as
+ * the light it carried (linear RGB `rgb`) at exposure `gain`: the
+ * luminance tone mapped as the renders map it.
  */
-function pathColor(rgb, gain) {
-  const largest = Math.max(rgb[0], rgb[1], rgb[2]);
-  if (!(largest > 0)) return 'rgb(0, 0, 0)';
+function pathColor(hue, rgb, gain) {
   const y = 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
   const brightness = (1 - Math.exp(-y * gain)) ** (1 / 1.8);
-  const [r, g, b] = rgb.map((v) => Math.round(255 * brightness * (v / largest)));
-  return `rgb(${r}, ${g}, ${b})`;
+  return rgba(hue.map((v) => v * brightness));
+}
+
+/**
+ * The term a drawn path samples, and the rays it is drawn with: a path
+ * that collected light after t scatterings is a sample of A^t e (the
+ * largest of its contributions, when it reached the lamp more than once),
+ * drawn from the camera to the last surface where it collected light; a
+ * path that found none is drawn whole, with `term` null.
+ */
+function pathTerm(path) {
+  if (path.found.length === 0) return { term: null, rays: path.rays };
+  const lum = (v) => 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
+  const main = path.found.reduce((best, f) => (lum(f.value) > lum(best.value) ? f : best));
+  return { term: main.step, rays: path.rays.slice(0, path.found.at(-1).step + 1) };
 }
 
 /** A count with a thousands separator, as TeX: 4096 becomes 4{,}096. */
@@ -157,11 +176,13 @@ function drawCameraLabel(ctx, transform) {
  * the step whose line shows why that estimate is right on average (its
  * `justification`); and the walk that repeats the
  * sampling at every surface it reaches until it finds the lamp, traced from
- * the camera and then lit from the lamp, each ray in the color of the
- * bounce its light is in (e, Ae, A²e, A³e). The steps after them
- * (`{ paths: n }`) show random walks on A = SG from the camera's 64 pixels
- * (flatland/pathSamples.js): drawn paths (up to two per pixel), bright where
- * they reached the lamp and faint where they ended without light, and under the
+ * the camera and then lit from the lamp, each ray in the color of the term
+ * its light belongs to (e, Ae, A²e, A³e, as in the equation) and labelled
+ * with it. The steps after them (`{ paths: n }`) show random walks on
+ * A = SG from the camera's 64 pixels (flatland/pathSamples.js): drawn paths
+ * (up to two per pixel), each that reached the lamp in the color of the
+ * term it samples (A^t e after t scatterings; A³e's color for t ≥ 3) and as
+ * bright as its light, faint where they ended without light, and under the
  * room the camera's image from n paths per pixel against the exact image.
  *
  * Content fields: `title`, `subtitle`, `lines` (EquationStack lines for
@@ -197,15 +218,19 @@ export default function PathTracing({ slide, buildStep }) {
   const previousPerPixel = fromStep !== null && fromStep >= EXPLANATION.length ? Math.min(counts[fromStep - EXPLANATION.length], KEPT) : 0;
   const drawn = useMemo(
     () => (traced
-      ? traced.traced.kept.filter((path) => path.index < shownPerPixel).map((path) => ({ ...path, length: pathLength(path) }))
+      ? traced.traced.kept.filter((path) => path.index < shownPerPixel).map((path) => {
+        const { term, rays } = pathTerm(path);
+        return { ...path, term, rays, length: pathLength({ rays }) };
+      })
       : []),
     [traced, shownPerPixel],
   );
+  const colorsRef = useRef(null);
   const longest = Math.max(1, ...drawn.filter((path) => path.index >= previousPerPixel).map((path) => path.length));
   const animates = fromStep === step - 1 && (stage !== 'paths' || shownPerPixel > previousPerPixel);
   const duration = { integral: 0, sample: 1400, average: 0, walk: 3200, paths: n === 1 ? 2400 : 1400 }[stage];
 
-  const paintWalk = (ctx, transform, progress) => {
+  const paintWalk = (ctx, transform, progress, colors) => {
     const { gather, patch, walk } = scene;
     const x = gather.point;
     const moving = fromStep === step - 1 ? progress : 1;
@@ -213,7 +238,7 @@ export default function PathTracing({ slide, buildStep }) {
     const fan = { integral: 1, sample: 1 - 0.88 * span(0, 0.3), average: 0.12, walk: 0.12 * (1 - span(0, 0.2)) }[stage];
     drawIncidentFan(ctx, transform, gather, patch, { gain: scene.gain, weight: 1, alpha: fan });
     const lobe = stage === 'walk' ? 1 - span(0, 0.2) : 1;
-    drawCosineLobe(ctx, transform, patch, x, LOBE, { color: SCATTER_COLOR, alpha: lobe, width: 3 });
+    drawCosineLobe(ctx, transform, patch, x, LOBE, { color: rgba(colors.scattering, 0.95), alpha: lobe, width: 3 });
     const [, first] = walk.vertices;
     // One direction from the lobe: the light of the surface it reaches arrives at x.
     const arrive = stage === 'sample' ? span(0.3, 1) : 1;
@@ -221,8 +246,16 @@ export default function PathTracing({ slide, buildStep }) {
     if (stage !== 'integral' && arrive > 0 && sampledAlpha > 0) {
       drawLightSegments(ctx, transform, [{ a: first, b: partway(first, x, 0.96 * arrive), color: lightColor(scene.sampled, scene.gain) }], { width: 3, glow: 9, alpha: sampledAlpha });
     }
-    // The camera's ray to x: where the path starts.
-    drawLightSegments(ctx, transform, [{ a: CAMERA.position, b: x, color: 'rgba(200, 206, 220, 0.55)' }], { width: 1.2, glow: 0 });
+    // The camera's ray to x, where the path starts: dashed over the fan, so it reads apart from the light.
+    ctx.save();
+    ctx.strokeStyle = CAMERA_RAY;
+    ctx.lineWidth = 2;
+    ctx.setLineDash([7, 6]);
+    ctx.beginPath();
+    ctx.moveTo(...transform.toCanvas(CAMERA.position));
+    ctx.lineTo(...transform.toCanvas(x));
+    ctx.stroke();
+    ctx.restore();
     if (stage === 'walk') {
       // Traced from the camera to the lamp, then lit from the lamp back to the camera, one bounce per ray.
       const points = [CAMERA.position, ...walk.vertices];
@@ -235,7 +268,7 @@ export default function PathTracing({ slide, buildStep }) {
         // Ray i (from points[i] to points[i + 1]) carries light that has bounced rays − 1 − i times.
         const order = rays - 1 - i;
         const t = span(0.45 + (0.55 * order) / rays, 0.45 + (0.55 * (order + 1)) / rays);
-        if (t > 0) lit.push({ a: points[i + 1], b: partway(points[i + 1], points[i], t), color: BOUNCE_COLORS[order] });
+        if (t > 0) lit.push({ a: points[i + 1], b: partway(points[i + 1], points[i], t), color: rgba(colors[TERM_COLORS[order]]) });
       }
       drawLightSegments(ctx, transform, lit, { width: 3, glow: 9 });
       for (const vertex of walk.vertices.slice(1, -1)) drawGlowPoint(ctx, transform, vertex, 'rgba(255, 255, 255, 0.9)', 2.5);
@@ -243,15 +276,16 @@ export default function PathTracing({ slide, buildStep }) {
     drawGlowPoint(ctx, transform, x, 'rgba(255, 255, 255, 0.95)', 3.5);
   };
 
-  const paintPaths = (ctx, transform, progress) => {
+  const paintPaths = (ctx, transform, progress, colors) => {
     const reach = (fromStep === step - 1 ? progress : 1) * longest;
     const dark = [];
     const lit = [];
     const faint = shownPerPixel === 1 ? 0.2 : 0.13;
-    // Paths that found light are drawn in its color, at one exposure for every path.
+    // Paths that found light are drawn in the color of their term, as bright as their light, at one exposure.
     const pathGain = 0.12;
     for (const path of drawn) {
-      const found = luminance(path.value, 0) > 0;
+      const found = path.term !== null && luminance(path.value, 0) > 0;
+      const hue = found ? colors[TERM_COLORS[Math.min(path.term, TERM_COLORS.length - 1)]] : null;
       // Paths shown on the step before stay whole; the new ones grow from the camera.
       const limit = path.index < previousPerPixel ? Infinity : reach;
       let travelled = 0;
@@ -260,7 +294,7 @@ export default function PathTracing({ slide, buildStep }) {
         if (travelled >= limit) break;
         const t = Math.min(1, (limit - travelled) / length);
         const segment = { a: [x0, y0], b: [x0 + (x1 - x0) * t, y0 + (y1 - y0) * t] };
-        if (found) lit.push({ ...segment, color: pathColor(path.value, pathGain) });
+        if (found) lit.push({ ...segment, color: pathColor(hue, path.value, pathGain) });
         else dark.push({ ...segment, color: `rgba(150, 160, 182, ${faint})` });
         travelled += length;
       }
@@ -270,19 +304,41 @@ export default function PathTracing({ slide, buildStep }) {
   };
 
   const paint = (ctx, progress) => {
+    colorsRef.current ??= themeColors(ctx.canvas, THEME_COLORS);
     const transform = drawRoom(ctx, env.room, ROOM_RECT, {
       table: env.table,
       fluence: null,
       surfaces: derived(env.steady, 'radiosity', () => patchRadiosity(env.transport, env.steady)),
       surfaceGain: gain * SURFACE_GAIN * 0.35,
     });
-    if (stage === 'paths') paintPaths(ctx, transform, progress);
-    else paintWalk(ctx, transform, progress);
+    if (stage === 'paths') paintPaths(ctx, transform, progress, colorsRef.current);
+    else paintWalk(ctx, transform, progress, colorsRef.current);
     drawRoomCamera(ctx, transform);
     drawCameraLabel(ctx, transform);
   };
 
-  const [labelLeft, labelTop] = roomTransform(ROOM_RECT).toCanvas(scene.gather.point);
+  const toCanvas = roomTransform(ROOM_RECT).toCanvas;
+  const [labelLeft, labelTop] = toCanvas(scene.gather.point);
+  // The term of the light along each of the walk's segments, beside the segment's middle, shown once it has lit.
+  const walkPoints = [CAMERA.position, ...scene.walk.vertices].map((p) => toCanvas(p));
+  const walkLabels = walkPoints.slice(1).map((b, i) => {
+    const a = walkPoints[i];
+    const order = walkPoints.length - 2 - i;
+    const length = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    // Offset from the middle, perpendicular to the segment: above it, away from the floor and the
+    // box, or to its right when the segment is nearly vertical.
+    const normal = [-(b[1] - a[1]) / length, (b[0] - a[0]) / length];
+    const middle = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+    const side = (Math.abs(normal[1]) < 0.3 ? normal[0] < 0 : normal[1] > 0) ? -1 : 1;
+    return {
+      tex: WALK_TERMS[order],
+      color: `var(--${TERM_COLORS[order]})`,
+      left: middle[0] + 22 * side * normal[0],
+      top: middle[1] + 22 * side * normal[1],
+      // As the walk animates, the segment of term `order` has lit at 0.45 + 0.55 · (order + 1) / rays of its duration.
+      delay: (duration / 1000) * (0.45 + (0.55 * (order + 1)) / (walkPoints.length - 1)),
+    };
+  });
 
   return (
     <div className="slide--path-tracing">
@@ -306,6 +362,18 @@ export default function PathTracing({ slide, buildStep }) {
             >
               <Text>{'$\\mathbf{x}$'}</Text>
             </motion.span>
+            {walkLabels.map((label) => (
+              <motion.span
+                key={label.tex}
+                className="paths-room-label"
+                style={{ left: label.left, top: label.top, color: label.color }}
+                initial={false}
+                animate={{ opacity: stage === 'walk' ? 1 : 0 }}
+                transition={{ duration: 0.35, delay: stage === 'walk' && animates ? label.delay : 0 }}
+              >
+                <Text>{label.tex}</Text>
+              </motion.span>
+            ))}
           </div>
           <div className={`paths-strips${traced ? '' : ' paths-strips--hidden'}`}>
             <div className="paths-strip">

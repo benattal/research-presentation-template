@@ -1,0 +1,1 @@
+- Step 4: Row $j$, for the pixel of the cyan wedge, on the floor by the red wall. The iteration $x_{k+1} = e + Ax_k$ adds one term of the series per step: from $x_0 = e$, $x_1$ adds the one-bounce paths, in the color of $A$. A path is drawn more often the more light it carries, and each element glows with its share of the row.

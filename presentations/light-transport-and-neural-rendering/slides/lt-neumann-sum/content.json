@@ -17,5 +17,6 @@
     "update": "$x_{k+1} = \\htmlClass{term-emission}{e} + A \\, x_k$",
     "symbol": "x"
   },
+  "bouncesShown": true,
   "caption": "$L_{k+1}(\\mathbf{x}, \\omega_o) = \\htmlClass{term-emission}{L_e(\\mathbf{x}, \\omega_o)} + \\int_{H^2} f_r \\, L_k(r(\\mathbf{x}, \\omega_i), -\\omega_i) \\cos\\theta_i \\, d\\omega_i$"
 }

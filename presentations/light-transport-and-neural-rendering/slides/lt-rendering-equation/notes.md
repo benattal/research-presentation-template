@@ -1,14 +1,19 @@
-Where does $x = e + Ax$ for light come from? From Kajiya's rendering equation, built here one term per click. The equation is written at one point $\mathbf{x}$ on the floor of the lamp-lit room. Points are bold, $\mathbf{x}$; plain $x$ stays the vector of the Neumann series section. Each term's picture is drawn in its term's color; ray tracing is geometry, so its symbols are uncolored and its rays and points drawn in gray.
+Transition: Where does $x = b + Ax$ come from for light? From Kajiya's rendering equation, built one term per click at a floor point $\mathbf{x}$. A bold $\mathbf{x}$ is a point; a plain $x$ is a vector.
 
-- **Outgoing.** $L_o(\mathbf{x}, \omega_o)$ is the radiance leaving $\mathbf{x}$ in direction $\omega_o$: the white ray. Here $\omega_o$ points toward the camera of the later slides.
-- **Emitted.** $L_e$ is the radiance a surface emits. Only the lamp emits in this room. At the floor point $L_e(\mathbf{x}, \omega_o) = 0$, so all the light leaving $\mathbf{x}$ is reflected light.
-- **Reflected.** The integral over the hemisphere $H^2$ of directions $\omega_i$ (in flatland, a half circle): the incident radiance $L_i(\mathbf{x}, \omega_i)$, weighted by the BRDF $f_r$ and by the cosine of the angle $\theta_i$ between $\omega_i$ and the normal. Each ray has the color of the light arriving along it: bright from the lamp, red from the left wall. The dashed circle is the cosine weight: light arriving at a grazing angle counts little. The floor is diffuse, so $f_r$ is a constant, its albedo divided by 2 in flatland (albedo$/\pi$ in 3D).
-- **Ray tracing.** The incident radiance is not a second unknown. Radiance is constant along a ray in vacuum, so the light arriving at $\mathbf{x}$ from direction $\omega_i$ is the light leaving the first surface point on that ray, $r(\mathbf{x}, \omega_i)$, in the direction back toward $\mathbf{x}$, $-\omega_i$. $r$ is the ray-tracing function: here the ray from $\mathbf{x}$ ends on the ceiling (the ring), and the light leaving the ceiling there returns along it.
-- **Propagation and scattering.** Substitute the ray-tracing relation into the integral. Only outgoing radiance is left, on both sides, so the subscript $o$ is dropped. Two operators appear. $G$ is propagation, ray tracing in every direction: $(GL)(\mathbf{x}, \omega_i) = L(r(\mathbf{x}, \omega_i), -\omega_i)$, read at the rings on the surfaces; visibility is part of $G$. $S$ is scattering: the integral with the BRDF and the cosine, the lobe. The animation applies them in this order: every direction is traced, the light of the surfaces at the rings arrives at $\mathbf{x}$, and the lobe weights it.
-- **Discretized.** Split the surfaces into patches (the ticks) and the directions into bins (the spokes). Radiance becomes a vector, and the equation becomes the equation of the Neumann series section, $x = b + Ax$, with $x = L$, the emission $e = L_e$ in the place of $b$, and $A = SG$: one bounce, propagation then scattering.
+- Step 1: $L_o$ is the radiance leaving $\mathbf{x}$ in direction $\omega_o$: the white ray.
+- Step 2: $L_e$ is emitted radiance. Only the lamp emits, so the light leaving the floor is all reflected.
+- Step 3: Reflected light integrates the incident radiance $L_i$ over the half circle of directions, weighted by the cosine, the dashed lobe, and by the BRDF $f_r$, the bidirectional reflectance distribution function. On this diffuse floor, $f_r$ is a constant set by the albedo: the fraction of arriving light a surface reflects.
+- Step 4: Radiance is constant along a ray, so the light arriving from $\omega_i$ is the light leaving the first surface on that ray, $r(\mathbf{x}, \omega_i)$.
+- Step 5: Substituting leaves only outgoing radiance and two operators: propagation $G$, ray tracing in every direction, and scattering $S$, the integral.
+- Step 6: Split the surfaces into patches and the directions into bins. Radiance becomes a vector, and this is the fixed-point equation $x = b + Ax$ of the first section, with $b = e$: the emitted light. One bounce is $A = SG$.
 
-The question this slide invites: why is this hard to solve directly? The unknown $L$ appears on both sides, once inside an integral over every direction at every point (a Fredholm equation of the second kind). After discretizing, $A$ has one row and one column per patch and direction, far too many to invert; the next slides apply $A$ instead, one bounce at a time.
+Remember: the rendering equation is $x = e + Ax$, with one bounce $A = SG$.
 
-To remember: the rendering equation is $x = e + Ax$, with $A = SG$ one bounce of light.
+Stop (planned): at step 6, why is this equation hard to solve directly? Answer: the unknown is on both sides, once inside an integral over every direction at every point. Discretized, $A$ has a row and a column for every patch and direction, far too many to invert, so the next slides apply $A$ one bounce at a time.
+
+If asked:
+- What is $f_r$ for this floor? Its albedo divided by 2 in flatland, or by $\pi$ in 3D.
+- Is visibility part of $G$? Yes: $G$ takes the light of the first surface each ray reaches.
+- What kind of equation is this? A Fredholm integral equation of the second kind.
 
 Mouse: click any surface to move $\mathbf{x}$.

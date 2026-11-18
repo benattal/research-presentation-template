@@ -9,7 +9,13 @@
       "step": 0
     },
     {
+      "tex": "$\\htmlClass{term-emission}{e} = E\\,p, \\quad c = C\\,x$",
+      "label": "emission $e$, radiance $x$",
+      "step": 1
+    },
+    {
       "tex": "$\\mathbf{T} = C(\\htmlClass{term-emission}{I}$",
+      "label": "one bounce $A$",
       "step": 1,
       "parts": [
         { "tex": "$+ \\htmlClass{term-bounce-1}{A}$", "step": 1 },

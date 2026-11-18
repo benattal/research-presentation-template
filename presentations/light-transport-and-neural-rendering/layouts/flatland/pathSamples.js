@@ -108,7 +108,10 @@ function samplingTable(transport) {
 
 /**
  * One walk from `start` (a state index). Returns its collected light
- * (RGB) and, when `keep`, the rays it took ([x0, y0, x1, y1] each).
+ * (RGB) and, when `keep`, the rays it took ([x0, y0, x1, y1] each) and
+ * `found`: for each step at which it collected emitted light, `{ step,
+ * value }` (the step is the number of scatterings before it, so that light
+ * is a sample of the term A^step e).
  */
 export function walk(transport, rays, start, random, keep = false) {
   const { scatter, emission } = transport;
@@ -116,8 +119,12 @@ export function walk(transport, rays, start, random, keep = false) {
   const value = [0, 0, 0];
   const weight = [1, 1, 1];
   const path = keep ? [] : null;
+  const found = keep ? [] : null;
   let state = start;
   for (let step = 0; step < MAX_STEPS; step += 1) {
+    if (keep && (emission[state * 3] > 0 || emission[state * 3 + 1] > 0 || emission[state * 3 + 2] > 0)) {
+      found.push({ step, value: [0, 1, 2].map((c) => weight[c] * emission[state * 3 + c]) });
+    }
     for (let c = 0; c < 3; c += 1) value[c] += weight[c] * emission[state * 3 + c];
     const q = Math.floor(state / BINS);
     const out = state % BINS;
@@ -140,7 +147,7 @@ export function walk(transport, rays, start, random, keep = false) {
     if (keep) path.push(Array.from(rays.segments.subarray((base + r) * 4, (base + r) * 4 + 4)));
     state = next;
   }
-  return { value, path };
+  return { value, path, found };
 }
 
 /**
@@ -175,7 +182,8 @@ export function exactImage(camera, x) {
  * its own seeded stream, so the first n paths are the same for every
  * max ≥ n. Returns the image after each count in `counts` (RGB per pixel,
  * the mean of the first n paths), and the first `keep` paths of every
- * pixel (from the camera, then the walk's rays) with what they carried.
+ * pixel (from the camera, then the walk's rays) with what they carried and
+ * where they collected it (`found`, see walk).
  */
 export function tracePaths(transport, rays, camera, counts, seed, keep = 4) {
   const max = Math.max(...counts);
@@ -188,9 +196,9 @@ export function tracePaths(transport, rays, camera, counts, seed, keep = 4) {
       const random = randoms[j];
       const ray = camera.rays[j * camera.samples + Math.min(camera.samples - 1, Math.floor(random() * camera.samples))];
       const keepThis = n <= keep;
-      const { value, path } = walk(transport, rays, ray.state, random, keepThis);
+      const { value, path, found } = walk(transport, rays, ray.state, random, keepThis);
       for (let c = 0; c < 3; c += 1) sums[j * 3 + c] += value[c];
-      if (keepThis) kept.push({ pixel: j, index: n - 1, value, rays: [[...CAMERA.position, ...ray.point], ...path] });
+      if (keepThis) kept.push({ pixel: j, index: n - 1, value, found, rays: [[...CAMERA.position, ...ray.point], ...path] });
     }
     if (counts.includes(n)) images.set(n, sums.map((sum) => sum / n));
   }
