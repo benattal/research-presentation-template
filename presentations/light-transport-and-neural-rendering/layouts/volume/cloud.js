@@ -117,3 +117,23 @@ export function renderCloud(cloud, columns, rows) {
   }
   return { columns, rows, emitted, seen, density };
 }
+
+/**
+ * The cloud as a medium rather than as the light the camera receives, for
+ * a panel that shows where samples fall in it: per cell of `image` (from
+ * `renderCloud`), the emission–absorption integral over a stretch `length`
+ * long of the cell's σ and c, c(1 − e^{−σ·length}), per unit length. A thin
+ * medium gives σc, as `emitted` does; a dense region gives c / length, its
+ * own color, where σc would grow with σ and tone map to white. Unlike
+ * `seen`, nothing is hidden behind a dense region. Returns a grid laid out
+ * like `emitted`.
+ */
+export function mediumImage(image, length) {
+  const values = new Float32Array(image.emitted.length);
+  for (let cell = 0; cell < image.density.length; cell += 1) {
+    const depth = image.density[cell] * length;
+    const factor = depth > 1e-6 ? (1 - Math.exp(-depth)) / depth : 1;
+    for (let k = 0; k < 3; k += 1) values[cell * 3 + k] = factor * image.emitted[cell * 3 + k];
+  }
+  return values;
+}

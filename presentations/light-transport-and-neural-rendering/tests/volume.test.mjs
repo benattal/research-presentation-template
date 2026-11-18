@@ -2,13 +2,15 @@
  * Volume rendering along a ray: the piecewise-constant quadrature (alpha
  * compositing) is exact for piecewise-constant fields and converges to the
  * fine reference integral otherwise; the samplers place samples where they
- * should; the integrating factor solves the transfer equation; and the
- * photon simulation transmits e^{−σₜd} of the beam unscattered.
+ * should; the picture of the cloud as a medium is σc where it is thin and
+ * its color where it is opaque; the integrating factor solves the transfer
+ * equation; and the photon simulation transmits e^{−σₜd} of the beam
+ * unscattered.
  */
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { simulateSlab } from '../layouts/BeamThroughMedium/photons.js';
-import { cloudBlobs, cloudRay, createCloud, renderCloud } from '../layouts/volume/cloud.js';
+import { cloudBlobs, cloudRay, createCloud, mediumImage, renderCloud } from '../layouts/volume/cloud.js';
 import { createRandom, gaussian } from '../layouts/volume/random.js';
 import { densityGradients } from '../layouts/volume/gradient.js';
 import {
@@ -187,6 +189,33 @@ describe('the cloud as the camera sees it', () => {
       return total;
     });
     assert.ok(relativeError(summed, pixel) < 2e-3, `${relativeError(summed, pixel)}`);
+  });
+});
+
+describe('the cloud as a medium', () => {
+  const cloud = lectureCloud(0.012);
+  const image = renderCloud(cloud, 400, 100);
+  const length = 0.4;
+  const medium = mediumImage(image, length);
+  const cellAt = (x, y) => Math.floor((1 - y) * 100) * 400 + Math.floor((x / 4) * 400);
+
+  it('is the emitted light σc where the medium is thin', () => {
+    const cell = cellAt(1.05, 0.56); // the wisp's center
+    const depth = image.density[cell] * length;
+    assert.ok(depth < 0.5, `${depth}`);
+    for (let k = 0; k < 3; k += 1) {
+      const ratio = medium[cell * 3 + k] / image.emitted[cell * 3 + k];
+      assert.ok(ratio < 1 && ratio > 1 - depth / 2, `channel ${k}: ${ratio}`);
+    }
+  });
+
+  it('is the color c / length where the medium is opaque, also behind its front', () => {
+    const cell = cellAt(2.47, 0.46); // the core's center, where the camera receives nothing
+    const color = cloud.sample(2.47, 1 - (Math.floor((1 - 0.46) * 100) + 0.5) / 100).color;
+    assert.ok(image.seen[cell * 3] < 1e-6);
+    for (let k = 0; k < 3; k += 1) {
+      assert.ok(Math.abs(medium[cell * 3 + k] - color[k] / length) < 1e-3 * color[k] / length, `channel ${k}`);
+    }
   });
 });
 
