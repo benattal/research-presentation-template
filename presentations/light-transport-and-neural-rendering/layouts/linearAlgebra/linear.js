@@ -1,45 +1,12 @@
 /**
  * Linear algebra of x = b + Ax for small dense matrices (arrays of rows):
- * products, the direct solve, the partial sums of the Neumann series, and
- * the paths an entry of A^k sums over.
+ * the product A v, the direct solve, the terms of the Neumann series
+ * applied to b, and the fixed-point iterates.
  */
 
 /** A v. */
 export function multiply(A, v) {
   return A.map((row) => row.reduce((sum, a, j) => sum + a * v[j], 0));
-}
-
-/** A B. */
-export function matrixProduct(A, B) {
-  return A.map((row) => B[0].map((_, j) => row.reduce((sum, a, m) => sum + a * B[m][j], 0)));
-}
-
-function identity(n) {
-  return Array.from({ length: n }, (_, i) => Array.from({ length: n }, (__, j) => (i === j ? 1 : 0)));
-}
-
-/** A^k, with A^0 = I. */
-export function matrixPower(A, k) {
-  let power = identity(A.length);
-  for (let step = 0; step < k; step += 1) power = matrixProduct(A, power);
-  return power;
-}
-
-/** The partial sum S_k = I + A + … + A^k of the Neumann series (S_0 = I). */
-export function seriesSum(A, k) {
-  let sum = identity(A.length);
-  let power = sum;
-  for (let step = 1; step <= k; step += 1) {
-    power = matrixProduct(A, power);
-    sum = sum.map((row, i) => row.map((value, j) => value + power[i][j]));
-  }
-  return sum;
-}
-
-/** (I − A)^{-1}, column by column with `solve`. Throws if I − A is singular. */
-export function resolvent(A) {
-  const columns = identity(A.length).map((unit) => solve(A, unit));
-  return columns[0].map((_, i) => columns.map((column) => column[i]));
 }
 
 /**
@@ -88,16 +55,4 @@ export function fixedPointIterates(A, b, start, count) {
     iterates.push(b.map((value, i) => value + Ax[i]));
   }
   return iterates;
-}
-
-/** Partial sums x_k = b + Ab + … + A^k b for k = 0 … count − 1. */
-export function partialSums(A, b, count) {
-  const sums = [b];
-  let term = b;
-  while (sums.length < count) {
-    term = multiply(A, term);
-    const previous = sums[sums.length - 1];
-    sums.push(previous.map((value, i) => value + term[i]));
-  }
-  return sums;
 }

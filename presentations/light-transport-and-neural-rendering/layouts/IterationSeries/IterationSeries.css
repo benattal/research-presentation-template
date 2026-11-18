@@ -1,0 +1,34 @@
+.slide--iteration-series {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.iteration-series-planes {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.iteration-series-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+/* A fixed height, so both planes start at the same place whatever their equation's height. */
+.iteration-series-equation {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  font-size: 28px;
+  color: var(--text-primary);
+}
+
+.iteration-series-takeaway {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 28px;
+  color: var(--text-primary);
+}

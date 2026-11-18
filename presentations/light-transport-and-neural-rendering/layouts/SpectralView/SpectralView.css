@@ -4,100 +4,36 @@
   height: 100%;
 }
 
-/* The derivation: one row under the header, its lines side by side. */
-.equation-stack.spectral-derivation {
-  flex-direction: row;
-  align-items: center;
-  gap: 64px;
-  height: 56px;
-  margin-bottom: 12px;
-  font-size: 24px;
-  color: var(--text-primary);
-}
-
-.spectral-derivation .math {
-  white-space: nowrap;
-}
-
+/* The plane at the Neumann series slide's place and size, so the picture stays put between them. */
 .spectral-body {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   flex: 1;
   min-height: 0;
-  align-items: flex-start;
 }
 
-.spectral-plane {
-  cursor: default;
+.spectral-equations {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 460px;
+  padding-top: 16px;
 }
 
-.spectral-eigenline {
-  stroke: currentColor;
-  stroke-width: 1.5;
-  stroke-dasharray: 6 6;
-  opacity: 0.55;
+.spectral-equation {
+  font-size: 26px;
+  color: var(--text-primary);
 }
 
-.spectral-scaled {
-  opacity: 0.28;
+/* The powers λ_i^k v_i, in the ink of term k. */
+.spectral-power {
+  fill: currentColor;
 }
 
-.spectral-parallelogram {
-  stroke: var(--text-muted);
-  stroke-width: 1.2;
-  stroke-dasharray: 4 5;
-}
-
-.spectral-handle {
-  fill: var(--bg-slide);
-  stroke: var(--ink-light-0);
-  stroke-width: 3;
-  cursor: grab;
-}
-
-.spectral-solution {
-  fill: none;
+/* Where each geometric series ends: c_i / (1 − λ_i) v_i. */
+.spectral-limit {
   stroke: var(--text-primary);
   stroke-width: 2.5;
-}
-
-/* Top-aligned with the plane, so it stays put whatever the step shows. */
-.spectral-side {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 440px;
-}
-
-.spectral-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-/* A fixed height: the row holds two factors or, for a complex pair, one modulus. */
-.spectral-factors {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-  height: 44px;
-  font-size: 22px;
-}
-
-.spectral-component {
-  stroke: currentColor;
-  stroke-width: 1.5;
-}
-
-.spectral-error {
-  stroke: var(--text-primary);
-}
-
-.spectral-current {
-  fill: var(--ink-light-3);
-}
-
-.la-plot-note.spectral-note {
-  color: var(--ink-light-3);
-  font-variant-numeric: tabular-nums;
+  stroke-linecap: round;
 }

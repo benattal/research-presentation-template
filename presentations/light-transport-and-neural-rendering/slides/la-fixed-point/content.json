@@ -6,9 +6,12 @@
   "eigenvectors": [[2, 1], [-1, 2]],
   "lambda": [0.8, 0.3],
   "b": [0, 1],
+  "trial": [1.6, 0.8],
   "buildSteps": [
     { "show": "source", "equation": "$(I - A)\\,x = \\htmlClass{term-emission}{b}$" },
-    { "show": "trial", "x": [1.6, 0.8], "equation": "$x \\;\\mapsto\\; \\htmlClass{term-emission}{b} + \\htmlClass{term-bounce-1}{Ax}$" },
-    { "show": "solution", "equation": "$x = \\htmlClass{term-emission}{b} + \\htmlClass{term-bounce-1}{Ax} \\iff x = (I - A)^{-1}\\, \\htmlClass{term-emission}{b}$" }
+    { "show": "trial", "equation": "$x \\;\\mapsto\\; \\htmlClass{term-emission}{b} + \\htmlClass{term-bounce-1}{Ax}$" },
+    { "show": "solution", "equation": "$x = \\htmlClass{term-emission}{b} + \\htmlClass{term-bounce-1}{Ax} \\iff x = (I - A)^{-1}\\, \\htmlClass{term-emission}{b}$" },
+    { "show": "prompt", "equation": "Without $(I - A)^{-1}$?" },
+    { "show": "iterate", "updates": 10, "equation": "$x_{k+1} = \\htmlClass{term-emission}{b} + \\htmlClass{term-bounce-1}{A x_k}$" }
   ]
 }

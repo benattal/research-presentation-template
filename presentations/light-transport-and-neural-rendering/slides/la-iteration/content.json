@@ -1,0 +1,18 @@
+{
+  "layout": "iterationSeries",
+  "sectionLabel": "Neumann series",
+  "title": "Iteration",
+  "subtitle": "Each update adds one term of the Neumann series",
+  "eigenvectors": [[2, 1], [-1, 2]],
+  "lambda": [0.8, 0.3],
+  "b": [0, 1],
+  "update": "$x_{k+1} = \\htmlClass{term-emission}{b} + \\htmlClass{term-bounce-1}{A x_k}$",
+  "series": "$x_{k+1} = \\htmlClass{term-emission}{b} + \\htmlClass{term-bounce-1}{Ab} + \\cdots + A^k b$",
+  "takeaway": "$x_k \\to (I - A)^{-1} b$, using only products $Av$",
+  "buildSteps": [
+    { "k": 1 },
+    { "k": 2 },
+    { "k": 3 },
+    { "k": "all" }
+  ]
+}

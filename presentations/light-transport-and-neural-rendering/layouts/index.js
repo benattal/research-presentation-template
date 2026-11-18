@@ -14,6 +14,7 @@ import GeometricSeries from './GeometricSeries/GeometricSeries.jsx';
 import IntegratingFactor from './IntegratingFactor/IntegratingFactor.jsx';
 import InverseOperator from './InverseOperator/InverseOperator.jsx';
 import Iteration from './Iteration/Iteration.jsx';
+import IterationSeries from './IterationSeries/IterationSeries.jsx';
 import LightPaths from './LightPaths/LightPaths.jsx';
 import NeumannSeries from './NeumannSeries/NeumannSeries.jsx';
 import AdjointViews from './OperatorExplorer/AdjointViews.jsx';
@@ -53,6 +54,7 @@ export default {
   integratingFactor: IntegratingFactor,
   inverseOperator: InverseOperator,
   iteration: Iteration,
+  iterationSeries: IterationSeries,
   lectureTitle: LectureTitle,
   lightPaths: LightPaths,
   neumannSeries: NeumannSeries,
