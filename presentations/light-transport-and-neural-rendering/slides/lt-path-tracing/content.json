@@ -6,12 +6,12 @@
   "lines": [
     {
       "label": "scattering integral",
-      "tex": "$\\htmlClass{term-operator}{\\int_{H^2} f_r \\, L_i \\cos\\theta_i \\, d\\omega_i}$",
+      "tex": "$\\htmlClass{term-scattering}{\\int_{H^2} f_r \\, L_i \\cos\\theta_i \\, d\\omega_i}$",
       "step": 0
     },
     {
       "label": "one random direction",
-      "tex": "$\\approx \\htmlClass{term-operator}{\\dfrac{f_r \\, L_i \\cos\\theta_i}{p(\\omega_i)}}$",
+      "tex": "$\\approx \\htmlClass{term-scattering}{\\dfrac{f_r \\, L_i \\cos\\theta_i}{p(\\omega_i)}}$",
       "step": 1,
       "continues": true,
       "justification": "$\\begin{aligned} \\mathbb{E}\\Big[\\dfrac{f_r \\, L_i \\cos\\theta_i}{p(\\omega_i)}\\Big] &= \\int_{H^2} \\dfrac{f_r \\, L_i \\cos\\theta_i}{p(\\omega_i)} \\, p(\\omega_i) \\, d\\omega_i \\\\ &= \\int_{H^2} f_r \\, L_i \\cos\\theta_i \\, d\\omega_i \\end{aligned}$",
@@ -19,7 +19,7 @@
     },
     {
       "label": "random walk",
-      "tex": "$x = \\htmlClass{term-emission}{e} + \\htmlClass{term-bounce-1}{A e} + \\htmlClass{term-bounce-2}{A^2 e} + \\htmlClass{term-bounce-3}{A^3 e} + \\cdots$",
+      "tex": "$x = \\htmlClass{term-emission}{e} + \\htmlClass{term-bounce-1}{A e} + \\htmlClass{term-bounce-2}{A^2 e} + \\htmlClass{term-bounce-3}{A^3 e} + \\htmlClass{term-bounce-3}{\\cdots}$",
       "step": 3
     }
   ],

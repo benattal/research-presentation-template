@@ -8,6 +8,10 @@
  * Two palettes with the same meanings:
  *   --light-0 … --light-4   inside renders: emission, then bounce 1, 2, 3, 4+
  *   --ink-light-*           the same roles as text and lines on white
+ *   --term-light-0 … 3      a light path drawn in a render in the color of its
+ *                           term (e, Ae, A²e, A³e and after): the hue of
+ *                           --ink-light-k, light enough for a dark render
+ *   --scattering / --ink-scattering   the scattering operator S and its lobe
  *   --adjoint / --ink-adjoint   sensors, importance, backward passes
  *   --derivative / --ink-derivative   derivatives and gradients
  *   --medium / --ink-medium     participating media, density, transmittance
@@ -46,6 +50,12 @@
   --ink-light-2: #c2410c;
   --ink-light-3: #be123c;
   --ink-light-4: #9f1239;
+  --term-light-0: #ffc93c;
+  --term-light-1: #ffa040;
+  --term-light-2: #ff6a45;
+  --term-light-3: #ff5c85;
+  --scattering: #e879f9;
+  --ink-scattering: #a21caf;
   --ink-adjoint: #0369a1;
   --ink-derivative: #a86f00;
   --ink-medium: #6d28d9;
@@ -79,6 +89,7 @@
 .term-bounce-3 { color: var(--ink-light-3); }
 .term-bounce-4 { color: var(--ink-light-4); }
 .term-operator { color: var(--ink-light-2); }
+.term-scattering { color: var(--ink-scattering); }
 .term-adjoint { color: var(--ink-adjoint); }
 .term-derivative { color: var(--ink-derivative); }
 .term-medium { color: var(--ink-medium); }

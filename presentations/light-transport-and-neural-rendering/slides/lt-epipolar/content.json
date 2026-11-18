@@ -28,7 +28,7 @@
       "type": "video",
       "src": "/slides/lt-epipolar/direct-and-global-video.webm",
       "alt": "Live single-bounce and multiple-bounce video",
-      "caption": "single and multiple bounces, live",
+      "captions": ["direct", "indirect"],
       "step": 1,
       "fit": {
         "aspect": 3.07,

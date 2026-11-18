@@ -45,12 +45,12 @@ const POINT = [500, FLOOR.y];
 const PATHS = {
   direct: {
     points: [PROJECTOR, POINT, CAMERA],
-    color: 'light-1',
+    color: 'term-light-1',
     label: [214, 218],
   },
   interreflection: {
     points: [PROJECTOR, [WALL.x, 262], POINT, CAMERA],
-    color: 'light-2',
+    color: 'term-light-2',
     label: [600, 368],
   },
   subsurface: {
@@ -58,17 +58,17 @@ const PATHS = {
       PROJECTOR, [604, FLOOR.y], [611, 416], [597, 430], [606, 443], [585, 447], [571, 433],
       [553, 445], [538, 429], [524, 440], [512, 421], POINT, CAMERA,
     ],
-    color: 'light-3',
+    color: 'term-light-3',
     label: [500, 470],
   },
   volumetric: {
     points: [PROJECTOR, [548, 124], POINT, CAMERA],
-    color: 'light-2',
+    color: 'term-light-2',
     label: [668, 106],
   },
 };
 
-const COLORS = ['render-bg', 'light-1', 'light-2', 'light-3', 'medium'];
+const COLORS = ['render-bg', 'term-light-1', 'term-light-2', 'term-light-3', 'medium'];
 
 function length(points) {
   let total = 0;
@@ -163,13 +163,17 @@ function drawDevice(ctx, position, target, color) {
   ctx.restore();
 }
 
-/** The scene without light: the floor slab, the wall, the medium, the projector, and the camera. */
-function drawScene(ctx, colors, subsurfaceLit) {
+/**
+ * The scene without light: the floor slab, the wall, the projector, the
+ * camera, and the medium at opacity `medium` (0 before the volumetric
+ * path's step, so it appears with the path that scatters in it).
+ */
+function drawScene(ctx, colors, subsurfaceLit, medium) {
   ctx.fillStyle = rgba(colors['render-bg']);
   ctx.fillRect(0, 0, PANEL[0], PANEL[1]);
 
   const cloud = ctx.createRadialGradient(CLOUD.x, CLOUD.y, 0, CLOUD.x, CLOUD.y, CLOUD.rx);
-  cloud.addColorStop(0, rgba(colors.medium, 0.34));
+  cloud.addColorStop(0, rgba(colors.medium, 0.34 * medium));
   cloud.addColorStop(1, rgba(colors.medium, 0));
   ctx.save();
   ctx.translate(CLOUD.x, CLOUD.y);
@@ -185,8 +189,8 @@ function drawScene(ctx, colors, subsurfaceLit) {
   ctx.fillRect(FLOOR.x0, FLOOR.y, FLOOR.x1 - FLOOR.x0, FLOOR.depth);
   if (subsurfaceLit > 0) {
     const glow = ctx.createRadialGradient(560, FLOOR.y + 24, 0, 560, FLOOR.y + 24, 80);
-    glow.addColorStop(0, rgba(colors['light-3'], 0.28 * subsurfaceLit));
-    glow.addColorStop(1, rgba(colors['light-3'], 0));
+    glow.addColorStop(0, rgba(colors['term-light-3'], 0.28 * subsurfaceLit));
+    glow.addColorStop(1, rgba(colors['term-light-3'], 0));
     ctx.fillStyle = glow;
     ctx.fillRect(FLOOR.x0, FLOOR.y, FLOOR.x1 - FLOOR.x0, FLOOR.depth);
   }
@@ -206,9 +210,10 @@ function drawScene(ctx, colors, subsurfaceLit) {
  * Kinds of light paths between a projector and a camera, one per build
  * step (after Nayar et al. 2006, Fig. 2): a step's `path` (direct,
  * interreflection, subsurface, volumetric) is drawn on a dark render of a
- * side view, in addition to the earlier ones, with its short `label`
- * beside it; a step without a path adds none (the scene alone, before the
- * first path). The newest path is drawn from the projector when the slide
+ * side view, in addition to the earlier ones, in the color of its term of
+ * T = C(I + A + A² + ⋯)E, with its short `label` beside it; a step without
+ * a path adds none (the scene alone, before the first path). The medium
+ * appears with the volumetric path. The newest path is drawn from the projector when the slide
  * moves forward to its step. `equations` sit beside the render; optional
  * `projectorLabel` and `cameraLabel` name the devices.
  *
@@ -242,7 +247,8 @@ export default function LightPaths({ slide, buildStep }) {
     // Only the path this step adds is drawn partway; every earlier one is whole.
     const fraction = (step) => (step === steps[current] ? ease(progress) : 1);
     const subsurface = shown.find((step) => step.path === 'subsurface');
-    drawScene(ctx, colors, subsurface ? fraction(subsurface) : 0);
+    const volumetric = shown.find((step) => step.path === 'volumetric');
+    drawScene(ctx, colors, subsurface ? fraction(subsurface) : 0, volumetric ? fraction(volumetric) : 0);
     shown.forEach((step) => drawPath(ctx, colors, PATHS[step.path], fraction(step)));
   });
 

@@ -107,7 +107,9 @@ export function SectionTitle({ slide }) {
  * shows the media in a box of that aspect ratio (width / height), filled
  * and cropped at `position` (a CSS object-position): it cuts a video's
  * black borders without re-encoding it. A figure with `until` fades out
- * at that build step.
+ * at that build step. A figure made of side-by-side panels (one stitched
+ * video) can caption each panel instead: `captions`, short labels left to
+ * right, each centered under an equal share of the figure's width.
  *
  * By default the figures sit in one row (four in a 2 × 2 grid). An
  * optional `columns` (and `rows`, default enough for every figure) lays
@@ -176,6 +178,11 @@ export function Figures({ slide, buildStep }) {
               ) : <Media item={figure} />}
             </div>
             {figure.caption && <figcaption><Text>{figure.caption}</Text></figcaption>}
+            {figure.captions && (
+              <figcaption className="figures-captions" style={{ gridTemplateColumns: `repeat(${figure.captions.length}, 1fr)` }}>
+                {figure.captions.map((caption) => <span key={caption}><Text>{caption}</Text></span>)}
+              </figcaption>
+            )}
           </motion.figure>
         ))}
       </div>

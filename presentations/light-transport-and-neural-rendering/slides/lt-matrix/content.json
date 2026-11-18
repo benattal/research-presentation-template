@@ -26,7 +26,17 @@
         { "tex": "$+ \\htmlClass{term-bounce-3}{\\cdots}$", "step": 5 },
         { "tex": "$)E$", "step": 3 }
       ]
+    },
+    {
+      "tex": "$x_{k+1} = \\htmlClass{term-emission}{e} + A\\,x_k$",
+      "step": 3
     }
+  ],
+  "iterates": [
+    { "tex": "$x_0 = \\htmlClass{term-emission}{e}$", "step": 3 },
+    { "tex": "$x_1 = x_0 + \\htmlClass{term-bounce-1}{A e}$", "step": 3 },
+    { "tex": "$x_2 = x_1 + \\htmlClass{term-bounce-2}{A^2 e}$", "step": 4 },
+    { "tex": "$x = x_2 + \\htmlClass{term-bounce-3}{\\cdots}$", "step": 5 }
   ],
   "buildSteps": [
     {

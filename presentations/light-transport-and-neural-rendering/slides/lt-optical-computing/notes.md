@@ -1,19 +1,15 @@
-Relighting and dual photography need the whole matrix $\mathbf{T}$. Many computations need only products with it, and a product needs no matrix: light the scene with pattern $p$ and take a photograph, and the photograph is $\mathbf{T}p$. One product is one photo. Any algorithm that only needs products, like the iteration $x_{k+1} = e + Ax_k$ of the Neumann series, can run optically, one photograph per product. O'Toole and Kutulakos (SIGGRAPH Asia 2010) ran power iteration and Arnoldi iteration this way with a projector and a camera.
+Transition: Relighting and dual photography need all of $\mathbf{T}$. Many computations need only products with it, and a product is one photograph: light the scene with $p$, and the photo is $\mathbf{T}p$.
 
-Why this matters: for a projector and a camera with a million pixels each, $\mathbf{T}$ is $10^6 \times 10^6$, $10^{12}$ entries (CMU 15-463, pp. 36 and 57). Measuring it entry by entry is out of reach; a few products are not.
+- Step 1: With a million pixels each, $\mathbf{T}$ has $10^{12}$ entries, too many to measure. So any algorithm that needs only products with $\mathbf{T}$ (power iteration, Arnoldi, GMRES) can run optically; O'Toole and Kutulakos (2010) ran all three. Here each element is both a light and a pixel, so $\mathbf{T}$ is square. Power iteration seeks the dominant eigenvector, the pattern that comes back unchanged up to scale, starting from $p_0$, one element on.
+- Step 2: $p_1$, one photograph later, normalized: brightest near the first element.
+- Steps 3 and 4: $p_2$ and $p_4$. Each product scales the part along each eigenvector by its eigenvalue, so the largest takes over: a broad bump over the middle of the room, close to $v_1$.
 
-The example is power iteration. An eigenvector of $\mathbf{T}$ is a pattern that, projected onto the scene, comes back in the photograph unchanged up to a scale: $\mathbf{T}v_1 = \lambda_1 v_1$. Power iteration computes the one with the largest eigenvalue: project $p$, photograph $\mathbf{T}p$, normalize, and project the result again. As on the spectral-view slide, each product multiplies the part of $p$ along each eigenvector by its eigenvalue, so the part along the largest one dominates after a few products.
+Remember: when only products are needed, a few photographs replace measuring the whole matrix.
 
-The setup here: each light element is both a light and a pixel, like a projector and a camera that share pixels. Then $\mathbf{T}$ is square, and $\mathbf{T}_{jk}$ is the light element $j$ receives when element $k$ is lit. The bars hanging from the ceiling are the pattern lighting the room, scaled to its largest entry; the profiles beside the room are the patterns of every step, drawn the same way.
+Stop (optional): what else needs only products? Answer: the Krylov methods, which build their answer from $p, \mathbf{T}p, \mathbf{T}^2 p, \ldots$: Arnoldi for several eigenvectors at once, and GMRES for the pattern $p$ that gives a target photo, $\mathbf{T}p = c$.
 
-- **$p_0$**: one element on, at the left.
-- **$p_1$**: one photograph. The light returned to the ceiling is spread out, brightest near the first element.
-- **$p_2$**, **$p_4$**: the pattern approaches the dominant eigenvector $v_1$ of $\mathbf{T}$: a broad bump, highest above the middle of the room, where the floor and the box reflect the most light back to the ceiling.
-
-The profile labeled $v_1$ is the dominant eigenvector computed from the full matrix, which takes one photograph per element. After four photographs the pattern has its shape.
-
-The question this slide invites: what else needs only products? Krylov methods, which build their answer from $p, \mathbf{T}p, \mathbf{T}^2 p, \ldots$: Arnoldi iteration for several eigenvectors at once, GMRES for solving $\mathbf{T}x = c$, and the Neumann series itself.
-
-To remember: when only products are needed, a few photographs replace measuring the whole matrix.
+If asked:
+- Can a projector show negative values? No. A product with a vector that has negative entries takes two photographs, of its positive and its negative parts, subtracted.
+- What is the profile labelled $v_1$? The dominant eigenvector computed from the full matrix, which takes one photograph per element.
 
 Mouse: click an element on the ceiling to start from it instead; every start approaches the same $v_1$.

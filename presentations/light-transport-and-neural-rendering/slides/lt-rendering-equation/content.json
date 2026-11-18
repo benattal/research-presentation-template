@@ -14,7 +14,7 @@
       "continues": true
     },
     {
-      "tex": "$+ \\htmlClass{term-operator}{\\int_{H^2} f_r \\, L_i(\\mathbf{x}, \\omega_i) \\cos\\theta_i \\, d\\omega_i}$",
+      "tex": "$+ \\htmlClass{term-scattering}{\\int_{H^2} f_r \\, L_i(\\mathbf{x}, \\omega_i) \\cos\\theta_i \\, d\\omega_i}$",
       "step": 2,
       "continues": true
     },
@@ -28,11 +28,11 @@
       "continues": true
     },
     {
-      "tex": "$L = \\htmlClass{term-emission}{L_e} + \\htmlClass{term-operator}{S} \\, G \\, L$",
+      "tex": "$L = \\htmlClass{term-emission}{L_e} + \\htmlClass{term-scattering}{S} \\, G \\, L$",
       "step": 4
     },
     {
-      "tex": "$x = \\htmlClass{term-emission}{e} + A \\, x, \\quad A = \\htmlClass{term-operator}{S} \\, G$",
+      "tex": "$x = \\htmlClass{term-emission}{e} + A \\, x, \\quad A = \\htmlClass{term-scattering}{S} \\, G$",
       "step": 5
     }
   ],

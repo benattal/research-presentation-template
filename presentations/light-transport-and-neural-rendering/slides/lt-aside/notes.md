@@ -1,9 +1,5 @@
-An aside before volumes: the same operators, in a lab instead of a renderer.
+Transition: An aside before volume rendering: light transport measured with cameras and computed with optics.
 
-So far the light came from the scene's own emission, and its images were computed. In computational imaging the light source is a controlled projector and the sensor is a real camera, and light transport between them is a matrix $\mathbf{T}$ from projector pixels to camera pixels. Parts of $\mathbf{T}$ are measured, products with it are computed optically, and its direct and indirect parts are separated. The photo is from O'Toole et al. (SIGGRAPH 2012): a scene photographed with coded projector patterns and camera masks, the probing of the aside's last slides.
+- Step 1: From O'Toole et al. (2012): the global component of a scene, the light that bounced more than once, in a single raw photograph. The objects inside the wax disk show only in it. The aside ends with how such a photo is taken.
 
-These slides are mostly results; the main thread continues with volume rendering.
-
-The question this slide invites: why are a projector and a camera described by the same operators as a renderer? Light adds, whatever the scene, so the camera image is a linear function of the projector pattern: a matrix, from projector pixels to camera pixels. The next slides build that matrix from the series of the operator section.
-
-To remember: with a projector and a camera, light transport is a matrix that can be measured and computed with.
+Remember: in the lab, light transport is a matrix to measure and to compute with.

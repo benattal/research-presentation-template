@@ -1,16 +1,14 @@
-The rendering equation slide wrote one bounce as $A = SG$. Here the two operators are applied to light in the room, one at a time, with the spotlight of the section's first picture on the left wall.
+Transition: Here $G$ and $S$ are applied one at a time. The room is lit by the spotlight of the section's first picture, so one beam is easy to follow.
 
-- $e$, emission: the spotlight's beam, leaving the wall.
-- $Ge$, propagation: radiance is constant along a ray, so $Ge$ at a surface point is the light leaving the surface its ray reaches, now as light arriving at the point. The beam crosses the room and arrives at the floor. Nothing has been reflected yet, so $Ge$ is still in the emission color.
-- $SGe$, scattering: the floor reflects the arriving light by its BRDF.
-- $Ae = SGe$: one bounce. $A$ maps light leaving surfaces to light leaving surfaces, so $x = e + Ax$ is well defined.
+- Step 1: $e$: the beam leaving the left wall.
+- Step 2: $Ge$: the beam crosses the room and arrives at the floor. Nothing is reflected yet.
+- Step 3: $SGe$: the floor reflects it by its BRDF. That is one bounce, $Ae = SGe$: light leaving surfaces again, which is why $x = e + Ax$ makes sense.
 
-The equations of the earlier steps stay on the side, dimmed, so the last step shows the whole construction.
+Remember: one bounce is propagation, then scattering, $A = SG$.
 
-Drawing convention: on this slide, light leaving a surface is drawn only near that surface; propagation is drawn crossing the room. On the next slides each bounce is drawn crossing the whole room.
+Stop (optional): why split $A$ into two operators? Answer: $G$ depends only on the geometry and $S$ only on the materials. Switch the floor between diffuse, glossy, and mirror with the buttons: $S$ changes, and $G$ stays the same.
 
-The question this slide invites: why split $A$ into two operators? Each depends on one thing. $G$ depends only on the geometry (which surface each ray reaches); $S$ only on the materials (the BRDF at each point). Changing the floor's material changes $S$ and leaves $G$ as it is. To show it, switch the floor between diffuse, glossy, and mirror with the buttons: a diffuse floor reflects in every direction, a glossy floor in a lobe, a mirror in one direction.
+If asked:
+- Why is the light drawn only near the surfaces here? On this slide, light leaving a surface is drawn near it and propagation is drawn crossing the room. The next slides draw each bounce across the whole room.
 
-To remember: one bounce is propagation, then scattering, $A = SG$.
-
-Mouse: the buttons at the top left (visible on hover) apply $G$, $S$, $A$, or add $e$ to what is shown; $G$ applies to light leaving surfaces and $S$ to light arriving at them.
+Mouse: the buttons at the top left, visible on hover, apply $G$, $S$, or $A$, or add $e$, to what is shown. $G$ applies to light leaving surfaces and $S$ to light arriving at them.

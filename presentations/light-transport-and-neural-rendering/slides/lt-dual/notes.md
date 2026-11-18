@@ -1,9 +1,11 @@
-Relighting uses the columns of $\mathbf{T}$. Its transpose has a less expected use: an image from the projector's position. The reason is Helmholtz reciprocity: a light path reversed has the same throughput.
+Transition: Relighting uses the columns of $\mathbf{T}$. Its transpose gives an image from where the projector stands.
 
-- **The diagram** (Sen et al., SIGGRAPH 2005). In the primal configuration, a projector shows the pattern $p'$ and the camera image is $c' = \mathbf{T}p'$. Swap them: a virtual projector at the camera and a virtual camera at the projector. By reciprocity, the transport matrix of the swapped setup is $\mathbf{T}^\top$, so $p'' = \mathbf{T}^\top c''$. Once $\mathbf{T}$ is measured, an image from the projector's position is $\mathbf{T}^\top c''$, computed, with no camera there.
-- **The identity on the right** is the definition of the transpose with inner products: $\langle c, \mathbf{T}p \rangle = \langle \mathbf{T}^\top c, p \rangle$. The camera image $\mathbf{T}p$ weighted by $c$ and the pattern $p$ weighted by the dual image $\mathbf{T}^\top c$ are the same number: the same light paths, summed from either end.
-- **Click: their card example.** The camera's view shows only the back of a playing card and a book page. The projector lights the card's face; light from the face reaches the book page and then the camera. From the measured $\mathbf{T}$, the dual image shows the card's face, the king of hearts, although no camera had it in view. The dual image is coarse because it has one pixel per projector block.
+- Step 1: After Sen et al. (2005). The light from projector pixel $k$ to camera pixel $j$ is $\mathbf{T}_{jk}$, and by Helmholtz reciprocity the reversed path carries the same light. So if a virtual projector at the camera showed $c$, a virtual camera at the projector would record $\mathbf{T}^\top c$, computed from the measured $\mathbf{T}$. The identity on the right says the same with inner products.
+- Step 2: The camera sees the back of a playing card and a book page. Light from the card's face reaches the camera only off the page, yet the dual image shows the face, the king of hearts, coarse with one pixel per projector block.
 
-The question this slide invites: where does the face's image come from, if no camera had the face in view? From the light paths. Each projector pixel lights one spot of the card's face, and that spot's light reaches the camera only after reflecting off the book page. The sum of column $k$ of $\mathbf{T}$ is how much of projector pixel $k$'s light reaches the camera, so it is large where the spot on the face is bright. Read across the projector pixels, those sums are an image of the face. With uniform light from the virtual projector, $c'' = \mathbf{1}$, the dual image $\mathbf{T}^\top \mathbf{1}$ is exactly those sums.
+Remember: the transpose of the transport matrix exchanges the source and the sensor.
 
-To remember: the transpose of the transport matrix is transport with light source and sensor exchanged. The same transpose, and the same inner-product identity, appear in the adjoint section.
+Stop (optional): where does the image of the face come from, if no camera saw it? Answer: each projector pixel lights one spot of the face, and that spot's light reaches the camera through the page. So the sum of column $k$ of $\mathbf{T}$ follows how bright spot $k$ is, and $\mathbf{T}^\top \mathbf{1}$, those sums side by side, is an image of the face.
+
+If asked:
+- Where does this come back? The adjoint section uses the same identity.

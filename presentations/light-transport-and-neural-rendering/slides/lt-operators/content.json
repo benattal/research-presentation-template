@@ -8,9 +8,9 @@
   "buildSteps": [
     {},
     {},
-    {},
     {}
   ],
   "light": "spot",
-  "history": true
+  "history": true,
+  "mergeNamed": true
 }

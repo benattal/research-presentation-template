@@ -251,14 +251,15 @@ function BounceThumbnail({ state, env, adjoint, unlit, direct, size }) {
  * The bounces A^k e (iterate) or the terms of the Neumann series and their
  * sum (sum), one row each beside the room; in sum mode a "+ ⋯" row stands
  * for the terms after the fourth, before the exact row. With `iterate`
- * (`{ update, symbol }`), the column also shows the fixed-point iteration
- * whose iterates are the partial sums: `update` (slide text, such as
- * $x_{k+1} = e + A\,x_k$) over the rows, and beside each row the iterate
- * that row completes, `symbol` with its index (x_0 = e after the first row,
- * the bare symbol beside the exact row). Rows after the current step stay
- * unlit.
+ * (`{ update, symbol? }`), the column also shows `update` (slide text, such
+ * as $x_{k+1} = e + A\,x_k$) over the rows and, with `symbol`, beside each
+ * row the iterate that row completes, `symbol` with its index (x_0 = e
+ * after the first row, the bare symbol beside the exact row). Rows after
+ * the current step stay unlit, except the bounce rows when `bouncesShown`
+ * (they continue the bounces of the slide before; the exact row still
+ * waits for its step).
  */
-function BounceColumn({ mode, direction, env, step, iterate }) {
+function BounceColumn({ mode, direction, env, step, iterate, bouncesShown }) {
   const adjoint = direction === 'adjoint';
   const source = adjoint ? env.sensor : env.transport.emission;
   const terms = useMemo(() => bounceTerms(env.transport, direction, source, 5), [env, direction, source]);
@@ -270,8 +271,9 @@ function BounceColumn({ mode, direction, env, step, iterate }) {
       key: k,
       state,
       tex: sum && k > 0 ? `+\\; ${tex}` : tex,
-      iterate: iterate ? `${iterate.symbol}_{${k}}` : '',
+      iterate: iterate?.symbol ? `${iterate.symbol}_{${k}}` : '',
       shown: k <= step,
+      lit: bouncesShown || k <= step,
       current: sum ? k === step : k === Math.min(step, 4),
       direct: adjoint && k === 0,
     };
@@ -283,6 +285,7 @@ function BounceColumn({ mode, direction, env, step, iterate }) {
       tex: '+\\; \\cdots',
       iterate: '',
       shown: step >= 5,
+      lit: step >= 5,
       current: step >= 5,
       direct: false,
     });
@@ -290,8 +293,9 @@ function BounceColumn({ mode, direction, env, step, iterate }) {
       key: 'exact',
       state: adjoint ? env.importance : env.steady,
       tex: `= ${DIRECTIONS[direction].exactTex}`,
-      iterate: iterate ? iterate.symbol : '',
+      iterate: iterate?.symbol ?? '',
       shown: step >= 5,
+      lit: step >= 5,
       current: step >= 5,
       direct: false,
     });
@@ -309,7 +313,7 @@ function BounceColumn({ mode, direction, env, step, iterate }) {
       {rows.map((row) => (
         <li key={row.key} className={row.current ? 'operator-column--current' : (row.shown ? '' : 'operator-column--later')}>
           {row.state
-            ? <BounceThumbnail state={row.state} env={env} adjoint={adjoint} unlit={!row.shown} direct={row.direct} size={THUMBNAIL} />
+            ? <BounceThumbnail state={row.state} env={env} adjoint={adjoint} unlit={!row.lit} direct={row.direct} size={THUMBNAIL} />
             : <span />}
           <span className="operator-term"><Text>{`$${'{'}${row.tex}${'}'}$`}</Text></span>
           <span className="operator-iterate">{row.iterate && <Text>{`$${row.iterate}$`}</Text>}</span>
@@ -339,8 +343,10 @@ function operationLabel(frame) {
  * entry per frame of the mode (4 for construct, 5 for iterate, 6 for sum).
  * Optional short labels: a step's `label` (under the room, for that
  * step), `caption` (slide text under the room on every step, at its
- * right edge), `iterate` (`{ update, symbol }`: the iteration beside the
- * rows, see BounceColumn), `columnNote` (`{ lines, step }`: short lines
+ * right edge; with a caption, the labels stay right under the room even
+ * when the side column is taller), `iterate` (`{ update, symbol? }`: the
+ * iteration over the rows, see BounceColumn), `bouncesShown: true` (the
+ * bounce rows lit from the first step, see BounceColumn), `columnNote` (`{ lines, step }`: short lines
  * under the column's rows, from build step `step`), and, in construct
  * mode, `history: true` (every frame's equation so far stays on the side,
  * the earlier ones dimmed, instead of the current one alone). Optional `header` (slide text, such as the
@@ -387,7 +393,7 @@ export default function OperatorExplorer({ slide, buildStep }) {
   return (
     <div className="slide--operator-explorer">
       <SlideTitle title={slide.title} subtitle={slide.subtitle} />
-      <div className="operator-main">
+      <div className={slide.caption ? 'operator-main operator-main--caption' : 'operator-main'}>
         <div className="operator-render">
           <RoomCanvas
             frame={frame}
@@ -447,7 +453,7 @@ export default function OperatorExplorer({ slide, buildStep }) {
               <p className="operator-kind">{KINDS[frame.kind]}</p>
             </>
           ) : (
-            <BounceColumn mode={mode} direction={direction} env={env} step={step} iterate={slide.iterate} />
+            <BounceColumn mode={mode} direction={direction} env={env} step={step} iterate={slide.iterate} bouncesShown={Boolean(slide.bouncesShown)} />
           )}
           {slide.columnNote && (
             <motion.div

@@ -28,6 +28,21 @@
   white-space: nowrap;
 }
 
+/* With a caption, the side column spans the label row too, so the labels sit right under the room
+   (at the same place on every slide) however tall the column is: the flexible second row takes
+   what the column needs beyond the room. */
+.operator-main--caption {
+  grid-template-rows: auto 1fr;
+}
+
+.operator-main--caption .operator-side {
+  grid-row: 1 / span 2;
+}
+
+.operator-main--caption .operator-room-label {
+  grid-row: 2;
+}
+
 /* Short lines under the column's rows. */
 .operator-column-note {
   display: flex;

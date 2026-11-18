@@ -7,7 +7,7 @@ import { useStageCanvas, useStepTransition } from '@core/stage/canvas.js';
 import EquationStack from '@core/stage/EquationStack.jsx';
 import RoomView from '../flatland/RoomView.jsx';
 import {
-  MATRIX_PIXELS, lightElementRoom, oneHot, relightingCheck, weightedSum,
+  MATRIX_PIXELS, lightElementRoom, oneHot, weightedSum,
 } from '../flatland/lightElements.js';
 import { drawPixelWedge, drawRoomCamera } from '../flatland/overlays.js';
 import { SURFACE_GAIN } from '../flatland/pictures.js';
@@ -22,11 +22,17 @@ import {
 import './TransportMatrix.css';
 
 const ROOM = ROOM_VIEW;
-const THUMB = [74, 44];
+/** A column's photo beside the room, in stage pixels (the room's 5 : 3), in three columns that fill the side. */
+const THUMB = [100, 60];
 /** Exposure of a column photo whose element is off, relative to one that is fully on. */
 const DIMMED = 0.3;
-/** Theme colors of a row's paths, by bounce count: emission, then bounce 1, 2, 3 (the terms I, A, A², ⋯). */
-const PATH_COLORS = ['light-0', 'light-1', 'light-2', 'light-3'];
+/**
+ * Theme colors of a row's paths, by bounce count: 0, 1, 2, 3 (the terms I,
+ * A, A², ⋯ of T), each the hue of its term in the equations; and the
+ * emission color of the glow under each element.
+ */
+const PATH_COLORS = ['term-light-0', 'term-light-1', 'term-light-2', 'term-light-3'];
+const ROW_COLORS = [...PATH_COLORS, 'light-0'];
 /** The cyan pixel marker of the row view, as the strip outlines the same pixel. */
 const PIXEL_MARK = [76, 201, 240];
 /** Paths drawn for a row, spread over its paths in proportion to the light each carries. */
@@ -121,12 +127,12 @@ function ColumnThumb({ env, k, weight, gain, onToggle }) {
  * c; with `measured` false, only the lit element's entry of p is marked.
  */
 function BlockDiagram({ pixels, elements, column, row, measured = true }) {
-  const unit = 3.5;
-  const bar = 24;
+  const unit = 2.6;
+  const bar = 20;
   const gap = 18;
   const height = pixels * unit;
   const top = 6;
-  const cx = 30;
+  const cx = 8;
   const tx = cx + bar + gap + 22;
   const tw = elements * unit;
   const px = tx + tw + gap;
@@ -187,13 +193,15 @@ function stepPattern(env, entry) {
  *   steps can add the terms one at a time. Beside the room, c = Tp is
  *   drawn as blocks to scale, with that column or row marked, over a
  *   short label (a step's `label`, or one naming the column or row).
+ *   Optional `iterates` (EquationStack lines `{ tex, step }`) stand beside
+ *   the blocks: the iterates of x_{k+1} = e + A x_k that the row steps add
+ *   term by term, each from its step, the newest in full color.
  * - `mode: 'relight'`: build steps `{ elements: [...] }` or `{ pattern:
- *   [one weight per element] }` light the room with p; the columns of T
- *   sit beside the room (each a photo, dimmed when its element is off), a
- *   graded pattern hangs from the ceiling as bars, and the photo as the
- *   sum of the weighted columns is shown beside the photo rendered
- *   directly. Clicking a column or dragging across the ceiling switches
- *   elements on and off.
+ *   [one weight per element] }` light the room with p, drawn as the sum of
+ *   the weighted columns; the columns of T sit beside the room (each a
+ *   photo, dimmed when its element is off), and a graded pattern hangs
+ *   from the ceiling as bars. Clicking a column or dragging across the
+ *   ceiling switches elements on and off.
  *
  * Moving forward one step, the room changes from the previous step's
  * lighting to the new one, and what the step adds (rays, paths, glows)
@@ -203,8 +211,8 @@ function stepPattern(env, entry) {
  * (EquationStack lines beside the room: `{ tex, step?, parts? }`, each
  * from its step on, its place kept from the first step), optional
  * `figure` (relight: a media item with `caption` and `step`; from that
- * step it is shown at full size in the room's place, and the check is
- * hidden), and optional `exposureStep` (the build step whose lighting
+ * step it is shown at full size in the room's place), optional `iterates`
+ * (matrix), and optional `exposureStep` (the build step whose lighting
  * sets the exposure; 0).
  */
 export default function TransportMatrix({ slide, buildStep }) {
@@ -213,6 +221,9 @@ export default function TransportMatrix({ slide, buildStep }) {
   if (!relight && slide.mode !== 'matrix') throw new Error(`transportMatrix: unknown mode "${slide.mode}"`);
   if (!Array.isArray(slide.equations) || slide.equations.some((line) => typeof line.tex !== 'string')) {
     throw new Error('transportMatrix: `equations` must be lines `{ tex, step? }`');
+  }
+  if (slide.iterates !== undefined && (relight || !Array.isArray(slide.iterates) || slide.iterates.some((line) => typeof line.tex !== 'string'))) {
+    throw new Error('transportMatrix: `iterates` must be lines `{ tex, step? }`, in matrix mode');
   }
   const colorsRef = useRef(null);
   const step = Math.min(buildStep, slide.buildSteps.length - 1);
@@ -262,10 +273,9 @@ export default function TransportMatrix({ slide, buildStep }) {
       paintPattern(ctx, env, gains, view, image, progress);
       return;
     }
-    colorsRef.current ??= themeColors(ctx.canvas, PATH_COLORS);
+    colorsRef.current ??= themeColors(ctx.canvas, ROW_COLORS);
     paintRow(ctx, env, view, colorsRef.current, progress);
   };
-  const check = useMemo(() => (relight && p ? relightingCheck(env, p) : null), [env, relight, p]);
   const largest = p ? Math.max(...p) : 0;
 
   /** Set element k to `value` (0 or 1), on top of whatever is shown. */
@@ -349,18 +359,13 @@ export default function TransportMatrix({ slide, buildStep }) {
                   />
                 ))}
               </div>
-              {check && !showFigure && (
-                <div className="matrix-check">
-                  <span className="matrix-check-label">sum of columns</span>
-                  <Strip image={check.summed} gain={gains.strip} width={300} />
-                  <span className="matrix-check-label">rendered directly</span>
-                  <Strip image={check.direct} gain={gains.strip} width={300} />
-                </div>
-              )}
             </>
           ) : (
             <>
-              <BlockDiagram pixels={MATRIX_PIXELS} elements={env.elements.length} column={k} row={entry.row} measured={measured} />
+              <div className="matrix-blocks-row">
+                <BlockDiagram pixels={MATRIX_PIXELS} elements={env.elements.length} column={k} row={entry.row} measured={measured} />
+                {slide.iterates && <EquationStack lines={slide.iterates} step={buildStep} className="matrix-iterates" />}
+              </div>
               <p className="matrix-label">
                 <Text>{entry.label ?? (entry.row === undefined ? 'column $k$: $p = \\delta_k$' : 'row $j$: pixel $j$')}</Text>
               </p>

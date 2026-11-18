@@ -63,3 +63,91 @@
   width: auto;
   border-radius: 4px;
 }
+
+/* Dual photography's configurations, drawn in line on the white slide, its labels over the drawing. */
+.dual-diagram {
+  position: relative;
+}
+
+.dual-diagram svg {
+  display: block;
+  overflow: visible;
+}
+
+.dual-device rect,
+.dual-device circle,
+.dual-device path {
+  fill: var(--bg-elevated);
+  stroke: var(--text-secondary);
+  stroke-width: 1.6;
+}
+
+.dual-frustum line {
+  stroke: var(--text-muted);
+  stroke-width: 1;
+}
+
+.dual-grid line {
+  stroke: var(--text-muted);
+  stroke-width: 0.8;
+}
+
+.dual-grid-back {
+  fill: #ffffff;
+}
+
+.dual-pixel-k {
+  fill: var(--term-light-0);
+}
+
+.dual-pixel-j {
+  fill: var(--adjoint);
+}
+
+.dual-scene {
+  fill: var(--bg-elevated);
+  stroke: var(--text-secondary);
+  stroke-width: 1.6;
+}
+
+.dual-path polyline {
+  fill: none;
+  stroke: var(--ink-light-1);
+  stroke-width: 2.4;
+  stroke-linejoin: round;
+}
+
+.dual-path path {
+  fill: var(--ink-light-1);
+}
+
+.dual-rule {
+  stroke: var(--border-light);
+  stroke-width: 1;
+}
+
+.dual-label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 19px;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.dual-label--start {
+  transform: translate(0, -50%);
+}
+
+.dual-label--end {
+  transform: translate(-100%, -50%);
+}
+
+.dual-label--name {
+  font-size: 20px;
+  color: var(--text-secondary);
+}
+
+.dual-label--muted {
+  font-size: 17px;
+  color: var(--text-muted);
+}

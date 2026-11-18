@@ -211,6 +211,11 @@
   color: var(--text-secondary);
 }
 
+/* One caption per panel of a figure, each centered under its share of the width. */
+.figures-item .figures-captions {
+  display: grid;
+}
+
 /* Derivations: one display equation per step, the newest in full color. */
 .slide--derivation {
   display: flex;
