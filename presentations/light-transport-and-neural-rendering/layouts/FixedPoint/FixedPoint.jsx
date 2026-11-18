@@ -21,14 +21,6 @@ const UPDATE_SECONDS = 0.45;
 const LABELLED_ITERATES = 2;
 const ITERATE_LABEL = { dx: 24, dy: 6 };
 
-function formatEntry(value) {
-  return String(Number(value.toFixed(2)));
-}
-
-function texMatrix(rows) {
-  return `\\begin{pmatrix} ${rows.map((row) => row.map(formatEntry).join(' & ')).join(' \\\\ ')} \\end{pmatrix}`;
-}
-
 /**
  * A linear system (I − A) x = b for a 2 × 2 matrix, read as the fixed
  * point x = b + Ax, then solved by iterating it. The plane shows b from the
@@ -38,14 +30,15 @@ function texMatrix(rows) {
  * triangle. The prompt step shows the trial x as the start x_0 and the
  * ring; the iterate step plays the updates x_{k+1} = b + A x_k from x_0,
  * each drawn as the trial's construction, and the iterates (dots) reach
- * the ring. Beside the plane, A and b, then the slide's equations, one
- * more per build step. From the trial step on, dragging the tip of x (x_0)
- * moves it; the iterates follow at once.
+ * the ring. Beside the plane, `given` (the line naming A and b), then the
+ * slide's equations, one more per build step. From the trial step on,
+ * dragging the tip of x (x_0) moves it; the iterates follow at once.
  *
  * Slide data: `eigenvectors` and `lambda` define A (as on the Neumann
  * series slides), `b` is in plain coordinates, `trial` is the trial x and
- * x_0. Build steps are `{ show, equation }` with `show` one of source,
- * trial, solution, prompt, or iterate (with `updates`, how many it plays).
+ * x_0, `given` is slide text. Build steps are `{ show, equation }` with
+ * `show` one of source, trial, solution, prompt, or iterate (with
+ * `updates`, how many it plays).
  */
 export default function FixedPoint({ slide, buildStep }) {
   const steps = slide.buildSteps;
@@ -53,7 +46,9 @@ export default function FixedPoint({ slide, buildStep }) {
     if (!SHOWS.includes(s.show)) throw new Error(`fixedPoint: unknown show "${s.show}"`);
     if (s.show === 'iterate' && !(Number.isInteger(s.updates) && s.updates >= 1)) throw new Error('fixedPoint: an iterate step needs "updates" (a positive integer)');
   });
-  if (!slide.trial) throw new Error('fixedPoint: the slide needs "trial"');
+  ['trial', 'given'].forEach((field) => {
+    if (!slide[field]) throw new Error(`fixedPoint: the slide needs "${field}"`);
+  });
   const step = steps[buildStep];
   // In the top component, which stays mounted across steps, so the updates play on the step change.
   const progress = useStepProgress(buildStep, step.show === 'iterate' ? step.updates * UPDATE_SECONDS * 1000 : 0);
@@ -75,7 +70,7 @@ export default function FixedPoint({ slide, buildStep }) {
       <div className="fixed-point-body">
         <div className="fixed-point-equations">
           <div className="fixed-point-data">
-            <Text>{`$A = ${texMatrix(A)} \\qquad \\htmlClass{term-emission}{b} = ${texMatrix(b.map((v) => [v]))}$`}</Text>
+            <Text>{slide.given}</Text>
           </div>
           <EquationStack
             lines={steps.map((s) => ({ tex: s.equation }))}

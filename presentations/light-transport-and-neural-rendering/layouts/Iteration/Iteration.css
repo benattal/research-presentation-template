@@ -68,10 +68,4 @@
 
 .la-plot-note.iteration-note-bound {
   color: var(--text-muted);
-  font-variant-numeric: tabular-nums;
-}
-
-.la-plot-note.iteration-note-error {
-  color: var(--ink-light-3);
-  font-variant-numeric: tabular-nums;
 }

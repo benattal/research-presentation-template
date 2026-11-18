@@ -7,6 +7,7 @@
   "lambda": [0.8, 0.3],
   "b": [0, 1],
   "trial": [1.6, 0.8],
+  "given": "$A \\in \\mathbb{R}^{2 \\times 2}, \\quad \\htmlClass{term-emission}{b} \\in \\mathbb{R}^2$",
   "buildSteps": [
     { "show": "source", "equation": "$(I - A)\\,x = \\htmlClass{term-emission}{b}$" },
     { "show": "trial", "equation": "$x \\;\\mapsto\\; \\htmlClass{term-emission}{b} + \\htmlClass{term-bounce-1}{Ax}$" },

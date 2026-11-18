@@ -2,5 +2,19 @@
   "layout": "lectureTitle",
   "title": "Light transport and neural rendering",
   "subtitle": "Benjamin Attal, Postdoc. with David Lindell",
-  "render": "light"
+  "figures": [
+    { "type": "image", "src": "/slides/title/indirect-light.jpg", "alt": "Rendered room lit only through a slightly open door", "caption": "indirect light" },
+    { "type": "image", "src": "/slides/title/caustics.jpg", "alt": "Rendered pool with caustics on its floor", "caption": "caustics" },
+    { "type": "image", "src": "/slides/title/participating-media.jpg", "alt": "Rendered glass, wine, juice, and a pitcher", "caption": "participating media" },
+    { "type": "video", "src": "/slides/title/light-in-flight.mp4", "caption": "light in flight" },
+    { "type": "video", "src": "/slides/title/time-of-flight-depth.mp4", "caption": "depth from time of flight" },
+    { "type": "video", "src": "/slides/title/relighting.mp4", "caption": "relighting" }
+  ],
+  "credits": [
+    { "source": "veach1997", "what": "Figs. 11.7, 11.9" },
+    { "source": "cmu15468-media", "what": "p. 19" },
+    { "source": "malik2024" },
+    { "source": "attal2021" },
+    { "source": "attal2024" }
+  ]
 }
