@@ -55,7 +55,7 @@ function beamFluence(room, table) {
   return result;
 }
 
-/** The three pictures (photo, direct, indirect), their probed photos, and the shares that check them. */
+/** The three pictures (photo, direct, indirect), their probed photos, and the indirect share of the photo. */
 function probing(env) {
   return derived(env.B[0], 'probing', () => {
     const system = coaxialSystem(env.diffuse, PIXELS);
@@ -79,10 +79,7 @@ function probing(env) {
     return {
       pictures: { photo: picture(B, true), direct: picture(E, true), indirect: picture(indirectB, false) },
       photos,
-      shares: {
-        indirect: indirectTotal / luminanceSum(photos.photo),
-        indirectKept: (luminanceSum(photos.direct) - directTotal) / indirectTotal,
-      },
+      indirectShare: indirectTotal / luminanceSum(photos.photo),
     };
   });
 }
@@ -179,9 +176,9 @@ function RealScenes({ real, shown }) {
  * step: the ordinary photo (Π = 11ᵀ), direct light only (Π = I: each
  * camera pixel sees only the projector pixel on the same ray), and
  * indirect light only (the complement), each with its probed photo
- * (Π ⊙ T)1 under it. The check: how much indirect light the direct-only
- * photo keeps (the diagonal of T's indirect part), and the indirect share
- * of the photo. Under the renders: `equations`, the product drawn as
+ * (Π ⊙ T)1 under it, and short notes: the indirect share of the photo,
+ * and that the indirect part has no direct light. Under the renders:
+ * `equations`, the product drawn as
  * blocks with the current step's Π, and optional short `labels`.
  *
  * Optional `real`: `{ step, rows, figures, captions, label }`, the same
@@ -206,8 +203,8 @@ export default function ProbingMatrix({ slide, buildStep }) {
   }), [result]);
   const step = Math.min(buildStep, PANELS.length - 1);
   const notes = {
-    photo: `${Math.round(100 * result.shares.indirect)}% indirect`,
-    direct: `${(100 * result.shares.indirectKept).toFixed(1)}% of indirect kept`,
+    photo: `${Math.round(100 * result.indirectShare)}% indirect`,
+    direct: '',
     indirect: 'no direct light',
   };
 

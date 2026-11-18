@@ -4,8 +4,8 @@
   "title": "Light transport probing",
   "subtitle": "Selecting light paths with coded illumination and masks",
   "equations": [
-    "$c = \\sum_k q_k \\odot \\mathbf{T}\\,p_k = (\\Pi \\odot \\mathbf{T})\\,\\mathbf{1}$",
-    "$\\Pi = \\sum_k q_k\\, p_k^\\top$"
+    "$c = \\sum_k s_k \\odot \\mathbf{T}\\,p_k = (\\Pi \\odot \\mathbf{T})\\,\\mathbf{1}$",
+    "$\\Pi = \\sum_k s_k\\, p_k^\\top$"
   ],
   "buildSteps": [
     {

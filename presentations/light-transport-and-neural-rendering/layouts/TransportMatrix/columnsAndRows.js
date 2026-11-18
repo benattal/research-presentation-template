@@ -13,7 +13,9 @@
  *
  *   with F, ρ, and the camera matrix Q of the per-patch diffuse solve
  *   (flatland/diffuse.js). The paths up to ROW_BOUNCES bounces are listed
- *   with these weights and drawn as a sample whose density follows them.
+ *   with these weights and drawn as a sample whose density follows them;
+ *   summed by element up to n bounces, they are the terms of the row up
+ *   to Aⁿ (rowShares), so a row can be shown one term at a time.
  *
  * Positions are room units; drawing is canvas code in stage pixels with the
  * transform drawRoom returns.
@@ -46,6 +48,10 @@ export function pixelRays(env) {
  * paths of n bounces from element k, the weights are (C Aⁿ E)_jk.
  */
 export function rowPathWeights(env, j) {
+  return derived(env.B[0], `row-path-weights:${j}`, () => listRowPaths(env, j));
+}
+
+function listRowPaths(env, j) {
   const { diffuse, elements, camera, room } = env;
   const { n, F } = diffuse;
   const seen = [];
@@ -69,6 +75,23 @@ export function rowPathWeights(env, j) {
   };
   elements.forEach((patch, k) => visit(k, [patch.index], ELEMENT_EMISSION.slice()));
   return paths;
+}
+
+/**
+ * Row j of T as luminance, one value per element: with `bounces` n (at
+ * most ROW_BOUNCES), the terms up to Aⁿ, (C (I + A + ⋯ + Aⁿ) E)_jk, from
+ * the listed paths; with `bounces` null, the whole entry T_jk.
+ */
+export function rowShares(env, j, bounces) {
+  return derived(env.B[0], `row-shares:${j}:${bounces}`, () => {
+    if (bounces === null) return env.images.map((image) => luminance(image, j * 3));
+    if (!(Number.isInteger(bounces) && bounces >= 0 && bounces <= ROW_BOUNCES)) {
+      throw new Error(`A row's bounces must be a whole number up to ${ROW_BOUNCES}, not ${bounces}`);
+    }
+    const shares = new Array(env.elements.length).fill(0);
+    for (const path of rowPathWeights(env, j)) if (path.bounces <= bounces) shares[path.element] += path.weight;
+    return shares;
+  });
 }
 
 /** True when the straight segment a → b (points on segments `from` and `to`) is unblocked and leaves and arrives on the lit sides. */
@@ -170,19 +193,20 @@ function cut(points, fraction) {
 }
 
 /**
- * Row view: the sampled paths (rowPaths), each `progress` of the way from
- * its element, added as light in the color of its bounce count
- * (`colors[bounces]`, byte RGB: emission, then bounce 1, 2, 3).
+ * Row view: the sampled paths (rowPaths), each `reach(path)` of the way
+ * from its element (0 to 1), added as light in the color of its bounce
+ * count (`colors[bounces]`, byte RGB: emission, then bounce 1, 2, 3).
  */
-export function drawRowPaths(ctx, transform, paths, colors, progress) {
-  if (progress <= 0) return;
+export function drawRowPaths(ctx, transform, paths, colors, reach) {
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
   ctx.lineWidth = 1;
   ctx.lineJoin = 'round';
   for (const path of paths) {
-    const drawn = cut(path.points, progress);
-    ctx.strokeStyle = rgba(colors[path.bounces], 0.2);
+    const fraction = reach(path);
+    if (fraction <= 0) continue;
+    const drawn = cut(path.points, fraction);
+    ctx.strokeStyle = rgba(colors[path.bounces], 0.22);
     ctx.beginPath();
     ctx.moveTo(...transform.toCanvas(drawn[0]));
     for (const point of drawn.slice(1)) ctx.lineTo(...transform.toCanvas(point));
@@ -194,10 +218,10 @@ export function drawRowPaths(ctx, transform, paths, colors, progress) {
 /**
  * Row view: a soft glow under each element, in `color` (byte RGB, the
  * emission color), its opacity in proportion to the element's value in
- * `shares` (T_jk along the ceiling) relative to the largest.
+ * `shares` (T_jk along the ceiling, or the terms of it shown so far)
+ * relative to `largest` (by default the largest of `shares`).
  */
-export function drawElementShares(ctx, transform, elements, shares, color) {
-  const largest = Math.max(...shares);
+export function drawElementShares(ctx, transform, elements, shares, color, largest = Math.max(...shares)) {
   if (!(largest > 0)) return;
   const radius = 0.32 * transform.scale;
   ctx.save();

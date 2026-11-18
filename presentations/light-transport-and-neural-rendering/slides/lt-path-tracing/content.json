@@ -13,15 +13,18 @@
       "label": "one random direction",
       "tex": "$\\approx \\htmlClass{term-operator}{\\dfrac{f_r \\, L_i \\cos\\theta_i}{p(\\omega_i)}}$",
       "step": 1,
-      "continues": true
+      "continues": true,
+      "justification": "$\\begin{aligned} \\mathbb{E}\\Big[\\dfrac{f_r \\, L_i \\cos\\theta_i}{p(\\omega_i)}\\Big] &= \\int_{H^2} \\dfrac{f_r \\, L_i \\cos\\theta_i}{p(\\omega_i)} \\, p(\\omega_i) \\, d\\omega_i \\\\ &= \\int_{H^2} f_r \\, L_i \\cos\\theta_i \\, d\\omega_i \\end{aligned}$",
+      "justificationStep": 2
     },
     {
       "label": "random walk",
       "tex": "$x = \\htmlClass{term-emission}{e} + \\htmlClass{term-bounce-1}{A e} + \\htmlClass{term-bounce-2}{A^2 e} + \\htmlClass{term-bounce-3}{A^3 e} + \\cdots$",
-      "step": 2
+      "step": 3
     }
   ],
   "buildSteps": [
+    {},
     {},
     {},
     {},

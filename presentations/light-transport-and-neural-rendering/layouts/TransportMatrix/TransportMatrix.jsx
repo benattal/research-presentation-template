@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import Media from '@core/stage/Media.jsx';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
-import { useStageCanvas } from '../canvas/canvas.js';
+import { useStageCanvas, useStepTransition } from '../canvas/canvas.js';
 import EquationStack from '../equations/EquationStack.jsx';
 import RoomView from '../flatland/RoomView.jsx';
 import {
@@ -14,7 +14,7 @@ import { SURFACE_GAIN } from '../flatland/pictures.js';
 import { ROOM_VIEW, drawRoom } from '../flatland/render.js';
 import { themeColors } from '../volume/draw.js';
 import {
-  drawElementShares, drawPixelRays, drawRowPaths, pixelRays, rowPaths,
+  drawElementShares, drawPixelRays, drawRowPaths, pixelRays, rowPaths, rowShares,
 } from './columnsAndRows.js';
 import {
   BAR_COLORS, Strip, drawElementBars, drawElements, elementAt, elementPictures, exposures, patternPicture,
@@ -29,33 +29,46 @@ const DIMMED = 0.3;
 const PATH_COLORS = ['light-0', 'light-1', 'light-2', 'light-3'];
 /** The cyan pixel marker of the row view, as the strip outlines the same pixel. */
 const PIXEL_MARK = [76, 201, 240];
-
-const luminance = (v, j) => 0.2126 * v[j * 3] + 0.7152 * v[j * 3 + 1] + 0.0722 * v[j * 3 + 2];
+/** Paths drawn for a row, spread over its paths in proportion to the light each carries. */
+const ROW_PATHS = 260;
 
 /** True when p has a weight other than 0 or 1, so its bars say more than which elements are on. */
 const graded = (p) => p.some((value) => value > 0 && value < 1);
 
 /**
- * Row j in the dark room: each element glowing with its share T_jk, the
- * light paths from the elements to pixel j drawn `progress` of the way,
- * and pixel j's wedge to the camera.
+ * Row j in the dark room, up to `view.bounces` bounces (all for null):
+ * the light paths from the elements to pixel j, each element glowing with
+ * its share of the row (the terms shown so far, relative to the largest
+ * whole entry T_jk), and pixel j's wedge to the camera. Moving forward
+ * from `view.before` (the previous row step, or null), the paths it did
+ * not show are drawn `progress` of the way from their elements and the
+ * glows rise from its shares.
  */
-function paintRow(ctx, env, j, colors, progress) {
+function paintRow(ctx, env, view, colors, progress) {
+  const { row: j, bounces, before } = view;
   const transform = drawRoom(ctx, env.room, { x: 0, y: 0, width: ROOM[0], height: ROOM[1] }, {});
-  drawRowPaths(ctx, transform, rowPaths(env, j), PATH_COLORS.map((name) => colors[name]), progress);
-  drawElementShares(ctx, transform, env.elements, env.images.map((image) => luminance(image, j)), colors['light-0']);
+  const drawnBefore = before ? (before.bounces ?? Infinity) : -1;
+  const paths = rowPaths(env, j, ROW_PATHS).filter((path) => bounces === null || path.bounces <= bounces);
+  drawRowPaths(ctx, transform, paths, PATH_COLORS.map((name) => colors[name]), (path) => (path.bounces > drawnBefore ? progress : 1));
+  const shares = rowShares(env, j, bounces);
+  const from = before ? rowShares(env, j, before.bounces) : shares.map(() => 0);
+  const glow = shares.map((value, k) => from[k] + (value - from[k]) * progress);
+  drawElementShares(ctx, transform, env.elements, glow, colors['light-0'], Math.max(...rowShares(env, j, null)));
   drawPixelWedge(ctx, env.room, transform, [j / MATRIX_PIXELS, (j + 1) / MATRIX_PIXELS], PIXEL_MARK);
   drawRoomCamera(ctx, transform);
   drawElements(ctx, transform, env.elements);
 }
 
 /**
- * The room under pattern p, brightening with `progress`; with `view.rays`,
- * each camera pixel's ray in the color of its value in `image` (the column
- * view), and with `view.bars`, the pattern's weights as bars.
+ * The room under pattern `view.p`, moving from `view.before` (the previous
+ * step's pattern; dark for none) with `progress`; with `view.rays`, each
+ * camera pixel's ray in the color of its value in `image` (the column
+ * view), drawn `progress` of the way to the camera, and with `view.bars`,
+ * the pattern's weights as bars.
  */
 function paintPattern(ctx, env, gains, view, image, progress) {
-  const picture = patternPicture(env, view.p.map((value) => value * progress));
+  const p = view.p.map((value, k) => (view.before ? view.before[k] : 0) + (value - (view.before ? view.before[k] : 0)) * progress);
+  const picture = patternPicture(env, p);
   const transform = drawRoom(ctx, env.room, { x: 0, y: 0, width: ROOM[0], height: ROOM[1] }, {
     table: env.table,
     fluence: picture.fluence,
@@ -66,7 +79,7 @@ function paintPattern(ctx, env, gains, view, image, progress) {
   if (view.rays) drawPixelRays(ctx, transform, pixelRays(env), image, gains.strip, progress);
   drawRoomCamera(ctx, transform);
   drawElements(ctx, transform, env.elements);
-  if (view.bars) drawElementBars(ctx, transform, env.elements, view.p.map((value) => value * progress), BAR_COLORS.light, Math.max(...view.p));
+  if (view.bars) drawElementBars(ctx, transform, env.elements, p, BAR_COLORS.light, Math.max(...view.p));
 }
 
 /**
@@ -104,9 +117,10 @@ function ColumnThumb({ env, k, weight, gain, onToggle }) {
 
 /**
  * c = T p as blocks drawn to scale (pixels by elements), with the column
- * (or row) the step shows marked in T and the entries it involves in p and c.
+ * (or row) the step shows marked in T and the entries it involves in p and
+ * c; with `measured` false, only the lit element's entry of p is marked.
  */
-function BlockDiagram({ pixels, elements, column, row }) {
+function BlockDiagram({ pixels, elements, column, row, measured = true }) {
   const unit = 3.5;
   const bar = 24;
   const gap = 18;
@@ -128,9 +142,9 @@ function BlockDiagram({ pixels, elements, column, row }) {
         <rect x={px} y={top} width={bar} height={elements * unit} {...block} />
         {column !== undefined && (
           <>
-            <rect x={tx + column * unit} y={top} width={unit} height={height} className="matrix-block-mark" />
+            {measured && <rect x={tx + column * unit} y={top} width={unit} height={height} className="matrix-block-mark" />}
             <rect x={px} y={top + column * unit} width={bar} height={unit} className="matrix-block-mark" />
-            <rect x={cx} y={top} width={bar} height={height} className="matrix-block-mark matrix-block-mark--soft" />
+            {measured && <rect x={cx} y={top} width={bar} height={height} className="matrix-block-mark matrix-block-mark--soft" />}
           </>
         )}
         {row !== undefined && (
@@ -162,12 +176,17 @@ function stepPattern(env, entry) {
  * (the pattern p), a camera of MATRIX_PIXELS pixels (the image c), c = Tp.
  *
  * - `mode: 'matrix'`: build steps `{ elements: [k] }` show column k (the
- *   room lit by element k alone, every camera pixel's ray in the color it
- *   measures, and the camera's image), and `{ row: j }` shows row j (the
+ *   room lit by element k alone, every camera pixel's ray in the color of
+ *   its value, and the camera's image); with `image: false`, the room lit
+ *   by element k without the rays, the image, or the column's mark in T
+ *   (a step to ask what that image is). `{ row: j }` shows row j (the
  *   light paths from every element that end at pixel j, colored by their
- *   number of bounces, and each element glowing with its share T_jk).
- *   Beside the room, c = Tp is drawn as blocks to scale, with that column
- *   or row marked.
+ *   number of bounces, and each element glowing with its share T_jk);
+ *   with `bounces: n`, only the terms up to Aⁿ (the paths of at most n
+ *   bounces, and each element's share of those terms), so consecutive
+ *   steps can add the terms one at a time. Beside the room, c = Tp is
+ *   drawn as blocks to scale, with that column or row marked, over a
+ *   short label (a step's `label`, or one naming the column or row).
  * - `mode: 'relight'`: build steps `{ elements: [...] }` or `{ pattern:
  *   [one weight per element] }` light the room with p; the columns of T
  *   sit beside the room (each a photo, dimmed when its element is off), a
@@ -176,13 +195,17 @@ function stepPattern(env, entry) {
  *   directly. Clicking a column or dragging across the ceiling switches
  *   elements on and off.
  *
+ * Moving forward one step, the room changes from the previous step's
+ * lighting to the new one, and what the step adds (rays, paths, glows)
+ * is drawn in; arriving or moving back shows the step settled.
+ *
  * Content fields: `title`, `subtitle`, `mode`, `buildSteps`, `equations`
- * (EquationStack lines beside the room: `{ tex, step? }`, each from its
- * step on, its place kept from the first step), optional `figure`
- * (relight: a media item with `caption` and `step`; from that step it is
- * shown at full size in the room's place, and the check is hidden), and
- * optional `exposureStep` (the build step whose lighting sets the
- * exposure; 0).
+ * (EquationStack lines beside the room: `{ tex, step?, parts? }`, each
+ * from its step on, its place kept from the first step), optional
+ * `figure` (relight: a media item with `caption` and `step`; from that
+ * step it is shown at full size in the room's place, and the check is
+ * hidden), and optional `exposureStep` (the build step whose lighting
+ * sets the exposure; 0).
  */
 export default function TransportMatrix({ slide, buildStep }) {
   const env = lightElementRoom();
@@ -192,7 +215,10 @@ export default function TransportMatrix({ slide, buildStep }) {
     throw new Error('transportMatrix: `equations` must be lines `{ tex, step? }`');
   }
   const colorsRef = useRef(null);
-  const entry = slide.buildSteps[Math.min(buildStep, slide.buildSteps.length - 1)];
+  const step = Math.min(buildStep, slide.buildSteps.length - 1);
+  const fromStep = useStepTransition(step);
+  const entry = slide.buildSteps[step];
+  const previous = fromStep === null ? null : slide.buildSteps[fromStep];
   const scripted = useMemo(() => (entry.row === undefined ? stepPattern(env, entry) : null), [env, entry]);
   const [painted, setPainted] = useState(null);
   const paintValue = useRef(null);
@@ -217,7 +243,19 @@ export default function TransportMatrix({ slide, buildStep }) {
     return { ...fixed, room: Math.min(fixed.room, own.room), strip: Math.min(fixed.strip, own.strip) };
   }, [env, fixed, painted]);
 
-  const view = entry.row === undefined ? { p, bars: relight && graded(p), rays: !relight } : { row: entry.row };
+  const measured = relight || entry.image !== false;
+  const view = entry.row === undefined
+    ? {
+      p,
+      before: previous && previous.row === undefined && !painted ? stepPattern(env, previous) : null,
+      bars: relight && graded(p),
+      rays: !relight && measured,
+    }
+    : {
+      row: entry.row,
+      bounces: entry.bounces ?? null,
+      before: previous && previous.row === entry.row ? { bounces: previous.bounces ?? null } : null,
+    };
   const image = weightedSum(env.images, p ?? uniform);
   const paint = (ctx, progress) => {
     if (view.row === undefined) {
@@ -225,7 +263,7 @@ export default function TransportMatrix({ slide, buildStep }) {
       return;
     }
     colorsRef.current ??= themeColors(ctx.canvas, PATH_COLORS);
-    paintRow(ctx, env, view.row, colorsRef.current, progress);
+    paintRow(ctx, env, view, colorsRef.current, progress);
   };
   const check = useMemo(() => (relight && p ? relightingCheck(env, p) : null), [env, relight, p]);
   const largest = p ? Math.max(...p) : 0;
@@ -272,13 +310,15 @@ export default function TransportMatrix({ slide, buildStep }) {
             width={ROOM[0]}
             height={ROOM[1]}
             paint={paint}
-            animationKey={`${buildStep}`}
-            duration={700}
+            animationKey={`${step}`}
+            duration={fromStep === step - 1 ? 700 : 0}
             redrawKey={p ? Array.from(p).join(',') : `row${entry.row}`}
             className="matrix-room"
             {...roomEvents}
           />
-          <Strip image={image} gain={p ? gains.strip : gains.uniform.strip} width={ROOM[0]} highlight={entry.row} />
+          <motion.div initial={false} animate={{ opacity: measured ? 1 : 0 }} transition={{ duration: 0.35 }}>
+            <Strip image={image} gain={p ? gains.strip : gains.uniform.strip} width={ROOM[0]} highlight={entry.row} />
+          </motion.div>
           {figure && (
             <motion.figure
               className="matrix-figure"
@@ -320,9 +360,9 @@ export default function TransportMatrix({ slide, buildStep }) {
             </>
           ) : (
             <>
-              <BlockDiagram pixels={MATRIX_PIXELS} elements={env.elements.length} column={k} row={entry.row} />
+              <BlockDiagram pixels={MATRIX_PIXELS} elements={env.elements.length} column={k} row={entry.row} measured={measured} />
               <p className="matrix-label">
-                <Text>{entry.row === undefined ? 'column $k$: $p = \\delta_k$' : 'row $j$: pixel $j$'}</Text>
+                <Text>{entry.label ?? (entry.row === undefined ? 'column $k$: $p = \\delta_k$' : 'row $j$: pixel $j$')}</Text>
               </p>
             </>
           )}

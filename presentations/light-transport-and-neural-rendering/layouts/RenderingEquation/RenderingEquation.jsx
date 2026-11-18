@@ -38,11 +38,15 @@ const TRACE_ANGLE = -0.2;
 /** Opacity of what an earlier equation showed, while a later one is current. */
 const DIM = 0.3;
 
-/** Render colors of the terms, the theme's --light-* roles (theme.css). */
+/**
+ * Render colors of the terms, the theme's --light-* roles (theme.css).
+ * Propagation (ray tracing, r and G) is geometry, as the patches and bins
+ * are: drawn neutral, as its symbols are uncolored in the equations.
+ */
 const EMISSION_LIGHT = 'rgb(255, 241, 201)';
 const SCATTER_COLOR = 'rgba(255, 159, 67, 0.95)';
-const TRACE_COLOR = 'rgba(232, 71, 95, 0.95)';
 const GEOMETRY_COLOR = 'rgba(232, 236, 244, 0.8)';
+const TRACE_COLOR = 'rgba(170, 182, 204, 0.95)';
 
 /**
  * What each build step shows once settled, as opacities: the lamp's light
@@ -144,14 +148,16 @@ function drawDashed(ctx, transform, a, b, color) {
   ctx.restore();
 }
 
-function drawDot(ctx, transform, p, color, radius, alpha) {
+/** A surface point reached by ray tracing: a ring, so it reads apart from the glowing point x. */
+function drawRing(ctx, transform, p, color, radius, alpha) {
   const [x, y] = transform.toCanvas(p);
   ctx.save();
   ctx.globalAlpha = alpha;
-  ctx.fillStyle = color;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = radius > 5 ? 2.5 : 1.6;
   ctx.beginPath();
   ctx.arc(x, y, radius, 0, 2 * Math.PI);
-  ctx.fill();
+  ctx.stroke();
   ctx.restore();
 }
 
@@ -162,9 +168,10 @@ function drawDot(ctx, transform, p, color, radius, alpha) {
  * camera), the lamp's emitted light L_e (term-emission), the scattering
  * integral (term-operator: the incident light arriving at x from every
  * direction, in its own color, weighted by the dashed cosine lobe), the
- * ray-tracing function r(x, ω_i) (term-bounce-4: one direction traced to
- * the surface it reaches, whose light returns along it), then L = L_e + SGL
- * (every direction traced, G, then the lobe, S), and x = e + Ax (patch
+ * ray-tracing function r(x, ω_i) (uncolored, drawn neutral as geometry:
+ * one direction traced to the surface it reaches, marked by a ring, whose
+ * light returns along it), then L = L_e + SGL (every direction traced, G,
+ * then the lobe, S), and x = e + Ax (patch
  * boundaries and direction bins). x starts at the floor point the measured
  * pixel sees, the x of the path tracing slide; clicking a surface moves it.
  *
@@ -258,8 +265,8 @@ export default function RenderingEquation({ slide, buildStep }) {
     // The surface points r(x, ω_i) of the drawn directions: those of the rays, then of the bins.
     if (state.hits > 0) {
       const fanHits = state.hitsOut >= 1 ? state.hits * Math.max(state.fan, state.hitLines) : 0;
-      for (const ray of fanRays(gather)) drawDot(ctx, transform, ray.end, TRACE_COLOR, 3.5, fanHits);
-      for (const bin of scene.bins) drawDot(ctx, transform, bin.end, TRACE_COLOR, 4.5, state.hits * binAlpha);
+      for (const ray of fanRays(gather)) drawRing(ctx, transform, ray.end, TRACE_COLOR, 3.5, fanHits);
+      for (const bin of scene.bins) drawRing(ctx, transform, bin.end, TRACE_COLOR, 4.5, state.hits * binAlpha);
     }
 
     drawCosineLobe(ctx, transform, patch, x, LOBE, { color: SCATTER_COLOR, alpha: state.lobe, width: 3 });
@@ -274,7 +281,7 @@ export default function RenderingEquation({ slide, buildStep }) {
       }
       drawDashed(ctx, transform, x, partway(x, end, state.traceOut), TRACE_COLOR);
       ctx.restore();
-      if (state.traceOut >= 1) drawDot(ctx, transform, end, TRACE_COLOR, 7, state.trace);
+      if (state.traceOut >= 1) drawRing(ctx, transform, end, TRACE_COLOR, 7, state.trace);
     }
 
     // L_o(x, ω_o): the light leaving x toward the camera.
@@ -308,7 +315,7 @@ export default function RenderingEquation({ slide, buildStep }) {
       opacity: settled.trace,
       tone: 'geometry',
     },
-    { key: 'hit', tex: '$r(\\mathbf{x}, \\omega_i)$', style: at(scene.traced.end, 52, 22), opacity: settled.trace, tone: 'trace' },
+    { key: 'hit', tex: '$r(\\mathbf{x}, \\omega_i)$', style: at(scene.traced.end, 52, 22), opacity: settled.trace, tone: 'geometry' },
   ];
 
   return (

@@ -22,6 +22,19 @@ function splitTex(line) {
 }
 
 /**
+ * The TeX of one of a line's `parts`: its formula after an empty group, so
+ * an operator it starts with (+, =) keeps the spacing it has between two
+ * terms rather than that of a sign.
+ */
+function partTex(line, part) {
+  const formula = typeof part?.tex === 'string' ? formulaOf(part.tex) : null;
+  if (formula === null || !Number.isInteger(part.step)) {
+    throw new Error(`EquationStack: each of the "parts" of "${line.tex}" needs "tex", one $…$ formula, and a whole "step"`);
+  }
+  return '${}' + formula + '$';
+}
+
+/**
  * Equations built up one per build step: the lecture's one owner of how an
  * equation stack appears.
  *
@@ -44,6 +57,13 @@ function splitTex(line) {
  *   and faded out on the next. It is drawn over the space below the line,
  *   where later lines appear, so that step must show none of them.
  *
+ * A line can also grow term by term: `parts`, each `{ tex, step }` with
+ * `tex` one `$…$` formula, follow the line's `tex` on the same row, each
+ * shown from its `step` (and not before the line itself). A part not yet
+ * shown keeps its space, so the terms already shown never move. Parts do
+ * not change which line is the current one, and a line with parts is
+ * complete once its last part is shown.
+ *
  * By default every line keeps its place from the first step: lines not yet
  * shown are invisible but take their space, so revealing a line never moves
  * the others and the stack sits in the same place on every step
@@ -54,7 +74,10 @@ export default function EquationStack({
   lines, step, keepPlaces = true, dimEarlier = true, className = '', lineClassName = '',
 }) {
   const appearsAt = (line, i) => line.step ?? i;
-  const completeAt = (line, i) => (line.rhs ? line.rhsStep ?? appearsAt(line, i) + 1 : appearsAt(line, i));
+  const completeAt = (line, i) => Math.max(
+    line.rhs ? line.rhsStep ?? appearsAt(line, i) + 1 : appearsAt(line, i),
+    ...(line.parts ?? []).map((part) => part.step),
+  );
   // The first row of the equation each line belongs to.
   const equationOf = [];
   lines.forEach((line, i) => equationOf.push(line.continues && i > 0 ? equationOf[i - 1] : i));
@@ -89,6 +112,18 @@ export default function EquationStack({
           >
             {line.label && <div className="equation-stack-label"><Text>{line.label}</Text></div>}
             <Text>{line.rhs ? splitTex(line) : line.tex}</Text>
+            {line.parts?.map((part, k) => (
+              <motion.span
+                key={k}
+                className="equation-stack-part"
+                initial={false}
+                animate={{ opacity: part.step <= step ? 1 : 0 }}
+                transition={{ duration: 0.35 }}
+                aria-hidden={part.step > step}
+              >
+                <Text>{partTex(line, part)}</Text>
+              </motion.span>
+            ))}
             {line.justification && (
               <motion.div
                 className="equation-stack-justification"

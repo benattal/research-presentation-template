@@ -9,13 +9,20 @@
       "step": 0
     },
     {
-      "tex": "$\\mathbf{T} = C(I + \\htmlClass{term-bounce-1}{A} + \\htmlClass{term-bounce-2}{A^2} + \\htmlClass{term-bounce-3}{\\cdots})E$",
-      "step": 0
+      "tex": "$\\mathbf{T} = C(\\htmlClass{term-emission}{I}$",
+      "step": 1,
+      "parts": [
+        { "tex": "$+ \\htmlClass{term-bounce-1}{A}$", "step": 1 },
+        { "tex": "$+ \\htmlClass{term-bounce-2}{A^2}$", "step": 2 },
+        { "tex": "$+ \\htmlClass{term-bounce-3}{\\cdots}$", "step": 4 },
+        { "tex": "$)E$", "step": 1 }
+      ]
     }
   ],
   "projectorLabel": "projector $p$",
   "cameraLabel": "camera $c$",
   "buildSteps": [
+    {},
     {
       "path": "direct",
       "label": "direct"
@@ -25,12 +32,12 @@
       "label": "interreflection"
     },
     {
-      "path": "subsurface",
-      "label": "subsurface"
-    },
-    {
       "path": "volumetric",
       "label": "volumetric"
+    },
+    {
+      "path": "subsurface",
+      "label": "subsurface"
     }
   ],
   "credits": [

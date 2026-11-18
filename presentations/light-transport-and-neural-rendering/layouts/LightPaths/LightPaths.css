@@ -35,7 +35,6 @@
 .light-paths-label--light-1 { color: var(--light-1); }
 .light-paths-label--light-2 { color: var(--light-2); }
 .light-paths-label--light-3 { color: var(--light-3); }
-.light-paths-label--medium { color: var(--medium); }
 
 .light-paths-side {
   display: flex;

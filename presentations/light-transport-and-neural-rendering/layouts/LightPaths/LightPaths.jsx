@@ -2,7 +2,9 @@ import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
-import { ease, useAnimation, useStageCanvas } from '../canvas/canvas.js';
+import {
+  ease, useAnimation, useStageCanvas, useStepTransition,
+} from '../canvas/canvas.js';
 import EquationStack from '../equations/EquationStack.jsx';
 import { rgba, themeColors } from '../volume/draw.js';
 import './LightPaths.css';
@@ -34,7 +36,11 @@ const POINT = [500, FLOOR.y];
 /**
  * The four kinds of path from the projector to the camera through POINT,
  * after Nayar et al. 2006, Fig. 2: each a polyline from the projector, the
- * color it is drawn in (a theme property), and where its label sits.
+ * color it is drawn in (a theme property), and where its label sits. The
+ * color is that of the term of T = C(I + A + A² + ⋯)E the path belongs
+ * to, by its number of scatterings: direct (one, A), interreflection and
+ * volumetric (two, A², the volumetric one scattering in the medium), and
+ * subsurface (many, the terms after A²).
  */
 const PATHS = {
   direct: {
@@ -57,12 +63,12 @@ const PATHS = {
   },
   volumetric: {
     points: [PROJECTOR, [548, 124], POINT, CAMERA],
-    color: 'medium',
+    color: 'light-2',
     label: [668, 106],
   },
 };
 
-const COLORS = ['render-bg', 'light-0', 'light-1', 'light-2', 'light-3', 'medium', 'text-muted'];
+const COLORS = ['render-bg', 'light-1', 'light-2', 'light-3', 'medium'];
 
 function length(points) {
   let total = 0;
@@ -198,29 +204,34 @@ function drawScene(ctx, colors, subsurfaceLit) {
 
 /**
  * Kinds of light paths between a projector and a camera, one per build
- * step (after Nayar et al. 2006, Fig. 2): each step's `path` (direct,
+ * step (after Nayar et al. 2006, Fig. 2): a step's `path` (direct,
  * interreflection, subsurface, volumetric) is drawn on a dark render of a
  * side view, in addition to the earlier ones, with its short `label`
- * beside it. `equations` sit beside the render; optional `projectorLabel`
- * and `cameraLabel` name the devices.
+ * beside it; a step without a path adds none (the scene alone, before the
+ * first path). The newest path is drawn from the projector when the slide
+ * moves forward to its step. `equations` sit beside the render; optional
+ * `projectorLabel` and `cameraLabel` name the devices.
  *
  * Content fields: `title`, `subtitle`, `equations` (EquationStack lines
- * `{ tex, step? }`), `buildSteps` (each `{ path, label }`), optional
- * `projectorLabel`, `cameraLabel`.
+ * `{ tex, step?, parts? }`), `buildSteps` (each `{ path, label }` or
+ * `{}`), optional `projectorLabel`, `cameraLabel`.
  */
 export default function LightPaths({ slide, buildStep }) {
   const steps = slide.buildSteps;
   for (const step of steps) {
-    if (!PATHS[step.path]) throw new Error(`lightPaths: unknown path "${step.path}"`);
+    if (step.path !== undefined && !PATHS[step.path]) throw new Error(`lightPaths: unknown path "${step.path}"`);
   }
   if (!Array.isArray(slide.equations) || slide.equations.some((line) => typeof line.tex !== 'string')) {
     throw new Error('lightPaths: `equations` must be lines `{ tex, step? }`');
   }
-  const shown = steps.slice(0, Math.min(buildStep, steps.length - 1) + 1);
+  const current = Math.min(buildStep, steps.length - 1);
+  const fromStep = useStepTransition(current);
+  const shown = steps.slice(0, current + 1).filter((step) => step.path);
+  const paths = steps.filter((step) => step.path);
   const [ref, ratio] = useStageCanvas();
   const colorsRef = useRef(null);
 
-  useAnimation(`${buildStep}-${ratio}`, 900, (progress) => {
+  useAnimation(`${current}-${ratio}`, fromStep === current - 1 ? 900 : 0, (progress) => {
     const canvas = ref.current;
     if (!canvas) return;
     colorsRef.current ??= themeColors(canvas, COLORS);
@@ -228,11 +239,11 @@ export default function LightPaths({ slide, buildStep }) {
     const ctx = canvas.getContext('2d');
     const scale = ratio * VIEW.scale;
     ctx.setTransform(scale, 0, 0, scale, -VIEW.left * scale, 0);
-    const newest = shown.length - 1;
-    const fraction = (i) => (i === newest ? ease(progress) : 1);
-    const subsurface = shown.findIndex((step) => step.path === 'subsurface');
-    drawScene(ctx, colors, subsurface < 0 ? 0 : fraction(subsurface));
-    shown.forEach((step, i) => drawPath(ctx, colors, PATHS[step.path], fraction(i)));
+    // Only the path this step adds is drawn partway; every earlier one is whole.
+    const fraction = (step) => (step === steps[current] ? ease(progress) : 1);
+    const subsurface = shown.find((step) => step.path === 'subsurface');
+    drawScene(ctx, colors, subsurface ? fraction(subsurface) : 0);
+    shown.forEach((step) => drawPath(ctx, colors, PATHS[step.path], fraction(step)));
   });
 
   return (
@@ -256,14 +267,14 @@ export default function LightPaths({ slide, buildStep }) {
               <Text>{slide.cameraLabel}</Text>
             </span>
           )}
-          {steps.map((step, i) => (
+          {paths.map((step) => (
             <motion.span
               key={step.path}
               className={`light-paths-label light-paths-label--${PATHS[step.path].color}`}
               style={onStage(PATHS[step.path].label)}
               initial={false}
-              animate={{ opacity: i < shown.length ? 1 : 0 }}
-              transition={{ duration: 0.35, delay: i === shown.length - 1 ? 0.5 : 0 }}
+              animate={{ opacity: shown.includes(step) ? 1 : 0 }}
+              transition={{ duration: 0.35, delay: step === steps[current] && fromStep === current - 1 ? 0.5 : 0 }}
             >
               {step.label}
             </motion.span>
