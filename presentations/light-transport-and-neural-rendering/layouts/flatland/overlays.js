@@ -4,8 +4,13 @@
  * camera's 1D image as a strip of pixels. Canvas code in stage pixels;
  * `transform` is the room transform drawRoom returns.
  */
-import { CAMERA, cameraRay, castRay } from './scene.js';
+import { GATHER_RAYS_PER_BIN } from './gather.js';
+import {
+  BINS, CAMERA, cameraRay, castRay, direction,
+} from './scene.js';
 import { toneMap } from './render.js';
+
+const luminance = (rgb) => 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
 
 /** CSS color of linear RGB light at exposure `gain`, through the render's tone curve. */
 export function lightColor(rgb, gain, alpha = 1) {
@@ -119,5 +124,120 @@ export function drawImageStrip(ctx, image, gain, { x, y, width, height }) {
     ctx.fillStyle = lightColor([image[j * 3], image[j * 3 + 1], image[j * 3 + 2]], gain);
     ctx.fillRect(x + j * w, y, Math.ceil(w + 0.5), height);
   }
+  ctx.restore();
+}
+
+/**
+ * The exposure for the incident rays of a gather (gather.js): the median
+ * incident light sits mid-curve, so rays of different light keep apart.
+ */
+export function incidentGain(gather) {
+  const values = gather.rays.map((ray) => luminance(ray.radiance)).sort((a, b) => a - b);
+  return 0.55 / Math.max(1e-6, values[Math.floor(values.length / 2)]);
+}
+
+/** The rays of a gather that `drawIncidentFan` draws: `perBin` evenly spaced rays of each direction bin. */
+export function fanRays(gather, perBin = 3) {
+  const every = Math.round(GATHER_RAYS_PER_BIN / perBin);
+  return gather.rays.filter((ray) => ray.k % every === Math.floor(every / 2) && ray.k < every * perBin);
+}
+
+/**
+ * The incident light of a gather at its point, as rays of light: `perBin`
+ * evenly spaced rays of each direction bin, each in the color of the light
+ * arriving along it. A ray runs from the surface it comes from toward the
+ * point, `reach` ∈ [0, 1] of the way (light arriving), and stops `gap` room
+ * units short of the point, so the rays do not saturate it. `weight` ∈
+ * [0, 1] blends each ray's light toward f_r cos θ relative to its largest
+ * value (albedo × cos θ for the diffuse BRDF ρ/2), so grazing light dims.
+ */
+export function drawIncidentFan(ctx, transform, gather, patch, {
+  gain, reach = 1, weight = 0, alpha = 1, perBin = 3, gap = 0.2,
+}) {
+  if (alpha <= 0 || reach <= 0) return;
+  const [px, py] = gather.point;
+  const segments = fanRays(gather, perBin).map((ray) => {
+    const rgb = ray.radiance.map((value, c) => value * (1 - weight + weight * patch.albedo[c] * Math.cos(ray.theta)));
+    const d = [ray.end[0] - px, ray.end[1] - py];
+    const length = Math.hypot(d[0], d[1]);
+    const near = Math.min(gap, length) / length;
+    const head = 1 - (1 - near) * reach;
+    return { a: ray.end, b: [px + d[0] * head, py + d[1] * head], color: lightColor(rgb, gain) };
+  });
+  drawLightSegments(ctx, transform, segments, { width: 1.4, glow: 3, alpha });
+}
+
+/**
+ * The cosine lobe at a surface point: r = radius · cos θ (room units), a
+ * circle touching the surface at the point, dashed, in `color`.
+ */
+export function drawCosineLobe(ctx, transform, patch, point, radius, { color, alpha = 1, width = 2 }) {
+  if (alpha <= 0) return;
+  const [cx, cy] = transform.toCanvas(point);
+  const R = radius * transform.scale;
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width;
+  ctx.setLineDash([5, 5]);
+  ctx.beginPath();
+  for (let i = 0; i <= 64; i += 1) {
+    const theta = -Math.PI / 2 + (i / 64) * Math.PI;
+    const d = direction(patch, theta);
+    const r = R * Math.cos(theta);
+    if (i === 0) ctx.moveTo(cx + d[0] * r, cy - d[1] * r);
+    else ctx.lineTo(cx + d[0] * r, cy - d[1] * r);
+  }
+  ctx.stroke();
+  ctx.restore();
+}
+
+/**
+ * The direction bins at a surface point: a half circle of `radius` room
+ * units with a spoke at each of the BINS + 1 bin edges.
+ */
+export function drawDirectionBins(ctx, transform, patch, point, radius, { color, alpha = 1 }) {
+  if (alpha <= 0) return;
+  const [cx, cy] = transform.toCanvas(point);
+  const r = radius * transform.scale;
+  const normalAngle = Math.atan2(-patch.normal[1], patch.normal[0]);
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, normalAngle - Math.PI / 2, normalAngle + Math.PI / 2);
+  ctx.stroke();
+  ctx.lineWidth = 1;
+  for (let b = 0; b <= BINS; b += 1) {
+    const d = direction(patch, -Math.PI / 2 + (b * Math.PI) / BINS);
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + d[0] * r, cy - d[1] * r);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+/**
+ * The patches of the room's surfaces: a short tick into the room at every
+ * patch boundary, `length` room units long.
+ */
+export function drawPatchTicks(ctx, transform, room, { color, alpha = 1, length = 0.16 }) {
+  if (alpha <= 0) return;
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  for (const patch of room.patches) {
+    for (const end of [patch.a, patch.b]) {
+      const [x0, y0] = transform.toCanvas(end);
+      const [x1, y1] = transform.toCanvas([end[0] + patch.normal[0] * length, end[1] + patch.normal[1] * length]);
+      ctx.moveTo(x0, y0);
+      ctx.lineTo(x1, y1);
+    }
+  }
+  ctx.stroke();
   ctx.restore();
 }

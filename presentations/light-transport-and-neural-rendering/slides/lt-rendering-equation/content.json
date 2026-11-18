@@ -1,46 +1,50 @@
 {
-  "layout": "derivation",
+  "layout": "renderingEquation",
   "sectionLabel": "Operator light transport",
   "title": "Rendering equation",
   "subtitle": "Outgoing light is emission plus scattered incident light",
   "lines": [
     {
-      "tex": "\\underbrace{L_o(\\mathbf{x}, \\omega_o)}_{\\text{outgoing}} = \\underbrace{\\htmlClass{term-emission}{L_e(\\mathbf{x}, \\omega_o)}}_{\\text{emitted}} + \\underbrace{\\htmlClass{term-operator}{\\int_{H^2} f_r \\, L_i(\\mathbf{x}, \\omega_i) \\cos\\theta_i \\, d\\omega_i}}_{\\text{reflected}}"
+      "tex": "$L_o(\\mathbf{x}, \\omega_o)$",
+      "step": 0
     },
     {
-      "tex": "L_i(\\mathbf{x}, \\omega_i) = L_o(r(\\mathbf{x}, \\omega_i), -\\omega_i)",
-      "label": "ray tracing"
+      "tex": "$= \\htmlClass{term-emission}{L_e(\\mathbf{x}, \\omega_o)}$",
+      "step": 1,
+      "continues": true
     },
     {
-      "tex": "L(\\mathbf{x}, \\omega_o) = \\htmlClass{term-emission}{L_e(\\mathbf{x}, \\omega_o)} + \\underbrace{\\htmlClass{term-operator}{\\int_{H^2} f_r \\, \\underbrace{L(r(\\mathbf{x}, \\omega_i), -\\omega_i)}_{G L} \\cos\\theta_i \\, d\\omega_i}}_{S G L}"
+      "tex": "$+ \\htmlClass{term-operator}{\\int_{H^2} f_r \\, L_i(\\mathbf{x}, \\omega_i) \\cos\\theta_i \\, d\\omega_i}$",
+      "step": 2,
+      "continues": true
     },
     {
-      "tex": "L = \\htmlClass{term-emission}{L_e} + \\htmlClass{term-operator}{A}\\, L, \\quad \\htmlClass{term-operator}{A} = SG"
+      "tex": "$L_i(\\mathbf{x}, \\omega_i)$",
+      "step": 3
     },
     {
-      "tex": "x = \\htmlClass{term-emission}{e} + \\htmlClass{term-operator}{A}\\, x",
-      "label": "discretized"
+      "tex": "$= L_o(\\htmlClass{term-bounce-4}{r(\\mathbf{x}, \\omega_i)}, -\\omega_i)$",
+      "step": 3,
+      "continues": true
+    },
+    {
+      "tex": "$L = \\htmlClass{term-emission}{L_e} + \\htmlClass{term-operator}{S} \\, \\htmlClass{term-bounce-4}{G} \\, L$",
+      "step": 4
+    },
+    {
+      "tex": "$x = \\htmlClass{term-emission}{e} + A \\, x, \\quad A = \\htmlClass{term-operator}{S} \\, \\htmlClass{term-bounce-4}{G}$",
+      "step": 5
     }
   ],
-  "fontSize": "1.45rem",
   "buildSteps": [
-    {},
-    {},
-    {},
-    {},
-    {}
+    { "label": "outgoing" },
+    { "label": "emitted" },
+    { "label": "reflected" },
+    { "label": "ray tracing" },
+    { "label": "propagation and scattering" },
+    { "label": "discretized" }
   ],
-  "figure": {
-    "type": "image",
-    "src": "/slides/lt-rendering-equation/ray-tracing-function.png",
-    "alt": "The ray-tracing function r(x, omega): the first surface point on the ray from x in direction omega; the incident light at x is the outgoing light there",
-    "width": 450
-  },
   "credits": [
-    "kajiya1986",
-    {
-      "source": "cmu15468-rendering",
-      "what": "p. 11"
-    }
+    "kajiya1986"
   ]
 }

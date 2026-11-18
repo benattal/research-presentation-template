@@ -8,7 +8,7 @@
  * toward the point from a solved light field x (the steady state).
  */
 import {
-  BINS, BIN_WIDTH, angleAt, binOf, binRange, castRay, direction, pointOn, stateIndex,
+  BINS, BIN_WIDTH, CAMERA, angleAt, binOf, binRange, cameraRay, castRay, direction, pointOn, stateIndex,
 } from './scene.js';
 
 /** Rays per direction bin of the gather. */
@@ -54,6 +54,18 @@ export function gatherAt(room, patch, u, x, e, perBin = GATHER_RAYS_PER_BIN) {
     outgoing: gathered.map((value, c) => value + emitted[c]),
     solved: [x[out], x[out + 1], x[out + 2]],
   };
+}
+
+/**
+ * The surface point the room's camera sees at image coordinate s ∈ [0, 1]:
+ * { patch, u }, the patch and the parameter along it, as `gatherAt` takes them.
+ */
+export function cameraSurfacePoint(room, s) {
+  const hit = castRay(room, CAMERA.position, cameraRay(CAMERA, s));
+  if (!hit) throw new Error(`The camera ray at ${s} leaves the room`);
+  const along = [hit.point[0] - hit.patch.a[0], hit.point[1] - hit.patch.a[1]];
+  const u = (along[0] * hit.patch.tangent[0] + along[1] * hit.patch.tangent[1]) / hit.patch.length;
+  return { patch: hit.patch, u };
 }
 
 /** The point of the room's surfaces nearest to `p` (room units), within `reach`: { patch, u } or null. */

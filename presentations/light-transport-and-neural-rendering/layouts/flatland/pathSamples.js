@@ -76,36 +76,60 @@ export function rayTable(room) {
   return { target, cumulative, segments };
 }
 
+const samplingTables = new WeakMap();
+
+/**
+ * The walk's choice of incoming bin at every state (q, out), computed once
+ * per transport: `weights[state · BINS + in]` = mean_c S_c[out, in], and
+ * `totals[state]` their sum (the probability of continuing). Tabulating
+ * them keeps a walk's step from re-reading S; the values are the same.
+ */
+function samplingTable(transport) {
+  if (!samplingTables.has(transport)) {
+    const { scatter, room } = transport;
+    const weights = new Float64Array(room.size * BINS);
+    const totals = new Float64Array(room.size);
+    for (let state = 0; state < room.size; state += 1) {
+      const q = Math.floor(state / BINS);
+      const out = state % BINS;
+      let total = 0;
+      for (let inc = 0; inc < BINS; inc += 1) {
+        let mean = 0;
+        for (let c = 0; c < 3; c += 1) mean += scatter[((q * 3 + c) * BINS + out) * BINS + inc];
+        weights[state * BINS + inc] = mean / 3;
+        total += weights[state * BINS + inc];
+      }
+      totals[state] = total;
+    }
+    samplingTables.set(transport, { weights, totals });
+  }
+  return samplingTables.get(transport);
+}
+
 /**
  * One walk from `start` (a state index). Returns its collected light
  * (RGB) and, when `keep`, the rays it took ([x0, y0, x1, y1] each).
  */
 export function walk(transport, rays, start, random, keep = false) {
   const { scatter, emission } = transport;
+  const { weights, totals } = samplingTable(transport);
   const value = [0, 0, 0];
   const weight = [1, 1, 1];
   const path = keep ? [] : null;
-  const w = new Float64Array(BINS);
   let state = start;
   for (let step = 0; step < MAX_STEPS; step += 1) {
     for (let c = 0; c < 3; c += 1) value[c] += weight[c] * emission[state * 3 + c];
     const q = Math.floor(state / BINS);
     const out = state % BINS;
-    let total = 0;
-    for (let inc = 0; inc < BINS; inc += 1) {
-      let mean = 0;
-      for (let c = 0; c < 3; c += 1) mean += scatter[((q * 3 + c) * BINS + out) * BINS + inc];
-      w[inc] = mean / 3;
-      total += w[inc];
-    }
+    const row = state * BINS;
     let u = random();
-    if (u >= total) break;
+    if (u >= totals[state]) break;
     let inc = 0;
-    while (inc < BINS - 1 && u >= w[inc]) {
-      u -= w[inc];
+    while (inc < BINS - 1 && u >= weights[row + inc]) {
+      u -= weights[row + inc];
       inc += 1;
     }
-    for (let c = 0; c < 3; c += 1) weight[c] *= scatter[((q * 3 + c) * BINS + out) * BINS + inc] / w[inc];
+    for (let c = 0; c < 3; c += 1) weight[c] *= scatter[((q * 3 + c) * BINS + out) * BINS + inc] / weights[row + inc];
     const s = q * BINS + inc;
     const base = s * RAYS;
     const pick = random() * rays.cumulative[base + RAYS - 1];
@@ -184,4 +208,32 @@ export function relativeError(estimate, exact) {
     mean += lum(exact, j);
   }
   return Math.sqrt(squares / pixels) / (mean / pixels);
+}
+
+/**
+ * One random walk over the room's surfaces in continuous position and
+ * angle, for drawing a single path (the estimator above walks the discrete
+ * states). From `point` on `patch` (room units), each step samples a
+ * direction with the flatland cosine density p(θ) = cos θ / 2, so θ =
+ * asin(2u − 1), and moves to the first surface on that ray. The walk stops
+ * at an emitting patch, when a ray leaves the room, or after `maxSteps`
+ * steps. Returns the vertices from `point` on, the patch of each, and
+ * whether the last vertex is on an emitter.
+ */
+export function surfaceWalk(room, point, patch, random, maxSteps = 8) {
+  const vertices = [point];
+  const patches = [patch];
+  let here = point;
+  let surface = patch;
+  for (let step = 0; step < maxSteps; step += 1) {
+    const theta = Math.asin(2 * random() - 1);
+    const hit = castRay(room, here, direction(surface, theta), surface.segment);
+    if (!hit) break;
+    vertices.push(hit.point);
+    patches.push(hit.patch);
+    if (hit.patch.emission) return { vertices, patches, lit: true };
+    here = hit.point;
+    surface = hit.patch;
+  }
+  return { vertices, patches, lit: false };
 }

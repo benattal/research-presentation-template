@@ -1,19 +1,15 @@
-Path tracing is a random-walk (Monte Carlo) estimate of the sum over bounces, run on the room's operator $A = SG$.
+The Neumann series applies $A$ to the whole light field, bounce after bounce: every point, every direction, the full integral each time. Path tracing estimates the same sum without computing $A$, one random direction at a time.
 
-The equation is the one-sample estimate of the rendering equation (CMU 15-468, p. 31): replace the integral over directions by one direction $\omega_i$, sampled with probability density $p(\omega_i)$, and divide by that density. The estimate is unbiased. The $L$ on the right is the same unknown at the hit point $r(\mathbf{x}, \omega_i)$, so it is estimated the same way, with one direction there: a path.
+- **Scattering integral.** At $\mathbf{x}$, the point one camera pixel sees, the reflected light is the integral over every direction: the rays, weighted by the cosine lobe, as on the rendering equation slide.
+- **One random direction.** Sample one direction $\omega_i$ with probability density $p(\omega_i)$ and divide by that density: $f_r L_i \cos\theta_i / p(\omega_i)$ is an unbiased estimate of the integral; its expected value is the integral (CMU 15-468, p. 31). Here $p$ is the cosine lobe itself, $p(\theta) = \cos\theta / 2$ in flatland, so the estimate is the albedo times the light arriving along $\omega_i$.
+- **Random walk.** $L_i(\mathbf{x}, \omega_i)$ is the outgoing light at $r(\mathbf{x}, \omega_i)$, itself unknown, so it is estimated the same way: one direction sampled there, then at the next surface, until the walk reaches the lamp. In one line, $L \approx L_e + f_r\, L(r(\mathbf{x}, \omega_i), -\omega_i) \cos\theta_i / p(\omega_i)$. The walk is traced from the camera (gray); its value is the lamp's light times the weights of its scatterings. This walk reaches the lamp after three scatterings (at $\mathbf{x}$, the red wall, and the floor), so its light is a sample of the term $A^3 e$. Each ray has the color of its term: $e$ leaving the lamp, then $Ae$, $A^2 e$, and $A^3 e$ toward the camera. A walk that reaches the lamp after $k$ scatterings is a sample of $A^k e$, so the average over walks estimates the whole sum, and $A$ is never stored.
+- **Paths per pixel.** Walks from every camera pixel: bright where they reached the lamp (in the color of their light), faint where they ended without light. With 1 path per pixel the image is mostly black with a few bright pixels; with 64 it is noisy; with 4,096 it matches the exact image, the camera's image of the solution of $x = e + Ax$. The error of a Monte Carlo average falls as $1/\sqrt{n}$: 16 times more paths, 4 times less error.
 
 Why one direction per bounce: with several directions at every hit point, the number of rays increases exponentially with the depth, and the deep bounces, which contribute least, get the most samples (15-468, pp. 36–37). One direction per bounce and many paths per pixel keeps the cost per bounce constant.
 
-Each path starts at the camera, through one pixel. At every surface the emission there is added to the path's value; then the path either stops (with probability one minus the albedo: Russian roulette) or continues for one bounce: an incoming direction is sampled from the BRDF and cosine, which is $S$, and a ray is traced to the first surface in that direction, which is $G$. A path that reaches the lamp after $k$ bounces is a sample of the $k$-th term of $x = e + Ae + A^2 e + \cdots$. The average over paths is an unbiased estimate of $x$, and $A$ is never stored.
+The paths of the last steps are walks on the room's discrete operator. At every surface the emission there is added to the path's value; then the path either stops (with probability one minus the albedo: Russian roulette) or continues with an incoming direction sampled from the BRDF and cosine, which is $S$, and a ray to the first surface in that direction, along one of the rays $G$ was built from. So the estimate converges to the solve itself, not to a slightly different answer.
 
 A pixel is $\langle q, x \rangle = \sum_k \langle q, A^k e \rangle$. A walk from the camera evaluates the same terms in the other order, starting from $q$ instead of $e$; the adjoint section returns to this.
-
-- **1 path per pixel.** Most paths (faint lines) never reach the lamp and contribute no light; the few that do are drawn in the color of their light (white from the lamp, red after the red wall, green after the green wall). The image is mostly black with a few bright pixels.
-- **16, 256, 4,096 paths per pixel.** The estimate (dots) converges to the exact image (line): the camera's image of the solution of $x = e + Ax$.
-
-The check is the relative error against that exact image: 196 %, 74 %, 18 %, 4 %. Each step has 16 times more paths and about a 4 times smaller error: the error of a Monte Carlo average falls as $1/\sqrt{n}$.
-
-The paths here are traced along exactly the rays the operator $G$ was built from, so the estimate converges to the solve itself, not to a slightly different answer.
 
 One sentence: path tracing estimates the Neumann series by averaging random walks through the scene.
 

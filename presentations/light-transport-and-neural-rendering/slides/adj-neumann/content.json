@@ -13,5 +13,14 @@
     {},
     {}
   ],
-  "shareLabel": "sum so far"
+  "iterate": {
+    "update": "$\\htmlClass{term-adjoint}{y_{k+1}} = \\htmlClass{term-adjoint}{q} + A^\\top \\htmlClass{term-adjoint}{y_k}$",
+    "symbol": "\\htmlClass{term-adjoint}{y}"
+  },
+  "columnNote": {
+    "lines": [
+      "$\\langle q, x \\rangle = \\langle y, e \\rangle$"
+    ],
+    "step": 5
+  }
 }
