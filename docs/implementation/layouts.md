@@ -53,3 +53,18 @@ explains how to write one. A custom layout renders its heading with
 `SlideTitle` (`@core/stage/SlideTitle.jsx`, taking `title` and an optional
 `subtitle`), so its header matches the core `content` layout's, and passes
 other text fields through `Text` (`@core/stage/Text.jsx`).
+
+## Widgets for layouts
+
+`core/client/stage/` also holds the widgets custom layouts share. Each
+module's docstring gives its fields; this table says what to reach for.
+
+| Module | Exports | Use |
+| --- | --- | --- |
+| `canvas.js` | `useStageCanvas`, `useAnimation`, `useStepTransition`, `stillFrames`, `ease` | a canvas drawn sharp at the stage's scale; animations that play only for a change made on the slide, not on arriving at it or in the capture view |
+| `EquationStack.jsx` | `EquationStack` (default) | equations revealed one per build step, earlier ones dimmed; a line can ask before its right side (`rhs`), show a one-step justification under it, or grow term by term (`parts`) |
+| `Controls.jsx` | `Slider`, `Readout` | a range input for exploring with the mouse that gives the arrow keys back to the slides; named values side by side |
+| `Chart.jsx` | `Chart` (default) | a plot with thin axes and lines, dots, bars, or areas, colored by class names; optionally a scrubber |
+
+A layout restyles a widget from its own stylesheet, scoped under its own
+class (`.my-layout .slider input`); the widgets' colors are core tokens.
