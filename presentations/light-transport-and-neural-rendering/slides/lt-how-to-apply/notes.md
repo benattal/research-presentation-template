@@ -9,4 +9,4 @@ Remember: $\mathbf{T}$ is used through its products, which can be precomputed, s
 If asked:
 - Whose spherical harmonics? Sloan et al. 2002, the method Ng et al. compare with, at as many terms as the wavelets.
 - What is in the setup? A projector and a camera, with a beam splitter between them.
-- What uses the third way? The optical computing slide, which runs numerical algorithms with photographs.
+- What uses the third way? Optical computing (O'Toole and Kutulakos 2010): an algorithm that needs only products with $\mathbf{T}$, such as power iteration, runs with one photograph per product.

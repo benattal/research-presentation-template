@@ -129,25 +129,13 @@ describe('transient light transport', () => {
 });
 
 describe('light elements and their transport matrix', async () => {
-  const {
-    angleBetween, dominantEigenvector, elementReturns, lightElementRoom, oneHot, powerIteration, relightingCheck,
-  } = await import('../layouts/flatland/lightElements.js');
+  const { lightElementRoom, relightingCheck } = await import('../layouts/flatland/lightElements.js');
   const env = lightElementRoom();
 
   it('a weighted sum of columns is the photo rendered directly', () => {
     const p = Float64Array.from(env.elements, (_, k) => (k % 3) / 2);
     const { relative } = relightingCheck(env, p);
     assert.ok(relative < 1e-8, `relative difference ${relative}`);
-  });
-
-  it('power iteration reaches the dominant eigenvector in a few photos', () => {
-    const T = elementReturns(env);
-    const K = env.elements.length;
-    const v = dominantEigenvector(T, K);
-    assert.ok(v.every((value) => value > 0));
-    const angles = powerIteration(T, oneHot(K, 1), 4).map((p) => angleBetween(p, v));
-    for (let t = 1; t < angles.length; t += 1) assert.ok(angles[t] < angles[t - 1]);
-    assert.ok(angles[4] < 1, `angle after 4 photos: ${angles[4]}°`);
   });
 
   it('a coaxial projector: the photo is its direct and indirect parts, and the diagonal keeps the direct light', async () => {

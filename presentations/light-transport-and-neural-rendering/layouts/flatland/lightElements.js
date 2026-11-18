@@ -20,8 +20,6 @@ export const MATRIX_PIXELS = 64;
 /** Emitted radiance of an element switched fully on, RGB (the lamp's color). */
 export const ELEMENT_EMISSION = MATERIALS.light.emission;
 
-const luminance = (v, i) => 0.2126 * v[i] + 0.7152 * v[i + 1] + 0.0722 * v[i + 2];
-
 let cached = null;
 
 /**
@@ -101,69 +99,4 @@ export function relightingCheck(env, p) {
 /** The room's state vector (patch × bin × RGB) under lighting p, for drawing. */
 export function roomState(env, p) {
   return patchesToState(env.room, weightedSum(env.B, p));
-}
-
-/**
- * The elements' own transport: R[j][k] is the light (luminance) arriving
- * at element j when element k is lit, as if each element also measured the
- * light that reaches it. One measurement under pattern p gives Rp.
- */
-export function elementReturns(env) {
-  const { diffuse, elements, B } = env;
-  const { n, F } = diffuse;
-  const K = elements.length;
-  const R = new Float64Array(K * K);
-  for (let k = 0; k < K; k += 1) {
-    for (let j = 0; j < K; j += 1) {
-      let sum = 0;
-      for (let p = 0; p < n; p += 1) sum += F[elements[j].index * n + p] * luminance(B[k], p * 3);
-      R[j * K + k] = sum;
-    }
-  }
-  return R;
-}
-
-/** y = Mx for a K × K row-major matrix. */
-export function multiply(M, x) {
-  const K = x.length;
-  const y = new Float64Array(K);
-  for (let j = 0; j < K; j += 1) {
-    let sum = 0;
-    for (let k = 0; k < K; k += 1) sum += M[j * K + k] * x[k];
-    y[j] = sum;
-  }
-  return y;
-}
-
-function normalized(v) {
-  const length = Math.hypot(...v);
-  return v.map((value) => value / length);
-}
-
-/**
- * Power iteration p_{t+1} = R p_t / ‖R p_t‖ from `start`, `count`
- * products (photos): returns p_0 … p_count, each scaled to unit length.
- */
-export function powerIteration(R, start, count) {
-  const patterns = [normalized(Float64Array.from(start))];
-  while (patterns.length <= count) patterns.push(normalized(multiply(R, patterns.at(-1))));
-  return patterns;
-}
-
-/** The dominant eigenvector of R (unit length, positive), by iterating to convergence. */
-export function dominantEigenvector(R, K) {
-  let v = normalized(new Float64Array(K).fill(1));
-  for (let i = 0; i < 10000; i += 1) {
-    const next = normalized(multiply(R, v));
-    const change = Math.max(...next.map((value, k) => Math.abs(value - v[k])));
-    v = next;
-    if (change < 1e-14) return v;
-  }
-  throw new Error('Power iteration did not converge');
-}
-
-/** The angle between two unit vectors, in degrees. */
-export function angleBetween(a, b) {
-  const cos = a.reduce((sum, value, i) => sum + value * b[i], 0);
-  return (Math.acos(Math.min(1, Math.max(-1, cos))) * 180) / Math.PI;
 }

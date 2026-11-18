@@ -22,7 +22,6 @@ import NeumannSeries from './NeumannSeries/NeumannSeries.jsx';
 import AdjointViews from './OperatorExplorer/AdjointViews.jsx';
 import OperatorExplorer from './OperatorExplorer/OperatorExplorer.jsx';
 import OperatorForm from './OperatorForm/OperatorForm.jsx';
-import OpticalComputing from './OpticalComputing/OpticalComputing.jsx';
 import PathTracing from './PathTracing/PathTracing.jsx';
 import PhasorToF from './PhasorToF/PhasorToF.jsx';
 import PointList from './PointList/PointList.jsx';
@@ -64,7 +63,6 @@ export default {
   neumannSeries: NeumannSeries,
   operatorExplorer: OperatorExplorer,
   operatorForm: OperatorForm,
-  opticalComputing: OpticalComputing,
   pathTracing: PathTracing,
   phasorToF: PhasorToF,
   pointList: PointList,

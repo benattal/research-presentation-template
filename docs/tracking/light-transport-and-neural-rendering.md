@@ -22,6 +22,11 @@ before changing a slide.
 
 2026-11-18, after cycle 1:
 
+- "Can you remove the optical computing slide? I think the application of
+  this is a little less clear." Removed: `lt-optical-computing`, its
+  layout, and the power-iteration helpers only it used. `lt-how-to-apply`'s
+  "If asked" names optical computing in one line.
+
 - "The neural rendering section is good overall, but I think there's too
   little connection to the representation. In the scene and measurement
   field slide, at least, you should make it clear that these quantities

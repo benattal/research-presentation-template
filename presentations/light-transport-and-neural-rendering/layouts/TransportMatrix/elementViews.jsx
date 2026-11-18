@@ -1,9 +1,9 @@
 /**
- * Pieces shared by the light element slides (TransportMatrix,
- * OpticalComputing): each element's light in the room, the room under a
- * pattern of elements as their weighted sum, the exposure for a pattern,
- * the elements drawn on the ceiling with a value per element as bars
- * hanging from them, and a 1D image as a strip of light.
+ * Pieces of the light element slides (TransportMatrix): each element's
+ * light in the room, the room under a pattern of elements as their
+ * weighted sum, the exposure for a pattern, the elements drawn on the
+ * ceiling with a value per element as bars hanging from them, and a 1D
+ * image as a strip of light.
  */
 import { useEffect } from 'react';
 import { useStageCanvas } from '@core/stage/canvas.js';

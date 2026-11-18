@@ -340,7 +340,6 @@ An aside, framed as one (the user, 2026-11-17: "the "computational imaging" appl
 | `lt-matrix` | Light transport matrix | With discrete lights and pixels, light transport is a matrix | `transportMatrix` |
 | `lt-relighting` | Relighting | A photo under any lighting is a weighted sum of one-light photos | `transportMatrix`; credits `debevec2000`, `cmu15463-transport` |
 | `lt-dual` | Dual photography | Swapping the camera and the projector | `figurePanel`; credits `sen2005` |
-| `lt-optical-computing` | Optical computing | Power iteration with photographs | `opticalComputing`; credits `otoole2010`, `cmu15463-transport` |
 | `lt-probing` | Light transport probing | Selecting light paths with coded illumination and masks | `probingMatrix`; credits `otoole2016`, `cmu15463-probing`, `nayar2006` |
 | `lt-epipolar` | Epipolar imaging | Separating direct and indirect light at video rate | `figures`; credits `cmu15463-transport`, `otoole2015` |
 
