@@ -187,9 +187,17 @@ export function Figures({ slide, buildStep }) {
  * column, such as the original's row labels); `labels` are short lines
  * under the caption, side by side. An optional `fontSize` (a CSS length)
  * sets the size of the lines.
+ *
+ * Two options pace the figure with the lines: `figure.step`, the build
+ * step it appears at (its space is kept from the first step), and
+ * `figure.rowSteps`, for a figure made of equal rows: one list of build
+ * steps per row, top to bottom, at which that row is the one the lines
+ * are about; at those steps the other rows are veiled.
  */
 export function Derivation({ slide, buildStep }) {
   const lines = slide.lines ?? [];
+  const figure = slide.figure;
+  const markedRow = figure?.rowSteps?.findIndex((steps) => steps.includes(buildStep)) ?? -1;
   return (
     <div className="slide--derivation">
       <SlideTitle title={slide.title} subtitle={slide.subtitle} />
@@ -209,8 +217,28 @@ export function Derivation({ slide, buildStep }) {
           ))}
         </ol>
         {slide.figure && (
-          <figure className="derivation-figure" style={slide.figure.width ? { flexBasis: slide.figure.width } : undefined}>
-            <Media item={slide.figure} />
+          <motion.figure
+            className="derivation-figure"
+            style={slide.figure.width ? { flexBasis: slide.figure.width } : undefined}
+            initial={false}
+            animate={{ opacity: buildStep >= (figure.step ?? 0) ? 1 : 0 }}
+            transition={{ duration: 0.35 }}
+          >
+            {figure.rowSteps ? (
+              <div className="derivation-figure-rows">
+                <Media item={figure} />
+                {figure.rowSteps.map((steps, row) => (
+                  <motion.div
+                    key={row}
+                    className="derivation-figure-veil"
+                    style={{ top: `${(100 * row) / figure.rowSteps.length}%`, height: `${100 / figure.rowSteps.length}%` }}
+                    initial={false}
+                    animate={{ opacity: markedRow >= 0 && markedRow !== row ? 0.72 : 0 }}
+                    transition={{ duration: 0.35 }}
+                  />
+                ))}
+              </div>
+            ) : <Media item={figure} />}
             {slide.figure.columnLabels && (
               <div
                 className="derivation-figure-columns"
@@ -228,7 +256,7 @@ export function Derivation({ slide, buildStep }) {
                 {slide.figure.labels.map((label) => <span key={label}><Text>{label}</Text></span>)}
               </div>
             )}
-          </figure>
+          </motion.figure>
         )}
       </div>
     </div>

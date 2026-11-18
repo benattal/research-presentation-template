@@ -4,9 +4,9 @@ import Text from '@core/stage/Text.jsx';
 import { ease, useStepTransition } from '@core/stage/canvas.js';
 import Chart from '@core/stage/Chart.jsx';
 import RoomView from '../flatland/RoomView.jsx';
-import { drawPixelWedge, drawRoomCamera } from '../flatland/overlays.js';
+import { drawGlowPoint, drawPixelWedge, drawRoomCamera } from '../flatland/overlays.js';
 import { SURFACE_GAIN, derived } from '../flatland/pictures.js';
-import { ROOM_VIEW, drawRoom } from '../flatland/render.js';
+import { ROOM_VIEW, drawRoom, pixelWedge } from '../flatland/render.js';
 import { MEASURED_PIXEL, flatlandRoom } from '../flatland/rooms.js';
 import { CAMERA, cameraRay, castRay } from '../flatland/scene.js';
 import {
@@ -33,6 +33,11 @@ const PIXEL_RAYS = 16;
 const GROUPS = [[1], [2], range(3, ORDERS)];
 const GROUP_NAMES = ['direct', 'bounce 2', '3 or more'];
 
+/** The light of the room's renders (`--light-1`), for the light travelling to the camera in the pixel's wedge. */
+const ARRIVING_LIGHT = [255, 210, 122];
+/** Color stops of the wedge's light, from the camera to the floor. */
+const WEDGE_STOPS = 48;
+
 function range(from, to) {
   return Array.from({ length: to - from }, (_, i) => from + i);
 }
@@ -55,8 +60,51 @@ function transientRoom(env) {
       const hit = castRay(env.room, CAMERA.position, cameraRay(CAMERA, s));
       rays.push({ patch: hit.patch.index, distance: hit.distance });
     }
-    return { transient, histograms: pixelTransient(transient, rays) };
+    const histograms = pixelTransient(transient, rays);
+    // The pixel's light at each arrival time (all orders, luminance), and its distance to the floor.
+    const arrival = Float64Array.from({ length: BINS }, (_, t) => histograms.slice(1).reduce((sum, order) => sum + luminance(order, t), 0));
+    const distance = rays.reduce((sum, ray) => sum + ray.distance, 0) / rays.length;
+    return { transient, histograms, arrival, arrivalPeak: Math.max(...arrival), distance };
   });
+}
+
+/**
+ * The light now in the pixel's wedge, on its way to the camera: at
+ * distance s from the camera it arrives at time + s, so its brightness is
+ * the pixel's arrival then, relative to the brightest arrival (a fixed
+ * exposure for every step, unlike the room's). A glow at the camera is
+ * the light arriving now.
+ */
+function drawArrivingLight(ctx, env, transform, result, time) {
+  const { camera, ends } = pixelWedge(env.room, transform, MEASURED_PIXEL);
+  const floor = [(ends[0][0] + ends[1][0]) / 2, (ends[0][1] + ends[1][1]) / 2];
+  const at = (t) => {
+    const bin = Math.round(t / STEP);
+    if (bin < 0 || bin >= BINS) return 0;
+    return result.arrival[bin] / result.arrivalPeak;
+  };
+  const shade = (value) => Math.min(1, 0.95 * Math.sqrt(value));
+  // The wedge is a few pixels wide near the camera, so the light is drawn as a glowing line along its middle.
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  ctx.lineCap = 'round';
+  for (const pass of [{ width: 14, blur: 5, alpha: 0.45 }, { width: 4, blur: 0, alpha: 1 }]) {
+    const gradient = ctx.createLinearGradient(...camera, ...floor);
+    for (let k = 0; k <= WEDGE_STOPS; k += 1) {
+      const s = (k / WEDGE_STOPS) * result.distance;
+      gradient.addColorStop(k / WEDGE_STOPS, `rgba(${ARRIVING_LIGHT.join(', ')}, ${pass.alpha * shade(at(time + s))})`);
+    }
+    ctx.filter = pass.blur ? `blur(${pass.blur}px)` : 'none';
+    ctx.strokeStyle = gradient;
+    ctx.lineWidth = pass.width;
+    ctx.beginPath();
+    ctx.moveTo(...camera);
+    ctx.lineTo(...floor);
+    ctx.stroke();
+  }
+  ctx.restore();
+  const now = shade(at(time));
+  if (now > 0.01) drawGlowPoint(ctx, transform, CAMERA.position, `rgba(${ARRIVING_LIGHT.join(', ')}, ${now})`, 9);
 }
 
 /** The plotted histogram up to time `time` (m): stacked bars per bounce order, per 2 ns, in radiance per ns. */
@@ -87,10 +135,10 @@ function histogramBars(histograms, time) {
 /**
  * Transient light transport in the flatland room: the lamp flashes a 2 ns
  * pulse, and build steps `{ time }` (meters of light travel) show the light
- * in flight at that time, the measured pixel's view, and the pixel's
- * transient histogram so far, stacked by bounce order (direct light
- * first, the indirect tail after). Moving forward animates the time.
- * Dragging on the plot sets the time.
+ * in flight at that time, the measured pixel's view with the light in it
+ * on its way to the camera, and the pixel's transient histogram so far,
+ * stacked by bounce order (direct light first, the indirect tail after).
+ * Moving forward animates the time. Dragging on the plot sets the time.
  *
  * Content fields: `title`, `subtitle`, `buildSteps` ({ time } each, in
  * meters; the room is 10 m wide).
@@ -127,16 +175,15 @@ export default function TransientFlatland({ slide, buildStep }) {
       surfaceGain: gain * SURFACE_GAIN,
     });
     drawPixelWedge(ctx, env.room, transform, MEASURED_PIXEL, [76, 201, 240], { fill: 0.1, line: 0.5 });
+    drawArrivingLight(ctx, env, transform, result, t);
     drawRoomCamera(ctx, transform);
     drawExposure(ctx, gain / reference);
   };
 
   const { series } = useMemo(() => histogramBars(result.histograms, shownTime), [result, shownTime]);
-  // The whole histogram is drawn faintly from the start, so the axes show where light will arrive.
+  // The axes are those of the whole histogram from the first step, so they stay put as light arrives.
   const whole = useMemo(() => histogramBars(result.histograms, Infinity), [result]);
-  const ghost = useMemo(() => whole.series.map((s) => ({ ...s, className: 'transient-ghost' })), [whole]);
-  const full = whole.top;
-  const yTop = niceCeiling(full);
+  const yTop = niceCeiling(whole.top);
   const ns = (meters) => meters / METERS_PER_NS;
   const xMax = ns(PLOT_RANGE);
   const ticks = [0, 40, 80, 120].filter((v) => v <= xMax);
@@ -162,7 +209,7 @@ export default function TransientFlatland({ slide, buildStep }) {
             x={{ min: 0, max: xMax, ticks: ticks.map((v) => ({ value: v, label: String(v) })), label: '$\\tau$ (ns)' }}
             // The arrival times are what the speaker reads; the radiance needs only its axis, no values.
             y={{ min: 0, max: yTop, ticks: [], label: 'radiance / ns' }}
-            series={[...ghost, ...series]}
+            series={series}
             marks={[{ x: ns(shownTime), className: 'transient-cursor' }]}
             onPointer={(value) => setScrubbed(value * METERS_PER_NS)}
             className="transient-chart"

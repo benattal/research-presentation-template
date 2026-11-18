@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
+import Text from '@core/stage/Text.jsx';
 import { ease, useAnimation, useStageCanvas } from '@core/stage/canvas.js';
 import EquationStack from '@core/stage/EquationStack.jsx';
 import PhasorPlane from '../activeSensing/PhasorPlane.jsx';
@@ -55,11 +56,12 @@ function mix(a, b, k) {
  * slide) drawn as an arrow in the complex plane, tip to tail. The
  * equations build up beside them (`lines`, an EquationStack): the phasor as
  * the transient's Fourier coefficient, and the same weights with a phase
- * each. Build steps (`buildSteps` entries `{ phase, fog }`) rotate each
- * arrow by its round-trip phase, so the chain sums to the measured phasor,
- * and remove the fog, leaving the single return of one opaque surface. Moving
- * between steps animates from the arrows on screen. The model is credited
- * through the slide's `credits`.
+ * each. Build steps (`buildSteps` entries `{ phase, fog, caption? }`)
+ * rotate each arrow by its round-trip phase, so the chain sums to the
+ * measured phasor, and remove the fog, leaving the single return of one
+ * opaque surface; `caption` is a short line under the plane for that step.
+ * Moving between steps animates from the arrows on screen. The model is
+ * credited through the slide's `credits`.
  */
 export default function ToFQuadrature({ slide, buildStep }) {
   const step = stepState(slide, buildStep);
@@ -134,6 +136,10 @@ export default function ToFQuadrature({ slide, buildStep }) {
             arrows={arrows}
             arc={frame.sum > 0.5 ? { angle: phaseOf(measured), tone: 'text', label: '$\\phi$' } : null}
           />
+          {/* The step's caption under the plane; its space is kept on every step. */}
+          <div className="tof-quadrature-caption" style={{ visibility: step.caption ? 'visible' : 'hidden' }}>
+            <Text>{step.caption ?? '$m$'}</Text>
+          </div>
         </div>
       </div>
     </div>

@@ -11,7 +11,7 @@
     },
     {
       "label": "same weights $w_i$",
-      "tex": "$\\hphantom{m_f} = \\sum_i w_i\\, \\htmlClass{term-operator}{e^{\\mathrm{j} 4\\pi f t_i / c}}$"
+      "tex": "$\\hphantom{m_f} = \\sum_i w_i\\, e^{\\mathrm{j} 4\\pi f t_i / c}$"
     },
     {
       "label": "one surface",
@@ -21,7 +21,8 @@
   "buildSteps": [
     {
       "phase": false,
-      "fog": true
+      "fog": true,
+      "caption": "$f = 0$: intensity $m$"
     },
     {
       "phase": true,

@@ -1,13 +1,12 @@
-Transition: the slides so far were about new sensors. The rest of the section is about light that bounces. Every field so far reproduces the scene under the light it was captured in. Changing the light is harder.
+Transition: The rest of the section is about light that bounces. Every field so far reproduces the scene under the light it was captured in.
 
-- Step 1: a NeRF's color $c$ at a point, toward a direction, is the radiance leaving that point toward the camera. That is the solution of the rendering equation of the surfaces section, $x = e + Ax$, with the real scene's emission $e$ and one bounce $A = SG$ (scattering $S$ after propagation $G$): $x = (I - A)^{-1}e$.
-- Step 2: that solution is the sum of every bounce. A NeRF stores only the sum, so the light, the materials, and the interreflections are baked into one color.
-- Step 3: relighting means solving again with a new emission $e'$ and the same $A$. That needs $A$ itself, the materials and the geometry, separately from the light, and the whole series under the new light.
+- Step 1: A NeRF's color is the light leaving a point toward the camera: the solution $x$ for the real scene, with its emission $e$ and its one bounce $A$. For this smoke, $A = D^{-1}K$. The top row is the original lighting.
+- Step 2: That solution is the sum of every bounce. A NeRF stores only the sum, so light, materials, and interreflections are baked into one color.
+- Step 3: Relighting means solving again with a new emission $e'$ and the same $A$, which needs $A$ separate from the light. Relit, the emissive volume, like a NeRF, keeps the old light; the scattering volume matches the reference.
 
-The figure (Nimier-David et al., SIGGRAPH 2022, Fig. 12): a plume of smoke reconstructed from images, under the original lighting (top) and relit (bottom). Left, an emissive volume, the NeRF-style model: it matches the original lighting, but relit it keeps the old illumination. Middle, a physically based scattering volume, the paper's method, which matches the reference (right) under the new light.
+Remember: a NeRF's color is the sum $x$; relighting needs the light and $A$ separately.
 
-The sentence to remember: a NeRF's color is the sum $x$; relighting needs the light and $A$ separately.
+Stop (optional), at step 3: why not keep NeRF and fit $A$ as well? Answer: then the renderer inside the loop computes every bounce at every iteration, and differentiates through it. That is the cost the next slides address.
 
-The question it invites: why not keep NeRF and just fit $A$ as well? Because then the renderer inside the loop has to compute every bounce, $x = (I - A)^{-1}e$, at every iteration, and differentiate through it. That is the cost the next slides address.
-
-Next: radiance caching, one way to afford those bounces.
+If asked:
+- Source? Nimier-David et al., SIGGRAPH 2022, Fig. 12: a plume of smoke reconstructed from images.

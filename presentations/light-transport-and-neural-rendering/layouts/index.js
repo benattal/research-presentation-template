@@ -17,6 +17,7 @@ import InverseRendering from './InverseRendering/InverseRendering.jsx';
 import Iteration from './Iteration/Iteration.jsx';
 import IterationSeries from './IterationSeries/IterationSeries.jsx';
 import LightPaths from './LightPaths/LightPaths.jsx';
+import MeasurementFields from './MeasurementFields/MeasurementFields.jsx';
 import NeumannSeries from './NeumannSeries/NeumannSeries.jsx';
 import AdjointViews from './OperatorExplorer/AdjointViews.jsx';
 import OperatorExplorer from './OperatorExplorer/OperatorExplorer.jsx';
@@ -59,6 +60,7 @@ export default {
   iterationSeries: IterationSeries,
   lectureTitle: LectureTitle,
   lightPaths: LightPaths,
+  measurementFields: MeasurementFields,
   neumannSeries: NeumannSeries,
   operatorExplorer: OperatorExplorer,
   operatorForm: OperatorForm,

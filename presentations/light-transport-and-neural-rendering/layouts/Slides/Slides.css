@@ -311,6 +311,23 @@
   border-radius: 4px;
 }
 
+/* A figure of equal rows: a veil of the slide's background over each row the lines are not about. */
+.derivation-figure-rows {
+  position: relative;
+}
+
+.derivation-figure-rows img {
+  display: block;
+}
+
+.derivation-figure-veil {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: var(--bg-slide);
+  pointer-events: none;
+}
+
 .derivation-figure-columns {
   display: grid;
   margin-top: 6px;

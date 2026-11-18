@@ -34,13 +34,10 @@
   transform: translateY(-8px);
 }
 
-/* Light still to arrive, drawn faintly. */
-.chart-bars.transient-ghost rect { fill: var(--bg-elevated); stroke: var(--border-light); stroke-width: 0.5; }
-
-/* Direct light, the second bounce, and later bounces: far apart on the bounce ramp. */
+/* Direct light, the second bounce, and later bounces, in the deck's colors for bounces 1, 2, and 3. */
 .chart-bars.transient-group-1 rect { fill: var(--ink-light-1); }
-.chart-bars.transient-group-2 rect { fill: var(--ink-light-3); }
-.chart-bars.transient-group-3 rect { fill: color-mix(in srgb, var(--ink-light-4) 45%, white); }
+.chart-bars.transient-group-2 rect { fill: var(--ink-light-2); }
+.chart-bars.transient-group-3 rect { fill: var(--ink-light-3); }
 
 .transient-legend {
   display: flex;
@@ -66,8 +63,8 @@
 }
 
 .transient-legend .transient-group-1 { color: var(--ink-light-1); }
-.transient-legend .transient-group-2 { color: var(--ink-light-3); }
-.transient-legend .transient-group-3 { color: color-mix(in srgb, var(--ink-light-4) 60%, white); }
+.transient-legend .transient-group-2 { color: var(--ink-light-2); }
+.transient-legend .transient-group-3 { color: var(--ink-light-3); }
 
 .chart-mark.transient-cursor {
   stroke: var(--ink-adjoint);

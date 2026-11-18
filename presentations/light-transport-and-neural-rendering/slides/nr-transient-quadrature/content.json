@@ -18,7 +18,7 @@
     },
     {
       "label": "transient; pulse shape $g$",
-      "tex": "$h(\\tau) = \\sum_i w_i\\; \\htmlClass{term-operator}{g\\!\\left(\\tau - \\dfrac{2t_i}{c}\\right)}$"
+      "tex": "$h(\\tau) = \\sum_i w_i\\; g\\!\\left(\\tau - \\dfrac{2t_i}{c}\\right)$"
     }
   ],
   "buildSteps": [

@@ -38,3 +38,8 @@
   align-items: center;
   gap: 4px;
 }
+
+.tof-quadrature-caption {
+  font-size: 22px;
+  color: var(--text-secondary);
+}

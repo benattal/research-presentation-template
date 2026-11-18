@@ -46,6 +46,16 @@
   opacity: 0.85;
 }
 
+.transient-quadrature-break-gap {
+  fill: var(--bg-slide);
+}
+
+.transient-quadrature-break-stroke {
+  fill: none;
+  stroke: var(--text-secondary);
+  stroke-width: 1.5;
+}
+
 .transient-quadrature-tick {
   fill: var(--text-secondary);
   font-size: 18px;

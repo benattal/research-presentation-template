@@ -33,6 +33,20 @@ const NANOSECOND = 1e-9;
 /** Width of a sample's bar, in stage pixels (samples are 5 cm, about 10 px, apart). */
 const SAMPLE_BAR = 6;
 
+/**
+ * The top of the plot, in the units of the terms with a source of unit
+ * intensity at the camera (Tᵢαᵢ has no unit; wᵢ = Tᵢαᵢ · ρᵢTᵢ/tᵢ², t in
+ * meters). Every step draws on this one scale, so the heights compare
+ * from step to step: the wᵢ are NeRF's weights times Lᵢ, and the
+ * histogram, as weight per sample interval, keeps the area of the bars it
+ * replaces. The fog's NeRF weights and the wall's wᵢ fit under it; the
+ * wall's NeRF weight (0.59) runs past the top, drawn with a break mark.
+ */
+const TERM_MAX = 0.043;
+
+/** Histogram bins per sample interval: a bin's weight times this is the weight per interval of the sample bars. */
+const BINS_PER_INTERVAL = roundTripTime(RAY_SCENE.step) / BIN_WIDTH;
+
 /** Durations of the step transitions, in ms: bars changing height, and the histogram filling in arrival order. */
 const MORPH_MS = 900;
 const SWEEP_MS = 1800;
@@ -57,11 +71,36 @@ function stepState(slide, buildStep) {
 
 const mix = (a, b, k) => a + (b - a) * k;
 
-/** Each sample's term at a step, relative to the largest: NeRF's weights Tᵢαᵢ or the collocated wᵢ. */
-function relativeTerms(step, terms) {
+/** Each sample's term at a step, as a fraction of the plot's height (TERM_MAX): NeRF's weights Tᵢαᵢ or the collocated wᵢ. */
+function plottedTerms(step, terms) {
   const values = step.terms === 'nerf' ? terms.nerf : terms.collocated;
-  const largest = Math.max(...values);
-  return values.map((value) => value / largest);
+  return values.map((value) => value / TERM_MAX);
+}
+
+/**
+ * A break mark near the plot's top at `x`, across a bar that runs past
+ * the top: a gap between two short slanted strokes, as on an axis that
+ * skips values (the same mark as the quadrature slides' σ plot), below
+ * the plot's labels.
+ */
+function BreakMark({ x, y }) {
+  return (
+    <g className="transient-quadrature-break">
+      <path className="transient-quadrature-break-gap" d={`M${x - 9},${y + 7} L${x - 1},${y - 7} L${x + 9},${y - 7} L${x + 1},${y + 7} Z`} />
+      <path className="transient-quadrature-break-stroke" d={`M${x - 9},${y + 7} L${x - 1},${y - 7} M${x + 1},${y + 7} L${x + 9},${y - 7}`} />
+    </g>
+  );
+}
+
+/** Runs of consecutive indices whose value exceeds 1 (the top of the plot), as `[first, last]`. */
+function runsAboveTop(values, shown) {
+  const runs = [];
+  values.forEach((value, i) => {
+    if (!(value > 1) || !shown(i)) return;
+    if (runs.length && runs.at(-1)[1] === i - 1) runs.at(-1)[1] = i;
+    else runs.push([i, i]);
+  });
+  return runs;
 }
 
 /**
@@ -100,17 +139,19 @@ export default function TransientQuadrature({ slide, buildStep }) {
     ? mix(from.pulseWidthNs * NANOSECOND, settledPulse, blend)
     : settledPulse;
   const pulseWidth = dragged.step === buildStep && dragged.pulseWidth !== null ? dragged.pulseWidth : animatedPulse;
-  const histogram = useMemo(
-    () => (step.histogram ? transientHistogram(samples, { binWidth: BIN_WIDTH, binCount: BIN_COUNT, pulseWidth }) : null),
-    [step.histogram, samples, pulseWidth],
-  );
+  // The histogram as a fraction of the plot's height: each bin's weight per sample interval, on the terms' scale.
+  const histogram = useMemo(() => {
+    if (!step.histogram) return null;
+    const bins = transientHistogram(samples, { binWidth: BIN_WIDTH, binCount: BIN_COUNT, pulseWidth });
+    return Array.from(bins, (value) => (value * BINS_PER_INTERVAL) / TERM_MAX);
+  }, [step.histogram, samples, pulseWidth]);
 
   // The bars of the sample terms: blended from the previous step's, or the previous step's while the histogram fills.
   const sampleBars = useMemo(() => {
-    if (step.histogram) return sweeping && k < 1 ? relativeTerms(from, terms) : null;
-    const target = relativeTerms(step, terms);
+    if (step.histogram) return sweeping && k < 1 ? plottedTerms(from, terms) : null;
+    const target = plottedTerms(step, terms);
     if (!from || from.histogram) return target;
-    const start = relativeTerms(from, terms);
+    const start = plottedTerms(from, terms);
     return target.map((value, i) => mix(start[i], value, blend));
   }, [step, from, sweeping, k, terms, blend]);
   const revealed = sweeping && k < 1 ? k * SHOWN_TIME : Infinity;
@@ -135,8 +176,21 @@ export default function TransientQuadrature({ slide, buildStep }) {
   const xOfTime = (time) => xOfDepth((time * SPEED_OF_LIGHT) / 2);
   const baseline = PLOT.height - PLOT.bottom;
   const height = baseline - PLOT.top;
-  const histogramPeak = histogram ? Math.max(...histogram) : 1;
+  const barTop = (fraction) => baseline - Math.min(1, fraction) * height;
   const wallDepth = RAY_SCENE.wall.depth;
+
+  // Which bins and sample bars are drawn now, and break marks over those that run past the top.
+  const binShown = (bin) => bin * BIN_WIDTH <= Math.min(revealed, SHOWN_TIME) && histogram[bin] > 0;
+  const sampleShown = (i) => {
+    const { t } = samples[i];
+    // While the histogram fills, a sample's bar is replaced by the bins once its light has arrived.
+    if (step.histogram && roundTripTime(t) <= revealed) return false;
+    return sampleBars[i] > 0.002 && t <= BOUNDS.x1;
+  };
+  const breaks = [
+    ...(histogram ? runsAboveTop(histogram, binShown).map(([first, last]) => (xOfTime(first * BIN_WIDTH) + xOfTime((last + 1) * BIN_WIDTH)) / 2) : []),
+    ...(sampleBars ? runsAboveTop(sampleBars, sampleShown).map(([first, last]) => (xOfDepth(samples[first].t) + xOfDepth(samples[last].t)) / 2) : []),
+  ];
   const ticks = step.histogram
     ? [0, 5, 10, 15].map((ns) => ({ x: xOfTime(ns * NANOSECOND), label: String(ns) }))
     : [0, 1, 2].map((m) => ({ x: xOfDepth(m), label: String(m) }));
@@ -156,20 +210,19 @@ export default function TransientQuadrature({ slide, buildStep }) {
           <div className="transient-quadrature-plot" style={{ width: PLOT.width, height: PLOT.height }}>
             <svg width={PLOT.width} height={PLOT.height} aria-hidden="true">
               <line className="transient-quadrature-guide" x1={xOfDepth(wallDepth)} y1={PLOT.top - 8} x2={xOfDepth(wallDepth)} y2={baseline} />
-              {histogram && [...histogram].map((value, bin) => {
-                if (bin * BIN_WIDTH > Math.min(revealed, SHOWN_TIME) || value <= 0) return null;
+              {histogram && histogram.map((value, bin) => {
+                if (!binShown(bin)) return null;
                 const x0 = xOfTime(bin * BIN_WIDTH);
                 const x1 = xOfTime((bin + 1) * BIN_WIDTH);
-                const top = baseline - (value / histogramPeak) * height;
+                const top = barTop(value);
                 return <rect key={bin} className="transient-quadrature-bar" x={x0} y={top} width={Math.max(0.5, x1 - x0 - 0.6)} height={baseline - top} />;
               })}
               {sampleBars && samples.map(({ t }, i) => {
-                // While the histogram fills, a sample's bar is replaced by the bins once its light has arrived.
-                if (step.histogram && roundTripTime(t) <= revealed) return null;
-                if (sampleBars[i] <= 0.002 || t > BOUNDS.x1) return null;
-                const top = baseline - sampleBars[i] * height;
+                if (!sampleShown(i)) return null;
+                const top = barTop(sampleBars[i]);
                 return <rect key={t} className="transient-quadrature-bar" x={xOfDepth(t) - SAMPLE_BAR / 2} y={top} width={SAMPLE_BAR} height={baseline - top} />;
               })}
+              {breaks.map((x) => <BreakMark key={x} x={x} y={PLOT.top + 30} />)}
               <line className="transient-quadrature-axis" x1={xOfDepth(0)} y1={baseline} x2={PLOT.width - 4} y2={baseline} />
               <line className="transient-quadrature-axis" x1={xOfDepth(0)} y1={PLOT.top - 8} x2={xOfDepth(0)} y2={baseline} />
               {ticks.map(({ x, label }) => (

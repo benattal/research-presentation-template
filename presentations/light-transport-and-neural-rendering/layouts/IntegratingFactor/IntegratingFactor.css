@@ -51,3 +51,38 @@
 .integrating-mark--medium {
   color: var(--ink-medium);
 }
+
+/* The strip's axis: t grows away from the camera, to the right. */
+.integrating-distance {
+  position: absolute;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 20px;
+  line-height: 1.1;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.integrating-distance-arrow {
+  font-size: 22px;
+}
+
+.integrating-plot-label {
+  position: absolute;
+  font-size: 22px;
+  line-height: 1.1;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.integrating-plot-label--integrand {
+  color: var(--ink-light-0);
+}
+
+.integrating-plot-label--end {
+  transform: translateX(-100%);
+  color: var(--text-primary);
+}

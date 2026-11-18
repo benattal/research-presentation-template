@@ -1,38 +1,37 @@
 {
-  "layout": "figureRows",
+  "layout": "measurementFields",
   "sectionLabel": "Neural rendering",
   "title": "Scene and measurement fields",
   "subtitle": "Representing the scene or the measurement",
-  "rows": [
+  "columns": [
     {
-      "figures": [
-        {
-          "type": "image",
-          "src": "/slides/nr-representation/transient-nerf-scene-field.png",
-          "alt": "Transient NeRF: density and color along a ray, rendered into a transient and convolved with the laser pulse",
-          "caption": "Scene field: density $\\sigma$ and color $c$"
-        }
-      ]
+      "field": "scene",
+      "title": "Scene field",
+      "outputs": "at each depth $t_i$: density $\\sigma_i$, albedo $\\rho_i$",
+      "equationLabel": "weights $w_i$ at round-trip times, pulse $g$",
+      "equation": "$h(\\tau) = \\sum_i w_i\\, g\\!\\left(\\tau - \\dfrac{2t_i}{c}\\right)$"
     },
     {
-      "figures": [
-        {
-          "type": "image",
-          "src": "/slides/nr-representation/flying-with-photons-transient-field.png",
-          "alt": "Flying with Photons: a transient and a density per sample, time-shifted and volume rendered",
-          "caption": "Measurement field: a transient at each point"
-        }
-      ]
+      "field": "measurement",
+      "title": "Measurement field",
+      "outputs": "at each depth $t_i$: density $\\sigma_i$, transient $h_i$",
+      "equationLabel": "NeRF's weights, each $h_i$ delayed to the camera",
+      "equation": "$h(\\tau) = \\sum_i T_i\\,\\alpha_i\\, h_i\\!\\left(\\tau - \\dfrac{t_i}{c}\\right)$",
+      "laterLabel": "later bounces"
     }
+  ],
+  "buildSteps": [
+    { "columns": 1 },
+    { "columns": 2 }
   ],
   "credits": [
     {
       "source": "malik2023",
-      "what": "Fig. 2"
+      "what": "Fig. 2, redrawn"
     },
     {
       "source": "malik2024",
-      "what": "Fig. 2"
+      "what": "Fig. 2, redrawn"
     }
   ]
 }

@@ -27,6 +27,10 @@
       "reference"
     ],
     "columnInset": 0.042,
+    "rowSteps": [
+      [0, 1],
+      [2]
+    ],
     "width": 640
   },
   "buildSteps": [
