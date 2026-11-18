@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
+import { ease, useAnimation, useStageCanvas } from '@core/stage/canvas.js';
+import EquationStack from '@core/stage/EquationStack.jsx';
 import PhasorPlane from '../activeSensing/PhasorPlane.jsx';
 import { themeColors } from '../activeSensing/draw.js';
 import {
@@ -9,8 +11,6 @@ import {
   RAY_PANEL, RAY_PANEL_BOUNDS, RAY_PANEL_COLORS, drawRayPanel,
 } from '../activeSensing/rayPanel.js';
 import { RAY_SCENE, raySamples } from '../activeSensing/rayScene.js';
-import { ease, useAnimation, useStageCanvas } from '../canvas/canvas.js';
-import EquationStack from '../equations/EquationStack.jsx';
 import './ToFQuadrature.css';
 
 /** The render panel (the transient slide's, in the same place) and the complex plane, in stage pixels. */

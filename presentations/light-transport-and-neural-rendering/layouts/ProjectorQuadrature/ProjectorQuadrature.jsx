@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
-import { Slider } from '../activeSensing/Controls.jsx';
+import { Slider } from '@core/stage/Controls.jsx';
+import { useAnimation, useStageCanvas } from '@core/stage/canvas.js';
 import {
   clearPanel, dashedLine, drawDevice, drawSurface, glowLine, panelLabel, rgba, sceneTransform, themeColors,
 } from '../activeSensing/draw.js';
-import { useAnimation, useStageCanvas } from '../canvas/canvas.js';
 import {
   PROJECTOR_SCENE, cameraSamples, projectorIrradiance, projectorLightImage, structuredLightQuadrature,
 } from './projection.js';

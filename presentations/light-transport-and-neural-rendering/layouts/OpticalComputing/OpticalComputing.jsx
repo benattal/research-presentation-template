@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
-import { ease, useStepTransition } from '../canvas/canvas.js';
+import { ease, useStepTransition } from '@core/stage/canvas.js';
 import RoomView from '../flatland/RoomView.jsx';
 import {
   dominantEigenvector, elementReturns, lightElementRoom, oneHot, powerIteration,

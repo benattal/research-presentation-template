@@ -2,10 +2,10 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
-import EquationStack from '../equations/EquationStack.jsx';
+import EquationStack from '@core/stage/EquationStack.jsx';
 import {
   ease, stillFrames, useAnimation, useStageCanvas, useStepTransition,
-} from '../canvas/canvas.js';
+} from '@core/stage/canvas.js';
 import { FLOOR_FINISHES } from '../flatland/scene.js';
 import { MEASURED_PIXEL, flatlandRoom } from '../flatland/rooms.js';
 import {

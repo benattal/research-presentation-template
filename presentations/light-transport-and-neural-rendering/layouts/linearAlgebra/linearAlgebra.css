@@ -143,26 +143,3 @@
 .la-ink-4 { color: var(--ink-light-4); }
 .la-ink-solution { color: var(--text-primary); }
 .la-ink-first { color: var(--text-secondary); }
-
-/* A labelled slider for exploring with the mouse. */
-.la-slider {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  font-size: 20px;
-  color: var(--text-secondary);
-}
-
-.la-slider-label {
-  min-width: 64px;
-}
-
-.la-slider input {
-  width: 200px;
-  accent-color: var(--ink-light-2);
-}
-
-.la-slider-value {
-  min-width: 56px;
-  font-variant-numeric: tabular-nums;
-}

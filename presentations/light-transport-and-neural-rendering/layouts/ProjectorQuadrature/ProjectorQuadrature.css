@@ -45,12 +45,12 @@
   gap: 22px;
 }
 
-.projector-quadrature-sliders .active-sensing-slider {
+.projector-quadrature-sliders .slider {
   flex-wrap: wrap;
   gap: 8px 12px;
 }
 
-.projector-quadrature-sliders .active-sensing-slider input[type='range'] {
+.projector-quadrature-sliders .slider input[type='range'] {
   order: 3;
   width: 100%;
 }

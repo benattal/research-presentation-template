@@ -1,6 +1,6 @@
 import SlideTitle from '@core/stage/SlideTitle.jsx';
-import { ease } from '../canvas/canvas.js';
-import EquationStack from '../equations/EquationStack.jsx';
+import { ease } from '@core/stage/canvas.js';
+import EquationStack from '@core/stage/EquationStack.jsx';
 import { seriesTerms, solve } from '../linearAlgebra/linear.js';
 import { normalize, spectralMatrix } from '../linearAlgebra/plane.js';
 import { useStepProgress } from '../linearAlgebra/useStepProgress.js';

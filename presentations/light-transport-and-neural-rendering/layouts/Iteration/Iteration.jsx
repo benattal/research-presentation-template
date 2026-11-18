@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
+import { Slider } from '@core/stage/Controls.jsx';
 import { chainErrors, chainSolution, chainTerms, errorBound } from '../linearAlgebra/chain.js';
 import { Bars, INKS, Plot, decadeTicks, niceCeiling } from '../linearAlgebra/plots.jsx';
-import Slider from '../linearAlgebra/Slider.jsx';
 import './Iteration.css';
 
 const BARS = [640, 430];

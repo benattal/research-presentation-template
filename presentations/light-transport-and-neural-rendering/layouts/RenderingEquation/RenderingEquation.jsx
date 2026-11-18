@@ -2,8 +2,8 @@ import { motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
-import { ease, useStepTransition } from '../canvas/canvas.js';
-import EquationStack from '../equations/EquationStack.jsx';
+import { ease, useStepTransition } from '@core/stage/canvas.js';
+import EquationStack from '@core/stage/EquationStack.jsx';
 import RoomView from '../flatland/RoomView.jsx';
 import {
   GATHER_RAYS_PER_BIN, cameraSurfacePoint, gatherAt, nearestSurfacePoint,

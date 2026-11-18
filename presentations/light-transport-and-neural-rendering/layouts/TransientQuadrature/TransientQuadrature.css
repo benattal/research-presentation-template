@@ -83,12 +83,12 @@
   font-size: 19px;
 }
 
-.transient-quadrature-control .active-sensing-slider {
+.transient-quadrature-control .slider {
   flex-wrap: wrap;
   gap: 8px 12px;
 }
 
-.transient-quadrature-control .active-sensing-slider input[type='range'] {
+.transient-quadrature-control .slider input[type='range'] {
   order: 3;
   width: 100%;
 }

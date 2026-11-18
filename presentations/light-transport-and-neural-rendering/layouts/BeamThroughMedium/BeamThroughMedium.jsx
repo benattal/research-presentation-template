@@ -1,7 +1,7 @@
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
-import { useAnimation, useStageCanvas } from '../canvas/canvas.js';
+import { useAnimation, useStageCanvas } from '@core/stage/canvas.js';
 import { drawPanel, glowDot, rgba, themeColors } from '../volume/draw.js';
 import { useFigureSize } from '../volume/figure.js';
 import { createRandom } from '../volume/random.js';

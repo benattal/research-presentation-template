@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
-import { useStageCanvas } from '../canvas/canvas.js';
+import { useStageCanvas } from '@core/stage/canvas.js';
 import { SURFACE_GAIN, cachedFluence, derived, sceneGain } from '../flatland/pictures.js';
 import { ROOM_VIEW, drawRoom } from '../flatland/render.js';
 import { patchRadiosity } from '../flatland/transport.js';

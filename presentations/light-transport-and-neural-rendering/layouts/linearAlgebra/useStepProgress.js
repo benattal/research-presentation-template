@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAnimation, useStepTransition } from '../canvas/canvas.js';
+import { useAnimation, useStepTransition } from '@core/stage/canvas.js';
 
 /**
  * Progress, from 0 to 1, of the move into build step `step`: it rises over

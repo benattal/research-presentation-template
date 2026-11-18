@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
-import { ease, useStepTransition } from '../canvas/canvas.js';
-import Chart from '../charts/Chart.jsx';
+import { ease, useStepTransition } from '@core/stage/canvas.js';
+import Chart from '@core/stage/Chart.jsx';
 import RoomView from '../flatland/RoomView.jsx';
 import { drawPixelWedge, drawRoomCamera } from '../flatland/overlays.js';
 import { SURFACE_GAIN, derived } from '../flatland/pictures.js';

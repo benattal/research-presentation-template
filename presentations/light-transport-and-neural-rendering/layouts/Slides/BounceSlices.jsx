@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import Text from '@core/stage/Text.jsx';
-import { stillFrames, useStageCanvas } from '../canvas/canvas.js';
+import { stillFrames, useStageCanvas } from '@core/stage/canvas.js';
 import { SURFACE_GAIN, cachedFluence, derived, sceneGain } from '../flatland/pictures.js';
 import { drawRoom } from '../flatland/render.js';
 import { flatlandRoom } from '../flatland/rooms.js';

@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
-import { useStageCanvas } from '../canvas/canvas.js';
+import { useStageCanvas } from '@core/stage/canvas.js';
 import RoomView from '../flatland/RoomView.jsx';
 import {
   CACHE_VIEWS, cacheState, observedPatches, oneBounceFromCache,

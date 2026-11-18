@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
-import { Slider } from '../activeSensing/Controls.jsx';
+import { Slider } from '@core/stage/Controls.jsx';
+import { ease, useAnimation, useStageCanvas, useStepTransition } from '@core/stage/canvas.js';
+import EquationStack from '@core/stage/EquationStack.jsx';
 import { sceneTransform, themeColors } from '../activeSensing/draw.js';
 import {
   SPEED_OF_LIGHT, collocatedWeights, compositingWeights, roundTripTime, transientHistogram,
@@ -10,8 +12,6 @@ import {
   RAY_PANEL, RAY_PANEL_BOUNDS, RAY_PANEL_COLORS, drawRayPanel,
 } from '../activeSensing/rayPanel.js';
 import { RAY_SCENE, raySamples } from '../activeSensing/rayScene.js';
-import { ease, useAnimation, useStageCanvas, useStepTransition } from '../canvas/canvas.js';
-import EquationStack from '../equations/EquationStack.jsx';
 import './TransientQuadrature.css';
 
 /** The render panel and the plot below it, in stage pixels; they share the horizontal axis. */

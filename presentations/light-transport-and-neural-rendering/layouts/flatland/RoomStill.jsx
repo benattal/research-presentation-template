@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useStageCanvas } from '../canvas/canvas.js';
+import { useStageCanvas } from '@core/stage/canvas.js';
 import { SURFACE_GAIN, cachedFluence, derived, sceneGain, subtract } from './pictures.js';
 import { MEASURED_PIXEL, flatlandRoom } from './rooms.js';
 import { drawRoom } from './render.js';

@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
-import EquationStack from '../equations/EquationStack.jsx';
+import EquationStack from '@core/stage/EquationStack.jsx';
 import { fixedPointIterates, multiply, solve } from '../linearAlgebra/linear.js';
 import { normalize, spectralMatrix } from '../linearAlgebra/plane.js';
 import { useStepProgress } from '../linearAlgebra/useStepProgress.js';

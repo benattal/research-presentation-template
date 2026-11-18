@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
-import { Readout, Slider } from '../activeSensing/Controls.jsx';
+import { Readout, Slider } from '@core/stage/Controls.jsx';
+import { ease, useAnimation, useStageCanvas } from '@core/stage/canvas.js';
 import PhasorPlane from '../activeSensing/PhasorPlane.jsx';
 import {
   clearPanel, dashedLine, drawDevice, drawSurface, glowLine, glowSpot, panelLabel, sceneTransform, themeColors,
@@ -8,7 +9,6 @@ import {
 import {
   ambiguityDistance, depthFromPhase, phaseOf, phasor, sumPhasors,
 } from '../activeSensing/measurement.js';
-import { ease, useAnimation, useStageCanvas } from '../canvas/canvas.js';
 import Modulation from './Modulation.jsx';
 import { PHASOR_SCENE, clampMirror, directReturn, mirrorReturn } from './multipath.js';
 import './PhasorToF.css';

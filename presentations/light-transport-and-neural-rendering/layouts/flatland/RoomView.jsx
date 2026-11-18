@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useAnimation, useStageCanvas } from '../canvas/canvas.js';
+import { useAnimation, useStageCanvas } from '@core/stage/canvas.js';
 
 /**
  * A canvas of `width` × `height` stage pixels that `paint(ctx, progress)`

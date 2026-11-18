@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
+import { Slider } from '@core/stage/Controls.jsx';
 import { Plot } from '../linearAlgebra/plots.jsx';
-import Slider from '../linearAlgebra/Slider.jsx';
 import './GeometricSeries.css';
 
 const PANEL = [560, 440];

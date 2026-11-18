@@ -1,7 +1,7 @@
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
-import { useStageCanvas } from '../canvas/canvas.js';
+import { useStageCanvas } from '@core/stage/canvas.js';
 import EquationLines from '../volume/EquationLines.jsx';
 import { drawAxes, fillSeries, glowDot, plotScale, rgba, strokeSeries, themeColors } from '../volume/draw.js';
 import { useFigureSize } from '../volume/figure.js';

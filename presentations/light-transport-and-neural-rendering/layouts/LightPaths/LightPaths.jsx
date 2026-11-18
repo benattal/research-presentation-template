@@ -4,8 +4,8 @@ import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
 import {
   ease, useAnimation, useStageCanvas, useStepTransition,
-} from '../canvas/canvas.js';
-import EquationStack from '../equations/EquationStack.jsx';
+} from '@core/stage/canvas.js';
+import EquationStack from '@core/stage/EquationStack.jsx';
 import { rgba, themeColors } from '../volume/draw.js';
 import './LightPaths.css';
 

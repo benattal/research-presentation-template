@@ -6,7 +6,7 @@
  * hanging from them, and a 1D image as a strip of light.
  */
 import { useEffect } from 'react';
-import { useStageCanvas } from '../canvas/canvas.js';
+import { useStageCanvas } from '@core/stage/canvas.js';
 import { patchesToState } from '../flatland/diffuse.js';
 import { weightedSum } from '../flatland/lightElements.js';
 import { drawImageStrip } from '../flatland/overlays.js';

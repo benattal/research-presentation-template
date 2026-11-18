@@ -3,8 +3,8 @@ import { motion } from 'framer-motion';
 import Media from '@core/stage/Media.jsx';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
-import { useStageCanvas, useStepTransition } from '../canvas/canvas.js';
-import EquationStack from '../equations/EquationStack.jsx';
+import { useStageCanvas, useStepTransition } from '@core/stage/canvas.js';
+import EquationStack from '@core/stage/EquationStack.jsx';
 import RoomView from '../flatland/RoomView.jsx';
 import {
   MATRIX_PIXELS, lightElementRoom, oneHot, relightingCheck, weightedSum,

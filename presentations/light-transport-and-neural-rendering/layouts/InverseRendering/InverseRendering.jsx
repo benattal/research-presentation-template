@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
-import { stillFrames, useAnimation, useStageCanvas } from '../canvas/canvas.js';
-import EquationStack from '../equations/EquationStack.jsx';
+import { stillFrames, useAnimation, useStageCanvas } from '@core/stage/canvas.js';
+import EquationStack from '@core/stage/EquationStack.jsx';
 import { SURFACE_GAIN, cachedFluence, derived, sceneGain } from '../flatland/pictures.js';
 import { flatlandRoom } from '../flatland/rooms.js';
 import { autoGain, drawRoom, roomTransform, toneMap } from '../flatland/render.js';

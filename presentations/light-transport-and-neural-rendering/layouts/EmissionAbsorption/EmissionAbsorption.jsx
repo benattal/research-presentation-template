@@ -1,7 +1,7 @@
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
-import { ease, useAnimation, useStageCanvas } from '../canvas/canvas.js';
+import { ease, useAnimation, useStageCanvas } from '@core/stage/canvas.js';
 import { CLOUD_EXTENT, cloudBlobs, cloudRay, createCloud, renderCloud } from '../volume/cloud.js';
 import {
   PIXEL_GAIN, drawCloudPanel, drawPixel, drawRayLine, figureGeometry,

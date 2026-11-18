@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import Media from '@core/stage/Media.jsx';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
-import EquationStack from '../equations/EquationStack.jsx';
+import EquationStack from '@core/stage/EquationStack.jsx';
 import './FigurePanel.css';
 
 /**
