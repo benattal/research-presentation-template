@@ -17,10 +17,3 @@ export function createRandom(seed) {
     return ((z ^ (z >>> 14)) >>> 0) / 4294967296;
   };
 }
-
-/** A standard normal sample from a uniform generator (Box–Muller). */
-export function gaussian(random) {
-  const u = 1 - random();
-  const v = random();
-  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-}

@@ -13,10 +13,10 @@ import { simulateSlab } from '../layouts/BeamThroughMedium/photons.js';
 import {
   MEDIUM_LENGTH, cloudBlobs, cloudRay, createCloud, mediumImage, renderCloud,
 } from '../layouts/volume/cloud.js';
-import { createRandom, gaussian } from '../layouts/volume/random.js';
+import { createRandom } from '../layouts/volume/random.js';
 import { densityGradients } from '../layouts/volume/gradient.js';
 import {
-  applyTransport, cellsAround, composite, estimate, gapWeights, hierarchicalSamples, importanceSamples, referenceIntegral,
+  cellsAround, composite, estimate, gapWeights, hierarchicalSamples, importanceSamples, referenceIntegral,
   randomSamples, relativeError, solveTransfer, stratifiedSamples, transferIntegral, uniformSamples,
 } from '../layouts/volume/ray.js';
 
@@ -251,32 +251,6 @@ describe('photons crossing a slab', () => {
     const { check, photons } = simulateSlab({ absorption: 1, scattering: 1, terms, seed: 1, beamCount: 200 });
     assert.equal(check.fraction, 1);
     assert.ok(photons.every((photon) => photon.kind === 'beam' && photon.fate === 'escaped'));
-  });
-});
-
-describe('the differential form', () => {
-  const density = (t) => 0.8 + 2 * Math.exp(-(((t - 0.6) / 0.12) ** 2) / 2);
-  const source = (t) => 5 * Math.exp(-(((t - 0.3) / 0.03) ** 2) / 2) + 3 * Math.exp(-(((t - 0.75) / 0.03) ** 2) / 2);
-  const solved = solveTransfer({ near: 0, far: 1, density, source, background: 0 }, 999);
-  const t = Array.from(solved.t);
-  const sources = t.map(source);
-  const recover = (radiance) => {
-    const recovered = applyTransport({ t, radiance, density: t.map(density) });
-    // Interior samples: the one-sided ends are first-order.
-    const inside = (values) => values.slice(1, -1);
-    const difference = inside(recovered).map((q, k) => q - inside(sources)[k]);
-    return Math.hypot(...difference) / Math.hypot(...inside(sources));
-  };
-
-  it('applying D to L = D⁻¹Q recovers Q from neighbouring samples alone', () => {
-    assert.ok(recover(Array.from(solved.radiance)) < 1e-2, `${recover(Array.from(solved.radiance))}`);
-  });
-
-  it('amplifies noise in L by the derivative', () => {
-    const random = createRandom(8);
-    const scale = 0.001 * Math.max(...solved.radiance);
-    const noisy = Array.from(solved.radiance, (value) => value + scale * gaussian(random));
-    assert.ok(recover(noisy) > 10 * recover(Array.from(solved.radiance)));
   });
 });
 

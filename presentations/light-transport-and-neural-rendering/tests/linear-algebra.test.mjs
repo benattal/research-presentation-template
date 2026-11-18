@@ -2,13 +2,11 @@
  * The linear algebra of the Neumann series section: the series telescopes
  * and converges to the direct solve within its error bound, the fixed-point
  * iterates from 0 are its partial sums, the slides share one example matrix
- * and source, the iteration on the large sparse chain stays within the
- * bound, and a matrix built from a spectrum has that spectrum.
+ * and source, and a matrix built from a spectrum has that spectrum.
  */
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
-import { applyChain, chainErrors, chainSolution, chainTerms, errorBound } from '../layouts/linearAlgebra/chain.js';
 import { fixedPointIterates, multiply, seriesTerms, solve } from '../layouts/linearAlgebra/linear.js';
 import { combine, components, eigenParts, normalize, spectralMatrix } from '../layouts/linearAlgebra/plane.js';
 
@@ -142,44 +140,6 @@ describe('the example matrix of the slides', () => {
     const last = fixedPointIterates(A, slide.b, slide.trial, updates)[updates];
     const x = solve(A, slide.b);
     assert.ok(Math.hypot(last[0] - x[0], last[1] - x[1]) < 0.06, `x_${updates} = ${last} vs ${x}`);
-  });
-});
-
-describe('iteration on a large sparse matrix', () => {
-  const { weight } = JSON.parse(readFileSync(new URL('../slides/la-apply/content.json', import.meta.url), 'utf8'));
-  const count = 61;
-  const terms = chainTerms(weight, count);
-  const errors = chainErrors(terms, weight);
-
-  it('applies the same A as the dense tridiagonal matrix', () => {
-    const v = [0.3, -1, 2, 0.5, 0, 1.5];
-    const dense = v.map((_, i) => v.map((__, j) => (Math.abs(i - j) === 1 ? weight : 0)));
-    Array.from(applyChain(Float64Array.from(v), weight)).forEach((value, i) => close(value, multiply(dense, v)[i], 1e-15, `entry ${i}`));
-  });
-
-  it('the closed-form solution satisfies x = b + Ax', () => {
-    const offsets = Array.from({ length: 41 }, (_, i) => i - 20);
-    const x = chainSolution(weight, offsets);
-    const Ax = applyChain(Float64Array.from(x), weight);
-    for (let i = 1; i < offsets.length - 1; i += 1) close(x[i], (offsets[i] === 0 ? 1 : 0) + Ax[i], 1e-12, `i = ${offsets[i]}`);
-  });
-
-  it('the error of x_k from x_0 = 0 is within ‖A‖^k‖b‖/(1 − ‖A‖), with ‖A‖_∞ = 0.9', () => {
-    assert.equal(errors.length, count + 1);
-    close(errors[0], chainSolution(weight, [0])[0], 1e-12, 'x_0 = 0: the error is ‖x‖');
-    errors.forEach((error, k) => assert.ok(error <= errorBound(2 * weight, 1, k), `k = ${k}: ${error} vs ${errorBound(2 * weight, 1, k)}`));
-    assert.ok(errors[count] < 1e-3, `k = ${count}: ${errors[count]}`);
-  });
-
-  it('the iterates agree with the dense direct solve on a chain long enough', () => {
-    const n = 2 * count + 1;
-    const dense = Array.from({ length: n }, (_, i) => Array.from({ length: n }, (__, j) => (Math.abs(i - j) === 1 ? weight : 0)));
-    const b = Array.from({ length: n }, (_, i) => (i === count ? 1 : 0));
-    const sums = partialSums(dense, b, count);
-    sums[count - 1].forEach((value, i) => close(value, terms.reduce((sum, term) => sum + term[i], 0), 1e-12, `entry ${i}`));
-    const x = solve(dense, b);
-    // The finite chain's solution differs from the closed form only by about r^count at its middle.
-    close(x[count], chainSolution(weight, [0])[0], 1e-10, 'middle entry');
   });
 });
 

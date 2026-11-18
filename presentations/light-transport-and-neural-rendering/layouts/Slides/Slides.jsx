@@ -123,15 +123,8 @@ export function SectionTitle({ slide }) {
  * line whatever the media's shapes. An optional `cellWidth` (stage pixels)
  * gives the columns that width and centers the grid, for media narrower
  * than an equal share of the slide (4:3 photos in a 2 × 2 grid).
- *
- * With `align: 'bottom'`, the figures of a row stand on one line: each
- * media at its own size, its caption under it, and the captions of the
- * row level; the row is centered in the space under the title.
  */
 export function Figures({ slide, buildStep }) {
-  if (slide.align !== undefined && slide.align !== 'bottom') {
-    throw new Error(`figures: slide "${slide.id}" has "align" "${slide.align}"; the only alignment is "bottom"`);
-  }
   const figures = slide.figures ?? [];
   const cells = figures.reduce((sum, figure) => sum + (figure.span ?? 1), 0);
   const columns = slide.columns ?? (figures.length === 4 ? 2 : figures.length);
@@ -145,7 +138,6 @@ export function Figures({ slide, buildStep }) {
   const gridClass = [
     `figures-grid figures-grid--${Math.min(figures.length, 4)}`,
     slide.uniform && 'figures-grid--uniform',
-    slide.align === 'bottom' && 'figures-grid--bottom',
   ].filter(Boolean).join(' ');
   const place = (figure) => {
     if (!figure.span && !figure.column && !figure.row) return undefined;

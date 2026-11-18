@@ -401,30 +401,13 @@ Differential light transport in operator form and its adjoint, written with inne
 
 ### Closing
 
-Takeaways, credits, questions.
+Takeaways and credits; questions after the credits (the user, 2026-11-18, removed the slides after the credits).
 
 | Slide | Title | Subtitle | Visual |
 |---|---|---|---|
 | `summary` | Summary | What to take away | `sectionOutline`; credits `otoole2012`, `cmu15468-media` |
 | `credits` | Credits | Every borrowed figure, slide, and video, in order of use | `credits` |
-| `questions` | Questions |  | `lectureTitle` |
 
-### Appendix
-
-Optional slides after "Questions", cut from the main talk for time.
-
-| Slide | Title | Subtitle | Visual |
-|---|---|---|---|
-| `la-geometric` | Geometric series | Inverting a number with a power series | `geometricSeries` |
-| `la-apply` | Iteration | Summing the series with matrix–vector products | `iteration` |
-| `lt-radiance` | Radiance and reflectance | Radiance is constant along a ray and changes only at surfaces | `floorScattering` |
-| `lt-three-point` | Three-point form | In area form, propagation and scattering are separate factors | `derivation`; credits `veach1997`, `arvo1995` |
-| `lt-structured-light` | Structured light transport | Structured-light scans with probing are robust to indirect light | `figures`; credits `otoole2014` |
-| `lt-how-to-apply` | Transport products | A product with the transport matrix is stored, simulated, or measured | `figureRows`; credits `ng2003`, `cmu15463-transport` |
-| `lt-primal-dual` | Primal-dual coding | Probing light transport in a single exposure | `figures`; credits `otoole2012` |
-| `nr-nlos` | Non-line-of-sight imaging | Objects around a corner are reconstructed from time-resolved light | `figureRows`; credits `otoole2018` |
-| `adj-volumes` | Differentiable volumes | Unbiased gradient estimators for volume reconstruction | `figures`; credits `nimierdavid2022` |
-| `vol-inverse` | Integral and differential forms | Inverting transport by differentiating radiance | `inverseOperator` |
 ## Interactive visuals
 
 Every interactive visual follows these rules; what each one shows is in the

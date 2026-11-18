@@ -251,21 +251,3 @@ export function transferIntegral(ray, steps = 20000) {
   const transmittance = Math.exp(-depth);
   return { radiance: integral + transmittance * ray.background, transmittance };
 }
-
-/**
- * The transfer operator D = ω·∇ + σₜ applied to radiance sampled along a
- * camera ray, where ω·∇ = −d/dt: Q̂(t) = −dL/dt + σₜ(t) L(t), with central
- * differences inside and one-sided ones at the ends. `t` must be evenly
- * spaced; `radiance` and `density` are sampled at `t`. Applying D needs
- * only each sample's neighbours: it is local, unlike its inverse.
- */
-export function applyTransport({ t, radiance, density }) {
-  const n = t.length;
-  const h = t[1] - t[0];
-  return Array.from({ length: n }, (_, k) => {
-    const derivative = k === 0 ? (radiance[1] - radiance[0]) / h
-      : k === n - 1 ? (radiance[n - 1] - radiance[n - 2]) / h
-        : (radiance[k + 1] - radiance[k - 1]) / (2 * h);
-    return -derivative + density[k] * radiance[k];
-  });
-}

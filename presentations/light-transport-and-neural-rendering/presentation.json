@@ -104,24 +104,7 @@
       "title": "Closing",
       "slides": [
         "summary",
-        "credits",
-        "questions"
-      ]
-    },
-    {
-      "id": "appendix",
-      "title": "Appendix",
-      "slides": [
-        "la-geometric",
-        "la-apply",
-        "lt-radiance",
-        "lt-three-point",
-        "lt-structured-light",
-        "lt-how-to-apply",
-        "lt-primal-dual",
-        "nr-nlos",
-        "adj-volumes",
-        "vol-inverse"
+        "credits"
       ]
     }
   ]

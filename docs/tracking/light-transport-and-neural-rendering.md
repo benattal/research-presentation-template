@@ -22,6 +22,19 @@ before changing a slide.
 
 2026-11-18, after cycle 1:
 
+- "You can remove the slides after the credits". Removed: `questions` (its
+  pause and answers moved to `credits`' notes) and the ten appendix
+  slides. Their layouts (`floorScattering`, `geometricSeries`,
+  `inverseOperator`, `iteration`) and the helpers only they used went with
+  them.
+- "Add a math primer slide (or two) discussing some equations/identities
+  (and prompting students to have them answer about what they are) that
+  are important: Eigenvectors of a matrix, eigenvector decomposition,
+  effect of a matrix in terms of eigenvectors; Inverse of A in terms of
+  eigenvectors; Monte carlo estimation of an integral, why the estimator in
+  expectation is correct; Some other things I might be missing", then
+  "I really just need this primer slide soon".
+
 - "Can you remove the optical computing slide? I think the application of
   this is a little less clear." Removed: `lt-optical-computing`, its
   layout, and the power-iteration helpers only it used. `lt-how-to-apply`'s

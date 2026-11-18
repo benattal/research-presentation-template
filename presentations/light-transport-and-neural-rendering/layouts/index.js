@@ -9,12 +9,8 @@ import EmissionAbsorption from './EmissionAbsorption/EmissionAbsorption.jsx';
 import FigurePanel from './FigurePanel/FigurePanel.jsx';
 import FigureRows from './FigureRows/FigureRows.jsx';
 import FixedPoint from './FixedPoint/FixedPoint.jsx';
-import FloorScattering from './FloorScattering/FloorScattering.jsx';
-import GeometricSeries from './GeometricSeries/GeometricSeries.jsx';
 import IntegratingFactor from './IntegratingFactor/IntegratingFactor.jsx';
-import InverseOperator from './InverseOperator/InverseOperator.jsx';
 import InverseRendering from './InverseRendering/InverseRendering.jsx';
-import Iteration from './Iteration/Iteration.jsx';
 import IterationSeries from './IterationSeries/IterationSeries.jsx';
 import LightPaths from './LightPaths/LightPaths.jsx';
 import MeasurementFields from './MeasurementFields/MeasurementFields.jsx';
@@ -50,12 +46,8 @@ export default {
   figureRows: FigureRows,
   figures: Figures,
   fixedPoint: FixedPoint,
-  floorScattering: FloorScattering,
-  geometricSeries: GeometricSeries,
   integratingFactor: IntegratingFactor,
-  inverseOperator: InverseOperator,
   inverseRendering: InverseRendering,
-  iteration: Iteration,
   iterationSeries: IterationSeries,
   lectureTitle: LectureTitle,
   lightPaths: LightPaths,
