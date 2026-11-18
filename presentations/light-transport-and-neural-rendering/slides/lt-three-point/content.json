@@ -10,7 +10,7 @@
       "label": "geometry term"
     },
     {
-      "tex": "\\small \\begin{aligned} L(\\mathbf{x}' \\to \\mathbf{x}'') &= \\htmlClass{term-emission}{L_e} + \\htmlClass{term-operator}{\\int_{\\mathcal{M}} f_s \\, \\underbrace{g(\\mathbf{x} \\leftrightarrow \\mathbf{x}') \\, V(\\mathbf{x} \\leftrightarrow \\mathbf{x}')}_{\\text{kernel of } G}} \\\\ &\\qquad\\quad \\htmlClass{term-operator}{L(\\mathbf{x} \\to \\mathbf{x}') \\, dA(\\mathbf{x})} \\end{aligned}"
+      "tex": "\\small \\begin{aligned} L(\\mathbf{x}' \\to \\mathbf{x}'') &= \\htmlClass{term-emission}{L_e} + \\htmlClass{term-operator}{\\int_{\\mathcal{M}} f_r \\, \\underbrace{g(\\mathbf{x} \\leftrightarrow \\mathbf{x}') \\, V(\\mathbf{x} \\leftrightarrow \\mathbf{x}')}_{\\text{kernel of } G}} \\\\ &\\qquad\\quad \\htmlClass{term-operator}{L(\\mathbf{x} \\to \\mathbf{x}') \\, dA(\\mathbf{x})} \\end{aligned}"
     },
     {
       "tex": "\\htmlClass{term-operator}{A} = S G",

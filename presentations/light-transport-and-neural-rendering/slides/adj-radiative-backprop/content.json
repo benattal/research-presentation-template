@@ -1,28 +1,18 @@
 {
-  "layout": "figureRows",
+  "layout": "adjointViews",
   "sectionLabel": "Adjoint light transport ⚡",
+  "view": "backprop",
   "title": "Radiative backpropagation",
   "subtitle": "The gradient of a rendering is computed by a second rendering",
-  "header": {
-    "label": "one adjoint solve for the whole loss",
-    "tex": "$\\partial_\\theta \\ell = \\langle \\htmlClass{term-adjoint}{y},\\, (\\partial_\\theta A)\\, x \\rangle, \\quad \\htmlClass{term-adjoint}{y} = (I - A^\\top)^{-1} \\sum_k \\dfrac{\\partial \\ell}{\\partial m_k}\\, \\htmlClass{term-adjoint}{q_k}$"
-  },
-  "rows": [
-    {
-      "figures": [
-        {
-          "type": "image",
-          "src": "/slides/adj-radiative-backprop/radiative-backprop-overview.png",
-          "alt": "Radiative backpropagation: primal rendering, objective, adjoint rendering emitted by the sensor, and parameter gradients",
-          "caption": "Backward pass: $\\partial\\ell/\\partial m$ emitted from the camera"
-        }
-      ]
-    }
+  "buildSteps": [
+    {},
+    {},
+    {}
   ],
   "credits": [
     {
       "source": "nimierdavid2020",
-      "what": "Fig. 2"
+      "what": "after Fig. 2"
     }
   ]
 }

@@ -20,6 +20,10 @@
       "label": "second march, constant memory"
     }
   ],
+  "remarks": [
+    "$\\sigma_i$: density, $c_i$: color, $\\delta_i$: length",
+    "$T_i$: transmittance, $\\alpha_i$: opacity"
+  ],
   "buildSteps": [
     {},
     {},

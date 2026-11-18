@@ -92,3 +92,43 @@
   min-height: 0;
   margin-top: 6px;
 }
+
+/* The sensitivity view's importance picture, under the equations beside the room. */
+.adjoint-views-thumb {
+  margin-top: 12px;
+}
+
+/* Radiative backpropagation: the equation over three rooms side by side, each with its labels under it. */
+.adjoint-backprop-header {
+  margin-bottom: 22px;
+  font-size: 1.75rem;
+  color: var(--text-primary);
+}
+
+.adjoint-backprop-header .math {
+  white-space: nowrap;
+}
+
+.adjoint-backprop {
+  display: flex;
+  gap: 44px;
+  align-items: flex-start;
+}
+
+.adjoint-backprop-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.adjoint-backprop-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.adjoint-backprop-strip-label {
+  font-size: 1.3rem;
+  color: var(--text-primary);
+}
