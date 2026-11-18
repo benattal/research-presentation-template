@@ -2,9 +2,10 @@
 
 [Plan](../plans/light-transport-and-neural-rendering.md)
 
-Current state: cycle 1 (c) is running, with fix agents for three section
-groups; the operator light transport and aside vetting is still running.
-The shared widgets are in `core/` (on `framework-sync`, not yet on
+Current state: cycle 1 (c) is merging. The opening and Neumann fixes are
+in; the fixes for the operator light transport and aside, the volume and
+neural rendering, and the adjoint and appendix are running. The shared
+widgets are in `core/` (on `framework-sync`, not yet on
 `main`). Next: merge the fixes, then cycles 2 and 3; move `main` to
 `framework-sync` after an idle `npm run test:ui`. Resume from the newest
 entry below.
@@ -143,6 +144,37 @@ before changing a slide.
   high level topics that the lecture will cover. This light paths slide is
   also not particularly useful by itself, each slide should serve a
   purpose."
+
+## 2026-11-18 11:00 — cycle 1 (c): fixes merging
+
+**Opening, Neumann series, closing, linear-algebra appendix** (cff32fd,
+merged in 87aa117). The changes:
+- `la-fixed-point`, `la-neumann` and `la-spectral` share one plane
+  (origin, scale and size), so nothing jumps between them.
+- The fixed-point trial is (2, 0.1), not the suggested (1.4, 0.4). At
+  (1.4, 0.4), $Ax$ is only 6.6° from $x$, so $A$ still reads as a scaling.
+- `la-neumann` labels its dot $S_2 b$ / $S_6 b$ and the dashed term
+  $A^3 b$.
+- `la-spectral` ends with "$= \sum c_i/(1-\lambda_i)\, v_i = (I-A)^{-1}b$".
+- `la-iteration` shows $x_0 = 0$, and its takeaway reads "if the spectral
+  radius $\rho(A) < 1$".
+- The fog photo's credit names Steve Lacey.
+- `la-geometric` marks partial sums that are off the chart on the chart's
+  edge.
+
+**Notes.** Every notes file of these 12 slides is in the
+Transition / Step / Remember / Stop / If asked format. Their spoken part
+went from 2,838 to 1,695 words. The planned stops are:
+- `la-fixed-point` step 4 (solving without the inverse);
+- `la-neumann` step 2 ($(I-A)S_k = ?$);
+- the pause on `la-iteration`;
+- the pause on the questions slide.
+
+**Questions for the user, from this pass:**
+- the trial at (2, 0.1);
+- the $A^3 b$ label;
+- the wording "the spectral radius";
+- the roadmap's notes, at 174 spoken words for six rows.
 
 ## 2026-11-18 08:30 — cycle 1 (b) findings; widgets in core
 
