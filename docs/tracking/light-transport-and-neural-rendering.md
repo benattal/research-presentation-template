@@ -2,13 +2,15 @@
 
 [Plan](../plans/light-transport-and-neural-rendering.md)
 
-Current state: cycle 1 (c) is merging. The opening and Neumann fixes and
-the volume and neural rendering fixes are in; the fixes for the operator
-light transport and aside and the adjoint and appendix are running. The shared
-widgets are in `core/` (on `framework-sync`, not yet on
-`main`). Next: merge the fixes, then cycles 2 and 3; move `main` to
-`framework-sync` after an idle `npm run test:ui`. Resume from the newest
-entry below.
+Current state: paused at the user's request after cycle 1. All four cycle
+1 (c) fix passes are merged and pushed, and their media are in the bucket.
+Cycles 2 and 3 have not started. The shared widgets are in `core/` (on
+`framework-sync`, not yet on `main`). Next:
+- cycle 2: a full capture, vetting with the brief of cycle 1, then fixes;
+- move `main` to `framework-sync` after an idle `npm run test:ui`;
+- the user's answers to the open questions in the newest entry.
+
+Resume from the newest entry below.
 
 ## Standing directions
 
@@ -144,6 +146,74 @@ before changing a slide.
   high level topics that the lecture will cover. This light paths slide is
   also not particularly useful by itself, each slide should serve a
   purpose."
+
+## 2026-11-18 13:00 — cycle 1 done; paused
+
+The last two fix passes are merged.
+
+**Adjoint section and appendix** (bf57fab, merged in a124cae).
+- Derivatives have one color, amber (`--derivative`). Blue is kept for
+  sensors and importance.
+- `adj-gradient` keeps the room's size at every step. It draws one uniform
+  band per surface, sized by that surface's derivative. Its notes answer
+  why the ceiling ranks above the red wall, checked against the engine.
+- `adj-importance`'s haze is gone: importance is now drawn at each beam's
+  destination.
+- `adj-sensitivity`'s $\delta e$ ring starts on the red wall.
+- Unnamed symbols are now named: $m$ and $q$ on `adj-adjoint`, $A = SG$ on
+  `adj-operator-derivative`, $x$ and $e$ on `adj-neumann`, and $q_k$ on
+  `adj-radiative-backprop`.
+- `lt-structured-light` describes indirect-invariant imaging.
+- `lt-three-point` gets "kernel of S" under $f_r$.
+- `lt-how-to-apply` says "precomputed".
+- `adj-volumes` is three cropped panels, with nothing clipped.
+- `adj-quadrature`, `lt-radiance` and `lt-primal-dual` have their layout
+  fixes.
+- Notes: all 19 slides are in the new format.
+
+**Operator light transport and aside** (5b54db9, merged in d80f517).
+- Each path is drawn in its term's color, from the new render palette
+  `--term-light-0…3`. The path-tracing walk labels its segments $e$, $Ae$,
+  $A^2e$, $A^3e$. The notes name paths by their number of bounces.
+- Scattering has its own color (fuchsia, `.term-scattering`).
+- `lt-matrix` shows $x_{k+1} = e + Ax_k$ and an iterates column as the row
+  view adds bounces, with notes for every step.
+- `lt-transport` defines $e = Ep$ and $c = Cx$ where the series appears,
+  and shows its medium only at its own step.
+- `lt-dual` is redrawn in the deck's notation ("diagram after Fig. 2").
+- `lt-epipolar` has a caption for each half.
+- `lt-relighting` no longer repeats its image.
+- `lt-operators` has 3 steps.
+- `lt-iterate` and `lt-neumann-sum` keep their thumbnails in place.
+- `lt-optical-computing`'s notes now say that any algorithm needing only
+  products with $T$ can run optically. They no longer claim the Neumann
+  iteration does.
+- Both sources were fetched and checked: `otoole2010` (power iteration,
+  Arnoldi and GMRES) and `cmu15463-probing`. They are in the bucket.
+- Notes: the main thread's spoken part is 899 words, and the aside's 1,436.
+
+**Found while merging, for cycle 2.** `--derivative` (#ffc83c) and
+`--term-light-0` (#ffc93c, the color of $e$'s path) are the same yellow.
+The two passes chose them independently.
+
+**Open questions for the user** (with those of the 11:00 entry):
+- **Adjoint and appendix:**
+  - "lost" light is now red on `adj-operator-derivative`;
+  - `adj-derivative`'s renders are amber instead of true color;
+  - the added line "one bounce $A = SG$";
+  - several notes are still above 120 spoken words (`adj-gradient` 177,
+    `adj-importance` 176, `vol-inverse` about 205).
+- **Operator light transport and aside:**
+  - `lt-iterate`'s new header line $A^{k+1}e = A(A^ke)$;
+  - the fuchsia for scattering;
+  - cutting the aside to about four slides;
+  - the overlap of `lt-transport` and `lt-matrix`.
+- **Unused media in the bucket:**
+  - `adj-volumes/ratio-and-delta-tracking.png`;
+  - `lt-dual/primal-dual-configurations.png`;
+  - the old `nr-representation` images.
+- **Still open from before:** the provenance lines for the title media
+  (a pass's tool refused to write them; they await the user).
 
 ## 2026-11-18 11:00 — cycle 1 (c): fixes merging
 
