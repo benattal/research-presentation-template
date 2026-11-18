@@ -2,11 +2,12 @@
 
 [Plan](../plans/light-transport-and-neural-rendering.md)
 
-Current state: cycle 1 (a) is merged, all four section passes. Cycle 1
-(b) is running: one vetting agent per section group. Next: consolidate
-their findings and fix them (cycle 1 (c)), then cycles 2 and 3. Move the
-core abstractions and sync the framework to `main` between cycles.
-Resume from the newest entry below.
+Current state: cycle 1 (c) is running, with fix agents for three section
+groups; the operator light transport and aside vetting is still running.
+The shared widgets are in `core/` (on `framework-sync`, not yet on
+`main`). Next: merge the fixes, then cycles 2 and 3; move `main` to
+`framework-sync` after an idle `npm run test:ui`. Resume from the newest
+entry below.
 
 ## Standing directions
 
@@ -142,6 +143,61 @@ before changing a slide.
   high level topics that the lecture will cover. This light paths slide is
   also not particularly useful by itself, each slide should serve a
   purpose."
+
+## 2026-11-18 08:30 — cycle 1 (b) findings; widgets in core
+
+**Widgets in `core/`.** `core/client/stage/` now holds:
+- the canvas and animation hooks (`canvas.js`);
+- `EquationStack`;
+- `Slider` and `Readout` (`Controls.jsx`), with one Slider replacing the
+  lecture's two;
+- `Chart`.
+
+`docs/implementation/layouts.md` lists them. They are on
+`framework-sync` (7df7f0a, pushed), which was merged into `guest-lecture`;
+the lecture's copies are removed (ead5d96). Every compared frame is
+unchanged except the sliders on `la-geometric` and `la-apply`, which take
+the deck's one slider style. `main` moves to `framework-sync` once
+`npm run test:ui` passes on an idle machine.
+
+**Vetting, cycle 1 (b).** Three of four reports are in. One finding is
+shared by all three: the notes read about 147 minutes for a 75-minute
+lecture, with about 30 class questions. Cycle 1 (c) therefore rewrites
+every slide's notes into one format:
+- a spoken core of about 120 words per slide;
+- stops marked "planned", "optional", or "pause";
+- the rest under "If asked".
+
+The planned stops are about 13, spread across the sections. The fix
+briefs are in the session scratchpad (`fix-brief.md` and one file per
+section).
+
+The largest findings:
+- **Notation and indexing:**
+  - $b$ and $e$ need a bridge between the Neumann series and light
+    transport sections.
+  - $x_0 = 0$ is not shown on `la-iteration`.
+- **Pictures that jump or mislead:**
+  - the plane moves between `la-fixed-point` and `la-neumann`;
+  - `adj-gradient`'s bands vary along each surface while the slide states
+    one albedo per surface, and its room shrinks at the slide change.
+- **Wrong statements:**
+  - `nr-representation`'s relighting answer contradicts `nr-baked`;
+  - `vol-rte`'s $T$ uses $\sigma_s$ before it exists;
+  - the bars on `nr-transient-quadrature` do not do what the notes say;
+  - `lt-structured-light` describes blocking instead of
+    indirect-invariant imaging.
+- **Clarity:**
+  - symbols from slides back are not named: `adj-adjoint`'s $m$ and $q$,
+    `nr-nerf`'s $A$ and $b$;
+  - derivatives are drawn in three colors in the adjoint section;
+  - `nr-representation`'s borrowed figures clash with the deck's
+    notation, so they are to be redrawn;
+  - `vol-vre` repeats the previous slide's derivation;
+  - the fog photo's credit omits the photographer.
+
+Added to the questions for the user: `nr-memory` has no visual (a chart
+of the memory sizes, or fold it into the adjoint divider).
 
 ## 2026-11-18 08:00 — cycle 1 (a) merged; vetting running
 
