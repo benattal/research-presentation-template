@@ -248,9 +248,15 @@ The user's directions of 2026-11-17 are quoted in the
   aloud, as the talk to graduate students), (b) other subagents vet
   the text and report, (c) the feedback consolidated and fixed.
 
-Work in progress, 2026-11-18: four agents in worktrees (section 1;
-section 2 with the explorer columns and path tracing; the aside's matrix
-slides; volume rendering), merged one at a time.
+Status, 2026-11-18 04:00. Merged (72bb3e6): the opening, `la-*`, the
+outline's picture, the split equation and justification in
+`EquationStack`, the rendering equation with the gather merged, the
+explorer columns, path tracing, the aside's matrix slides, the volume
+section (`vol-inverse` to the appendix), the adjoint gradient and
+sensitivity, the numbers in every section, and the presenter notes'
+math. Left: the title slide, `lt-divider`'s slices, `nr-inverse`, the
+stops beyond `la-neumann` and the adjoint slides, `lt-probing`'s number,
+the core abstractions, then the cycles.
 
 13. **Rehearsal pass.** Notes for every slide; time a run-through with the
     presenter timer and cut the slides marked *optional* until it fits;
@@ -308,7 +314,7 @@ Plain linear algebra before any light: the user (2026-11-17), "You do not need t
 | `la-fixed-point` | Fixed-point equation | A linear system written as a fixed point | `fixedPoint` |
 | `la-neumann` | Neumann series | Inverting a matrix with a power series | `neumannSeries` |
 | `la-spectral` | Spectral view | Along each eigenvector, a geometric series | `spectralView` |
-| `la-apply` | Iteration | Summing the series with matrix–vector products | `iteration` |
+| `la-iteration` | Iteration | Each update adds one term of the Neumann series | `iterationSeries` |
 
 ### Operator light transport
 
@@ -317,8 +323,7 @@ The rendering equation as $x = e + Ax$ with $A = SG$, shown on the flatland room
 | Slide | Title | Subtitle | Visual |
 |---|---|---|---|
 | `lt-divider` | Operator light transport | Light between surfaces, written with operators | `sectionTitle` |
-| `lt-rendering-equation` | Rendering equation | Outgoing light is emission plus scattered incident light | `derivation`; credits `kajiya1986`, `cmu15468-rendering` |
-| `lt-gather` | Scattering integral | Light leaving a point is a weighted integral of incident light | `scatteringGather` |
+| `lt-rendering-equation` | Rendering equation | Outgoing light is emission plus scattered incident light | `renderingEquation`; credits `kajiya1986` |
 | `lt-operators` | Transport operator | One bounce of light, split into propagation and scattering | `operatorExplorer` |
 | `lt-iterate` | Multiple bounces | One bounce of light at a time | `operatorExplorer` |
 | `lt-neumann-sum` | Global illumination | The sum of all bounces | `operatorExplorer` |
@@ -351,7 +356,6 @@ The radiative transfer equation in operator form, $(D - K)L = Q$, its integral f
 | `vol-operator` | Operator form | Transport along rays and scattering over directions | `operatorForm` |
 | `vol-integrating-factor` | Integrating factor | Along one ray, the transfer equation is solved by an integral | `integratingFactor` |
 | `vol-vre` | Volume rendering equation | Light in a medium has the same fixed-point form as between surfaces | `derivation`; credits `cmu15468-media` |
-| `vol-inverse` | Integral and differential forms | Inverting transport by differentiating radiance | `inverseOperator` |
 | `vol-emission-absorption` | Emission–absorption model | Emitted light along a ray, weighted by transmittance | `emissionAbsorption`; credits `max1995` |
 | `vol-quadrature` | Quadrature | Alpha compositing as a quadrature of the integral | `quadratureExplorer`; credits `tagliasacchi2022` |
 | `vol-sampling` | Sampling | Sampling where the weights are large reduces the error | `quadratureExplorer`; credits `mildenhall2020` |
@@ -413,6 +417,7 @@ Optional slides after "Questions", cut from the main talk for time.
 | Slide | Title | Subtitle | Visual |
 |---|---|---|---|
 | `la-geometric` | Geometric series | Inverting a number with a power series | `geometricSeries` |
+| `la-apply` | Iteration | Summing the series with matrix–vector products | `iteration` |
 | `lt-radiance` | Radiance and reflectance | Radiance is constant along a ray and changes only at surfaces | `floorScattering` |
 | `lt-three-point` | Three-point form | In area form, propagation and scattering are separate factors | `derivation`; credits `veach1997`, `arvo1995` |
 | `lt-structured-light` | Structured light transport | Structured-light scans with probing are robust to indirect light | `figures`; credits `otoole2014` |
@@ -420,6 +425,7 @@ Optional slides after "Questions", cut from the main talk for time.
 | `lt-primal-dual` | Primal-dual coding | Probing light transport in a single exposure | `figures`; credits `otoole2012` |
 | `nr-nlos` | Non-line-of-sight imaging | Objects around a corner are reconstructed from time-resolved light | `figureRows`; credits `otoole2018` |
 | `adj-volumes` | Differentiable volumes | Unbiased gradient estimators for volume reconstruction | `figures`; credits `nimierdavid2022` |
+| `vol-inverse` | Integral and differential forms | Inverting transport by differentiating radiance | `inverseOperator` |
 ## Interactive visuals
 
 Every interactive visual follows these rules; what each one shows is in the

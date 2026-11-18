@@ -2,9 +2,11 @@
 
 [Plan](../plans/light-transport-and-neural-rendering.md)
 
-Current state: the user is reviewing the deck on the dev server while the
-edits below are made in git worktrees by four agents, merged one at a
-time. Resume from the plan's "User edits after cycle 3".
+Current state: the four section agents' work and the numbers pass are
+merged and pushed (72bb3e6). Next: the remaining edits and cycle 1 by
+section agents, then vetting agents; the core abstractions and the
+framework sync to `main` between cycles. Resume from the plan's "User
+edits after cycle 3".
 
 ## Standing directions
 
@@ -140,6 +142,59 @@ before changing a slide.
   high level topics that the lecture will cover. This light paths slide is
   also not particularly useful by itself, each slide should serve a
   purpose."
+
+## 2026-11-18 04:00 — the user's section edits merged
+
+Merged into `guest-lecture` and pushed (72bb3e6), each after check, the
+deck tests, and a look at its frames:
+
+- section 1 (agent): `la-fixed-point` with ten updates and the prompt;
+  `la-neumann` with $(I - A)S_k \overset{?}{=}$, the answer, and the
+  cancellation shown for one step; `la-spectral` rebuilt on the same
+  vectors; `la-iteration` new; `la-apply` and `la-geometric` in the
+  appendix; the outline's first picture is the 2D updates.
+  `EquationStack` gained `rhs` (a question mark over the relation until
+  the right side shows) and `justification` (a line shown for one step).
+- section 2 (agent): `lt-rendering-equation` rebuilt term by term in the
+  room, `lt-gather` merged into it and deleted; the explorer's share
+  column replaced by the iteration ($x_0 \dots x_4$, the iterated
+  rendering equation as a caption); `lt-path-tracing` from the scattering
+  integral to one random direction to a random walk, without the chart
+  and the error table; its 0.5 s entry block fixed (a cached table in
+  `walk()`, the traced room prepared when idle).
+- the aside (agent): `lt-matrix` and `lt-transport` written with
+  $\mathbf{T} = C(I + A + A^2 + \cdots)E$; a column drawn as the pixels'
+  rays under one element, a row as sampled paths to one pixel; readouts
+  removed from `lt-relighting` and `lt-optical-computing`.
+- volume (agent): order rte, operator, integrating factor, vre,
+  emission–absorption, quadrature, sampling; `vol-inverse` to the
+  appendix; "like G/S" replaced; the quadrature panel now draws the medium
+  (the black band was the light reaching the camera, not the medium);
+  readouts removed.
+- mine: the neural rendering readouts; `adj-gradient` as the room with
+  each surface lit by its derivative, in turn; `adj-sensitivity` without
+  values; `adj-quadrature` drawing the medium; presenter notes render
+  their math (remark-math, the slides' KaTeX options; `npm run check`
+  renders every notes formula: 952, none broken); the agent files
+  without quotes.
+
+Open:
+
+- The machine throttles sustained CPU work (a fixed loop runs 0.3 s per
+  chunk, then up to 1.7 s after a few seconds), so a cold page load took
+  85 s and captures time out. Capture now gives its first load 5 min;
+  later frames still time out now and then. `npm run test:ui` gave
+  unusable results (two runs overlapped and shared fixture files) and has
+  to be rerun on an idle machine.
+- From the agents: `la-apply` and `la-iteration` are both titled
+  "Iteration" and index differently; `la-divider` still shows the scalar
+  series; `la-fixed-point` shows $A$'s entries; G borrows the bounce-4
+  crimson; $A^k e$ on `lt-iterate` against $L_k$ on `lt-neumann-sum`;
+  `lt-divider`'s notes say "Section 2"; `lt-matrix`'s row view is busy;
+  `lt-transport` shows the whole series at once; `vol-rte` does not define
+  $f_p$ and $\omega'$; `public/slides/lt-rendering-equation/ray-tracing-function.png`
+  is unused.
+- The framework commits on this branch since `bca346f` are not on `main`.
 
 ## 2026-11-18 01:00 — resumed; cycle 3 checked; user's section edits
 
