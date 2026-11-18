@@ -16,10 +16,39 @@ before changing a slide.
 
 2026-11-17, while resuming:
 
+- "I would also recommend re-designing the inverse monte carlo rendering
+  slide from Gkioulekas, while still citing them. If a figure is simply
+  cut from a paper or presentation, and doesn't exactly fit, you are
+  welcome to (and should) re-design while citing/attributing."
+- "When you say "like G" and "like S" on the volume rendering slides,
+  students will not remember what these are. You have to make sure that
+  terms you use are clear." And: "I understand that all of these
+  suggestions I'm giving require navigating some challenging tradeoffs
+  (verbosity, clarity, overexplaining, underexplaining), but you'll need to
+  do your best to address them. Make sure your vetting loop is robust."
+- "Another important thing: I would also like you to introduce stops for
+  (a) pausing for questions and (b) asking a question about the content to
+  the students to keep them engaged. There's lots of interesting,
+  challenging content here, that requires some thought to figure out.
+  Several places can be used as stopping points to let the students play
+  around with some ideas/problem solve"
 - "Be sure to also add presenter notes. I would have agents "read them out
   loud" to themselves to make sure they flow well, make for a good
   presentation to graduate students."
-- Goal: "Address all of the requested edits, then repeat 3-4 times (a) do
+- "I think other refinements to visuals to make things more intuitive and
+  illustrative like this are possible."
+- "The operator light transport image can remain mostly the same -- it
+  would be nice to have different bars separating different slices of the
+  image, each with a different number of bounces per slice (which should be
+  labeled)"
+- "I also think that the title slide can be different, showing some cool
+  visuals for neural rendering in addition to a much more interesting one
+  for light transport (showing some cool rendered effects)"
+- Goal (replacing the one below): "Address all of the requested edits,
+  then repeat 3-4 times (a) do a pass on the slides and notes with
+  subagents, (b) have subagents vet the slides and notes and report
+  feedback, (c) consolidate feedback, check for bugs, and repeat"
+- Earlier goal: "Address all of the requested edits, then repeat 3-4 times (a) do
   a pass on the text with subagents, (b) have subagents vet the text and
   report feedback, (c) consolidate feedback and repeat"
 - "For the adjoint slides, the sum so far numbers are not useful"

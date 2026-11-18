@@ -230,6 +230,16 @@ The user's directions of 2026-11-17 are quoted in the
   bars.
 - Numbers elsewhere (neural rendering included): every value shown has an
   illustrative use, or it goes.
+- Stops: pauses for questions, and questions or small problems for the
+  students at points where the content takes thought (the fixed-point
+  slide's prompt is the first), each with what to ask and the answer in
+  the notes.
+- Title slide: striking renders of light transport effects and of neural
+  rendering results. The operator light transport divider: the room in
+  labelled slices with 0, 1, 2, … bounces.
+- `nr-inverse`: the analysis-by-synthesis figure redrawn as the deck's own
+  visual of the optimization loop, credited after Gkioulekas; other cut-out
+  figures that do not fit, redrawn the same way.
 - Then 3–4 cycles: (a) a text and notes pass by subagents (the notes read
   aloud, as the talk to graduate students), (b) other subagents vet
   the text and report, (c) the feedback consolidated and fixed.

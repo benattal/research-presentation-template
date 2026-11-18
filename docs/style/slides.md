@@ -144,10 +144,20 @@ space is not used effectively in these slides".
   than the framework's body size without a reason.
 - Define a necessary technical term and spell out an abbreviation at first
   use, on the slide or in the notes.
+- **Terms are clear where they are used.** The user (2026-11-17): "When
+  you say "like G" and "like S" on the volume rendering slides, students
+  will not remember what these are. You have to make sure that terms you
+  use are clear." A symbol from an earlier slide is named in words where
+  it reappears ("propagation $G$"), unless the slide just before used it.
 
 ## Figures and media
 
 - A figure shows one thing; crop away what the point does not need.
+- **Redesign a borrowed figure that does not fit.** The user (2026-11-17):
+  "If a figure is simply cut from a paper or presentation, and doesn't
+  exactly fit, you are welcome to (and should) re-design while
+  citing/attributing." Draw it again for the slide's point and credit the
+  original ("after Gkioulekas, CMU 15-468").
 - **Each image shows the point it sits under.** Before placing a figure,
   read its own caption and panel labels in the source, and caption it with
   what it shows, not with what the method does. An image standing in for
