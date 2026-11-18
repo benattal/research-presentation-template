@@ -2,9 +2,9 @@
 
 [Plan](../plans/light-transport-and-neural-rendering.md)
 
-Current state: cycle 1 (c) is merging. The opening and Neumann fixes are
-in; the fixes for the operator light transport and aside, the volume and
-neural rendering, and the adjoint and appendix are running. The shared
+Current state: cycle 1 (c) is merging. The opening and Neumann fixes and
+the volume and neural rendering fixes are in; the fixes for the operator
+light transport and aside and the adjoint and appendix are running. The shared
 widgets are in `core/` (on `framework-sync`, not yet on
 `main`). Next: merge the fixes, then cycles 2 and 3; move `main` to
 `framework-sync` after an idle `npm run test:ui`. Resume from the newest
@@ -175,6 +175,39 @@ went from 2,838 to 1,695 words. The planned stops are:
 - the $A^3 b$ label;
 - the wording "the spectral radius";
 - the roadmap's notes, at 174 spoken words for six rows.
+
+**Volume and neural rendering** (4812a6f, merged in d257b33). The
+changes:
+- `vol-rte` shows $T = e^{-\sigma_a d}$ until $\sigma_s$ is introduced.
+- `vol-integrating-factor`:
+  - colors $D$, $K$ and $Q$ as its neighbours do;
+  - labels the strip's axis and the light's direction;
+  - shades the integrand $T(KL+Q)$ and marks $T(d)L(d)$.
+- `vol-vre` has four steps: the three-term line "from the integrating
+  factor", then $x = b + Ax$, $A = D^{-1}K$, and the series, with the
+  render.
+- `nr-representation` is redrawn in the deck's notation, as the new
+  `MeasurementFields` layout, credited "Fig. 2, redrawn". The old images
+  are unused.
+- `nr-transient-quadrature` uses one scale for every step, with break
+  marks.
+- `nr-nerf`'s labels name no symbols from earlier slides.
+- `nr-baked` marks the row its step is about.
+- `nr-radiance-cache` reads "$A(x - \hat x)$: missing light".
+- `nr-flash-cache` shows its identity under the figure.
+- The credits no longer read "after … after", and CSC2529 gets its year.
+
+**Notes.** All 24 slides' notes are in the new format: 3,080 spoken words,
+about 128 per slide, down from 8,238.
+
+**Questions for the user, from this pass:**
+- `nr-applications`' propagating-light video is still dark after the crop.
+  Brighter clips exist in `assets/sources/malik2024` (`cornell_multiview`,
+  `coke_teaser`).
+- On `nr-transient`, two of the bounce colors are hard to tell apart in the
+  legend.
+- `nr-transient-quadrature`'s 3 ns step shows small returns under the
+  shared scale.
 
 ## 2026-11-18 08:30 — cycle 1 (b) findings; widgets in core
 
