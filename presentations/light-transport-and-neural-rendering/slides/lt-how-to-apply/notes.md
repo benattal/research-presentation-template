@@ -1,11 +1,12 @@
-Appendix slide, for a question about how a product with the transport matrix is computed in practice. It belongs with the transport matrix slides of the aside.
+Transition: an appendix slide, for a question about computing products with the transport matrix. Every method in the aside needs $\mathbf{T}p$, the camera image for a projector pattern $p$, but $\mathbf{T}$ is rarely stored: for a megapixel camera and projector, it has $10^6 \times 10^6$ entries.
 
-Every method of the aside needs products $\mathbf{T}p$: the camera image $c$ for one projector pattern $p$, with $\mathbf{T} = C(I - A)^{-1}E$. With a megapixel camera and projector, $\mathbf{T}$ is a $10^6 \times 10^6$ matrix, so it is rarely stored in full. Three ways to get $\mathbf{T}p$:
+- Step 1: Precomputed: compute $\mathbf{T}$ once and compress it. Ng et al. store transport in wavelets and keep only the largest terms of the lighting, to relight in real time. On the left, spherical harmonics; on the right, their wavelets, with the same number of terms: only the wavelets keep the sharp shadow.
+- Step 2: Simulated: render the scene. The emission is $e = Ep$, the light solves $x = e + Ax$, and the image is $c = Cx$, as in the room.
+- Step 3: Measured: project $p$ and photograph the result. One exposure is $\mathbf{T}p$, because light adds. The setup is from the optical computing part of the CMU lecture.
 
-- Click 1, stored: precompute $\mathbf{T}$ and compress it. Ng et al. store transport in a wavelet basis, keep only the largest terms of the lighting, and relight a scene with a sparse matrix–vector product in real time.
-- Click 2, simulated: render the scene. The emission is $e = Ep$, the light is the solution of $x = e + Ax$ (the Neumann series, or path tracing), and the image is $c = Cx$. The room is this simulation.
-- Click 3, measured optically: project $p$ with a real projector and photograph the result. One exposure of the camera is $\mathbf{T}p$, because light adds. This setup, from the optical computing part of the CMU lecture, has a beam splitter between the projector and the camera.
+Remember: $\mathbf{T}$ is used through its products, which can be precomputed, simulated, or photographed.
 
-The sentence to remember: $\mathbf{T}$ is used through its products, and a product can be looked up, simulated, or photographed.
-
-The optical computing slide uses the third option to run numerical algorithms with photographs.
+If asked:
+- Whose spherical harmonics? Sloan et al. 2002, the method Ng et al. compare with, at as many terms as the wavelets.
+- What is in the setup? A projector and a camera, with a beam splitter between them.
+- What uses the third way? The optical computing slide, which runs numerical algorithms with photographs.

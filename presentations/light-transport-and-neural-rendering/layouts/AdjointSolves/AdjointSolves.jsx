@@ -31,12 +31,12 @@ const FORWARD_ROWS = [{ y: 52, k: '1' }, { y: 100, k: '2' }, { y: 148, k: '3' },
 const FORWARD_LABEL_Y = 18;
 const FORWARD_COUNT_Y = 254;
 
-/** The adjoint route: one solve from q to y, then a fan of inner products. */
+/** The adjoint route: one solve from q to y, then a fan of inner products; its count sits under its arrow, as the forward count does. */
 const ADJOINT_Y = 400;
 const ADJOINT_LABEL_Y = 366;
 const Y_NODE = 262;
 const FAN_ROWS = [{ y: 318, k: '1' }, { y: 362, k: '2' }, { y: 406, k: '3' }, { y: 470, k: 'N' }];
-const ADJOINT_COUNT_Y = 486;
+const ADJOINT_COUNT_Y = ADJOINT_Y + (FORWARD_COUNT_Y - FORWARD_ROWS[3].y);
 
 const fade = (visible) => ({ initial: false, animate: { opacity: visible ? 1 : 0 }, transition: { duration: 0.35 } });
 

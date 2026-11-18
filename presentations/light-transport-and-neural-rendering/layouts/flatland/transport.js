@@ -365,8 +365,17 @@ export function buildFluenceTable(room, { width = 160, height = 96, directions =
  * reaches (importance travelling backward). With `pulse: { width, trail }`,
  * light more than `width` behind the front is scaled by `trail`, so a
  * bright pulse travels ahead of the light filling in behind it.
+ *
+ * With `at: 'destination'`, `state` is indexed instead by the incident
+ * state at each ray's destination end (importance leaving the surface the
+ * ray reaches, such as Sᵀq): each ray shows the value of the one surface
+ * and direction it ends at. An outgoing state at the source end holds a
+ * whole beam's value, and a beam can end on several surfaces.
  */
-export function fluence(table, state, maxDistance = Infinity, { feather = 0.35, from = 'source', pulse = null } = {}) {
+export function fluence(table, state, maxDistance = Infinity, {
+  feather = 0.35, from = 'source', pulse = null, at = 'source',
+} = {}) {
+  if (at !== 'source' && at !== 'destination') throw new Error(`Unknown ray end "${at}"`);
   const { width, height, directions, states, distances } = table;
   const result = new Float32Array(width * height * 3);
   const dw = (2 * Math.PI) / directions;
@@ -377,7 +386,7 @@ export function fluence(table, state, maxDistance = Infinity, { feather = 0.35, 
     let b = 0;
     const base = cell * directions;
     for (let k = 0; k < directions; k += 1) {
-      const s = states[base + k];
+      const s = at === 'source' ? states[base + k] : states[base + ((k + half) % directions)];
       if (s === 0xffff) continue;
       let w = dw;
       if (maxDistance !== Infinity) {

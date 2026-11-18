@@ -6,17 +6,17 @@
   "equations": [
     {
       "label": "integral form: integrals, Monte Carlo",
-      "equation": "$$L = D^{-1}Q + D^{-1}K\\,L$$",
+      "equation": "$$L = D^{-1}\\htmlClass{term-emission}{Q} + D^{-1}K\\,L$$",
       "step": 0
     },
     {
       "label": "differential form: derivatives",
-      "equation": "$$Q = (D - K)\\,L$$",
+      "equation": "$$\\htmlClass{term-emission}{Q} = (D - K)\\,L$$",
       "step": 1
     },
     {
       "label": "on this ray, without scattering",
-      "equation": "$$Q = -\\frac{dL}{dt} + \\sigma_t L$$",
+      "equation": "$$\\htmlClass{term-emission}{Q} = -\\frac{dL}{dt} + \\sigma_t L$$",
       "step": 1
     }
   ],

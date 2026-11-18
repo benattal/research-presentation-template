@@ -9,7 +9,7 @@ import { describe, it } from 'node:test';
 import { BINS, binCosine, createRoom, stateIndex } from '../layouts/flatland/scene.js';
 import {
   addVectors, bounce, bounceAdjoint, buildFluenceTable, buildTransport, fluence, outgoingFlux, pixelResponse,
-  propagate, scatter, seriesTerms, solve,
+  propagate, scatter, scatterAdjoint, seriesTerms, solve,
 } from '../layouts/flatland/transport.js';
 
 const dot = (a, b) => a.reduce((sum, value, i) => sum + value * b[i], 0);
@@ -101,6 +101,27 @@ describe('flatland transport', () => {
       else if (phi[cell * 3] > 0) lit += 1;
     }
     assert.ok(lit > 0.6 * table.width * table.height);
+  });
+
+  it('importance leaving the floor, drawn from the rays\' ends, stays within its extent of the floor', () => {
+    const table = buildFluenceTable(room, { width: 80, height: 48, directions: 96 });
+    const q = pixelResponse(transport, 0.425, 0.455);
+    const leaving = scatterAdjoint(transport, q);
+    const floor = new Set();
+    for (let i = 0; i < q.length; i += 1) if (q[i]) floor.add(Math.floor(i / 3 / BINS));
+    const ends = [...floor].map((p) => room.patches[p]);
+    const [left, right] = [Math.min(...ends.map((p) => p.a[0])), Math.max(...ends.map((p) => p.b[0]))];
+    const extent = 2;
+    const phi = fluence(table, leaving, extent, { from: 'destination', at: 'destination' });
+    let near = 0;
+    for (let cell = 0; cell < table.width * table.height; cell += 1) {
+      const x = ((cell % table.width) + 0.5) / table.width * 10;
+      const y = 6 - (Math.floor(cell / table.width) + 0.5) / table.height * 6;
+      const distance = Math.hypot(Math.max(0, left - x, x - right), y);
+      if (distance > extent + 0.1) assert.equal(phi[cell * 3], 0, `importance at (${x.toFixed(2)}, ${y.toFixed(2)})`);
+      else if (phi[cell * 3] > 0) near += 1;
+    }
+    assert.ok(near > 0);
   });
 });
 

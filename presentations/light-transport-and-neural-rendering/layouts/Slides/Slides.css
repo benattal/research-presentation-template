@@ -198,6 +198,12 @@
   height: 100%;
 }
 
+/* Figures standing on one line: the row as tall as its tallest figure, centered, each figure at its bottom. */
+.figures-grid--bottom {
+  align-content: center;
+  align-items: end;
+}
+
 .figures-item figcaption {
   margin-top: 8px;
   text-align: center;

@@ -1,15 +1,15 @@
-Transition: now every derivative at once. The light $x$ takes one forward solve and the importance $y$ one adjoint solve. Then the derivative of the pixel with respect to any parameter is one inner product, $\partial_\theta m = \langle y, (\partial_\theta A)\, x \rangle$.
+Transition: now every derivative at once. A parameter changes the light leaving a surface by $(\partial_\theta A)\, x$, so the pixel changes by $\partial_\theta m = \langle y, (\partial_\theta A)\, x \rangle$.
 
-- Step 1: the light $x$, from one forward solve.
-- Step 2: the importance $y$ of the pixel, from one adjoint solve. The light moves to the side; both are reused for every derivative.
-- Step 3: $\theta$ is the red wall's albedo, as on the derivative slides. $(\partial_\theta A)\, x$ is the light the red wall reflects, and in the inner product it is weighted by the importance on the wall. The amber band along the wall shows the derivative: the more opaque, the larger.
+- Step 1: The light $x$, from one forward solve.
+- Step 2: The importance $y$ of the pixel, from one adjoint solve. The light moves to the side: both are reused for every derivative.
+- Step 3: $\theta$ is the red wall's albedo, as on the derivative slides. $(\partial_\theta A)\, x$ is the light the red wall reflects, weighted in the inner product by the importance on the wall. The amber band along the wall shows that derivative: the larger, the more opaque.
+- Step 4: Every surface's albedo is a parameter, each with its own inner product of the same $x$ and $y$. The floor's band is the strongest by far: the floor is lit by the lamp and inside the wedge, so light and importance are both large there. Then the ceiling, the red wall, and the box; the green wall is last. Five derivatives took two solves, not one per albedo.
 
-Question for the class, at step 3: every surface's albedo is a parameter. Which surface's albedo changes this pixel most, and which least? (Answer on the next click.)
+Remember: with many parameters, each derivative is one inner product with the same $x$ and $y$.
 
-- Step 4: the other surfaces light up one after another, largest derivative first, each by its own inner product with the same $x$ and $y$; only $\partial_\theta A$ changes. The floor is first, and brightest inside the wedge: it is lit by the lamp and it is inside the pixel's wedge, so both the light and the importance are large there. The ceiling and the box follow. The green wall is last: it is lit, but its light reaches the pixel only by way of other surfaces.
+Stop (planned): at step 3, ask which surface's albedo changes this pixel most, and which least. Answer: the floor most and the green wall least, on the next click.
 
-Five derivatives took two solves. With finite differences, each derivative takes one more forward solve, with that albedo changed: five here, and millions for a scene with a texture or a network.
-
-The sentence to remember: with many parameters, each derivative is one inner product with the same $x$ and $y$.
-
-Next: the same computation for NeRF's quadrature along one ray.
+If asked:
+- Why does the ceiling come before the red wall, when the lamp does not light it? The ceiling reflects the light of the floor, which the lamp lights directly, and the floor in the wedge faces all of the ceiling. The ceiling is also longer: one albedo scales ten units of ceiling against six of wall. Per unit length, the red wall's derivative is larger.
+- Why is the green wall last? It is lit, but its light reaches the floor in the wedge only after other bounces.
+- How opaque is each band? Its opacity is the square root of its derivative relative to the floor's, which keeps the order and keeps the green wall visible. The floor's derivative is about three times the ceiling's.
