@@ -1,3 +1,5 @@
-Section 4. In neural rendering the problem is reversed: the measurement $x$ is given, and the scene is unknown.
+This section reverses the problem. So far the scene was known and we computed the light; now the measurements are given and the scene is unknown. We render a guess of the scene with the models of the previous sections, compare the rendering with the measurements, and change the scene until they match.
 
-The scene is a learned field, a network whose outputs are density and color. We render it with the models of the previous sections to predict a measurement, and fit the network's parameters until the prediction matches. The render shows light in flight, a pulse partway across the room: time-of-flight measurements are one of the sensors this section covers.
+The plan: the optimization loop itself; neural radiance fields, the first example; the same approach for sensors that measure the time light takes, and for structured light; and last, scenes where light bounces, which have to be rendered with every bounce inside the loop.
+
+The render shows light in flight, a pulse partway across the room: time-of-flight measurements are among the sensors of this section.

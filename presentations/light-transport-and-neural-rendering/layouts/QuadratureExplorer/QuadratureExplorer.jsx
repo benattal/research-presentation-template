@@ -2,6 +2,7 @@ import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
 import { ease, useAnimation, useStageCanvas } from '../canvas/canvas.js';
+import EquationStack from '../equations/EquationStack.jsx';
 import {
   CLOUD_EXTENT, CORE_X, cloudBlobs, cloudRay, createCloud, mediumImage, renderCloud,
 } from '../volume/cloud.js';
@@ -89,6 +90,11 @@ function drawBreaks(ctx, scale, ts, values, max, colors) {
   }
 }
 
+/** What a build step samples: steps with the same key show the same samples. */
+function samplingKey(step) {
+  return `${step.sampler}:${step.samples}:${step.coarse ?? ''}`;
+}
+
 /** The samples a build step asks for, with the same seed every time. */
 function drawSamples(field, step, seed) {
   const sampler = SAMPLERS[step.sampler];
@@ -108,10 +114,15 @@ function drawSamples(field, step, seed) {
  * samples, coarse?, note? }`, `note` a short label under the sample count.
  * Slide fields: `surfaceWidth` (the core's surface width in world units at
  * first), `coreDensity` (see `cloudBlobs`), `equations` (display math
- * beside the figure), `remarks` (short labels under them), and
- * `compareSamplers` (bars of every sampler's error in the steps, the RMS
- * over rays across the cloud, in place of the two pixels). Drag the figure
- * to move the surface; the slider sets its sharpness.
+ * beside the figure) or `lines` (an EquationStack beside the figure, for
+ * equations that build up or ask a question), `remarks` (short labels
+ * under them), and `compareSamplers` (bars of every sampler's error in the
+ * steps, the RMS over rays across the cloud, in place of the two pixels).
+ * Drag the figure to move the surface; the slider sets its sharpness.
+ *
+ * Build steps with the same sampling (sampler, count, coarse count) show
+ * the same samples: only a step that changes the sampling grows its
+ * samples and bars again, so a step can change the equations alone.
  */
 export default function QuadratureExplorer({ slide, buildStep }) {
   const step = slide.buildSteps?.[buildStep];
@@ -127,10 +138,13 @@ export default function QuadratureExplorer({ slide, buildStep }) {
   const [canvasRef, ratio] = useStageCanvas();
   const progressRef = useRef(1);
   const dragRef = useRef(false);
-  const stepRef = useRef(buildStep);
-  if (stepRef.current !== buildStep) {
-    // A new step grows its samples and bars from nothing, also in the draw before its animation's first frame.
-    stepRef.current = buildStep;
+  const sampling = samplingKey(step);
+  // The first step with this sampling seeds its samples, so every step with the same sampling shows the same ones.
+  const samplingStep = slide.buildSteps.findIndex((s) => samplingKey(s) === sampling);
+  const samplingRef = useRef(sampling);
+  if (samplingRef.current !== sampling) {
+    // A new sampling grows its samples and bars from nothing, also in the draw before its animation's first frame.
+    samplingRef.current = sampling;
     progressRef.current = 0;
   }
 
@@ -151,10 +165,10 @@ export default function QuadratureExplorer({ slide, buildStep }) {
     if (!cloud) return null;
     const field = cloudRay(cloud, RAY_Y);
     const reference = referenceIntegral(field, 20000);
-    const drawn = drawSamples(field, step, 7 + buildStep);
+    const drawn = drawSamples(field, step, 7 + samplingStep);
     const result = estimate(field, drawn.samples);
     return { drawn, reference, result, profile: rayProfile(field, 900) };
-  }, [cloud, step, buildStep]);
+  }, [cloud, step, samplingStep]);
 
   const comparison = useMemo(() => {
     if (!cloud || !slide.compareSamplers) return null;
@@ -268,7 +282,7 @@ export default function QuadratureExplorer({ slide, buildStep }) {
     drawAxes(ctx, weights, colors['text-muted']);
   }, [canvasRef, colors, ray, image, medium, geometry, ratio]);
 
-  useAnimation(buildStep, 700, (progress) => {
+  useAnimation(sampling, 700, (progress) => {
     progressRef.current = progress;
     draw();
   });
@@ -323,6 +337,9 @@ export default function QuadratureExplorer({ slide, buildStep }) {
           )}
         </div>
         <div className="quadrature-side">
+          {slide.lines && (
+            <div className="quadrature-lines"><EquationStack lines={slide.lines} step={buildStep} dimEarlier={false} /></div>
+          )}
           {slide.equations?.map((equation) => (
             <div key={equation} className="quadrature-equation"><Text>{equation}</Text></div>
           ))}

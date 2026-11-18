@@ -56,8 +56,10 @@ function trailOf(photon, i, inScatteringShown) {
  * Slide fields: `lhs` (math) and its optional short `lhsLabel`, `terms`
  * (`[{ process, math, label, className }]`, process one of absorption,
  * outScattering, emission, inScattering), `absorption` and `scattering`
- * (σₐ and σₛ per unit length at first), and build steps `{ terms: n }`
- * showing the first n terms.
+ * (σₐ and σₛ per unit length at first), build steps `{ terms: n }`
+ * showing the first n terms, and optional `definitions`
+ * (`[{ text, step }]`): short lines naming a term's symbols, shown in the
+ * side column from build step `step`.
  */
 export default function BeamThroughMedium({ slide, buildStep }) {
   const step = slide.buildSteps?.[buildStep];
@@ -256,6 +258,14 @@ export default function BeamThroughMedium({ slide, buildStep }) {
           <div className="beam-transmittance" style={{ visibility: active.absorption || active.outScattering ? 'visible' : 'hidden' }}>
             <span className="beam-transmittance-label">transmittance</span>
             <Text>{'$T = e^{-(\\sigma_a + \\sigma_s)\\, d}$'}</Text>
+          </div>
+          {/* Symbols the terms introduce, each from its build step; their space is reserved, so nothing moves. */}
+          <div className="beam-definitions">
+            {(slide.definitions ?? []).map((definition) => (
+              <span key={definition.text} style={{ visibility: buildStep >= definition.step ? 'visible' : 'hidden' }}>
+                <Text>{definition.text}</Text>
+              </span>
+            ))}
           </div>
         </div>
       </div>

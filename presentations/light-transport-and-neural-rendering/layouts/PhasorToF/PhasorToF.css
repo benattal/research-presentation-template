@@ -17,31 +17,61 @@
   flex-shrink: 0;
 }
 
-.phasor-tof-figure {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 6px;
-}
-
-/* The figure's own labels, re-set at a legible size: `x`, `y` are fractions of the figure (top left, or top
-   center); a line break in a label starts a new line, as in the original. */
-.phasor-tof-figure-box {
+/* The emitted and received modulation: thin waves on white, the delay φ under the received one. */
+.phasor-tof-modulation {
   position: relative;
 }
 
-.phasor-tof-figure-label {
+.phasor-tof-modulation svg {
+  display: block;
+}
+
+.phasor-tof-modulation-wave {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+}
+
+.phasor-tof-modulation-mean {
+  stroke: var(--border-light);
+  stroke-width: 1;
+}
+
+.phasor-tof-modulation-crest {
+  stroke: var(--text-muted);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+}
+
+.phasor-tof-modulation-bracket {
+  fill: none;
+  stroke: var(--text-primary);
+  stroke-width: 1.5;
+}
+
+.phasor-tof-modulation-label,
+.phasor-tof-modulation-phi,
+.phasor-tof-modulation-time {
   position: absolute;
-  font-size: 16px;
-  line-height: 1.05;
-  white-space: pre;
-  color: var(--bg-elevated);
+  line-height: 1;
   pointer-events: none;
 }
 
-.phasor-tof-figure-label--center {
+.phasor-tof-modulation-label {
+  font-size: 18px;
+  color: var(--text-secondary);
+}
+
+.phasor-tof-modulation-phi {
   transform: translateX(-50%);
-  text-align: center;
+  font-size: 22px;
+  color: var(--text-primary);
+}
+
+.phasor-tof-modulation-time {
+  transform: translateY(-50%);
+  font-size: 22px;
+  color: var(--text-muted);
 }
 
 .phasor-tof-panel {

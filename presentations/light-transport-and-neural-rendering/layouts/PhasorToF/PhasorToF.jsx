@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import Media from '@core/stage/Media.jsx';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
-import Text from '@core/stage/Text.jsx';
 import { Readout, Slider } from '../activeSensing/Controls.jsx';
 import PhasorPlane from '../activeSensing/PhasorPlane.jsx';
 import {
@@ -11,11 +9,13 @@ import {
   ambiguityDistance, depthFromPhase, phaseOf, phasor, sumPhasors,
 } from '../activeSensing/measurement.js';
 import { ease, useAnimation, useStageCanvas } from '../canvas/canvas.js';
+import Modulation from './Modulation.jsx';
 import { PHASOR_SCENE, clampMirror, directReturn, mirrorReturn } from './multipath.js';
 import './PhasorToF.css';
 
-/** The render panel and the complex plane, in stage pixels. */
+/** The render panel and the complex plane, in stage pixels; the modulation plot is as wide as the panel. */
 const PANEL = { width: 500, height: 262 };
+const MODULATION_HEIGHT = 262;
 const PLANE = { width: 440, height: 412 };
 
 /** The part of the scene the panel shows, in meters. */
@@ -42,19 +42,17 @@ function formatDepth(meters) {
 }
 
 /**
- * A continuous-wave time-of-flight pixel: `figure` (a media item, usually
- * borrowed and credited through the slide's `credits`) shows the emitted
- * and received modulation above a panel with a camera and source beside
- * each other and a ray to a wall; the returns are drawn as phasors in the
- * complex plane. Each build step (`buildSteps` entries `{ frequencyMHz,
- * mirror }`) sets the modulation frequency and whether a mirror adds a
- * second path; the frequency slider and dragging the mirror explore
- * further. The check reads the depth recovered from the phase against the
- * true depth.
+ * A continuous-wave time-of-flight pixel: the emitted and received
+ * modulation against time (Modulation, with the delay φ marked) above a
+ * panel with a camera and source beside each other and a ray to a wall;
+ * the returns are drawn as phasors in the complex plane, with the same φ.
+ * Each build step (`buildSteps` entries `{ frequencyMHz, mirror }`) sets
+ * the modulation frequency and whether a mirror adds a second path; the
+ * frequency slider and dragging the mirror explore further. The check
+ * reads the depth recovered from the phase against the true depth.
  */
 export default function PhasorToF({ slide, buildStep }) {
   const step = stepState(slide, buildStep);
-  if (!slide.figure?.src) throw new Error('phasorToF: the slide needs "figure", a media item');
   const [frequency, setFrequency] = useState(step.frequencyMHz * 1e6);
   const [mirrorShown, setMirrorShown] = useState(step.mirror ? 1 : 0);
   const [mirrorCenter, setMirrorCenter] = useState(PHASOR_SCENE.mirror.center);
@@ -185,19 +183,16 @@ export default function PhasorToF({ slide, buildStep }) {
       <SlideTitle title={slide.title} subtitle={slide.subtitle} />
       <div className="phasor-tof-body">
         <div className="phasor-tof-left" style={{ width: PANEL.width }}>
-          {/* The borrowed figure, with its labels (`figure.labels`) set at the slide's size over it. */}
-          <div className="phasor-tof-figure-box">
-            <Media item={slide.figure} className="phasor-tof-figure" />
-            {(slide.figure.labels ?? []).map((label) => (
-              <span
-                key={label.text}
-                className={`phasor-tof-figure-label${label.align === 'center' ? ' phasor-tof-figure-label--center' : ''}`}
-                style={{ left: `${100 * label.x}%`, top: `${100 * label.y}%` }}
-              >
-                <Text>{label.text}</Text>
-              </span>
-            ))}
-          </div>
+          <Modulation
+            width={PANEL.width}
+            height={MODULATION_HEIGHT}
+            frequency={frequency}
+            returns={[
+              { amplitude: direct.amplitude, phase: direct.phase, tone: 'light-1' },
+              ...(bounce ? [{ amplitude: bounce.amplitude * mirrorShown, phase: bounce.phase, tone: 'light-3' }] : []),
+            ]}
+            scale={PLANE_RADIUS}
+          />
           <canvas
             ref={canvasRef}
             className="phasor-tof-panel"

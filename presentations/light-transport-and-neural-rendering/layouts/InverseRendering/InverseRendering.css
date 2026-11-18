@@ -1,0 +1,58 @@
+.slide--inverse-rendering {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* The equations on the left, the room and its strips on the right, both from the top. */
+.inverse-rendering-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  align-items: flex-start;
+  padding-top: 12px;
+}
+
+.inverse-rendering-lines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  min-width: 0;
+  font-size: 1.75rem;
+  color: var(--text-primary);
+}
+
+.inverse-rendering-lines .math {
+  white-space: nowrap;
+}
+
+.inverse-rendering-figure {
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* The θ beside the wall whose albedo it is, in the render's color for learned quantities. */
+.inverse-rendering-wall {
+  position: absolute;
+  transform: translate(0, -50%);
+  font-size: 30px;
+  line-height: 1;
+  color: var(--learned);
+  pointer-events: none;
+}
+
+/* Each strip's symbol, right-aligned in the column left of the strips. */
+.inverse-rendering-row {
+  position: absolute;
+  left: 0;
+  transform: translate(0, -50%);
+  text-align: right;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--text-primary);
+  transition: opacity 0.35s;
+  pointer-events: none;
+}

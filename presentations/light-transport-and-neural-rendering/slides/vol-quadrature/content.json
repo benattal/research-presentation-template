@@ -5,16 +5,20 @@
   "subtitle": "Alpha compositing as a quadrature of the integral",
   "surfaceWidth": 0.012,
   "coreDensity": 30,
-  "equations": [
-    "$$C = \\int_0^d T\\,\\sigma\\,c\\,dt$$",
-    "$$\\hat C = \\sum_i T_i\\,\\alpha_i\\,c_i$$",
-    "$$\\alpha_i = 1 - e^{-\\sigma_i \\delta_i}$$",
-    "$$T_i = \\prod_{j<i} (1 - \\alpha_j)$$"
+  "lines": [
+    { "tex": "$\\displaystyle C = \\int_0^d T\\,\\sigma\\,c\\,dt$", "step": 0 },
+    { "tex": "$\\displaystyle \\hat C = \\sum_i T_i\\,\\alpha_i\\,c_i$", "step": 0 },
+    { "tex": "$\\alpha_i$", "rhs": "$1 - e^{-\\sigma_i \\delta_i}$", "step": 0 },
+    { "tex": "$\\displaystyle T_i = \\prod_{j<i} (1 - \\alpha_j)$", "step": 1 }
   ],
   "remarks": [
     "$\\delta_i$: length of interval $i$"
   ],
   "buildSteps": [
+    {
+      "sampler": "uniform",
+      "samples": 4
+    },
     {
       "sampler": "uniform",
       "samples": 4

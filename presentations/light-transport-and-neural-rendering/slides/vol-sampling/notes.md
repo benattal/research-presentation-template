@@ -1,13 +1,17 @@
-Transition: the same 32 samples can go anywhere on the ray. Where they go changes the error.
+Transition: with the same number of samples, where they go on the ray changes the error.
 
 All three samplers are random and use the same budget of 32 samples, so the comparison is fair.
 
-- Step 1, random: independent, uniformly random positions anywhere on the ray. Some stretches of the ray get several samples, others none, and the surface is often missed.
-- Step 2, stratified: the ray is cut into 32 equal intervals with one random sample in each. No stretch is left empty, and the error halves. NeRF trains with stratified samples: they move at every iteration, so over many iterations the samples cover every point of the ray.
-- Step 3, hierarchical, as in NeRF: 16 stratified coarse samples (rings) are used to locate the light; the dashed steps are the coarse weights per gap between samples. 16 fine samples (dots) are drawn from those weights, and the estimate is computed from all 32.
-- The bars on the right are each sampler's error, the RMS over 64 rays across the cloud, so the luck of one ray's sample positions averages out.
+- Step 1, random: independent, uniformly random positions anywhere on the ray. Some stretches get several samples and others none, and the thin surface is often missed.
+- Step 2, stratified: the ray is cut into 32 equal intervals with one random sample in each. No stretch is left empty, and the error is about half. NeRF trains with stratified samples: they move at every iteration, so over many iterations they cover every point of the ray.
+- Step 3, hierarchical, as in NeRF: 16 stratified coarse samples (rings) locate the light; the dashed steps are their weights, one per gap between coarse samples. 16 fine samples (dots) are drawn in proportion to those weights, and the estimate uses all 32.
+- The bars on the right are each sampler's error, the root mean square over 64 rays across the cloud, so the luck of one ray's samples averages out.
+
+The question it invites: why not put every sample at the surface? Because where the surface is is not known until some samples have found it. Hierarchical sampling is that idea in two passes: coarse samples find it, fine samples refine it.
 
 The sentence to remember: with a fixed number of samples, put them where the weights are.
+
+Pause for questions: this ends the volume rendering section. In one line: light in a medium is $x = b + Ax$ again, with $A$ one scattering event; without scattering, a pixel is the emission along its ray weighted by transmittance, computed by alpha compositing samples. Two questions to expect. Why does NeRF ignore scattering? Its color $c$ is fit to photographs, so it already includes the scattered light; the next section comes back to what that costs. How are samples chosen in practice? As on this slide.
 
 Background: evenly spaced samples, which are not random, also do better than random ones on one ray. They are not used for training because they evaluate the same points at every iteration.
 
