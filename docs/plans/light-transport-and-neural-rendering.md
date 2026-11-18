@@ -223,8 +223,20 @@ The user's directions of 2026-11-17 are quoted in the
   light element; a row as the paths from every light element to one pixel,
   each with its total contribution.
 - `vol-inverse`: no numbers for the ODE solver and the formula.
-- Then: a list of the numeric readouts left in other demos, for the user
-  to decide which go.
+- Volume rendering: after the integral form, one clear line to what
+  neural rendering needs; the quadrature slide's broken visuals fixed.
+- Adjoint slides: no numbers without an illustrative use; the gradient's
+  contributions shown by highlighting scene components in turn instead of
+  bars.
+- Numbers elsewhere (neural rendering included): every value shown has an
+  illustrative use, or it goes.
+- Then 3–4 cycles: (a) a text and notes pass by subagents (the notes read
+  aloud, as the talk to graduate students), (b) other subagents vet
+  the text and report, (c) the feedback consolidated and fixed.
+
+Work in progress, 2026-11-18: four agents in worktrees (section 1;
+section 2 with the explorer columns and path tracing; the aside's matrix
+slides; volume rendering), merged one at a time.
 
 13. **Rehearsal pass.** Notes for every slide; time a run-through with the
     presenter timer and cut the slides marked *optional* until it fits;
@@ -270,7 +282,6 @@ The title, a motivating figure, and the outline.
 | Slide | Title | Subtitle | Visual |
 |---|---|---|---|
 | `title` | Light transport and neural rendering | Benjamin Attal, Postdoc. with David Lindell | `lectureTitle` |
-| `hook` | Light paths | A pixel is a sum of light over every path to the camera | `figures`; credits `cmu15468-rendering` |
 | `roadmap` | Outline |  | `sectionOutline`; credits `otoole2012`, `cmu15468-media` |
 
 ### Neumann series
@@ -281,7 +292,6 @@ Plain linear algebra before any light: the user (2026-11-17), "You do not need t
 |---|---|---|---|
 | `la-divider` | Neumann series | Solving linear equations with a power series | `sectionTitle` |
 | `la-fixed-point` | Fixed-point equation | A linear system written as a fixed point | `fixedPoint` |
-| `la-geometric` | Geometric series | Inverting a number with a power series | `geometricSeries` |
 | `la-neumann` | Neumann series | Inverting a matrix with a power series | `neumannSeries` |
 | `la-spectral` | Spectral view | Along each eigenvector, a geometric series | `spectralView` |
 | `la-apply` | Iteration | Summing the series with matrix–vector products | `iteration` |
@@ -388,6 +398,7 @@ Optional slides after "Questions", cut from the main talk for time.
 
 | Slide | Title | Subtitle | Visual |
 |---|---|---|---|
+| `la-geometric` | Geometric series | Inverting a number with a power series | `geometricSeries` |
 | `lt-radiance` | Radiance and reflectance | Radiance is constant along a ray and changes only at surfaces | `floorScattering` |
 | `lt-three-point` | Three-point form | In area form, propagation and scattering are separate factors | `derivation`; credits `veach1997`, `arvo1995` |
 | `lt-structured-light` | Structured light transport | Structured-light scans with probing are robust to indirect light | `figures`; credits `otoole2014` |
@@ -395,7 +406,6 @@ Optional slides after "Questions", cut from the main talk for time.
 | `lt-primal-dual` | Primal-dual coding | Probing light transport in a single exposure | `figures`; credits `otoole2012` |
 | `nr-nlos` | Non-line-of-sight imaging | Objects around a corner are reconstructed from time-resolved light | `figureRows`; credits `otoole2018` |
 | `adj-volumes` | Differentiable volumes | Unbiased gradient estimators for volume reconstruction | `figures`; credits `nimierdavid2022` |
-
 ## Interactive visuals
 
 Every interactive visual follows these rules; what each one shows is in the

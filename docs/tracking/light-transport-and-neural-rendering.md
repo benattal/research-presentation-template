@@ -16,6 +16,27 @@ before changing a slide.
 
 2026-11-17, while resuming:
 
+- "Be sure to also add presenter notes. I would have agents "read them out
+  loud" to themselves to make sure they flow well, make for a good
+  presentation to graduate students."
+- Goal: "Address all of the requested edits, then repeat 3-4 times (a) do
+  a pass on the text with subagents, (b) have subagents vet the text and
+  report feedback, (c) consolidate feedback and repeat"
+- "For the adjoint slides, the sum so far numbers are not useful"
+- "On later slides, there are also numbers that I don't find particularly
+  useful. Everything needs to have an illustrative use. The bar chart
+  indicating contributions might be useful, but I think there's a more
+  intuitive way to visualize this, potentially by progressively
+  highlighting different scene components/parameters"
+- "The neural rendering slides are quite good, I'll have more specific
+  feedback tomorrow. I'm sure many of my previous comments about clarity
+  and flow also apply to some of the slides here too"
+- "Many of the volume rendering slides I think get a bit lost. I think
+  showing the integro-differential form is useful. I think deriving the
+  integral form is useful. I'm a bit confused about what is happening
+  beyond that."
+- "Some of the figures/visuals are a bit broken (on the quadrature slide
+  for example). Again, unnecessary numbers"
 - "Again, several unnecessary numbers in the slides (the number for ODE
   solver and formula)"
 - "Please also launch subagents (up to 4) to help"
