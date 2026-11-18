@@ -22,6 +22,11 @@ before changing a slide.
 
 2026-11-18, after cycle 1:
 
+- "Please remove the content about transmittance (and anything that needs
+  too much additional context) from the primer slides." Removed the
+  transmittance and the derivative of an inverse; the second primer slide
+  keeps Monte Carlo and the transpose.
+
 - "You can remove the slides after the credits". Removed: `questions` (its
   pause and answers moved to `credits`' notes) and the ten appendix
   slides. Their layouts (`floorScattering`, `geometricSeries`,
