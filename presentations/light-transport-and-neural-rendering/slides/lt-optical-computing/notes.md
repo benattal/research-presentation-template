@@ -4,7 +4,7 @@ Why this matters: for a real projector and camera with a million pixels each, $\
 
 An eigenvector of $\mathbf{T}$ is a pattern that, projected onto the scene, comes back in the photograph unchanged up to a scale: $\mathbf{T}v_1 = \lambda_1 v_1$. The principal eigenvector is the fixed point of the sequence $p, \mathbf{T}p, \mathbf{T}^2 p, \ldots$ after normalizing (15-463, p. 44): the fixed-point view of the first linear algebra slide. Power iteration converges to the one with the largest eigenvalue: project $p$, capture $\mathbf{T}p$, normalize, and project the result again. As on the spectral-view slide, the component along the largest eigenvalue dominates after a few products.
 
-The setup here: each of the 19 light elements is both a light and a pixel, like a projector and a camera that share pixels. Then $\mathbf{T}$ is square (19 × 19), and $\mathbf{T}_{jk}$ is the light element $j$ receives when element $k$ is lit.
+The setup here: each light element is both a light and a pixel, like a projector and a camera that share pixels. Then $\mathbf{T}$ is square, and $\mathbf{T}_{jk}$ is the light element $j$ receives when element $k$ is lit.
 
 The bars hanging from the ceiling are the pattern lighting the room, one bar per element, scaled to its largest entry; the bars beside the room are the patterns of every step, drawn the same way.
 
@@ -12,7 +12,7 @@ The bars hanging from the ceiling are the pattern lighting the room, one bar per
 - **$p_1$**: one photograph. The light returned to the ceiling is spread out, brightest near the first element.
 - **$p_2$**, **$p_4$**: the pattern converges to the dominant eigenvector $v_1$ of $\mathbf{T}$: a broad bump, highest above the middle of the room, where the floor and the box reflect the most light back to the ceiling.
 
-The numbers are the angle between each pattern and $v_1$ (computed from the full matrix, which takes 19 photographs): 77.7° for the single element, then 17.0° after one photograph, 3.9° after two, 0.2° after four.
+The profile labeled $v_1$ is the dominant eigenvector computed from the full matrix, which takes one photograph per element. After four photographs, the pattern has its shape.
 
 One sentence: with products measured optically, a few photographs replace measuring the whole matrix.
 

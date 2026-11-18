@@ -4,7 +4,7 @@ import Text from '@core/stage/Text.jsx';
 import { ease, useStepTransition } from '../canvas/canvas.js';
 import RoomView from '../flatland/RoomView.jsx';
 import {
-  angleBetween, dominantEigenvector, elementReturns, lightElementRoom, oneHot, powerIteration,
+  dominantEigenvector, elementReturns, lightElementRoom, oneHot, powerIteration,
 } from '../flatland/lightElements.js';
 import { derived, SURFACE_GAIN } from '../flatland/pictures.js';
 import { ROOM_VIEW, drawRoom } from '../flatland/render.js';
@@ -48,10 +48,10 @@ function PatternProfile({ p }) {
  * build step `{ photos: t }` lights the room with p_t, the pattern after t
  * photos, p_{t+1} = Tp_t / ‖Tp_t‖, starting from one element (`start`,
  * default 1, left to right from 0), drawn as bars hanging from the
- * elements (each relative to the largest). Beside the room: each step's pattern
- * as a bar profile (one bar per element), its angle to the dominant eigenvector v_1 of T
- * (computed from the full matrix), and the count of photos against the
- * number of elements. Clicking an element on the ceiling restarts from it.
+ * elements (each relative to the largest). Beside the room: each step's
+ * pattern as a bar profile (one bar per element), above the dominant
+ * eigenvector v_1 of T (computed from the full matrix) drawn the same way.
+ * Clicking an element on the ceiling restarts from it.
  *
  * Content fields: `title`, `subtitle`, `equations` (display lines above
  * the patterns), optional `labels` (short lines under them), optional
@@ -126,21 +126,13 @@ export default function OpticalComputing({ slide, buildStep }) {
               <li key={t} className={i === step ? 'optical-current' : (i < step ? '' : 'optical-later')}>
                 <span className="optical-name"><Text>{`$p_{${t}}$`}</Text></span>
                 <PatternProfile p={patterns[t]} />
-                <span className="optical-angle">{i <= step ? `${angleBetween(patterns[t], v1).toFixed(1)}°` : ''}</span>
               </li>
             ))}
             <li className="optical-eigenvector">
               <span className="optical-name"><Text>{'$v_1$'}</Text></span>
               <PatternProfile p={v1} />
-              <span className="optical-angle" />
             </li>
           </ol>
-          <dl className="optical-count">
-            <dt>photos</dt>
-            <dd>{counts[step]}</dd>
-            <dt>light elements</dt>
-            <dd>{K}</dd>
-          </dl>
         </div>
       </div>
     </div>

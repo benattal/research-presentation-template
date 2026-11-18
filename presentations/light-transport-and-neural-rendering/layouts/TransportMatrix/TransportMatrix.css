@@ -30,17 +30,13 @@
 .matrix-equation {
   font-size: 26px;
   color: var(--text-primary);
+  white-space: nowrap;
 }
 
 .matrix-label {
   margin: 0;
   font-size: 22px;
   color: var(--text-primary);
-}
-
-.matrix-label--muted {
-  font-size: 20px;
-  color: var(--text-secondary);
 }
 
 .matrix-thumbs {
@@ -72,11 +68,6 @@
 
 .matrix-check-label {
   margin-top: 2px;
-}
-
-.matrix-check-difference {
-  margin-top: 4px;
-  color: var(--text-primary);
 }
 
 /* c = Tp as blocks drawn to scale: plain outlines, the step's column or row marked. */
@@ -120,17 +111,6 @@
   transform: translateX(-50%);
   font-size: 24px;
   color: var(--text-primary);
-}
-
-.matrix-block-size {
-  position: absolute;
-  transform: translateX(-100%);
-  font-size: 18px;
-  color: var(--text-secondary);
-}
-
-.matrix-block-size--right {
-  transform: none;
 }
 
 /* A borrowed figure shown at full size in the room's place, over the room and its strip. */
