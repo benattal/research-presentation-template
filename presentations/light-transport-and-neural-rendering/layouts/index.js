@@ -27,7 +27,7 @@ import ProbingMatrix from './ProbingMatrix/ProbingMatrix.jsx';
 import ProjectorQuadrature from './ProjectorQuadrature/ProjectorQuadrature.jsx';
 import QuadratureExplorer from './QuadratureExplorer/QuadratureExplorer.jsx';
 import RadianceCache from './RadianceCache/RadianceCache.jsx';
-import ScatteringGather from './ScatteringGather/ScatteringGather.jsx';
+import RenderingEquation from './RenderingEquation/RenderingEquation.jsx';
 import { Derivation, Figures, LectureTitle, SectionTitle } from './Slides/Slides.jsx';
 import SpectralView from './SpectralView/SpectralView.jsx';
 import ToFQuadrature from './ToFQuadrature/ToFQuadrature.jsx';
@@ -66,7 +66,7 @@ export default {
   projectorQuadrature: ProjectorQuadrature,
   quadratureExplorer: QuadratureExplorer,
   radianceCache: RadianceCache,
-  scatteringGather: ScatteringGather,
+  renderingEquation: RenderingEquation,
   sectionTitle: SectionTitle,
   spectralView: SpectralView,
   tofQuadrature: ToFQuadrature,

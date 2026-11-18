@@ -27,7 +27,6 @@
       "slides": [
         "lt-divider",
         "lt-rendering-equation",
-        "lt-gather",
         "lt-operators",
         "lt-iterate",
         "lt-neumann-sum",

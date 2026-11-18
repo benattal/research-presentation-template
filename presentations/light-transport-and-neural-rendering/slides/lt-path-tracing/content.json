@@ -3,16 +3,33 @@
   "sectionLabel": "Operator light transport",
   "title": "Path tracing",
   "subtitle": "Estimating the sum over bounces with random walks",
-  "equation": "$L \\approx L_e + \\dfrac{f_r\\, L(r(\\mathbf{x}, \\omega_i), -\\omega_i) \\cos\\theta_i}{p(\\omega_i)}$",
+  "lines": [
+    {
+      "label": "scattering integral",
+      "tex": "$\\htmlClass{term-operator}{\\int_{H^2} f_r \\, L_i \\cos\\theta_i \\, d\\omega_i}$",
+      "step": 0
+    },
+    {
+      "label": "one random direction",
+      "tex": "$\\approx \\htmlClass{term-operator}{\\dfrac{f_r \\, L_i \\cos\\theta_i}{p(\\omega_i)}}$",
+      "step": 1,
+      "continues": true
+    },
+    {
+      "label": "random walk",
+      "tex": "$x = \\htmlClass{term-emission}{e} + \\htmlClass{term-bounce-1}{A e} + \\htmlClass{term-bounce-2}{A^2 e} + \\htmlClass{term-bounce-3}{A^3 e} + \\cdots$",
+      "step": 2
+    }
+  ],
   "buildSteps": [
+    {},
+    {},
+    {},
     {
       "paths": 1
     },
     {
-      "paths": 16
-    },
-    {
-      "paths": 256
+      "paths": 64
     },
     {
       "paths": 4096

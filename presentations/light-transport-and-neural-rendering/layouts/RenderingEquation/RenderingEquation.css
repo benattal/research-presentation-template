@@ -1,0 +1,68 @@
+.slide--rendering-equation {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* The room and the equations beside it, as on the operator slides that follow (the room keeps its place);
+   the step's short label under the room. */
+.rendering-equation-main {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 28px;
+  row-gap: 10px;
+  align-items: start;
+}
+
+.rendering-equation-room {
+  position: relative;
+}
+
+.rendering-equation-canvas {
+  cursor: crosshair;
+}
+
+/* Symbols on the render, centered on their anchor, in the render color of their term. */
+.rendering-equation-label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 22px;
+  white-space: nowrap;
+  pointer-events: none;
+  text-shadow: 0 0 4px #07090f, 0 0 8px #07090f;
+}
+
+.rendering-equation-label--geometry {
+  color: #eef0f5;
+}
+
+.rendering-equation-label--emission {
+  color: var(--light-0);
+}
+
+.rendering-equation-label--trace {
+  color: var(--light-4);
+}
+
+.rendering-equation-lines {
+  gap: 30px;
+  font-size: 1.5rem;
+  color: var(--text-primary);
+}
+
+.rendering-equation-lines .math {
+  white-space: nowrap;
+}
+
+/* A further row of the equation above it: indented, close under it. */
+.rendering-equation-lines .equation-stack-line--continued {
+  margin-top: -22px;
+  padding-left: 1.2em;
+}
+
+.rendering-equation-room-label {
+  grid-column: 1;
+  margin: 0;
+  font-size: 1.3rem;
+  color: var(--text-primary);
+}

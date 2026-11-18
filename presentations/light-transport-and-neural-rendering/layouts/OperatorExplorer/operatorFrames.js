@@ -9,7 +9,7 @@
  * leaving them —Gᵀ→ arriving at the next surfaces, so Aᵀ = GᵀSᵀ.
  */
 import {
-  addVectors, bounce, bounceAdjoint, outgoingFlux, propagate, propagateAdjoint, scatter, scatterAdjoint,
+  addVectors, bounce, bounceAdjoint, propagate, propagateAdjoint, scatter, scatterAdjoint,
 } from '../flatland/transport.js';
 
 export const DIRECTIONS = {
@@ -182,9 +182,4 @@ export function bounceTerms(transport, direction, source, count) {
   const terms = [source];
   while (terms.length < count) terms.push(step(transport, terms.at(-1)));
   return terms;
-}
-
-/** Share of the steady-state light a partial sum is still missing (by flux). */
-export function remainingShare(transport, partial, exact) {
-  return 1 - outgoingFlux(transport, partial) / outgoingFlux(transport, exact);
 }

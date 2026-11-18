@@ -4,9 +4,10 @@
   height: 100%;
 }
 
+/* The room at the operator slides' place and size, the equations beside it. */
 .paths-body {
   display: flex;
-  gap: 30px;
+  gap: 28px;
   flex: 1;
   min-height: 0;
   align-items: flex-start;
@@ -19,10 +20,37 @@
   flex-shrink: 0;
 }
 
+.paths-room {
+  position: relative;
+}
+
+/* x on the render, centered on its anchor. */
+.paths-room-label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 22px;
+  color: #eef0f5;
+  white-space: nowrap;
+  pointer-events: none;
+  text-shadow: 0 0 4px #07090f, 0 0 8px #07090f;
+}
+
+/* The camera's image from the paths, over the exact image; their place is kept before they show. */
+.paths-strips {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.paths-strips--hidden {
+  visibility: hidden;
+}
+
 .paths-strip {
   display: flex;
   align-items: center;
   gap: 12px;
+  min-height: 24px;
   font-size: 20px;
   color: var(--text-primary);
 }
@@ -35,70 +63,25 @@
 .paths-side {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 28px;
   min-width: 0;
 }
 
-.paths-equation {
-  font-size: 20px;
+.paths-lines {
+  gap: 26px;
+  font-size: 1.45rem;
   color: var(--text-primary);
+}
+
+.paths-lines .math {
   white-space: nowrap;
+}
+
+.paths-lines .equation-stack-line--continued {
+  margin-top: -14px;
 }
 
 .paths-count {
   font-size: 24px;
   color: var(--text-primary);
-}
-
-.chart-dots.paths-estimate circle {
-  fill: var(--ink-light-2);
-}
-
-.chart-line.paths-exact {
-  stroke: var(--text-primary);
-  stroke-width: 1.8;
-}
-
-.chart-note.paths-note-estimate {
-  color: var(--ink-light-2);
-}
-
-.chart-note.paths-note-exact {
-  color: var(--text-primary);
-}
-
-.paths-errors {
-  border-collapse: collapse;
-  font-size: 20px;
-  color: var(--text-secondary);
-}
-
-.paths-errors th,
-.paths-errors td {
-  padding: 2px 0;
-  min-width: 96px;
-  text-align: right;
-  font-weight: 400;
-}
-
-.paths-errors th {
-  color: var(--text-muted);
-}
-
-.paths-errors .paths-errors-count {
-  font-family: var(--font-mono);
-}
-
-.paths-errors .paths-errors-value {
-  font-family: var(--font-mono);
-  text-align: right;
-  color: var(--text-primary);
-}
-
-.paths-errors .paths-errors-current td {
-  color: var(--ink-light-2);
-}
-
-.paths-errors .paths-errors-later {
-  visibility: hidden;
 }

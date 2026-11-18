@@ -1,8 +1,9 @@
 /**
- * The numbers the "Multiple bounces" slide (lt-iterate) labels: each
- * bounce of the lamp's light in the flatland room has about 0.64 of the
- * light of the one before, and that ratio tends to the spectral radius of
- * the bounce operator, rho(A) = 0.69 (power iteration), which is below 1.
+ * The numbers the notes of the "Multiple bounces" slide (lt-iterate) state,
+ * and the claim its column note makes (rho(A) < 1): each bounce of the
+ * lamp's light in the flatland room has about 0.64 of the light of the one
+ * before, and that ratio tends to the spectral radius of the bounce
+ * operator, rho(A) = 0.69 (power iteration), which is below 1.
  */
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
@@ -19,8 +20,9 @@ describe('bounce ratio of the lamp-lit room', () => {
   let rho = 0;
   for (let i = 0; i < 200; i += 1) {
     const w = bounce(transport, v);
-    rho = norm(w) / norm(v);
-    v = w.map((x) => x / norm(w));
+    const size = norm(w);
+    rho = size / norm(v);
+    v = w.map((x) => x / size);
   }
 
   const fluxes = [outgoingFlux(transport, transport.emission)];

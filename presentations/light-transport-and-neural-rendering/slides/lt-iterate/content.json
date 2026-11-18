@@ -22,11 +22,10 @@
       "label": "after 4 bounces"
     }
   ],
-  "shareLabel": "share of $x$",
+  "caption": "$(A^{k+1} e)(\\mathbf{x}, \\omega_o) = \\int_{H^2} f_r \\, (A^k e)(r(\\mathbf{x}, \\omega_i), -\\omega_i) \\cos\\theta_i \\, d\\omega_i$",
   "columnNote": {
     "lines": [
-      "albedo $< 1 \\Rightarrow \\rho(A) < 1$",
-      "ratio $\\approx 0.64 \\to 0.69$"
+      "albedo $< 1 \\Rightarrow \\rho(A) < 1$"
     ],
     "step": 2
   }

@@ -13,11 +13,19 @@
   align-items: start;
 }
 
+/* The step's label at the left, an optional caption (an equation) at the right. */
 .operator-room-label {
   grid-column: 1;
-  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 24px;
   font-size: 1.3rem;
   color: var(--text-primary);
+}
+
+.operator-room-caption .math {
+  white-space: nowrap;
 }
 
 /* Short lines under the column's rows. */
@@ -25,7 +33,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  margin-top: 14px;
+  margin-top: 6px;
   font-size: 1.2rem;
   color: var(--text-secondary);
 }
@@ -107,9 +115,9 @@
   color: var(--text-muted);
 }
 
-/* Thumbnail, term, and share in three aligned columns; each row's <li> only groups its cells.
+/* Thumbnail, term, and iterate in three aligned columns; each row's <li> only groups its cells.
    The grid spans the side column and the term column takes what the others leave, so the
-   shares end at the same x on every slide whatever the terms are. */
+   iterates end at the same x on every slide whatever the terms are. */
 .operator-column {
   list-style: none;
   display: grid;
@@ -127,15 +135,15 @@
   display: contents;
 }
 
-.operator-column-label {
+/* The iteration over the term and iterate columns, ending where the iterates end. */
+.operator-column-update {
   grid-column: 2 / 4;
   text-align: right;
   white-space: nowrap;
 }
 
 .operator-column .operator-column-header {
-  font-size: 1.05rem;
-  color: var(--text-secondary);
+  color: var(--text-primary);
 }
 
 .operator-history {
@@ -154,10 +162,6 @@
   display: block;
   flex-shrink: 0;
   border-radius: 4px;
-}
-
-.operator-equation--small {
-  font-size: 1.7rem;
 }
 
 /* One line under the column: ⟨q, x⟩ and ⟨y, e⟩ with their values. */
@@ -179,17 +183,10 @@
   color: var(--text-primary);
 }
 
-/* Wide enough for "100%", so a share appearing never widens the column. */
-.operator-share {
-  min-width: 56px;
+/* The iterate a row completes; wide enough for x_4, so an iterate appearing never widens the column. */
+.operator-iterate {
+  min-width: 40px;
   text-align: right;
-  font-variant-numeric: tabular-nums;
-  font-size: 18px;
-  color: var(--text-secondary);
-}
-
-.operator-equation--small {
-  font-size: 1.45rem;
 }
 
 .operator-bars {
