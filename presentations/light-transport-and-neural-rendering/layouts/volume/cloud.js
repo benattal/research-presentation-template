@@ -119,6 +119,13 @@ export function renderCloud(cloud, columns, rows) {
 }
 
 /**
+ * The stretch, in world units, over which a cloud panel shows the medium
+ * (`mediumImage`): the soft wisp and tail as on the emission–absorption
+ * slide, and the dense core in its two colors, outer layer and inside.
+ */
+export const MEDIUM_LENGTH = 0.4;
+
+/**
  * The cloud as a medium rather than as the light the camera receives, for
  * a panel that shows where samples fall in it: per cell of `image` (from
  * `renderCloud`), the emission–absorption integral over a stretch `length`
@@ -128,7 +135,7 @@ export function renderCloud(cloud, columns, rows) {
  * `seen`, nothing is hidden behind a dense region. Returns a grid laid out
  * like `emitted`.
  */
-export function mediumImage(image, length) {
+export function mediumImage(image, length = MEDIUM_LENGTH) {
   const values = new Float32Array(image.emitted.length);
   for (let cell = 0; cell < image.density.length; cell += 1) {
     const depth = image.density[cell] * length;

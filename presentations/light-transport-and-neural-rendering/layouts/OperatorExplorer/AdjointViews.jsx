@@ -4,23 +4,37 @@ import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
 import { useStageCanvas } from '../canvas/canvas.js';
 import EquationStack from '../equations/EquationStack.jsx';
-import { albedoGradients, finiteDifference } from '../flatland/gradients.js';
+import RoomView from '../flatland/RoomView.jsx';
+import { albedoGradients } from '../flatland/gradients.js';
 import { SURFACE_GAIN, cachedFluence, derived, sceneGain, subtract } from '../flatland/pictures.js';
 import { MEASURED_PIXEL, flatlandRoom } from '../flatland/rooms.js';
 import { ROOM_VIEW, autoGain, drawRoom, pixelWedge, roomTransform } from '../flatland/render.js';
-import { BINS, stateIndex } from '../flatland/scene.js';
+import { BINS, GROUPS, stateIndex } from '../flatland/scene.js';
 import { bounce, patchRadiosity, solve } from '../flatland/transport.js';
 import './OperatorExplorer.css';
 import './AdjointViews.css';
 
-/** The two rooms of the gradient view, side by side across the slide, in stage pixels (the room's 10 × 6 aspect). */
-const PAIR_SIZE = [568, 341];
+/**
+ * The gradient view's large room and the thumbnails beside it, in stage
+ * pixels (the room's 10 × 6 aspect): 736 + 48 + 384 spans the stage's
+ * content width.
+ */
+const GRADIENT_ROOM = [736, 442];
+const GRADIENT_THUMB = [384, 230];
+/** How long the surfaces take to light up, one after another, in ms. */
+const REVEAL_MS = 2400;
+/**
+ * The gradient picture: the light under it, at this fraction of its
+ * exposure; the width of the band along each surface, in room units; and
+ * the band's color (RGB, an amber unlike any light or importance color).
+ */
+const GRADIENT_BACKDROP = 0.06;
+const GRADIENT_BAND = 0.16;
+const GRADIENT_INK = '255, 200, 60';
 /** The wall whose albedo the derivative views differentiate. */
 const WALL = 'left wall';
 /** How far the geometry view moves the box, in room units. */
 const BOX_SHIFT = 0.3;
-/** Surface groups for the per-surface gradient, in the order of the bars. */
-const WALL_GROUPS = [['left wall', 'red wall'], ['right wall', 'green wall'], ['ceiling', 'ceiling'], ['floor', 'floor'], ['box', 'box']];
 /** Colors of light gained and lost when the box moves, per unit luminance. */
 const GAINED_TINT = [1, 0.78, 0.45];
 const LOST_TINT = [0.36, 0.55, 1];
@@ -30,8 +44,6 @@ const fade = (visible) => ({ initial: false, animate: { opacity: visible ? 1 : 0
 function luminance(v, i) {
   return 0.2126 * v[i] + 0.7152 * v[i + 1] + 0.0722 * v[i + 2];
 }
-
-const dot = (a, b) => a.reduce((sum, value, i) => sum + value * b[i], 0);
 
 /** The light the wall reflects, (∂A/∂θ) x = (∂S/∂θ) G x: A x restricted to the wall's states. */
 function wallSource(env) {
@@ -305,22 +317,17 @@ const SENSITIVITY_LINES = [
 
 /**
  * Importance as sensitivity: step 0 shows y = ∂m/∂e; step 1 adds light δe
- * at one surface (click any surface to move it), shows the light it adds,
- * δx = (I − A)⁻¹δe, and compares the pixel's change ⟨q, δx⟩ with the
- * adjoint's ⟨y, δe⟩.
+ * at one surface (click any surface to move it) and shows the light it
+ * adds, δx = (I − A)⁻¹δe, whose effect on the pixel the equations beside it
+ * state two ways, ⟨q, δx⟩ = ⟨y, δe⟩.
  */
 function SensitivityView({ slide, buildStep, env }) {
   const [patchIndex, setPatchIndex] = useState(() => env.room.patches.find((patch) => patch.group === 'box' && patch.normal[1] > 0.5).index);
   const step = Math.min(buildStep, 1);
-  const perturbation = useMemo(() => {
-    const source = patchSource(env, patchIndex);
-    const light = solve(source, (v) => bounce(env.transport, v));
+  const added = useMemo(() => {
+    const light = solve(patchSource(env, patchIndex), (v) => bounce(env.transport, v));
     const gain = autoGain(cachedFluence(env.table, light, Infinity, 'source'), 0.97) * 0.6;
-    return {
-      picture: () => lightPicture(env, light, gain),
-      forward: dot(env.sensor, light),
-      adjoint: dot(env.importance, source),
-    };
+    return () => lightPicture(env, light, gain);
   }, [env, patchIndex]);
   const patchAt = (point) => nearestPatch(env, point)?.index ?? null;
   return (
@@ -330,7 +337,7 @@ function SensitivityView({ slide, buildStep, env }) {
         <div className="operator-render" data-no-swipe>
           <AdjointRoom
             env={env}
-            picture={step === 0 ? importancePicture : perturbation.picture}
+            picture={step === 0 ? importancePicture : added}
             camera
             marker={step === 1 ? env.room.patches[patchIndex].center : null}
             pickAt={step === 1 ? patchAt : null}
@@ -338,79 +345,132 @@ function SensitivityView({ slide, buildStep, env }) {
           />
           <RoomCaption>{step === 0 ? '$\\htmlClass{term-adjoint}{y}$' : '$\\delta x = (I - A)^{-1}\\, \\delta e$'}</RoomCaption>
         </div>
-        <SideEquations lines={SENSITIVITY_LINES} step={step}>
-          <motion.dl className="operator-check" {...fade(step === 1)}>
-            <dt><Text>{'forward, $\\langle q, \\delta x \\rangle$'}</Text></dt>
-            <dd>{perturbation.forward.toFixed(5)}</dd>
-            <dt><Text>{'adjoint, $\\langle y, \\delta e \\rangle$'}</Text></dt>
-            <dd>{perturbation.adjoint.toFixed(5)}</dd>
-          </motion.dl>
-        </SideEquations>
+        <SideEquations lines={SENSITIVITY_LINES} step={step} />
       </div>
     </div>
   );
 }
 
-/** Sum of the per-patch gradients over each surface group. */
-function wallGradients(env, gradients) {
-  return WALL_GROUPS.map(([group, label]) => ({
-    label,
-    value: env.room.patches.filter((patch) => patch.group === group).reduce((sum, patch) => sum + gradients[patch.index], 0),
-  }));
+/**
+ * The derivative of the pixel with respect to the albedo of each patch,
+ * ∂m/∂θ = ⟨y, (∂θA)x⟩ (flatland/gradients.js), as a brightness per unit
+ * length from 0 to 1, and the surfaces ordered by their total, largest
+ * first. All are positive: brighter surfaces only brighten the pixel.
+ */
+function surfaceGradients(env) {
+  return derived(env.importance, 'surface-gradients', () => {
+    const perPatch = albedoGradients(env.transport, env.steady, env.importance);
+    const density = env.room.patches.map((patch) => perPatch[patch.index] / patch.length);
+    const largest = Math.max(...density);
+    const total = (group) => env.room.patches.filter((patch) => patch.group === group).reduce((sum, patch) => sum + perPatch[patch.index], 0);
+    return {
+      level: density.map((value) => value / largest),
+      order: [...GROUPS].sort((a, b) => total(b) - total(a)),
+    };
+  });
 }
 
 /**
- * The gradient from one forward and one adjoint solve: the light x and the
- * importance y as two rooms side by side (steps 0 and 1), then (step 2)
- * the derivative of the pixel with respect to each surface's albedo as
- * bars under x, and under y the red wall's value checked against a finite
- * difference. Both values are computed here, not typed.
+ * The gradient picture: the light x, dimmed, with a band along each surface
+ * on its lit side, more opaque the more its albedo changes the pixel and
+ * scaled by `reveal(group)` (0 to 1), and the camera with its pixel.
+ */
+function paintGradient(ctx, env, gradients, reveal, [width, height]) {
+  const transform = drawRoom(ctx, env.room, { x: 0, y: 0, width, height }, {
+    table: env.table,
+    fluence: cachedFluence(env.table, env.steady, Infinity, 'source'),
+    fluenceGain: sceneGain(env, false) * GRADIENT_BACKDROP,
+    palette: 'light',
+    camera: true,
+    pixel: MEASURED_PIXEL,
+  });
+  ctx.save();
+  for (const patch of env.room.patches) {
+    // The floor the pixel sees directly has about 18 times the others' gradient; a cube root keeps them visible beside it.
+    const alpha = reveal(patch.group) * Math.cbrt(gradients.level[patch.index]);
+    if (alpha < 0.02) continue;
+    const inward = (point) => [point[0] + GRADIENT_BAND * patch.normal[0], point[1] + GRADIENT_BAND * patch.normal[1]];
+    ctx.fillStyle = `rgba(${GRADIENT_INK}, ${alpha})`;
+    ctx.beginPath();
+    [patch.a, patch.b, inward(patch.b), inward(patch.a)].forEach((point, i) => {
+      const [cx, cy] = transform.toCanvas(point);
+      if (i === 0) ctx.moveTo(cx, cy);
+      else ctx.lineTo(cx, cy);
+    });
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+/** The large picture's caption at each step of the gradient view. */
+const GRADIENT_CAPTIONS = [
+  { tex: '$x = (I - A)^{-1} e$' },
+  { tex: '$\\htmlClass{term-adjoint}{y = (I - A^\\top)^{-1} q}$' },
+  { tex: '$\\partial_\\theta m = \\langle \\htmlClass{term-adjoint}{y}, (\\partial_\\theta A)\\, x \\rangle$', given: '$\\theta$: red wall albedo' },
+  { tex: '$\\partial_\\theta m = \\langle \\htmlClass{term-adjoint}{y}, (\\partial_\\theta A)\\, x \\rangle$', given: "$\\theta$: each surface's albedo" },
+];
+
+/**
+ * The gradient from one forward and one adjoint solve. A large room shows
+ * the light x (step 0), then the importance y (step 1), each moving to a
+ * thumbnail beside it once introduced; then the derivative of the pixel
+ * with respect to the red wall's albedo, the wall lit by how much it
+ * changes the pixel (step 2); then every surface lights up in turn, largest
+ * first, each by its own derivative (step 3).
  */
 function GradientView({ slide, buildStep, env }) {
-  const check = useMemo(() => {
-    const walls = wallGradients(env, albedoGradients(env.transport, env.steady, env.importance));
-    return {
-      walls,
-      largest: Math.max(...walls.map((wall) => Math.abs(wall.value))),
-      adjoint: walls.find((wall) => wall.label === 'red wall').value,
-      difference: finiteDifference('diffuse', env.sensor, WALL),
+  const step = Math.min(buildStep, GRADIENT_CAPTIONS.length - 1);
+  const gradients = useMemo(() => surfaceGradients(env), [env]);
+  const caption = GRADIENT_CAPTIONS[step];
+  const paint = (ctx, progress) => {
+    if (step < 2) {
+      const { room, table, ...shown } = (step === 0 ? steadyLight : importancePicture)(env);
+      drawRoom(ctx, env.room, { x: 0, y: 0, width: GRADIENT_ROOM[0], height: GRADIENT_ROOM[1] }, {
+        table: env.table, ...shown, camera: step === 1, pixel: step === 1 ? MEASURED_PIXEL : null,
+      });
+      return;
+    }
+    // The red wall first; on the last step the other surfaces follow, one after another.
+    const others = gradients.order.filter((group) => group !== WALL);
+    const reveal = (group) => {
+      if (group === WALL) return 1;
+      if (step === 2) return 0;
+      return Math.min(1, Math.max(0, progress * others.length - others.indexOf(group)));
     };
-  }, [env]);
+    paintGradient(ctx, env, gradients, reveal, GRADIENT_ROOM);
+  };
   return (
     <div className="slide--operator-explorer">
       <SlideTitle title={slide.title} subtitle={slide.subtitle} />
-      <div className="adjoint-views-pair">
-        <div className="adjoint-views-pair-column">
-          <AdjointRoom env={env} picture={steadyLight} size={PAIR_SIZE} />
-          <RoomCaption className="adjoint-views-caption--pair">{'$x = (I - A)^{-1} e$'}</RoomCaption>
-          <motion.div className="adjoint-views-gradient" {...fade(buildStep >= 2)}>
-            <div className="adjoint-views-gradient-equation">
-              <Text>{'$\\partial_\\theta m = \\langle \\htmlClass{term-adjoint}{y}, (\\partial_\\theta A)\\, x \\rangle$'}</Text>
-              <span className="adjoint-views-given"><Text>{"$\\theta$: a surface's albedo"}</Text></span>
-            </div>
-            <ul className="operator-bars adjoint-views-bars">
-              {check.walls.map((wall) => (
-                <li key={wall.label}>
-                  <span>{wall.label}</span>
-                  <span className="operator-bar" style={{ width: `${(100 * Math.abs(wall.value)) / check.largest}%` }} />
-                </li>
-              ))}
-            </ul>
+      <div className="adjoint-gradient">
+        <div className="operator-render">
+          <div className="adjoint-views-room" style={{ width: GRADIENT_ROOM[0], height: GRADIENT_ROOM[1] }}>
+            <RoomView
+              width={GRADIENT_ROOM[0]}
+              height={GRADIENT_ROOM[1]}
+              paint={paint}
+              animationKey={`${step}`}
+              duration={step === 3 ? REVEAL_MS : 0}
+              className="operator-room"
+            />
+            {step === 1 && <WedgeLabel env={env} size={GRADIENT_ROOM} />}
+          </div>
+          <div className="adjoint-gradient-caption">
+            <Text>{caption.tex}</Text>
+            {caption.given && <span className="adjoint-views-given"><Text>{caption.given}</Text></span>}
+          </div>
+        </div>
+        <div className="adjoint-gradient-column">
+          <motion.div {...fade(step >= 1)}>
+            <AdjointRoom env={env} picture={steadyLight} size={GRADIENT_THUMB} />
+            <RoomCaption className="adjoint-views-caption--pair">{'light $x$'}</RoomCaption>
+          </motion.div>
+          <motion.div {...fade(step >= 2)}>
+            <AdjointRoom env={env} picture={importancePicture} camera size={GRADIENT_THUMB} />
+            <RoomCaption className="adjoint-views-caption--pair">{'importance $\\htmlClass{term-adjoint}{y}$'}</RoomCaption>
           </motion.div>
         </div>
-        <motion.div className="adjoint-views-pair-column" {...fade(buildStep >= 1)}>
-          <AdjointRoom env={env} picture={importancePicture} camera size={PAIR_SIZE} />
-          <RoomCaption className="adjoint-views-caption--pair">{'$\\htmlClass{term-adjoint}{y = (I - A^\\top)^{-1} q}$'}</RoomCaption>
-          <motion.div className="adjoint-views-check" {...fade(buildStep >= 2)}>
-            <p className="adjoint-views-check-title">red wall</p>
-            <dl>
-              <dt>adjoint</dt>
-              <dd>{check.adjoint.toFixed(5)}</dd>
-              <dt>finite difference</dt>
-              <dd>{check.difference.toFixed(5)}</dd>
-            </dl>
-          </motion.div>
-        </motion.div>
       </div>
     </div>
   );
@@ -426,15 +486,15 @@ function GradientView({ slide, buildStep, env }) {
  * - `operator`: ∂θA = (∂θS)G + S(∂θG): the material term (the same source
  *   on the wall) and the geometry term (light gained and lost when the box
  *   moves);
- * - `gradient`: the light x and the importance y side by side, then the
- *   gradient ⟨y, (∂θA)x⟩ for each surface's albedo as bars, the red wall's
- *   checked against a finite difference;
+ * - `gradient`: the light x, then the importance y, then the room with each
+ *   surface lit by the gradient ⟨y, (∂θA)x⟩ of the pixel with respect to
+ *   its albedo: the red wall, then every surface in turn;
  * - `sensitivity`: importance as y = ∂m/∂e, then the light δx added by
  *   light δe at one (clickable) surface, with the forward and adjoint
  *   changes of the pixel.
  *
  * Content fields: `title`, `subtitle`, `view`, and `buildSteps` with one
- * entry per step of the view (1, 4, 2, 3, and 2).
+ * entry per step of the view (1, 4, 2, 4, and 2).
  */
 export default function AdjointViews({ slide, buildStep }) {
   const env = flatlandRoom('diffuse', 'lamp');

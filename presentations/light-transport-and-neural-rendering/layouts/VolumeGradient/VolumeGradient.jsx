@@ -3,7 +3,9 @@ import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
 import { ease, useAnimation, useStageCanvas, useStepTransition } from '../canvas/canvas.js';
 import EquationStack from '../equations/EquationStack.jsx';
-import { CLOUD_EXTENT, cloudBlobs, cloudRay, createCloud, renderCloud } from '../volume/cloud.js';
+import {
+  CLOUD_EXTENT, cloudBlobs, cloudRay, createCloud, mediumImage, renderCloud,
+} from '../volume/cloud.js';
 import {
   PIXEL_GAIN, drawCloudPanel, drawPixel, drawRayLine, figureGeometry, worldToPanel,
 } from '../volume/cloudFigure.js';
@@ -28,7 +30,7 @@ const GRADIENT_RANGE = 1.3;
 
 /**
  * The gradient of NeRF's quadrature on one ray, beside its derivation: the
- * glowing cloud and the ray's samples; the terms Tᵢαᵢcᵢ of the forward march
+ * medium (as on the quadrature slide) and the ray's samples; the terms Tᵢαᵢcᵢ of the forward march
  * as bars in their sample's color; the derivative ∂Ĉ/∂σᵢ of each sample
  * (luminance, signed) from the gradient step on; and in the last step the
  * second march, which moves from the camera to the back and draws the color
@@ -60,8 +62,10 @@ export default function VolumeGradient({ slide, buildStep }) {
     const field = cloudRay(cloud, RAY_Y);
     const result = composite(field, cellsAround(uniformSamples(slide.samples, field.near, field.far), field.near, field.far));
     const marches = densityGradients(result);
+    const image = renderCloud(cloud, 400, 100);
     return {
-      image: renderCloud(cloud, 400, 100),
+      image,
+      medium: mediumImage(image),
       result,
       terms: result.terms.map((term, i) => ({
         ...term,
@@ -84,7 +88,7 @@ export default function VolumeGradient({ slide, buildStep }) {
     // How far the second march has gone along the ray (world units), when it is shown.
     const march = buildStep >= STEP.march ? xRange[0] + ease(marchRef.current) * (xRange[1] - xRange[0]) : null;
 
-    drawCloudPanel(ctx, geometry, scene.image.seen, scene.image, colors);
+    drawCloudPanel(ctx, geometry, scene.medium, scene.image, colors);
     const [, yRay] = worldToPanel(panel, CLOUD_EXTENT.near, RAY_Y);
     drawRayLine(ctx, panel, RAY_Y);
     for (const term of scene.terms) glowDot(ctx, worldToPanel(panel, term.t, RAY_Y), colors['light-0'], 2.4, 0.9);

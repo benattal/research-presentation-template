@@ -10,7 +10,9 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { simulateSlab } from '../layouts/BeamThroughMedium/photons.js';
-import { cloudBlobs, cloudRay, createCloud, mediumImage, renderCloud } from '../layouts/volume/cloud.js';
+import {
+  MEDIUM_LENGTH, cloudBlobs, cloudRay, createCloud, mediumImage, renderCloud,
+} from '../layouts/volume/cloud.js';
 import { createRandom, gaussian } from '../layouts/volume/random.js';
 import { densityGradients } from '../layouts/volume/gradient.js';
 import {
@@ -195,8 +197,8 @@ describe('the cloud as the camera sees it', () => {
 describe('the cloud as a medium', () => {
   const cloud = lectureCloud(0.012);
   const image = renderCloud(cloud, 400, 100);
-  const length = 0.4;
-  const medium = mediumImage(image, length);
+  const length = MEDIUM_LENGTH;
+  const medium = mediumImage(image);
   const cellAt = (x, y) => Math.floor((1 - y) * 100) * 400 + Math.floor((x / 4) * 400);
 
   it('is the emitted light σc where the medium is thin', () => {

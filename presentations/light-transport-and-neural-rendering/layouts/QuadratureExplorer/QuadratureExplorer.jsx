@@ -27,12 +27,6 @@ const COMPARISON_RAYS = Array.from({ length: 64 }, (_, i) => 0.2 + (0.55 * (i + 
 /** The σ plot's range: the core's surface layer fits, its denser inside is clipped. */
 const DENSITY_MAX = 40;
 /**
- * The panel shows the medium the samples fall in (`mediumImage`) over this
- * length, in world units: the soft wisp and tail as on the emission–absorption
- * slide, and the dense core in its two colors, outer layer and inside.
- */
-const MEDIUM_LENGTH = 0.4;
-/**
  * Samplers by the name build steps use: each takes the ray's field, the
  * step, and a seeded random source, and returns `{ samples, coarse?, gaps? }`.
  * 'uniform' is evenly spaced midpoints (deterministic); 'random' is
@@ -151,7 +145,7 @@ export default function QuadratureExplorer({ slide, buildStep }) {
   }, [colors, edge, coreX, slide.coreDensity]);
 
   const image = useMemo(() => cloud && renderCloud(cloud, 400, 100), [cloud]);
-  const medium = useMemo(() => image && mediumImage(image, MEDIUM_LENGTH), [image]);
+  const medium = useMemo(() => image && mediumImage(image), [image]);
 
   const ray = useMemo(() => {
     if (!cloud) return null;
