@@ -5,7 +5,7 @@ So far every picture was a steady state: the lamp on long enough for the light t
 - **$\tau \approx 55$ ns.** Light reaches the camera. The cyan wedge marks one pixel (the floor beside the red wall). The first peak of its histogram is direct light: lamp to floor to camera, the shortest paths.
 - **$\tau \approx 120$ ns.** The room glows faintly with light that has bounced several times, and the pixel's histogram has a long tail, colored by bounce order. Bounce 2 is small here, and most of the tail has bounced three or more times. No direct light from the lamp reaches the ceiling (the lamp is in the ceiling), so light reflected by the ceiling reaches this floor only on the third bounce.
 
-The check: summed over time, the histogram equals the pixel's value in the steady state (to about one part per million; the light still to arrive after 180 m of travel is negligible). A steady-state photograph is the integral of the transient over time.
+Summed over time, the histogram equals the pixel's value in the steady state: a steady-state photograph is the integral of the transient over time.
 
 The light in flight dims by orders of magnitude as it spreads, so each step has its own exposure; the label in the corner is the exposure relative to the first step.
 

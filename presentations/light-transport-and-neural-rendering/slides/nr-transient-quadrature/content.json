@@ -32,7 +32,6 @@
     },
     {
       "terms": "collocated",
-      "intensity": true,
       "label": "$w_i$"
     },
     {

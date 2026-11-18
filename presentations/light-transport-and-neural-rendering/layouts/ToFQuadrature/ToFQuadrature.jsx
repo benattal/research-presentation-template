@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
-import { Readout } from '../activeSensing/Controls.jsx';
 import PhasorPlane from '../activeSensing/PhasorPlane.jsx';
 import { themeColors } from '../activeSensing/draw.js';
 import {
@@ -58,7 +57,7 @@ function mix(a, b, k) {
  * the transient's Fourier coefficient, and the same weights with a phase
  * each. Build steps (`buildSteps` entries `{ phase, fog }`) rotate each
  * arrow by its round-trip phase, so the chain sums to the measured phasor,
- * and remove the fog for the check against a single opaque surface. Moving
+ * and remove the fog, leaving the single return of one opaque surface. Moving
  * between steps animates from the arrows on screen. The model is credited
  * through the slide's `credits`.
  */
@@ -113,16 +112,6 @@ export default function ToFQuadrature({ slide, buildStep }) {
     arrows.push({ from: [0, 0], to: measured, tone: 'text', width: 3.5, opacity: frame.sum, label: '$m_f$', labelAt: 'right' });
   }
 
-  // One 2 × 2 grid on every step: amplitude and phase on the left, a single surface's exact values beside them.
-  const opaque = !step.fog && step.phase;
-  const { depth, albedo } = RAY_SCENE.wall;
-  const checks = [
-    { key: 'amplitude', label: step.phase ? '$|m_f|$' : '$\\int h\\,d\\tau$', value: amplitudeOf(measured).toFixed(4) },
-    { key: 'amplitude-exact', label: '$\\rho/d^2$', value: (albedo / depth ** 2).toFixed(4), hidden: !opaque },
-    { key: 'phase', label: '$\\arg m_f$', value: `${((phaseOf(measured) * 180) / Math.PI).toFixed(1)}°`, hidden: !step.phase },
-    { key: 'phase-exact', label: '$4\\pi f d/c$', value: `${((roundTripPhase(depth, frequency) * 180) / Math.PI).toFixed(1)}°`, hidden: !opaque },
-  ];
-
   return (
     <div className="slide--tof-quadrature">
       <SlideTitle title={slide.title} subtitle={slide.subtitle} />
@@ -145,7 +134,6 @@ export default function ToFQuadrature({ slide, buildStep }) {
             arrows={arrows}
             arc={frame.sum > 0.5 ? { angle: phaseOf(measured), tone: 'text', label: '$\\phi$' } : null}
           />
-          <Readout items={checks} columns="repeat(2, 166px)" className="tof-quadrature-readout" />
         </div>
       </div>
     </div>

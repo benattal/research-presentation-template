@@ -3,7 +3,7 @@ Transition: in time of flight, the source was at the camera. In structured light
 - Step 1, the pattern: ten stripes from the projector. Where they cross the translucent blob, part of their light is scattered; behind the box, the floor is in shadow.
 - Step 2, one sample of the camera ray. The dashed line runs from the sample to the projector's center of projection, through the projector pixel whose light reaches the sample: $P(\mathbf{x}_i)$ is that pixel's value in the pattern.
 - Step 3, every sample: each term of the quadrature is NeRF's weight $T_i\alpha_i$, the sample's albedo $\rho_i$, and the projector's light at the sample: $P(\mathbf{x}_i)$ with the $1/r^2$ falloff, attenuated by $T^{\mathrm{p}}_i$, the transmittance from the sample toward the projector.
-- Each dot's size, and each bar beside the panel, is one term; the pixel $m$ is their sum, 0.0525 here. The floor sample is about 90% of $m$, and the blob's samples inside a bright stripe are the rest.
+- Each dot's size, and each bar beside the panel, is one term; the pixel $m$ is their sum. The floor sample is most of it, and the blob's samples inside a bright stripe are the rest.
 
 The sentence to remember: structured light is NeRF's quadrature with the light at each sample given by the projected pattern.
 

@@ -6,7 +6,7 @@ Transition: the last slide showed light arriving in order of path length, in the
 - Step 3, substitute: $m = \sum_i T_i^2\alpha_i\rho_i/t_i^2$. The transmittance is squared because the light crosses the medium twice, out and back. $m$ is the intensity, the pixel's total measurement (the deck's measurement symbol, $m = \langle q, x \rangle$); each term is a weight $w_i$.
 - Step 4, the transient: the light of sample $i$ arrives at its round-trip time $2t_i/c$, spread by the pulse shape $g$, so $h(\tau) = \sum_i w_i\, g(\tau - 2t_i/c)$: the same weights, binned by arrival time. The panel and the plot have the same horizontal axis, each depth $t$ above its time $2t/c$. On the click, the histogram fills in arrival order while a mark moves along the ray.
 - Step 5, a 3 ns pulse: both returns are blurred, and the fog's and the wall's light overlap in time.
-- The check: $\int h\,d\tau = m = 0.1080$ at every pulse width, since binning only redistributes the same weights in time.
+- Binning only redistributes the same weights in time, so $\int h\,d\tau = m$ at every pulse width.
 
 The sentence to remember: a transient is the quadrature's weights, binned by round-trip time.
 

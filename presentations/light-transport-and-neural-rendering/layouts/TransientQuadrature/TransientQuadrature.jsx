@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
-import { Readout, Slider } from '../activeSensing/Controls.jsx';
+import { Slider } from '../activeSensing/Controls.jsx';
 import { sceneTransform, themeColors } from '../activeSensing/draw.js';
 import {
-  SPEED_OF_LIGHT, collocatedWeights, compositingWeights, intensityQuadrature, roundTripTime, transientHistogram,
+  SPEED_OF_LIGHT, collocatedWeights, compositingWeights, roundTripTime, transientHistogram,
 } from '../activeSensing/measurement.js';
 import {
   RAY_PANEL, RAY_PANEL_BOUNDS, RAY_PANEL_COLORS, drawRayPanel,
@@ -41,9 +41,8 @@ const TERMS = ['nerf', 'collocated'];
 
 /**
  * A build step is either the quadrature's terms per sample, `{ terms,
- * label }` with terms 'nerf' (Tᵢαᵢ) or 'collocated' (wᵢ = Tᵢ²αᵢρᵢ/tᵢ²) and
- * an optional `intensity` (show the readout m), or the transient,
- * `{ histogram: true, pulseWidthNs, label }`. `label` names the plotted
+ * label }` with terms 'nerf' (Tᵢαᵢ) or 'collocated' (wᵢ = Tᵢ²αᵢρᵢ/tᵢ²), or
+ * the transient, `{ histogram: true, pulseWidthNs, label }`. `label` names the plotted
  * quantity.
  */
 function stepState(slide, buildStep) {
@@ -75,8 +74,7 @@ function relativeTerms(step, terms) {
  * transient steps bin the same weights by round-trip time, spread by the
  * laser pulse. Moving forward animates from the previous step: the bars
  * change height, the histogram fills in arrival order, the pulse widens.
- * The slider sets the pulse width on the transient steps; the readout
- * checks the histogram's integral against m.
+ * The slider sets the pulse width on the transient steps.
  */
 export default function TransientQuadrature({ slide, buildStep }) {
   const step = stepState(slide, buildStep);
@@ -96,7 +94,6 @@ export default function TransientQuadrature({ slide, buildStep }) {
     nerf: compositingWeights(samples).map(({ weight }) => weight),
     collocated: collocatedWeights(samples),
   }), [samples]);
-  const intensity = useMemo(() => intensityQuadrature(samples), [samples]);
 
   const settledPulse = step.histogram ? step.pulseWidthNs * NANOSECOND : 0;
   const animatedPulse = from?.histogram && step.histogram
@@ -107,7 +104,6 @@ export default function TransientQuadrature({ slide, buildStep }) {
     () => (step.histogram ? transientHistogram(samples, { binWidth: BIN_WIDTH, binCount: BIN_COUNT, pulseWidth }) : null),
     [step.histogram, samples, pulseWidth],
   );
-  const integral = histogram ? histogram.reduce((sum, bin) => sum + bin, 0) : 0;
 
   // The bars of the sample terms: blended from the previous step's, or the previous step's while the histogram fills.
   const sampleBars = useMemo(() => {
@@ -194,13 +190,6 @@ export default function TransientQuadrature({ slide, buildStep }) {
         </div>
         <div className="transient-quadrature-side">
           <EquationStack lines={slide.lines} step={buildStep} className="transient-quadrature-stack" />
-          <Readout
-            columns={2}
-            items={[
-              { label: '$m$', value: intensity.toFixed(4), hidden: !(step.intensity || step.histogram) },
-              { label: '$\\int h\\,d\\tau$', value: integral.toFixed(4), hidden: !step.histogram },
-            ]}
-          />
           <div className="transient-quadrature-control" style={{ visibility: step.histogram ? 'visible' : 'hidden' }}>
             <Slider
               label="pulse"
