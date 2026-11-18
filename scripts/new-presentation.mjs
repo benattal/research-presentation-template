@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * Start a presentation: a title slide, an outline, one content slide, and a
- * closing slide, ready for `npm run dev -- <id>`.
+ * Start a presentation: a title slide, an outline, one content slide, a
+ * closing slide, and a README.md that says how to pull and push its assets,
+ * ready for `npm run dev -- <id>`.
  *
  *   npm run new -- <id> [--title "Talk title"]
  *
@@ -32,7 +33,44 @@ if (existsSync(dir)) {
 const title = values.title ?? id.split('-').map((word) => word[0].toUpperCase() + word.slice(1)).join(' ');
 const json = (value) => `${JSON.stringify(value, null, 2)}\n`;
 
+/**
+ * The presentation's README: what it is, and how to fetch its assets on a
+ * fresh checkout and push new ones (DATA.md has the full description).
+ * `tests/repository.test.mjs` checks that every presentation has one.
+ */
+function presentationReadme(id, title) {
+  return [
+    `# ${title}`,
+    '',
+    'What this presentation is, for whom, and where it is given.',
+    '',
+    '## Assets: pull them before presenting',
+    '',
+    "The slides' media (`public/`) and source material (`assets/`) are not in",
+    'git. Their durable copy is the R2 bucket described in [DATA.md](../../DATA.md),',
+    `under \`tcig-projects/research-presentation-template/presentations/${id}/\`.`,
+    '',
+    'On a fresh checkout:',
+    '',
+    '```bash',
+    'npm install',
+    `npm run assets -- pull ${id}   # needs rclone and the \`tcig\` remote (DATA.md, "Setup")`,
+    `npm run check -- ${id}         # lists any asset still missing`,
+    `npm run dev -- ${id}           # present it locally`,
+    '```',
+    '',
+    'After adding or changing media, push them (this copies only; it never',
+    'deletes anything in the bucket):',
+    '',
+    '```bash',
+    `npm run assets -- push ${id}`,
+    '```',
+    '',
+  ].join('\n');
+}
+
 const files = {
+  'README.md': presentationReadme(id, title),
   'presentation.json': json({
     title,
     defaultTransition: 'fade',

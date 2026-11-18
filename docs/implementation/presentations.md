@@ -8,6 +8,7 @@ bucket. Ids use lowercase letters, digits, and hyphens.
 
 ```text
 presentations/<id>/
+  README.md                           what it is; how to pull and push its assets
   presentation.json
   layouts/index.js
   slides/<slide-id>/content.json
@@ -19,6 +20,10 @@ presentations/<id>/
   sources.json                        optional: citations of borrowed material
   layouts/<LayoutName>/...            optional, registered in layouts/index.js
 ```
+
+Every presentation has a `README.md` saying what it is and how to fetch
+its assets on a fresh checkout (`npm run assets -- pull <id>`) and push new
+ones; `npm run new` writes one, and `npm test` fails when one is missing.
 
 ## `presentation.json`
 
