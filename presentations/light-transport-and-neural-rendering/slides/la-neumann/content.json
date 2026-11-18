@@ -5,10 +5,23 @@
   "subtitle": "Inverting a matrix with a power series",
   "eigenvectors": [[2, 1], [-1, 2]],
   "lambda": [0.8, 0.3],
+  "b": [0, 1],
+  "equations": [
+    { "step": 0, "tex": "$S_k = \\htmlClass{term-emission}{I} + \\htmlClass{term-bounce-1}{A} + \\htmlClass{term-bounce-2}{A^2} + \\cdots + A^k$" },
+    {
+      "step": 1,
+      "tex": "$(I - A)\\, S_k$",
+      "rhs": "$I - \\htmlClass{term-bounce-3}{A^{k+1}}$",
+      "justification": "$\\begin{aligned} S_k &= I + \\htmlClass{term-muted}{A + \\cdots + A^k} \\\\ A S_k &= \\phantom{I + {}} \\htmlClass{term-muted}{A + \\cdots + A^k} + \\htmlClass{term-bounce-3}{A^{k+1}} \\end{aligned}$"
+    },
+    { "step": 3, "tex": "$A^{k+1} \\to 0 \\;\\text{ if }\\; \\rho(A) = \\max_i |\\lambda_i| < 1$" },
+    { "step": 4, "tex": "$(I - A)^{-1} = \\htmlClass{term-emission}{I} + \\htmlClass{term-bounce-1}{A} + \\htmlClass{term-bounce-2}{A^2} + \\cdots$" }
+  ],
   "buildSteps": [
-    { "terms": 1, "equation": "$S_k = I + A + A^2 + \\cdots + A^k$" },
-    { "terms": 2, "equation": "$(I - A)\\, S_k = I - A^{k+1}$" },
-    { "terms": 6, "equation": "$A^{k+1} \\to 0 \\;\\text{ if }\\; \\rho(A) = \\max_i |\\lambda_i| < 1$", "eigenvalues": true },
-    { "terms": "all", "equation": "$(I - A)^{-1} = I + A + A^2 + \\cdots$", "eigenvalues": true }
+    { "k": 2 },
+    { "k": 2 },
+    { "k": 2, "next": true },
+    { "k": 6, "eigenvalues": true },
+    { "k": "all", "eigenvalues": true }
   ]
 }

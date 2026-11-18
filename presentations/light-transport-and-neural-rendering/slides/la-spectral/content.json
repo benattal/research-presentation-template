@@ -3,71 +3,13 @@
   "sectionLabel": "Neumann series",
   "title": "Spectral view",
   "subtitle": "Along each eigenvector, a geometric series",
-  "eigenvectors": [
-    [
-      2,
-      1
-    ],
-    [
-      -1,
-      2
-    ]
-  ],
+  "eigenvectors": [[2, 1], [-1, 2]],
+  "lambda": [0.8, 0.3],
+  "b": [0, 1],
   "buildSteps": [
-    {
-      "lambda": [
-        0.8,
-        0.3
-      ],
-      "b": [
-        1,
-        0
-      ],
-      "terms": 8
-    },
-    {
-      "lambda": [
-        0.8,
-        0.3
-      ],
-      "b": [
-        0,
-        1
-      ],
-      "terms": 8
-    },
-    {
-      "lambda": [
-        0.8,
-        0.3
-      ],
-      "b": [
-        0.7,
-        0.7
-      ],
-      "terms": 8
-    },
-    {
-      "lambda": [
-        0.97,
-        0.3
-      ],
-      "b": [
-        0.1,
-        0.7
-      ],
-      "terms": 8
-    },
-    {
-      "complex": {
-        "modulus": 0.85,
-        "angle": 35
-      },
-      "b": [
-        1,
-        0
-      ],
-      "terms": 30
-    }
+    { "show": "eigenvectors", "equation": "$A^k v_i = \\lambda_i^k\\, v_i$" },
+    { "show": "components", "equation": "$\\htmlClass{term-emission}{b} = \\htmlClass{term-emission}{c_1 v_1} + \\htmlClass{term-emission}{c_2 v_2}$" },
+    { "show": "series", "equation": "$\\sum_k A^k \\htmlClass{term-emission}{b} = \\sum_i c_i \\left(\\htmlClass{term-emission}{1} + \\htmlClass{term-bounce-1}{\\lambda_i} + \\htmlClass{term-bounce-2}{\\lambda_i^2} + \\cdots\\right) v_i$" },
+    { "show": "limits", "equation": "$\\phantom{\\sum_k A^k b} = \\sum_i \\dfrac{c_i}{1 - \\lambda_i}\\, v_i$" }
   ]
 }

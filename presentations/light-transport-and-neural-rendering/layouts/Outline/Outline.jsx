@@ -2,43 +2,50 @@ import { motion } from 'framer-motion';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
 import RoomStill from '../flatland/RoomStill.jsx';
+import { fixedPointIterates, solve } from '../linearAlgebra/linear.js';
+import { normalize, spectralMatrix } from '../linearAlgebra/plane.js';
+import VectorPlane, { Arrow, FixedPointUpdates, Ring, fitView } from '../linearAlgebra/VectorPlane.jsx';
 import { TextWithBolt } from '../Slides/Bolt.jsx';
 import './Outline.css';
 
 const THUMB = [128, 76];
+/** Updates drawn in the Neumann series picture. */
+const THUMB_UPDATES = 12;
 
-/** A small plot of the partial sums of 1 + a + a² + … approaching 1/(1 − a). */
-function SeriesThumbnail() {
-  const [w, h] = THUMB;
-  const a = 0.8;
-  const limit = 1 / (1 - a);
-  const points = [];
-  let sum = 0;
-  for (let k = 0; k < 14; k += 1) {
-    sum += a ** k;
-    points.push([12 + (k * (w - 24)) / 13, h - 10 - ((h - 24) * sum) / limit]);
-  }
+/**
+ * The Neumann series section's picture: the updates x_{k+1} = b + A x_k
+ * from x_0 = 0 stepping to the solution (the ring), drawn as on the
+ * section's slides, small. `iterates` gives A (`eigenvectors`, `lambda`)
+ * and `b`, the data of those slides.
+ */
+function IterationThumbnail({ iterates }) {
+  const A = spectralMatrix(iterates.eigenvectors.map(normalize), iterates.lambda);
+  const { b } = iterates;
+  const solution = solve(A, b);
+  const view = fitView([[0, 0], b, solution], ...THUMB, 8);
   return (
-    <svg className="sections-outline-thumb sections-outline-thumb--plot" width={w} height={h} viewBox={`0 0 ${w} ${h}`} aria-hidden="true">
-      <line x1="8" x2={w - 8} y1={14} y2={14} className="sections-outline-plot-limit" />
-      <line x1="8" x2={w - 8} y1={h - 10} y2={h - 10} className="sections-outline-plot-axis" />
-      {points.map(([x, y], k) => <circle key={k} cx={x} cy={y} r="3.2" className="sections-outline-plot-dot" />)}
-    </svg>
+    <VectorPlane view={view} className="sections-outline-thumb sections-outline-thumb--plane">
+      <FixedPointUpdates view={view} b={b} iterates={fixedPointIterates(A, b, [0, 0], THUMB_UPDATES)} shown={THUMB_UPDATES} width={1.6} head={6} dot={2.2} />
+      <Arrow view={view} from={[0, 0]} to={b} className="la-ink-emission" width={1.8} head={6} />
+      <Ring view={view} at={solution} r={4.5} />
+    </VectorPlane>
   );
 }
 
+/** A section's picture, from its data: a room render, an image, or the Neumann series iterates. */
 function Thumbnail({ visual }) {
   if (visual.render) return <RoomStill kind={visual.render} width={THUMB[0]} height={THUMB[1]} className="sections-outline-thumb" />;
   if (visual.image) return <img className="sections-outline-thumb sections-outline-thumb--image" src={visual.image} alt="" />;
-  return <SeriesThumbnail />;
+  if (visual.iterates) return <IterationThumbnail iterates={visual.iterates} />;
+  throw new Error(`sectionOutline: section "${visual.title}" needs "render", "image", or "iterates"`);
 }
 
 /**
  * The lecture's outline: one row per section with its name, a plain
  * one-line description, and a small picture of the section (a room render,
- * an image, or the series plot). `sections` is a list of
- * `{ title, subtitle, render? | image?, aside? }`; an aside row is indented
- * under the section before it. Rows appear one per build step.
+ * an image, or the Neumann series iterates). `sections` is a list of
+ * `{ title, subtitle, render | image | iterates, aside? }`; an aside row is
+ * indented under the section before it. Rows appear one per build step.
  */
 export default function Outline({ slide, buildStep }) {
   return (

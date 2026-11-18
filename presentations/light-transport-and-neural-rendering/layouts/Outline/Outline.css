@@ -79,19 +79,17 @@
   object-fit: cover;
 }
 
-.sections-outline-thumb--plot {
+/* The Neumann series picture: the plane figure, with lines thinned to its size. */
+.sections-outline-thumb--plane {
+  overflow: hidden;
   background: var(--bg-elevated);
 }
 
-.sections-outline-plot-limit {
-  stroke: var(--text-muted);
-  stroke-dasharray: 4 4;
+.sections-outline-thumb--plane .la-ring {
+  stroke-width: 1.5;
 }
 
-.sections-outline-plot-axis {
-  stroke: var(--border-light);
-}
-
-.sections-outline-plot-dot {
-  fill: var(--ink-light-2);
+.sections-outline-thumb--plane .la-gap {
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
 }

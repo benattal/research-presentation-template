@@ -1,11 +1,8 @@
 /**
  * 2 × 2 matrices built from their spectrum, for the plane figures of the
  * linear algebra slides. Vectors are [x, y]; matrices are arrays of rows.
- *
- * A real spectrum gives A = V Λ V^{-1} with eigenvectors v1, v2 (the
- * columns of V) and eigenvalues λ1, λ2. A complex pair r e^{±iθ} gives
- * A = V (r R_θ) V^{-1}, R_θ the rotation by θ: in the basis (v1, v2), A
- * rotates by θ and scales by r, so its powers spiral.
+ * A = V Λ V^{-1} has eigenvectors v1, v2 (the columns of V) and real
+ * eigenvalues λ1, λ2.
  */
 
 /** v scaled to length 1. */
@@ -27,34 +24,30 @@ export function combine([v1, v2], [c1, c2]) {
   return [c1 * v1[0] + c2 * v2[0], c1 * v1[1] + c2 * v2[1]];
 }
 
-/** V M V^{-1} for the basis (v1, v2) and a 2 × 2 matrix M in that basis. */
-function inBasis([v1, v2], M) {
+/** The matrix V diag(λ1, λ2) V^{-1} with eigenvectors `basis` [v1, v2] and eigenvalues `lambda` [λ1, λ2]. */
+export function spectralMatrix([v1, v2], [l1, l2]) {
   const det = v1[0] * v2[1] - v2[0] * v1[1];
   if (Math.abs(det) < 1e-12) throw new Error('the basis vectors are parallel');
   const V = [[v1[0], v2[0]], [v1[1], v2[1]]];
   const inverse = [[v2[1] / det, -v2[0] / det], [-v1[1] / det, v1[0] / det]];
   const product = (P, Q) => P.map((row) => [0, 1].map((j) => row[0] * Q[0][j] + row[1] * Q[1][j]));
-  return product(product(V, M), inverse);
+  return product(product(V, [[l1, 0], [0, l2]]), inverse);
 }
 
 /**
- * The matrix of a spectrum `spec` in the basis `basis`: `{ lambda: [λ1, λ2] }`
- * for real eigenvalues (eigenvectors `basis`), or `{ modulus, angle }` (angle
- * in degrees) for the complex pair modulus · e^{±i angle}. Returns `{ A,
- * eigenvalues }`, eigenvalues as [re, im] pairs.
+ * b split along the eigenvectors `basis` of the matrix with eigenvalues
+ * `lambda` (each |λ_i| < 1): `parts` are the components c_i v_i of b, and
+ * `limits` the components c_i / (1 − λ_i) v_i of (I − A)^{-1} b, the sums
+ * of the geometric series c_i (1 + λ_i + λ_i² + …) v_i.
  */
-export function spectralMatrix(basis, spec) {
-  if (spec.lambda) {
-    const [l1, l2] = spec.lambda;
-    return { A: inBasis(basis, [[l1, 0], [0, l2]]), eigenvalues: [[l1, 0], [l2, 0]] };
-  }
-  const theta = spec.angle * Math.PI / 180;
-  const c = spec.modulus * Math.cos(theta);
-  const s = spec.modulus * Math.sin(theta);
-  return { A: inBasis(basis, [[c, -s], [s, c]]), eigenvalues: [[c, s], [c, -s]] };
-}
-
-/** |1 / (1 − λ)| for an eigenvalue λ = [re, im]: how much (I − A)^{-1} scales its eigenvector. */
-export function amplification([re, im]) {
-  return 1 / Math.hypot(1 - re, im);
+export function eigenParts(basis, lambda, b) {
+  lambda.forEach((l) => {
+    if (!(Math.abs(l) < 1)) throw new Error(`eigenParts: |λ| = ${Math.abs(l)} is not below 1`);
+  });
+  const c = components(basis, b);
+  const along = (i, scale) => combine(basis, i === 0 ? [c[0] * scale, 0] : [0, c[1] * scale]);
+  return {
+    parts: [0, 1].map((i) => along(i, 1)),
+    limits: [0, 1].map((i) => along(i, 1 / (1 - lambda[i]))),
+  };
 }

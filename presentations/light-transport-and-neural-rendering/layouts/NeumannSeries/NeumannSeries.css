@@ -4,97 +4,24 @@
   height: 100%;
 }
 
+/* The plane at the spectral slide's place and size, so the picture stays put between them. */
 .neumann-body {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   flex: 1;
   min-height: 0;
-}
-
-.neumann-side {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-self: stretch;
-  width: 460px;
-  padding: 24px 0 12px;
 }
 
 .neumann-equations {
   display: flex;
   flex-direction: column;
-  gap: 26px;
+  gap: 30px;
+  width: 460px;
+  padding-top: 16px;
 }
 
 .neumann-equation {
   font-size: 28px;
   color: var(--text-primary);
-}
-
-.neumann-key {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  font-size: 20px;
-  color: var(--text-secondary);
-}
-
-.neumann-key > div {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.neumann-key svg {
-  display: block;
-  overflow: visible;
-}
-
-.neumann-plane {
-  position: relative;
-  flex-shrink: 0;
-}
-
-.neumann-terms {
-  position: absolute;
-  left: 16px;
-  top: 6px;
-  font-size: 28px;
-  color: var(--text-primary);
-}
-
-.neumann-factor {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  font-size: 22px;
-  white-space: nowrap;
-  pointer-events: none;
-}
-
-.neumann-eigenline {
-  stroke: currentColor;
-  stroke-width: 1.5;
-  stroke-dasharray: 6 6;
-  opacity: 0.55;
-}
-
-.neumann-circle {
-  fill: none;
-  stroke: var(--ink-light-0);
-  stroke-width: 2.5;
-}
-
-.neumann-image {
-  fill: var(--ink-light-1);
-  fill-opacity: 0.12;
-  stroke: var(--ink-light-1);
-  stroke-width: 2.5;
-}
-
-.neumann-limit {
-  fill: none;
-  stroke: var(--text-muted);
-  stroke-width: 1.5;
-  stroke-dasharray: 5 6;
 }

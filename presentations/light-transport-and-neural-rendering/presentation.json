@@ -18,7 +18,7 @@
         "la-fixed-point",
         "la-neumann",
         "la-spectral",
-        "la-apply"
+        "la-iteration"
       ]
     },
     {
@@ -114,6 +114,7 @@
       "title": "Appendix",
       "slides": [
         "la-geometric",
+        "la-apply",
         "lt-radiance",
         "lt-three-point",
         "lt-structured-light",
