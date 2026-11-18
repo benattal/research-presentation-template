@@ -41,10 +41,6 @@ function formatDepth(meters) {
   return `${meters.toFixed(2)} m`;
 }
 
-function formatDegrees(radians) {
-  return `${Math.round((radians * 180) / Math.PI)}°`;
-}
-
 /**
  * A continuous-wave time-of-flight pixel: `figure` (a media item, usually
  * borrowed and credited through the slide's `credits`) shows the emitted
@@ -227,9 +223,7 @@ export default function PhasorToF({ slide, buildStep }) {
           <Readout
             columns={2}
             items={[
-              { label: '$\\phi$', value: formatDegrees(measuredPhase) },
               { label: '$\\hat d = c\\phi/4\\pi f$', value: formatDepth(reportedDepth) },
-              { label: '$c/2f$', value: formatDepth(wrapDistance) },
               { label: '$d$', value: formatDepth(PHASOR_SCENE.wall.depth) },
             ]}
           />

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
-import { Readout, Slider } from '../activeSensing/Controls.jsx';
+import { Slider } from '../activeSensing/Controls.jsx';
 import {
   clearPanel, dashedLine, drawDevice, drawSurface, glowLine, panelLabel, rgba, sceneTransform, themeColors,
 } from '../activeSensing/draw.js';
@@ -224,16 +224,9 @@ export default function ProjectorQuadrature({ slide, buildStep }) {
     });
   });
 
-  const term = quadrature.terms[highlighted];
   const largestTerm = Math.max(...quadrature.terms.map((entry) => entry.contribution), 1e-12);
   const barPitch = (TERMS_PLOT.width - TERMS_PLOT.left) / samples.length;
   const barBase = TERMS_PLOT.height - TERMS_PLOT.bottom;
-  const checks = {
-    // Before the camera ray, the readout keeps its place empty, so nothing below it moves.
-    none: [{ label: '$P(\\mathbf{x}_i)$', value: term.pattern.toFixed(2), hidden: true }],
-    one: [{ label: '$P(\\mathbf{x}_i)$', value: term.pattern.toFixed(2) }],
-    all: [{ label: '$m$', value: quadrature.pixel.toFixed(4) }],
-  }[step.projection];
 
   return (
     <div className="slide--projector-quadrature">
@@ -251,7 +244,6 @@ export default function ProjectorQuadrature({ slide, buildStep }) {
           style={{ width: PANEL.width, height: PANEL.height }}
         />
         <div className="projector-quadrature-side">
-          <Readout columns={1} items={checks} />
           <div
             className="projector-quadrature-terms"
             style={{ width: TERMS_PLOT.width, height: TERMS_PLOT.height, opacity: step.projection === 'all' ? fade : 0 }}

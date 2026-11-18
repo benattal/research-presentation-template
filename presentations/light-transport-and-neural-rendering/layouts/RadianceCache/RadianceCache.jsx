@@ -10,7 +10,6 @@ import { drawDevice } from '../flatland/overlays.js';
 import { SURFACE_GAIN, cachedFluence, derived, sceneGain, subtract } from '../flatland/pictures.js';
 import { ROOM_VIEW, drawRoom } from '../flatland/render.js';
 import { flatlandRoom } from '../flatland/rooms.js';
-import { BINS, binCosine } from '../flatland/scene.js';
 import { patchRadiosity } from '../flatland/transport.js';
 import './RadianceCache.css';
 
@@ -21,35 +20,14 @@ const THUMB = [108, 65];
 const EXPOSURE = 0.45;
 const BIAS_EXPOSURE = 4;
 
-/** The cache, the estimate from it, and their errors, computed once for the lamp room. */
+/** The cache and the estimate from it, computed once for the lamp room. */
 function cacheRoom(env) {
   return derived(env.steady, 'radiance-cache', () => {
     const observed = observedPatches(env.room);
     const cache = cacheState(env.room, env.steady, observed);
     const estimate = oneBounceFromCache(env.transport, cache);
     const missing = subtract(env.steady, estimate);
-    const flux = (state, keep) => {
-      let sum = 0;
-      for (const patch of env.room.patches) {
-        if (!keep(patch)) continue;
-        for (let bin = 0; bin < BINS; bin += 1) {
-          const i = (patch.index * BINS + bin) * 3;
-          sum += (0.2126 * state[i] + 0.7152 * state[i + 1] + 0.0722 * state[i + 2]) * binCosine(bin) * patch.length;
-        }
-      }
-      return sum;
-    };
-    const hidden = (patch) => !observed[patch.index];
-    const seen = (patch) => Boolean(observed[patch.index]);
-    const error = (state, keep) => flux(state, keep) / flux(env.steady, keep) - 1;
-    return {
-      observed,
-      states: { cache, estimate, exact: env.steady, missing },
-      errors: {
-        hidden: { cache: error(cache, hidden), estimate: error(estimate, hidden) },
-        seen: { cache: error(cache, seen), estimate: error(estimate, seen) },
-      },
-    };
+    return { observed, states: { cache, estimate, exact: env.steady, missing } };
   });
 }
 
@@ -130,8 +108,6 @@ function Thumb({ env, result, stepKey }) {
   );
 }
 
-const percent = (value) => `${value < 0 ? '−' : ''}${Math.abs(100 * value).toFixed(Math.abs(value) >= 0.1 || value === 0 ? 0 : 1)}%`;
-
 /**
  * Radiance caching, as an illustration of the idea: a NeRF as the cache x̂
  * of the light leaving surfaces, exact where a few views observed them and
@@ -139,9 +115,7 @@ const percent = (value) => `${value < 0 ? '−' : ''}${Math.abs(100 * value).toF
  * physically based bounce over the cached light, e + Ax̂. Build steps show
  * the cache (with the views and the unobserved surfaces), the one-bounce
  * estimate, the full solve x, and the bias (e + Ax̂) − x = A(x̂ − x), drawn
- * as the light it removes. A column beside the room keeps every step; from
- * the second step a table compares the cache's error with the estimate's,
- * behind the box and elsewhere.
+ * as the light it removes. A column beside the room keeps every step.
  *
  * Content fields: `title`, `subtitle`, and four `buildSteps`.
  */
@@ -175,29 +149,6 @@ export default function RadianceCache({ slide, buildStep }) {
               </li>
             ))}
           </ol>
-          {step >= 1 && (
-            <table className="cache-errors">
-              <thead>
-                <tr>
-                  <th>error</th>
-                  <th><Text>{'$\\htmlClass{term-learned}{\\hat{x}}$'}</Text></th>
-                  <th><Text>{'$e + A\\htmlClass{term-learned}{\\hat{x}}$'}</Text></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>behind the box</td>
-                  <td>{percent(result.errors.hidden.cache)}</td>
-                  <td>{percent(result.errors.hidden.estimate)}</td>
-                </tr>
-                <tr>
-                  <td>elsewhere</td>
-                  <td>{percent(result.errors.seen.cache)}</td>
-                  <td>{percent(result.errors.seen.estimate)}</td>
-                </tr>
-              </tbody>
-            </table>
-          )}
         </div>
       </div>
     </div>

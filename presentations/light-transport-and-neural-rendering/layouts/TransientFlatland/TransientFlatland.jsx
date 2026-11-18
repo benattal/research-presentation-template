@@ -8,7 +8,7 @@ import { drawPixelWedge, drawRoomCamera } from '../flatland/overlays.js';
 import { SURFACE_GAIN, derived } from '../flatland/pictures.js';
 import { ROOM_VIEW, drawRoom } from '../flatland/render.js';
 import { MEASURED_PIXEL, flatlandRoom } from '../flatland/rooms.js';
-import { CAMERA, angleAt, binOf, cameraRay, castRay, stateIndex } from '../flatland/scene.js';
+import { CAMERA, cameraRay, castRay } from '../flatland/scene.js';
 import {
   ORDERS, fluenceInFlight, patchesAt, pixelTransient, solveTransient,
 } from '../flatland/transient.js';
@@ -39,7 +39,7 @@ function range(from, to) {
 
 const luminance = (v, i) => 0.2126 * v[i * 3] + 0.7152 * v[i * 3 + 1] + 0.0722 * v[i * 3 + 2];
 
-/** The pulse's transient, the measured pixel's histogram by bounce order, and its steady-state value. */
+/** The pulse's transient and the measured pixel's histogram by bounce order. */
 function transientRoom(env) {
   return derived(env.steady, 'transient', () => {
     const { patches } = env.room;
@@ -50,18 +50,12 @@ function transientRoom(env) {
     }
     const transient = solveTransient(env.transport, E, { step: STEP, bins: BINS, pulseBins: PULSE_BINS });
     const rays = [];
-    let steady = 0;
     for (let i = 0; i < PIXEL_RAYS; i += 1) {
       const s = MEASURED_PIXEL[0] + ((i + 0.5) / PIXEL_RAYS) * (MEASURED_PIXEL[1] - MEASURED_PIXEL[0]);
-      const d = cameraRay(CAMERA, s);
-      const hit = castRay(env.room, CAMERA.position, d);
+      const hit = castRay(env.room, CAMERA.position, cameraRay(CAMERA, s));
       rays.push({ patch: hit.patch.index, distance: hit.distance });
-      steady += luminance(env.steady, stateIndex(hit.patch.index, binOf(angleAt(hit.patch, [-d[0], -d[1]])))) / PIXEL_RAYS;
     }
-    const histograms = pixelTransient(transient, rays);
-    let total = 0;
-    for (const h of histograms) for (let t = 0; t < BINS; t += 1) total += luminance(h, t);
-    return { transient, histograms, steady, total };
+    return { transient, histograms: pixelTransient(transient, rays) };
   });
 }
 
@@ -95,13 +89,11 @@ function histogramBars(histograms, time) {
  * pulse, and build steps `{ time }` (meters of light travel) show the light
  * in flight at that time, the measured pixel's view, and the pixel's
  * transient histogram so far, stacked by bounce order (direct light
- * first, the indirect tail after). Moving forward animates the time. The
- * last step checks that the histogram sums to the pixel's steady-state
- * value. Dragging on the plot sets the time.
+ * first, the indirect tail after). Moving forward animates the time.
+ * Dragging on the plot sets the time.
  *
  * Content fields: `title`, `subtitle`, `buildSteps` ({ time } each, in
- * meters; the room is 10 m wide), optional `check` (the step index from
- * which the check shows; default the last).
+ * meters; the room is 10 m wide).
  */
 export default function TransientFlatland({ slide, buildStep }) {
   const env = flatlandRoom('diffuse', 'lamp');
@@ -119,7 +111,6 @@ export default function TransientFlatland({ slide, buildStep }) {
   // relative to the first step's; moving forward blends the two exposures.
   const gainAt = (t) => derived(result.transient.total, `gain:${t}`, () => meanExposure(env.table, fluenceInFlight(env.table, result.transient, t)));
   const reference = gainAt(times[0]);
-  const showCheck = step >= (slide.check ?? times.length - 1) && scrubbed === null;
 
   const paint = (ctx, progress) => {
     const a = from !== null && scrubbed === null ? ease(progress) : 1;
@@ -180,14 +171,6 @@ export default function TransientFlatland({ slide, buildStep }) {
               <li key={name} className={`transient-group-${i + 1}`}>{name}</li>
             ))}
           </ul>
-          {showCheck && (
-            <dl className="transient-check">
-              <dt><Text>{'$\\sum_\\tau$ histogram'}</Text></dt>
-              <dd>{result.total.toFixed(4)}</dd>
-              <dt>steady state</dt>
-              <dd>{result.steady.toFixed(4)}</dd>
-            </dl>
-          )}
         </div>
       </div>
     </div>

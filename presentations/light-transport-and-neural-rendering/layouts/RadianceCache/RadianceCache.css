@@ -68,30 +68,3 @@
 .cache-step-label {
   font-size: 18px;
 }
-
-.cache-errors {
-  border-collapse: collapse;
-  font-size: 18px;
-  color: var(--text-secondary);
-}
-
-.cache-errors th,
-.cache-errors td {
-  padding: 2px 10px 2px 0;
-  font-weight: 400;
-  text-align: right;
-}
-
-.cache-errors th:first-child,
-.cache-errors td:first-child {
-  text-align: left;
-}
-
-.cache-errors th {
-  color: var(--text-muted);
-}
-
-.cache-errors td + td {
-  font-variant-numeric: tabular-nums;
-  color: var(--text-primary);
-}

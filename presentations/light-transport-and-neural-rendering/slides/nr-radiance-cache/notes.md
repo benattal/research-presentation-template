@@ -7,7 +7,7 @@ This slide is an illustration of the idea in the flatland room, not a trained ne
 - **Solve, $x$.** The full solution, for comparison.
 - **Bias.** The error of the estimate is $(e + A\hat{x}) - x = A(\hat{x} - x)$: one bounce of the cache's error. Here the cache is too dark behind the box, so the bias is a deficit of light; the render is that missing light, at four times the exposure. It is brightest by the box's left face, and it reaches the red wall and the ceiling: on the observed surfaces, the estimate is about 7 % too dark.
 
-The table is the check: the cache's error is only on the unobserved surfaces; after one bounce it is smaller there and also present on every surface lit from them. It is a bias: it does not decrease with more samples of the bounce.
+The thumbnails show the point: the cache's error is only on the unobserved surfaces; after one bounce it is smaller there and also present on every surface lit from them. It is a bias: it does not decrease with more samples of the bounce.
 
 One sentence: with a radiance cache, every bounce after the first comes from the cache, at the cost of a bias $A(\hat{x} - x)$ wherever the cache is wrong.
 

@@ -74,19 +74,3 @@
   stroke-dasharray: none;
   stroke-width: 1.5;
 }
-
-.transient-check {
-  display: grid;
-  grid-template-columns: auto auto;
-  justify-content: start;
-  gap: 4px 22px;
-  margin: 0;
-  font-size: 21px;
-  color: var(--text-secondary);
-}
-
-.transient-check dd {
-  margin: 0;
-  font-variant-numeric: tabular-nums;
-  color: var(--text-primary);
-}
