@@ -31,6 +31,14 @@ Before relying on an earlier user decision recorded in a tracker or plan, find
 the original dated direction and quote it. A paraphrase can turn a narrow
 direction into a broad one.
 
+Record every direction the user gives where it cannot get lost. The user
+(2026-11-17): "Also make sure you are recording my guidance somewhere so
+that it doesn't get lost. Maybe in tracking (at the top) or somewhere more
+permanent?" A project's directions go, quoted and dated, in the "Standing
+directions" section at the top of its tracker; a direction about slides in
+general also goes into `docs/style/slides.md`; a direction about how to
+work goes into both agent files.
+
 Slide content is the user's: its wording, its order, what it teaches. Fix
 code and layout freely; propose content changes (a wrong label, a confusing
 question, a slide that does not match its notes) and let the user decide.

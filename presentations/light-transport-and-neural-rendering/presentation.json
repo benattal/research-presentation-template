@@ -7,7 +7,6 @@
       "title": "Opening",
       "slides": [
         "title",
-        "hook",
         "roadmap"
       ]
     },
@@ -17,7 +16,6 @@
       "slides": [
         "la-divider",
         "la-fixed-point",
-        "la-geometric",
         "la-neumann",
         "la-spectral",
         "la-apply"
@@ -117,6 +115,7 @@
       "id": "appendix",
       "title": "Appendix",
       "slides": [
+        "la-geometric",
         "lt-radiance",
         "lt-three-point",
         "lt-structured-light",

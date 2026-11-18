@@ -93,6 +93,39 @@
   fill: currentColor;
 }
 
+.la-arrow--dashed .la-arrow-shaft {
+  stroke-dasharray: 7 6;
+}
+
+/* The solution (I − A)^{-1} b: a ring. Iterates and partial sums: dots. */
+.la-ring {
+  fill: none;
+  stroke: var(--text-primary);
+  stroke-width: 2.5;
+}
+
+.la-dot {
+  fill: var(--text-primary);
+}
+
+.la-dot--faint {
+  fill: var(--text-muted);
+}
+
+/* An eigenvector's line: dashed, in the neutral ink of its eigenvector. */
+.la-eigenline {
+  stroke: var(--text-muted);
+  stroke-width: 1.5;
+  stroke-dasharray: 6 6;
+}
+
+/* Construction lines: the components of a vector along the eigenvectors. */
+.la-construction {
+  stroke: var(--text-muted);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 5;
+}
+
 /* Colors of plane figures: the source b, the terms of a series, the solution, and the two
    eigendirections in neutral inks (the deck's colors carry other meanings, cyan importance). */
 .la-ink-emission { color: var(--ink-light-0); }

@@ -53,9 +53,16 @@
   white-space: nowrap;
 }
 
-/* The forward and adjoint check, at the size of the labels beside it. */
+/* The forward and adjoint check, at the size of the labels beside it: one
+   row each, label then value, as the gradient view's check. */
 .adjoint-views-side .operator-check {
+  grid-template-columns: auto auto;
+  column-gap: 24px;
   font-size: 1.3rem;
+}
+
+.adjoint-views-side .operator-check dt {
+  white-space: nowrap;
 }
 
 .adjoint-views-legend--gained {

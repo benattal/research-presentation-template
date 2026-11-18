@@ -2,8 +2,99 @@
 
 [Plan](../plans/light-transport-and-neural-rendering.md)
 
-Current state: paused at the user's request in review cycle 3, with the
-work committed and pushed. Resume from the plan's "Cycle 3: remaining work".
+Current state: the user is reviewing the deck on the dev server while the
+edits below are made in git worktrees by four agents, merged one at a
+time. Resume from the plan's "User edits after cycle 3".
+
+## Standing directions
+
+Every direction of the user still in force for this lecture, quoted, newest
+first. General slide rules are also in
+[slide style](../style/slides.md) and [slide review](../style/slide-review.md);
+earlier directions are quoted in the dated entries below. Read this list
+before changing a slide.
+
+2026-11-17, while resuming:
+
+- "Again, several unnecessary numbers in the slides (the number for ODE
+  solver and formula)"
+- "Please also launch subagents (up to 4) to help"
+- "Also make sure you are recording my guidance somewhere so that it
+  doesn't get lost. Maybe in tracking (at the top) or somewhere more
+  permanent?"
+- "Please restart the page it crashed" (the deck is viewed live on the dev
+  server: edits that can break it are made in a worktree)
+- "I like the light transport matrix slides overall, good idea for the
+  visualization. I think for visualizing the columns/rows we can actually
+  visualize (a) all pixels that observe the scene for a given
+  illumination, (b) all paths from the light sources (along with their
+  total contributions) that end up at a certain pixel (roughly)"
+- "I need the light transport matrix stuff to be more tied explicitly to
+  the rendering equation/iterated rendering equation from the previous
+  section (also worth showing the iterated rendering equation when we're
+  applying sucessive bounces? maybe that's what you can use an extra column
+  for)"
+- "There's a big jump from these operator evaluations of light transport
+  to Monte Carlo, this needs to be made more clear. It doesn't necessarily
+  need to be a ton more detail, but if we plan to explain it more
+  intuitively/in less detail, then we can't get bogged down in too much
+  text/excessive information"
+- "You do not need numbers under sum so far, or even need the sum so far
+  column"
+- "Something like merging this with the scattering integral
+  visualization/slide would be nice. I could do without the bar charts on
+  the scattering integral slide. I think the specific numerical values in
+  many of these demos are unnecessary"
+- "The rendering equation slide has a bunch of equations that *do not*
+  feel tied to appropriate visuals. This is a great place to illustrate
+  what each term means with animations and visuals. You don't always need
+  to borrow from existing decks if it makes it clunkier to explain a
+  concept"
+- "I think the last slide of this section before operator light transport
+  can just be re-iterating the Neumann series takeaway, showing again the
+  iterated updates of x <- Ax + b (and what this is expanded) in 2D"
+- "Spectral view slide is nice -- again I like the equations here, and how
+  you are using the eigenspace to show that it *does* in fact compute the
+  inverse (in the eigenbasis). However, the visuals are again disconnected
+  from the content (this is a theme)"
+- "The neumann series slide is okay, but I fail to see what exactly it's
+  illustrating. If you could relate the content & equations more
+  effectively to the visuals that would be good."
+- "I think we can skip the geometric series slide"
+- "The fixed point equation slide is nice, and visually illustrates (for
+  one step) that applying the update x <- Ax + b brings you closer to the
+  solution. I want you to show this for multiple steps. This should also be
+  a prompt to the class (any ideas for how to solve for this without
+  knowing the inverse?), which will be elucidated more on later slides"
+- "I don't like the "light paths" slide at the intro. Instead, before
+  jumping into content, we should introduce the lecture outline, talk about
+  high level topics that the lecture will cover. This light paths slide is
+  also not particularly useful by itself, each slide should serve a
+  purpose."
+
+## 2026-11-18 01:00 — resumed; cycle 3 checked; user's section edits
+
+The user's directions of this session are under "Standing directions".
+
+Done on resuming:
+
+- New machine set up: Node 26.13.1 and rclone 1.76 (winget), `npm
+  install`, assets pulled (75 + 91 files). Checks pass (`npm run check`,
+  `npm test` 30/30, deck tests 86/86); full capture 20261118-002432: 210
+  frames, 0 errors, 0 warnings.
+- Cycle 3's items checked in the frames: done as listed, except
+  adj-sensitivity's check (one line overflowing the right margin, labels
+  wrapping; now two rows, as adj-gradient's). Open: vol-vre's six-line
+  stack is taller than its figure (a content choice: the slide rules allow
+  three lines); lt-radiance's beam edges are smooth at 4× zoom, the core
+  clipped white by the ×3 exposure (the review's complaint was not
+  recorded).
+- Timing, measured in the audience view (dev build): lt-iterate's steps
+  settle in 0.92–0.97 s, as lt-neumann-sum's; the 1.5 s of cycle 3 is not
+  reproduced. lt-operators' 2.2 s and 2.4 s steps are its propagation
+  animations. Found: entering lt-path-tracing blocks the main thread for
+  0.53 s (the slide appears at 1.1 s against about 0.45 s), and the
+  lt-divider render for 0.44 s.
 
 ## 2026-11-18 00:40 — paused in review cycle 3
 

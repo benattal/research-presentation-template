@@ -70,6 +70,26 @@ export function solve(A, b) {
   return x;
 }
 
+/** The terms b, Ab, …, A^{count−1} b of the Neumann series applied to b. */
+export function seriesTerms(A, b, count) {
+  const terms = [b];
+  while (terms.length < count) terms.push(multiply(A, terms[terms.length - 1]));
+  return terms;
+}
+
+/**
+ * The fixed-point iterates x_0 = `start`, x_{k+1} = b + A x_k, for
+ * k = 0 … count. From x_0 = 0, x_{k+1} is the partial sum b + Ab + … + A^k b.
+ */
+export function fixedPointIterates(A, b, start, count) {
+  const iterates = [start];
+  while (iterates.length <= count) {
+    const Ax = multiply(A, iterates[iterates.length - 1]);
+    iterates.push(b.map((value, i) => value + Ax[i]));
+  }
+  return iterates;
+}
+
 /** Partial sums x_k = b + Ab + … + A^k b for k = 0 … count − 1. */
 export function partialSums(A, b, count) {
   const sums = [b];

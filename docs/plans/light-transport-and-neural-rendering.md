@@ -195,6 +195,37 @@ Not confirmed at the pause (do or verify):
   adj-volumes notes (the Adam/SGDm chart); lt-radiance's beam edges and
   labels.
 
+### User edits after cycle 3
+
+The user's directions of 2026-11-17 are quoted in the
+[tracker](../tracking/light-transport-and-neural-rendering.md). In order:
+
+- Opening: `hook` removed; the outline follows the title.
+- `la-fixed-point`: several updates $x \leftarrow b + Ax$ converging, and
+  a prompt to the class (solving without $(I - A)^{-1}$).
+- `la-geometric` moves to the appendix.
+- `la-neumann` and `la-spectral`: one $A$ and one $b$ across the section;
+  each equation tied to a mark in the visual (the terms $A^k b$ tip to
+  tail; the same sum along each eigenvector).
+- The section's last slide: the iterated updates in 2D beside their
+  expansion $b + Ab + A^2 b + \cdots$; the old `la-apply` (the chain of
+  $10^6$ unknowns) moves to the appendix.
+- `lt-rendering-equation` and `lt-gather` merged: each term of the
+  rendering equation shown in the room, without the bar chart or numbers.
+- `lt-iterate`, `lt-neumann-sum` (and `adj-neumann`): no share or "sum so
+  far" column; the column shows the iterated rendering equation instead.
+- `lt-path-tracing`: a clearer step from the operator sum to Monte Carlo
+  (sampling one direction of the scattering integral, then a path), with
+  less on the slide.
+- The aside's transport matrix slides written with the previous section's
+  terms: $\mathbf{T} = C(I - A)^{-1}E = C(I + A + A^2 + \cdots)E$.
+- `lt-matrix`: a column drawn as every pixel's view of the scene under one
+  light element; a row as the paths from every light element to one pixel,
+  each with its total contribution.
+- `vol-inverse`: no numbers for the ODE solver and the formula.
+- Then: a list of the numeric readouts left in other demos, for the user
+  to decide which go.
+
 13. **Rehearsal pass.** Notes for every slide; time a run-through with the
     presenter timer and cut the slides marked *optional* until it fits;
     full capture with no errors or warnings; `npm run build` and present

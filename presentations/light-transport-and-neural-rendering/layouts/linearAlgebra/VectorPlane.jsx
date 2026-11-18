@@ -53,6 +53,41 @@ export function Arrow({ view, from, to, className, width = 2.5, head = 13 }) {
   );
 }
 
+/** Inks of the series terms b, Ab, A²b, …: the deck's colors of light by bounce, the last for every later term. */
+const TERM_INKS = ['la-ink-emission', 'la-ink-1', 'la-ink-2', 'la-ink-3', 'la-ink-4'];
+
+/** The ink class of the term A^j b. */
+export function termInk(j) {
+  return TERM_INKS[Math.min(j, TERM_INKS.length - 1)];
+}
+
+/**
+ * The plane vectors `terms` drawn tip to tail from `start`, the j-th in the
+ * ink of term `first + j`. With `dashed`, the arrows are dashed (a term not
+ * yet added).
+ */
+export function TermPath({ view, terms, start = [0, 0], first = 0, width = 3.5, head = 16, dashed = false }) {
+  let tip = start;
+  return terms.map((term, j) => {
+    const from = tip;
+    tip = [tip[0] + term[0], tip[1] + term[1]];
+    const ink = termInk(first + j);
+    return <Arrow key={j} view={view} from={from} to={tip} className={dashed ? `${ink} la-arrow--dashed` : ink} width={width} head={head} />;
+  });
+}
+
+/** A ring at plane point `at`: the solution (I − A)^{-1} b on every slide of the section. */
+export function Ring({ view, at, className = 'la-ring', r = 10 }) {
+  const [x, y] = view.toScreen(at);
+  return <circle cx={x} cy={y} r={r} className={className} />;
+}
+
+/** A dot at plane point `at`: an iterate or a partial sum. */
+export function Dot({ view, at, className = 'la-dot', r = 5 }) {
+  const [x, y] = view.toScreen(at);
+  return <circle cx={x} cy={y} r={r} className={className} />;
+}
+
 /** The line through `through` along `direction`, across the whole view. */
 export function PlaneLine({ view, through = [0, 0], direction, className }) {
   const reach = 4 * Math.hypot(view.width, view.height) / view.scale;

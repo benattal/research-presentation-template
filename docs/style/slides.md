@@ -79,6 +79,23 @@ space is not used effectively in these slides".
   on a slide runs long.
 - **Every slide has a visual.** An equation-only slide gets a figure or
   larger equations.
+- **Every slide serves a purpose.** The user (2026-11-17): "This light
+  paths slide is also not particularly useful by itself, each slide should
+  serve a purpose." A slide that shows a picture without making a point
+  the talk needs is cut.
+- **The visual shows what the equations say.** The user (2026-11-17): "If
+  you could relate the content & equations more effectively to the visuals
+  that would be good." and "the visuals are again disconnected from the
+  content (this is a theme)". Each equation or label has a counterpart in
+  the visual, drawn in the same color and appearing at the same build
+  step; a part of the visual that nothing on the slide refers to is cut.
+  An own visual beats a borrowed one that makes the idea clunkier ("You
+  don't always need to borrow from existing decks if it makes it clunkier
+  to explain a concept").
+- **Numbers only when the speaker uses them.** The user (2026-11-17): "I
+  think the specific numerical values in many of these demos are
+  unnecessary". A demo shows a value, chart, or readout only when the
+  explanation refers to it.
 - **The visual fills the free space.** Size it to the space under the
   subtitle, with no awkward whitespace; a row of small images becomes a
   grid.
