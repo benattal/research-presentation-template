@@ -18,8 +18,8 @@ import { fluence, patchRadiosity } from '../flatland/transport.js';
 export const STRIP = 30;
 /** Longest bar hanging from a ceiling element, in stage pixels. */
 const BAR = 70;
-/** Colors of the bars: light (a pattern of the elements) and importance (shares of one pixel). */
-export const BAR_COLORS = { light: 'rgba(255, 241, 201, 0.7)', importance: 'rgba(76, 201, 240, 0.8)' };
+/** Colors of the bars: light (a pattern of the elements). */
+export const BAR_COLORS = { light: 'rgba(255, 241, 201, 0.7)' };
 
 /** Per element: its light as a full state vector and its fluence, computed once. */
 export function elementPictures(env) {

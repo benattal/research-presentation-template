@@ -80,29 +80,6 @@
   min-width: 30px;
 }
 
-.optical-angle {
-  min-width: 52px;
-  font-family: var(--font-mono);
-  font-size: 18px;
-  text-align: right;
-}
-
-.optical-count {
-  display: grid;
-  grid-template-columns: auto auto;
-  justify-content: start;
-  gap: 4px 18px;
-  margin: 0;
-  font-size: 20px;
-  color: var(--text-secondary);
-}
-
-.optical-count dd {
-  margin: 0;
-  font-family: var(--font-mono);
-  color: var(--text-primary);
-}
-
 .optical-label {
   margin: 0;
   font-size: 20px;

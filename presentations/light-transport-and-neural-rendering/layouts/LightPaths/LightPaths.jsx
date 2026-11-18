@@ -3,11 +3,24 @@ import { motion } from 'framer-motion';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
 import { ease, useAnimation, useStageCanvas } from '../canvas/canvas.js';
+import EquationStack from '../equations/EquationStack.jsx';
 import { rgba, themeColors } from '../volume/draw.js';
 import './LightPaths.css';
 
-/** The render panel, in stage pixels. */
+/** The scene's drawing area, in panel pixels (the coordinates below). */
 const PANEL = [940, 520];
+/**
+ * The part of the panel shown (the scene without its empty margins), in
+ * panel pixels, and its size on the stage: `scale` stage pixels per panel
+ * pixel, leaving room beside it for the equations.
+ */
+const VIEW = { left: 40, width: 830, scale: 0.9 };
+const VIEW_SIZE = [VIEW.width * VIEW.scale, PANEL[1] * VIEW.scale];
+
+/** Stage position, within the shown panel, of panel point [x, y]. */
+function onStage([x, y]) {
+  return { left: (x - VIEW.left) * VIEW.scale, top: y * VIEW.scale };
+}
 
 /** The scene, a side view in panel pixels: floor (a translucent slab), a wall, a cloud of medium. */
 const FLOOR = { y: 400, x0: 30, x1: 840, depth: 52 };
@@ -188,16 +201,20 @@ function drawScene(ctx, colors, subsurfaceLit) {
  * step (after Nayar et al. 2006, Fig. 2): each step's `path` (direct,
  * interreflection, subsurface, volumetric) is drawn on a dark render of a
  * side view, in addition to the earlier ones, with its short `label`
- * beside it. `equation` sits beside the render; optional `projectorLabel`
+ * beside it. `equations` sit beside the render; optional `projectorLabel`
  * and `cameraLabel` name the devices.
  *
- * Content fields: `title`, `subtitle`, `equation`, `buildSteps` (each
- * `{ path, label }`), optional `projectorLabel`, `cameraLabel`.
+ * Content fields: `title`, `subtitle`, `equations` (EquationStack lines
+ * `{ tex, step? }`), `buildSteps` (each `{ path, label }`), optional
+ * `projectorLabel`, `cameraLabel`.
  */
 export default function LightPaths({ slide, buildStep }) {
   const steps = slide.buildSteps;
   for (const step of steps) {
     if (!PATHS[step.path]) throw new Error(`lightPaths: unknown path "${step.path}"`);
+  }
+  if (!Array.isArray(slide.equations) || slide.equations.some((line) => typeof line.tex !== 'string')) {
+    throw new Error('lightPaths: `equations` must be lines `{ tex, step? }`');
   }
   const shown = steps.slice(0, Math.min(buildStep, steps.length - 1) + 1);
   const [ref, ratio] = useStageCanvas();
@@ -209,7 +226,8 @@ export default function LightPaths({ slide, buildStep }) {
     colorsRef.current ??= themeColors(canvas, COLORS);
     const colors = colorsRef.current;
     const ctx = canvas.getContext('2d');
-    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    const scale = ratio * VIEW.scale;
+    ctx.setTransform(scale, 0, 0, scale, -VIEW.left * scale, 0);
     const newest = shown.length - 1;
     const fraction = (i) => (i === newest ? ease(progress) : 1);
     const subsurface = shown.findIndex((step) => step.path === 'subsurface');
@@ -221,20 +239,20 @@ export default function LightPaths({ slide, buildStep }) {
     <div className="slide--light-paths">
       <SlideTitle title={slide.title} subtitle={slide.subtitle} />
       <div className="light-paths-body">
-        <div className="light-paths-panel" style={{ width: PANEL[0], height: PANEL[1] }}>
+        <div className="light-paths-panel" style={{ width: VIEW_SIZE[0], height: VIEW_SIZE[1] }}>
           <canvas
             ref={ref}
-            width={Math.round(PANEL[0] * ratio)}
-            height={Math.round(PANEL[1] * ratio)}
-            style={{ width: PANEL[0], height: PANEL[1], display: 'block' }}
+            width={Math.round(VIEW_SIZE[0] * ratio)}
+            height={Math.round(VIEW_SIZE[1] * ratio)}
+            style={{ width: VIEW_SIZE[0], height: VIEW_SIZE[1], display: 'block' }}
           />
           {slide.projectorLabel && (
-            <span className="light-paths-device" style={{ left: PROJECTOR[0] - 30, top: PROJECTOR[1] - 54 }}>
+            <span className="light-paths-device" style={onStage([PROJECTOR[0] - 30, PROJECTOR[1] - 54])}>
               <Text>{slide.projectorLabel}</Text>
             </span>
           )}
           {slide.cameraLabel && (
-            <span className="light-paths-device" style={{ left: CAMERA[0] - 40, top: CAMERA[1] + 26 }}>
+            <span className="light-paths-device" style={onStage([CAMERA[0] - 40, CAMERA[1] + 26])}>
               <Text>{slide.cameraLabel}</Text>
             </span>
           )}
@@ -242,7 +260,7 @@ export default function LightPaths({ slide, buildStep }) {
             <motion.span
               key={step.path}
               className={`light-paths-label light-paths-label--${PATHS[step.path].color}`}
-              style={{ left: PATHS[step.path].label[0], top: PATHS[step.path].label[1] }}
+              style={onStage(PATHS[step.path].label)}
               initial={false}
               animate={{ opacity: i < shown.length ? 1 : 0 }}
               transition={{ duration: 0.35, delay: i === shown.length - 1 ? 0.5 : 0 }}
@@ -252,7 +270,7 @@ export default function LightPaths({ slide, buildStep }) {
           ))}
         </div>
         <div className="light-paths-side">
-          <Text>{slide.equation}</Text>
+          <EquationStack lines={slide.equations} step={buildStep} dimEarlier={false} lineClassName="light-paths-equation" />
         </div>
       </div>
     </div>

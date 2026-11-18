@@ -3,7 +3,16 @@
   "sectionLabel": "Operator light transport",
   "title": "Light transport",
   "subtitle": "Light transport is the map from light sources to measurements",
-  "equation": "$c = \\mathbf{T}\\,p$",
+  "equations": [
+    {
+      "tex": "$c = \\mathbf{T}\\,p$",
+      "step": 0
+    },
+    {
+      "tex": "$\\mathbf{T} = C(I + \\htmlClass{term-bounce-1}{A} + \\htmlClass{term-bounce-2}{A^2} + \\htmlClass{term-bounce-3}{\\cdots})E$",
+      "step": 0
+    }
+  ],
   "projectorLabel": "projector $p$",
   "cameraLabel": "camera $c$",
   "buildSteps": [

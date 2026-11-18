@@ -5,7 +5,9 @@
   "subtitle": "A photo under any lighting is a weighted sum of one-light photos",
   "mode": "relight",
   "equations": [
-    "$c = \\mathbf{T}p = \\sum_k p_k \\, \\mathbf{T}_{:,k}$"
+    {
+      "tex": "$c = \\mathbf{T}p = \\sum_k p_k \\, \\mathbf{T}_{:,k}$"
+    }
   ],
   "exposureStep": 1,
   "figure": {
