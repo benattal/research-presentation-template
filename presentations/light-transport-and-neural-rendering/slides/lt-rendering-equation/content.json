@@ -23,16 +23,16 @@
       "step": 3
     },
     {
-      "tex": "$= L_o(\\htmlClass{term-bounce-4}{r(\\mathbf{x}, \\omega_i)}, -\\omega_i)$",
+      "tex": "$= L_o(r(\\mathbf{x}, \\omega_i), -\\omega_i)$",
       "step": 3,
       "continues": true
     },
     {
-      "tex": "$L = \\htmlClass{term-emission}{L_e} + \\htmlClass{term-operator}{S} \\, \\htmlClass{term-bounce-4}{G} \\, L$",
+      "tex": "$L = \\htmlClass{term-emission}{L_e} + \\htmlClass{term-operator}{S} \\, G \\, L$",
       "step": 4
     },
     {
-      "tex": "$x = \\htmlClass{term-emission}{e} + A \\, x, \\quad A = \\htmlClass{term-operator}{S} \\, \\htmlClass{term-bounce-4}{G}$",
+      "tex": "$x = \\htmlClass{term-emission}{e} + A \\, x, \\quad A = \\htmlClass{term-operator}{S} \\, G$",
       "step": 5
     }
   ],

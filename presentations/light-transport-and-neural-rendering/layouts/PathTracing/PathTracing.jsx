@@ -32,8 +32,12 @@ const RAYS_PER_PIXEL = 16;
 const KEPT = 2;
 const SEED = 11;
 
-/** The steps before the path counts: the integral at x, one sampled direction, one random walk. */
-const EXPLANATION = ['integral', 'sample', 'walk'];
+/**
+ * The steps before the path counts: the integral at x, one sampled
+ * direction, the same picture while the slide shows why the sample is
+ * right on average, and one random walk.
+ */
+const EXPLANATION = ['integral', 'sample', 'average', 'walk'];
 /**
  * The seed of the drawn walk from x: it reaches the lamp after three
  * scatterings (x, the red wall, the floor), across the room.
@@ -146,10 +150,12 @@ function drawCameraLabel(ctx, transform) {
 
 /**
  * Path tracing in the flatland room, from the scattering integral to
- * random walks. The first three build steps are at the point x that the
- * measured pixel sees: the incident light over every direction, weighted
+ * random walks. The first four build steps are at the point x imaged by
+ * the measured pixel: the incident light over every direction, weighted
  * by the cosine lobe (the integral); one direction sampled from the lobe
- * and its light (the one-sample estimate); and the walk that repeats the
+ * and its light (the one-sample estimate); the same picture again, for
+ * the step whose line shows why that estimate is right on average (its
+ * `justification`); and the walk that repeats the
  * sampling at every surface it reaches until it finds the lamp, traced from
  * the camera and then lit from the lamp, each ray in the color of the
  * bounce its light is in (e, Ae, A²e, A³e). The steps after them
@@ -159,7 +165,7 @@ function drawCameraLabel(ctx, transform) {
  * room the camera's image from n paths per pixel against the exact image.
  *
  * Content fields: `title`, `subtitle`, `lines` (EquationStack lines for
- * the first three steps), and `buildSteps`: three steps, then one
+ * the first four steps), and `buildSteps`: four steps, then one
  * `{ paths: n }` per count.
  */
 export default function PathTracing({ slide, buildStep }) {
@@ -197,14 +203,14 @@ export default function PathTracing({ slide, buildStep }) {
   );
   const longest = Math.max(1, ...drawn.filter((path) => path.index >= previousPerPixel).map((path) => path.length));
   const animates = fromStep === step - 1 && (stage !== 'paths' || shownPerPixel > previousPerPixel);
-  const duration = { integral: 0, sample: 1400, walk: 3200, paths: n === 1 ? 2400 : 1400 }[stage];
+  const duration = { integral: 0, sample: 1400, average: 0, walk: 3200, paths: n === 1 ? 2400 : 1400 }[stage];
 
   const paintWalk = (ctx, transform, progress) => {
     const { gather, patch, walk } = scene;
     const x = gather.point;
     const moving = fromStep === step - 1 ? progress : 1;
     const span = (a, b) => ease(Math.min(1, Math.max(0, (moving - a) / (b - a))));
-    const fan = { integral: 1, sample: 1 - 0.88 * span(0, 0.3), walk: 0.12 * (1 - span(0, 0.2)) }[stage];
+    const fan = { integral: 1, sample: 1 - 0.88 * span(0, 0.3), average: 0.12, walk: 0.12 * (1 - span(0, 0.2)) }[stage];
     drawIncidentFan(ctx, transform, gather, patch, { gain: scene.gain, weight: 1, alpha: fan });
     const lobe = stage === 'walk' ? 1 - span(0, 0.2) : 1;
     drawCosineLobe(ctx, transform, patch, x, LOBE, { color: SCATTER_COLOR, alpha: lobe, width: 3 });

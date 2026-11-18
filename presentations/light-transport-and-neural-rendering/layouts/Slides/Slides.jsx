@@ -11,6 +11,7 @@ import Text from '@core/stage/Text.jsx';
 import { renderMath } from '@core/stage/math.js';
 import RoomStill from '../flatland/RoomStill.jsx';
 import { TextWithBolt } from './Bolt.jsx';
+import BounceSlices from './BounceSlices.jsx';
 import SeriesPlot from './SeriesPlot.jsx';
 import './Slides.css';
 
@@ -40,9 +41,11 @@ export function LectureTitle({ slide }) {
  * A section divider: `title` (the section's name; a "⚡" in it is drawn as
  * an SVG bolt), `subtitle` (one line on what the section does), and,
  * beside them on the right, one picture of DIVIDER_VISUAL size: a room
- * render (`render`: 'light', 'spot', 'pulse', or 'importance'), an image
- * (`image`, a media item filling the box and cropped to it, credited with
- * the slide's `credits`), or the series plot (`series: true`).
+ * render (`render`: 'light', 'spot', 'pulse', or 'importance'), the
+ * spotlight room in labelled slices by number of bounces (`slices`, see
+ * BounceSlices), an image (`image`, a media item filling the box and
+ * cropped to it, credited with the slide's `credits`), or the series plot
+ * (`series: true`).
  */
 export function SectionTitle({ slide }) {
   const [width, height] = DIVIDER_VISUAL;
@@ -54,6 +57,7 @@ export function SectionTitle({ slide }) {
       </div>
       <div className="section-title-visual" style={{ width, height }}>
         {slide.render && <RoomStill kind={slide.render} width={width} height={height} className="section-title-render" />}
+        {slide.slices && <BounceSlices slices={slide.slices} width={width} height={height} />}
         {slide.image && <img className="section-title-render section-title-image" src={slide.image.src} alt={slide.image.alt ?? ''} />}
         {slide.series && <SeriesPlot width={width} height={height} />}
       </div>

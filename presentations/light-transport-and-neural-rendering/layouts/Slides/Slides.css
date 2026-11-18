@@ -69,6 +69,20 @@
   border-radius: 6px;
 }
 
+/* The room in slices by number of bounces: each slice's label centered under it, below the box. */
+.bounce-slices {
+  position: relative;
+}
+
+.bounce-slices-label {
+  position: absolute;
+  top: calc(100% + 8px);
+  transform: translateX(-50%);
+  font-size: 17px;
+  white-space: nowrap;
+  color: var(--text-secondary);
+}
+
 .series-plot {
   display: block;
   background: var(--bg-elevated);

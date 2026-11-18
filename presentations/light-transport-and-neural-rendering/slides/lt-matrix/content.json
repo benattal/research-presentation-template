@@ -18,11 +18,24 @@
       "step": 0
     },
     {
-      "tex": "$\\phantom{\\mathbf{T}} = C(\\htmlClass{term-emission}{I} + \\htmlClass{term-bounce-1}{A} + \\htmlClass{term-bounce-2}{A^2} + \\htmlClass{term-bounce-3}{\\cdots})E$",
-      "step": 2
+      "tex": "$\\phantom{\\mathbf{T}} = C(\\htmlClass{term-emission}{I}$",
+      "step": 3,
+      "parts": [
+        { "tex": "$+ \\htmlClass{term-bounce-1}{A}$", "step": 3 },
+        { "tex": "$+ \\htmlClass{term-bounce-2}{A^2}$", "step": 4 },
+        { "tex": "$+ \\htmlClass{term-bounce-3}{\\cdots}$", "step": 5 },
+        { "tex": "$)E$", "step": 3 }
+      ]
     }
   ],
   "buildSteps": [
+    {
+      "elements": [
+        3
+      ],
+      "image": false,
+      "label": "$p = \\delta_k$"
+    },
     {
       "elements": [
         3
@@ -32,6 +45,14 @@
       "elements": [
         12
       ]
+    },
+    {
+      "row": 28,
+      "bounces": 1
+    },
+    {
+      "row": 28,
+      "bounces": 2
     },
     {
       "row": 28

@@ -40,10 +40,6 @@
   color: var(--light-0);
 }
 
-.rendering-equation-label--trace {
-  color: var(--light-4);
-}
-
 .rendering-equation-lines {
   gap: 30px;
   font-size: 1.5rem;

@@ -3,5 +3,11 @@
   "sectionLabel": "Operator light transport",
   "title": "Operator light transport",
   "subtitle": "Light between surfaces, written with operators",
-  "render": "spot"
+  "slices": [
+    { "bounces": 0, "label": "0 bounces" },
+    { "bounces": 1, "label": "1 bounce" },
+    { "bounces": 2, "label": "2 bounces" },
+    { "bounces": 3, "label": "3 bounces" },
+    { "label": "all" }
+  ]
 }

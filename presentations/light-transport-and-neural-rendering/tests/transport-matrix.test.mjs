@@ -10,7 +10,9 @@ import { describe, it } from 'node:test';
 import { bouncePatches } from '../layouts/flatland/diffuse.js';
 import { elementEmission, lightElementRoom, oneHot } from '../layouts/flatland/lightElements.js';
 import { ROOM_HEIGHT, ROOM_WIDTH, castRay } from '../layouts/flatland/scene.js';
-import { ROW_BOUNCES, pixelRays, rowPathWeights, rowPaths } from '../layouts/TransportMatrix/columnsAndRows.js';
+import {
+  ROW_BOUNCES, pixelRays, rowPathWeights, rowPaths, rowShares,
+} from '../layouts/TransportMatrix/columnsAndRows.js';
 
 const env = lightElementRoom();
 const { diffuse, elements, camera } = env;
@@ -57,6 +59,20 @@ describe('a row of the light transport matrix', () => {
       }
     });
   }
+
+  it('the shares of a row grow with each term shown, up to the whole entries T_jk', () => {
+    for (const j of ROWS) {
+      const whole = rowShares(env, j, null);
+      let before = elements.map(() => 0);
+      for (let bounces = 0; bounces <= ROW_BOUNCES; bounces += 1) {
+        const shares = rowShares(env, j, bounces);
+        elements.forEach((_, k) => {
+          assert.ok(shares[k] >= before[k] && shares[k] <= whole[k] * (1 + 1e-9), `pixel ${j}, element ${k}, ${bounces} bounces`);
+        });
+        before = shares;
+      }
+    }
+  });
 
   it('the paths up to ROW_BOUNCES carry part of each entry T_jk, never more', () => {
     for (const j of ROWS) {
