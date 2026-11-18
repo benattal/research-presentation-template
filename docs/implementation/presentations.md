@@ -138,8 +138,14 @@ Jarosz").
 
 ## Presenter notes
 
-`notes.md` holds a slide's notes, in Markdown. A slide with build steps can
-add `notes-<step>.md` (0-based) for a step that needs its own notes; every
+`notes.md` holds a slide's notes, in Markdown, with math written as in
+slide text (`$…$` inline, `$$…$$` on its own lines). The presenter window
+finds formulas with the Markdown parser's math extension (remark-math), so
+Markdown escapes and emphasis never reach inside a formula, and renders
+them with the slides' KaTeX options
+(`core/client/presentation/notesMath.js`); `npm run check` reports a
+formula that does not render. A slide with build steps can add
+`notes-<step>.md` (0-based) for a step that needs its own notes; every
 other step shows `notes.md`. Under the development server the presenter
 window can edit notes and saves them to the file that was on screen; saving
 does not reload the audience view.
