@@ -160,7 +160,8 @@ export default function TransientFlatland({ slide, buildStep }) {
             width={CHART[0]}
             height={CHART[1]}
             x={{ min: 0, max: xMax, ticks: ticks.map((v) => ({ value: v, label: String(v) })), label: '$\\tau$ (ns)' }}
-            y={{ min: 0, max: yTop, ticks: [0, yTop / 2, yTop].map((v) => ({ value: v, label: formatTick(v) })), label: 'radiance / ns' }}
+            // The arrival times are what the speaker reads; the radiance needs only its axis, no values.
+            y={{ min: 0, max: yTop, ticks: [], label: 'radiance / ns' }}
             series={[...ghost, ...series]}
             marks={[{ x: ns(shownTime), className: 'transient-cursor' }]}
             onPointer={(value) => setScrubbed(value * METERS_PER_NS)}
@@ -216,8 +217,4 @@ function drawExposure(ctx, factor) {
 function niceCeiling(value) {
   const power = 10 ** Math.floor(Math.log10(value));
   return [1, 2, 2.5, 5, 10].map((m) => m * power).find((v) => v >= value * 0.999);
-}
-
-function formatTick(value) {
-  return value === 0 ? '0' : String(Number(value.toPrecision(2)));
 }

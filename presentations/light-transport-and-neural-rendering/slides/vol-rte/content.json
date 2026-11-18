@@ -11,6 +11,11 @@
     { "process": "emission", "math": "+\\,\\sigma_a L_e", "label": "emission", "className": "term-emission" },
     { "process": "inScattering", "math": "+\\,\\sigma_s \\int f_p\\, L \\, d\\omega'", "label": "in-scattering", "className": "term-bounce-2" }
   ],
+  "definitions": [
+    { "text": "$\\omega$: direction of the ray", "step": 0 },
+    { "text": "$f_p$: phase function", "step": 4 },
+    { "text": "$\\omega'$: incoming direction", "step": 4 }
+  ],
   "absorption": 0.8,
   "scattering": 0.8,
   "buildSteps": [

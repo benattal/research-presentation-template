@@ -58,6 +58,20 @@
   margin: 0;
 }
 
+/* Equations that build up, centered in the column as the display equations are. */
+.quadrature-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-size: 25px;
+  text-align: center;
+  color: var(--text-primary);
+}
+
+.quadrature-lines .math {
+  white-space: nowrap;
+}
+
 .quadrature-remark,
 .quadrature-note {
   font-size: 20px;

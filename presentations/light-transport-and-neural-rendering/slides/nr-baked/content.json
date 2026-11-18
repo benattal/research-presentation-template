@@ -6,7 +6,7 @@
   "lines": [
     {
       "tex": "\\htmlClass{term-learned}{c} = x = (I - A)^{-1}\\, \\htmlClass{term-emission}{e}",
-      "label": "real scene's $A$"
+      "label": "real scene: emission $e$, one bounce $A$"
     },
     {
       "tex": "x = \\htmlClass{term-emission}{e} + \\htmlClass{term-bounce-1}{Ae} + \\htmlClass{term-bounce-2}{A^2 e} + \\htmlClass{term-bounce-3}{A^3 e} + \\cdots",
@@ -14,7 +14,7 @@
     },
     {
       "tex": "x' = (I - A)^{-1}\\, \\htmlClass{term-emission}{e'}",
-      "label": "new light, same $A$"
+      "label": "new emission $e'$, same $A$"
     }
   ],
   "figure": {

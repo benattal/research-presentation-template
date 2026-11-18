@@ -1,33 +1,31 @@
 {
-  "layout": "derivation",
+  "layout": "inverseRendering",
   "sectionLabel": "Neural rendering",
   "title": "Inverse rendering",
   "subtitle": "Rendering inside an optimization loop",
   "lines": [
     {
-      "tex": "\\hat C = \\mathrm{render}(\\htmlClass{term-learned}{\\theta})",
-      "label": "render the scene"
+      "tex": "$\\hat C = \\mathrm{render}(\\htmlClass{term-learned}{\\theta})$",
+      "label": "render"
     },
     {
-      "tex": "\\ell(\\htmlClass{term-learned}{\\theta}) = \\big\\| \\hat C - \\tilde C \\big\\|^2",
-      "label": "compare with measurements $\\tilde C$"
+      "tex": "$\\ell(\\htmlClass{term-learned}{\\theta}) = \\big\\| \\hat C - \\tilde C \\big\\|^2$",
+      "label": "compare with the measurement $\\tilde C$"
     },
     {
-      "tex": "\\htmlClass{term-learned}{\\theta} \\leftarrow \\htmlClass{term-learned}{\\theta} - \\eta\\, \\nabla_{\\theta}\\, \\ell",
-      "label": "update the scene"
+      "tex": "$\\nabla_{\\theta}\\, \\ell$",
+      "rhs": "$2\\, (\\partial_{\\theta} \\hat C)^{\\top} (\\hat C - \\tilde C)$",
+      "label": "gradient"
+    },
+    {
+      "tex": "$\\htmlClass{term-learned}{\\theta} \\leftarrow \\htmlClass{term-learned}{\\theta} - \\eta\\, \\nabla_{\\theta}\\, \\ell$",
+      "label": "update",
+      "step": 4
     }
   ],
-  "figure": {
-    "type": "image",
-    "src": "/slides/nr-inverse/analysis-by-synthesis.jpg",
-    "alt": "Analysis by synthesis: measured images compared with a rendering of material m, and the derivative of the image with respect to the material computed by Monte Carlo rendering",
-    "caption": "Analysis by synthesis",
-    "width": 640,
-    "labels": [
-      "figure's $m$: our $\\theta$"
-    ]
-  },
   "buildSteps": [
+    {},
+    {},
     {},
     {},
     {}
@@ -35,7 +33,7 @@
   "credits": [
     {
       "source": "cmu15468-diffrender",
-      "what": "p. 12"
+      "what": "after pp. 11–12"
     }
   ]
 }

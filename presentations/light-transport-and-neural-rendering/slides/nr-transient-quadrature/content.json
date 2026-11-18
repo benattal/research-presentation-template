@@ -9,7 +9,7 @@
       "tex": "$\\hat C = \\sum_i T_i\\,\\alpha_i\\,L_i$"
     },
     {
-      "label": "source at the camera",
+      "label": "source at the camera; albedo $\\rho_i$",
       "tex": "$L_i = \\rho_i\\,\\dfrac{T_i}{t_i^2}$"
     },
     {
@@ -17,7 +17,7 @@
       "tex": "$m = \\sum_i \\underbrace{T_i^2\\,\\alpha_i\\,\\dfrac{\\rho_i}{t_i^2}}_{w_i}$"
     },
     {
-      "label": "transient",
+      "label": "transient; pulse shape $g$",
       "tex": "$h(\\tau) = \\sum_i w_i\\; \\htmlClass{term-operator}{g\\!\\left(\\tau - \\dfrac{2t_i}{c}\\right)}$"
     }
   ],
