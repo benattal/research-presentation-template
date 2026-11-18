@@ -143,6 +143,39 @@ before changing a slide.
   also not particularly useful by itself, each slide should serve a
   purpose."
 
+## 2026-11-18 06:30 — cycle 1 (a): two of four section passes merged
+
+Merged and pushed (6c7f1ee; the title's six media pushed to R2):
+
+- adjoint and appendix: `adj-derivative` asks $\partial_\theta x \overset{?}{=}$
+  before the answer; `adj-sensitivity` shows $y$ beside $\delta x$;
+  `adj-radiative-backprop`'s Fig. 2 redrawn as three flatland rooms (light
+  with image and reference strips, importance with
+  $\partial\ell/\partial m$, the gradient), credited "after Fig. 2";
+  symbol labels on `adj-quadrature`; notes for all 11 adjoint and 7
+  appendix slides, with six questions and a closing pause.
+- opening and Neumann series: the title as six credited figures (Veach
+  Figs. 11.7 and 11.9, CMU 15-468 lecture 12 p. 19, Malik et al. 2024,
+  TöRF, Flash Cache); `la-divider` shows the 2D updates; `la-fixed-point`
+  without $A$'s entries; `la-spectral` asks $\sum_k A^k b \overset{?}{=}$;
+  `la-apply` retitled "Large systems" and indexed from $x_0 = 0$; the
+  summary in six rows matching the outline; notes for all twelve slides.
+
+Not done, waiting for the user: the agent writing the title's provenance
+lines into `assets/sources/README.md` was refused by its worktree guard;
+the lines are in this session's transcript, to add once the user agrees.
+
+Open questions for the user from these passes: the six title figures and
+captions; "Large systems" for `la-apply`; the summary's subtitle; $v_1$
+on `la-neumann`'s lines; a question step on `la-iteration`; the redrawn
+backprop figure (three images in `public/slides/adj-radiative-backprop/`
+now unused); `lt-radiance`'s "reflected 77%" column; whether six adjoint
+questions are too many; `adj-quadrature`'s two symbol lines;
+`lt-three-point`'s uncolored $S$ and $G$.
+
+Running: the operator light transport and aside pass; the volume and
+neural rendering pass. Next: vetting agents per section (cycle 1 (b)).
+
 ## 2026-11-18 04:00 — the user's section edits merged
 
 Merged into `guest-lecture` and pushed (72bb3e6), each after check, the
