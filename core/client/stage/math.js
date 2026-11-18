@@ -41,9 +41,24 @@ export function splitMath(text) {
   return segments;
 }
 
-/** KaTeX HTML for one formula. Throws on malformed math. */
+/**
+ * Rendered formulas by source, least recently used first. Text re-renders
+ * with its component (an animated layout on every frame, the presenter
+ * window on every update), so KaTeX runs once per formula and repeats are
+ * lookups. Bounded, because a layout may format changing values into TeX.
+ */
+const RENDERED_LIMIT = 1000;
+const rendered = new Map();
+
+/** KaTeX HTML for one formula, cached (see `rendered`). Throws on malformed math. */
 export function renderMath(source, display = false) {
-  return katex.renderToString(source, { ...OPTIONS, displayMode: display });
+  const key = `${display ? 'display' : 'inline'}:${source}`;
+  let html = rendered.get(key);
+  if (html === undefined) html = katex.renderToString(source, { ...OPTIONS, displayMode: display });
+  else rendered.delete(key);
+  rendered.set(key, html);
+  if (rendered.size > RENDERED_LIMIT) rendered.delete(rendered.keys().next().value);
+  return html;
 }
 
 /**
