@@ -12,7 +12,7 @@
       "label": "forward march"
     },
     {
-      "tex": "$$\\htmlClass{term-adjoint}{\\frac{\\partial \\hat C}{\\partial \\sigma_i}} = \\delta_i \\Big( T_{i+1}\\, c_i - \\big(\\hat C - \\hat C_{\\le i}\\big) \\Big)$$",
+      "tex": "$$\\htmlClass{term-derivative}{\\frac{\\partial \\hat C}{\\partial \\sigma_i}} = \\delta_i \\Big( \\htmlClass{term-adjoint}{T_{i+1}}\\, c_i - \\big(\\hat C - \\hat C_{\\le i}\\big) \\Big)$$",
       "label": "$\\hat C - \\hat C_{\\le i}$: color behind sample $i$"
     },
     {

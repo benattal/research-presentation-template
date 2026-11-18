@@ -19,8 +19,8 @@ const SPOT_EXPOSURE = 3;
  * alone (radiance unchanged along the ray); 'diffuse', 'glossy', or
  * 'mirror' adds the light that floor finish scatters once. Beside the
  * render, each step's label, and for each finish, under the heading
- * "reflected", the fraction of the beam's flux the floor reflects (the
- * check: equal for every finish).
+ * "reflected" (shown with the first fraction), the fraction of the beam's
+ * flux the floor reflects (the check: equal for every finish).
  */
 export default function FloorScattering({ slide, buildStep }) {
   const steps = slide.buildSteps;
@@ -32,6 +32,9 @@ export default function FloorScattering({ slide, buildStep }) {
     () => Object.fromEntries(steps.filter((s) => s.floor).map((s) => [s.floor, reflectedFraction(s.floor)])),
     [steps],
   );
+  // The heading shows with the first fraction under it; until then it keeps its place.
+  const firstFraction = steps.findIndex((s) => s.floor);
+  const headed = firstFraction >= 0 && buildStep >= firstFraction;
 
   useEffect(() => {
     const { env, state } = beamPicture(step.floor ?? 'diffuse', Boolean(step.floor));
@@ -63,7 +66,7 @@ export default function FloorScattering({ slide, buildStep }) {
         <ol className="floor-scattering-states">
           <li className="floor-scattering-header">
             <span />
-            <span>reflected</span>
+            <span style={{ visibility: headed ? 'visible' : 'hidden' }}>reflected</span>
           </li>
           {steps.map((s, i) => (
             <li

@@ -52,7 +52,7 @@ export default function VolumeGradient({ slide, buildStep }) {
   const [canvasRef, ratio] = useStageCanvas();
   const marchRef = useRef(1);
   const from = useStepTransition(buildStep);
-  useLayoutEffect(() => setColors(themeColors(canvasRef.current, [...VOLUME_COLORS, 'ink-adjoint'])), [canvasRef]);
+  useLayoutEffect(() => setColors(themeColors(canvasRef.current, [...VOLUME_COLORS, 'ink-derivative'])), [canvasRef]);
 
   const geometry = useMemo(() => figureGeometry(size), [size]);
 
@@ -141,7 +141,7 @@ export default function VolumeGradient({ slide, buildStep }) {
     if (buildStep >= STEP.gradient) {
       const largest = GRADIENT_RANGE * Math.max(...scene.terms.map((term) => Math.abs(term.gradient)));
       const gradient = plotScale(lower, xRange, [-largest, largest]);
-      ctx.fillStyle = rgba(colors['ink-adjoint'], 0.85);
+      ctx.fillStyle = rgba(colors['ink-derivative'], 0.85);
       for (const term of scene.terms) {
         const left = gradient.x(term.start) + 1;
         const width = Math.max(1, gradient.x(term.end) - gradient.x(term.start) - 2);
@@ -200,7 +200,7 @@ export default function VolumeGradient({ slide, buildStep }) {
                 </span>
               )}
               <span
-                className="volume-gradient-label volume-gradient-label--adjoint"
+                className="volume-gradient-label volume-gradient-label--derivative"
                 style={{ top: lower.y + 4, width: geometry.gutter - 12, visibility: buildStep >= STEP.gradient ? 'visible' : 'hidden' }}
               >
                 <Text>{'$\\dfrac{\\partial \\hat C}{\\partial \\sigma_i}$'}</Text>
@@ -212,7 +212,11 @@ export default function VolumeGradient({ slide, buildStep }) {
               >
                 0
               </span>
-              <span className="volume-gradient-axis" style={{ left: geometry.width - 16, top: lower.y + lower.height + 2 }}>
+              {/* The ray coordinate under the gradient plot, from the step that draws it, as its "0". */}
+              <span
+                className="volume-gradient-axis"
+                style={{ left: geometry.width - 16, top: lower.y + lower.height + 2, visibility: buildStep >= STEP.gradient ? 'visible' : 'hidden' }}
+              >
                 <Text>{'$t$'}</Text>
               </span>
             </>

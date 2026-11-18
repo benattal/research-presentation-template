@@ -2,7 +2,7 @@
   "layout": "figureRows",
   "sectionLabel": "Operator light transport",
   "title": "Transport products",
-  "subtitle": "A product with the transport matrix is stored, simulated, or measured",
+  "subtitle": "A product with the transport matrix is precomputed, simulated, or measured",
   "rows": [
     {
       "figures": [
@@ -10,7 +10,7 @@
           "type": "image",
           "src": "/slides/lt-how-to-apply/precomputed-transport.jpg",
           "alt": "A statue relit in real time from precomputed light transport",
-          "caption": "stored",
+          "caption": "precomputed",
           "width": 1.016
         },
         {

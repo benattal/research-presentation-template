@@ -8,6 +8,10 @@ import { CAMERA, ROOM_HEIGHT, ROOM_WIDTH, cameraRay, castRay } from './scene.js'
 
 /** The color importance is drawn in (cyan), per unit luminance. */
 export const IMPORTANCE_TINT = [0.3, 0.79, 0.94];
+/** The color derivatives are drawn in (amber, `--derivative` in theme.css), per unit luminance. */
+export const DERIVATIVE_TINT = [1, 0.784, 0.235];
+/** Palettes other than 'light' (true color): a value's luminance in one tint. */
+const TINTS = { importance: IMPORTANCE_TINT, derivative: DERIVATIVE_TINT };
 
 /**
  * The size of the room render, in stage pixels, on every slide that shows
@@ -28,11 +32,13 @@ function luminance(r, g, b) {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
-/** RGB of a value in the given palette: light keeps its color, importance turns cyan. */
+/** RGB of a value in the given palette: light keeps its color, importance turns cyan, derivatives amber. */
 function paletteColor(palette, r, g, b) {
   if (palette === 'light') return [r, g, b];
+  const tint = TINTS[palette];
+  if (!tint) throw new Error(`Unknown palette "${palette}"`);
   const y = luminance(r, g, b);
-  return [y * IMPORTANCE_TINT[0], y * IMPORTANCE_TINT[1], y * IMPORTANCE_TINT[2]];
+  return [y * tint[0], y * tint[1], y * tint[2]];
 }
 
 /**

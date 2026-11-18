@@ -8,7 +8,8 @@
  * Two palettes with the same meanings:
  *   --light-0 … --light-4   inside renders: emission, then bounce 1, 2, 3, 4+
  *   --ink-light-*           the same roles as text and lines on white
- *   --adjoint / --ink-adjoint   importance, gradients, backward passes
+ *   --adjoint / --ink-adjoint   sensors, importance, backward passes
+ *   --derivative / --ink-derivative   derivatives and gradients
  *   --medium / --ink-medium     participating media, density, transmittance
  *   --learned / --ink-learned   network outputs and measurements
  *
@@ -36,6 +37,7 @@
   --light-3: #ff6b3d;
   --light-4: #e8475f;
   --adjoint: #4cc9f0;
+  --derivative: #ffc83c;
   --medium: #9d7bff;
   --learned: #6ee7b7;
 
@@ -45,6 +47,7 @@
   --ink-light-3: #be123c;
   --ink-light-4: #9f1239;
   --ink-adjoint: #0369a1;
+  --ink-derivative: #a86f00;
   --ink-medium: #6d28d9;
   --ink-learned: #047857;
 
@@ -77,6 +80,7 @@
 .term-bounce-4 { color: var(--ink-light-4); }
 .term-operator { color: var(--ink-light-2); }
 .term-adjoint { color: var(--ink-adjoint); }
+.term-derivative { color: var(--ink-derivative); }
 .term-medium { color: var(--ink-medium); }
 .term-learned { color: var(--ink-learned); }
 .term-muted { color: var(--text-muted); }

@@ -47,8 +47,8 @@
   pointer-events: none;
 }
 
-.volume-gradient-label--adjoint {
-  color: var(--ink-adjoint);
+.volume-gradient-label--derivative {
+  color: var(--ink-derivative);
 }
 
 /* "0" at the gradient plot's zero line, left of its axis, as a tick label. */

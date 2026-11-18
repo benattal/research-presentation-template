@@ -19,7 +19,7 @@
   },
   "columnNote": {
     "lines": [
-      "$\\langle q, x \\rangle = \\langle y, e \\rangle$"
+      "$\\langle \\htmlClass{term-adjoint}{q}, x \\rangle = \\langle \\htmlClass{term-adjoint}{y}, e \\rangle$ · light $x$, emission $e$"
     ],
     "step": 5
   }

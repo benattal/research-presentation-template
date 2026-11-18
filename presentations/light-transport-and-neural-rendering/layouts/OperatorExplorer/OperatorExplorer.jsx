@@ -12,7 +12,7 @@ import {
   SURFACE_GAIN, cachedFluence, derived, sceneGain, subtract,
 } from '../flatland/pictures.js';
 import { ROOM_VIEW, drawRoom } from '../flatland/render.js';
-import { fluence, patchRadiosity, propagate, propagateAdjoint } from '../flatland/transport.js';
+import { fluence, patchRadiosity, propagate } from '../flatland/transport.js';
 import {
   DIRECTIONS, addFrame, allowedOperations, applyOperator, bounceTerms, frameTex, scriptedFrames,
   sourceFrame, termClass, termTex,
@@ -48,8 +48,29 @@ function mix(...pairs) {
 }
 
 /**
+ * Importance leaving its surfaces (a 'leaving' state such as Sᵀq, indexed
+ * at the end of each ray where it leaves), drawn along the rays it travels
+ * back by, within `extent` room units of those surfaces.
+ */
+function leavingFluence(env, state, extent) {
+  return derived(state, `leaving-fluence:${extent}`, () => fluence(env.table, state, extent, { from: 'destination', at: 'destination' }));
+}
+
+/**
+ * The importance an 'arriving' frame travelled from: the leaving state that
+ * Gᵀ (or Aᵀ = GᵀSᵀ, through its Sᵀ) propagated; null for a source or a sum.
+ */
+function leftFrom(frame, env) {
+  if (frame.op === 'G') return frame.from.state;
+  if (frame.op === 'A') return derived(frame.from.state, 'apply-S', () => applyOperator(env.transport, frame.from, 'S')).state;
+  return null;
+}
+
+/**
  * What a frame looks like once its animation has finished: the light in
- * the room (fluence) and the glow of each surface.
+ * the room (fluence) and the glow of each surface. Light that has just
+ * travelled (G) is drawn along its rays from the state it left, and so is
+ * importance (Gᵀ): each ray shows the value at the surface it left.
  */
 function settledPicture(frame, env, fullRays) {
   const { table, transport, sensor } = env;
@@ -68,6 +89,8 @@ function settledPicture(frame, env, fullRays) {
     };
   }
   if (frame.kind === 'arriving') {
+    const travelled = leftFrom(frame, env);
+    if (travelled) return { fluence: leavingFluence(env, travelled, Infinity), surfaces: radiosity(frame.state) };
     const direct = frame.terms.includes('');
     const rays = direct ? derived(frame.state, 'without-sensor', () => subtract(frame.state, sensor)) : frame.state;
     return {
@@ -75,9 +98,8 @@ function settledPicture(frame, env, fullRays) {
       surfaces: radiosity(frame.state),
     };
   }
-  const rays = derived(frame.state, 'propagated', () => propagateAdjoint(transport, frame.state));
   return {
-    fluence: cachedFluence(table, rays, fullRays ? Infinity : LEAVING, 'destination'),
+    fluence: leavingFluence(env, frame.state, fullRays ? Infinity : LEAVING),
     surfaces: radiosity(frame.state),
   };
 }
@@ -85,8 +107,7 @@ function settledPicture(frame, env, fullRays) {
 /** Light (or importance) of `frame` growing out of its surfaces, `distance` room units so far. */
 function growingFluence(frame, env, distance) {
   if (frame.direction === 'forward') return fluence(env.table, frame.state, distance, { from: 'source' });
-  const rays = derived(frame.state, 'propagated', () => propagateAdjoint(env.transport, frame.state));
-  return fluence(env.table, rays, distance, { from: 'destination' });
+  return fluence(env.table, frame.state, distance, { from: 'destination', at: 'destination' });
 }
 
 /** Scattering: the old light fades while surfaces change color, then the new light leaves them. */
@@ -115,7 +136,7 @@ function propagatePicture(frame, progress, env) {
     };
   }
   return {
-    fluence: fluence(table, frame.state, reach, { from: 'destination', pulse }),
+    fluence: fluence(table, before.state, reach, { from: 'destination', at: 'destination', pulse }),
     surfaces: mix([radiosity(before.state), 1 - 0.5 * progress], [radiosity(frame.state), progress]),
   };
 }

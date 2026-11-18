@@ -1,9 +1,8 @@
-Transition: the memory slide ended with two ways to differentiate a renderer. Automatic differentiation stores every intermediate value of the forward pass; the adjoint method recomputes them instead. This section derives the adjoint method for light transport.
+Transition: this section derives, for light transport, the adjoint method named on the memory slide.
 
-The problem: inverse rendering needs the derivative of each measurement with respect to every scene parameter, and a scene can have millions of parameters. The result of the section: all of these derivatives cost one extra solve of the same transport equation, with the transposed operator $A^\top$, whatever the number of parameters.
+- Step 1: Every derivative of a pixel, for millions of scene parameters, costs one extra transport solve, with the transposed operator. The picture is its solution for one pixel, called importance.
 
-The picture shows the solution of that transposed equation, called importance, drawn in cyan. It leaves one camera pixel and spreads through the room along the same rays as light.
+Remember: one extra solve gives all the derivatives of a pixel.
 
-The bolt refers to the title of the paper the section ends with: Nimier-David et al., SIGGRAPH 2020, "Radiative backpropagation: an adjoint method for lightning-fast differentiable rendering".
-
-The sentence to remember: gradients of light transport cost one extra transport solve.
+If asked:
+- What is the bolt in the title? It refers to the paper the section ends with, Nimier-David et al., SIGGRAPH 2020: "Radiative backpropagation: an adjoint method for lightning-fast differentiable rendering".

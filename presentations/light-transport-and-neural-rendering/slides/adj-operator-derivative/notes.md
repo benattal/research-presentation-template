@@ -1,10 +1,9 @@
-Transition: the new source $(\partial_\theta A)\, x$ needs the derivative of the operator. One bounce is $A = SG$: propagation $G$ maps the light leaving each surface to the light arriving at the surfaces it reaches, and scattering $S$ maps arriving light to reflected light by each surface's BRDF. By the product rule, $\partial_\theta A = (\partial_\theta S)\, G + S\, (\partial_\theta G)$ (the line at the top): one term for materials and one for geometry.
+Transition: the new source needs the derivative of one bounce, $A = SG$: propagation $G$, then scattering $S$. By the product rule, $\partial_\theta A = (\partial_\theta S)\, G + S\, (\partial_\theta G)$, the line at the top: one term for materials and one for geometry.
 
-- Step 1, a material: $\theta$ is the red wall's albedo. Only $S$ changes, so $(\partial_\theta A)\, x = (\partial_\theta S)\, G\, x$: the light arriving at the wall, $Gx$, reflected by the change of its albedo. It is the source of the last slide, drawn the same way.
-- Step 2, geometry: $\theta$ is the box's position. Moving the box changes $G$, because it changes which surfaces are visible from each other. The render shows how the direct light changes when the box moves right: warm where light is gained, blue where it is lost. The change lies along the box's sides and the edges of its shadow. This is the largest part of $S\, (\partial_\theta G)\, x$.
+- Step 1: A material: $\theta$ is the red wall's albedo. Only scattering changes, so the source is $(\partial_\theta S)\, G\, x$: the light arriving at the wall, reflected by the change of its albedo. It is the source of the last slide.
+- Step 2: Geometry: $\theta$ is the box's position. Moving the box changes propagation, because it changes which points are visible from each other. The render shows how the direct light changes when the box moves right: amber where light is gained, red where it is lost. The change lies along the box's sides and the edges of its shadow. This is the largest part of $S\, (\partial_\theta G)\, x$.
 
-The sentence to remember: a material parameter changes scattering, and a geometric parameter changes visibility.
+Remember: a material changes scattering $S$, and geometry changes visibility, in propagation $G$.
 
-The question it invites: which term is harder to compute? The geometry term. Visibility jumps from 1 to 0 across a shadow edge, so its derivative is concentrated on the edges. A Monte Carlo sample almost never lies exactly on an edge, so differentiating a renderer's samples one by one misses this term. Differentiable renderers include it with methods designed for it: sampling the edges, or reparameterizing the integral. The rest of the section uses material parameters.
-
-Next: the derivatives of one pixel with respect to every parameter at once.
+If asked:
+- Which term is harder to compute? The geometry term. Visibility jumps from 1 to 0 across a shadow edge, so its derivative is concentrated on the edges. A Monte Carlo sample almost never lies exactly on an edge, so differentiating each sample misses this term. Differentiable renderers sample the edges, or reparameterize the integral. The rest of the section uses material parameters.

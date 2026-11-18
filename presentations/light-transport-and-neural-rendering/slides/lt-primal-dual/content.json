@@ -25,6 +25,7 @@
       "step": 2
     }
   ],
+  "align": "bottom",
   "buildSteps": [
     {},
     {},

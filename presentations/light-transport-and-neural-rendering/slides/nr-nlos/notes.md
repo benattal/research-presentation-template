@@ -1,12 +1,9 @@
-Appendix slide, for a question about what else time-resolved measurements give. It follows the transient slides of the neural rendering section.
+Transition: an appendix slide, for a question about what else time-resolved measurements contain. Light that bounces off a wall, a hidden object, and the wall again arrives later than the direct reflection, and its arrival time gives the length of its path.
 
-Time-resolved measurements contain more than depth. Light that bounces off a wall, then off a hidden object, then back off the wall arrives later than the direct reflection, and the length of its path follows from its arrival time.
+- Step 1: Left, the setup: points on a visible wall are scanned with a pulsed laser, and the photons returning to each point are timed with a single-photon detector, a confocal setup. The bunny is hidden behind the occluder. Right, a different hidden object, a retroreflective mannequin measured with the real system: its measurements as a video, then its reconstructed shape. With confocal scanning, the reconstruction has a closed form, the light-cone transform, far cheaper than earlier methods.
 
-- Left: the setup. A pulsed laser scans points on a visible wall, and a single-photon detector records, at the same point (confocal), when photons return. The bunny is hidden behind the occluder.
-- Right: the measurements, played back as a video, show light returning to the wall from the hidden object, and the reconstruction shows its shape. The video is a different hidden object from the bunny of the illustration: a retroreflective mannequin, measured with the real system (its title, "Retroreflective Mannequin Measurements", and the caption say so).
+Remember: three-bounce light, resolved in time, contains the geometry of objects outside the line of sight.
 
-With confocal scanning (O'Toole et al., Nature 2018), the reconstruction has a closed form, the light-cone transform, which needs far less computation and memory than earlier methods.
-
-The sentence to remember: three-bounce light, resolved in time, contains the geometry of objects outside the line of sight.
-
-Illustration and video from the project page of O'Toole, Lindell, and Wetzstein, Nature 2018.
+If asked:
+- Cheaper in what? In computation and memory.
+- Where are the pictures from? The project page of O'Toole, Lindell, and Wetzstein, Nature 2018.
