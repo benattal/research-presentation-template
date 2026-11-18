@@ -8,7 +8,10 @@ import './GeometricSeries.css';
 const PANEL = [560, 440];
 /** Terms of the partial-sum plot, k = 0 … TERMS. */
 const TERMS = 30;
-/** Partial sums beyond this size leave the partial-sum plot, with their terms. */
+/**
+ * Partial sums beyond this size set no range on the partial-sum plot:
+ * they are marks on its edge, and their terms are not drawn.
+ */
 const CAP = 40;
 /** The a axis of the Taylor plot, and its value axis. */
 const A_RANGE = [-1.5, 1.5];
@@ -40,7 +43,8 @@ function partialSum(a, k) {
  * which agree with it for |a| < 1 and leave it outside; the marker is the
  * chosen a, with the values S_k(a) on it. Right: those values against k,
  * each term a^k drawn as the step from S_{k−1} to S_k (in the ink of term
- * k), and the limit 1/(1 − a) when |a| < 1. Build steps `{ a }` set a; a
+ * k), and the limit 1/(1 − a) when |a| < 1; a sum past the plot's range
+ * is a triangle on its edge, pointing out. Build steps `{ a }` set a; a
  * slider changes it.
  */
 export default function GeometricSeries({ slide, buildStep }) {
@@ -61,12 +65,12 @@ function SeriesPanels({ initial }) {
   const ks = Array.from({ length: TERMS + 1 }, (_, k) => k);
   const sums = ks.map((k) => partialSum(a, k));
 
-  // A term is drawn with its partial sum only while both of its ends lie inside the plot.
-  const inside = (value) => Math.abs(value) <= CAP;
-  const shown = ks.filter((k) => inside(sums[k]) && (k === 0 || inside(sums[k - 1])));
-  const visible = [...shown.map((k) => sums[k]), ...(converges ? [limit] : [])];
+  // The plot's range fits the sums up to CAP in size and the limit; a term is drawn while both of its ends lie in it.
+  const visible = [...sums.filter((value) => Math.abs(value) <= CAP), ...(converges ? [limit] : [])];
   const lo = Math.min(0, ...visible);
   const hi = Math.max(1, ...visible) * 1.08;
+  const inRange = (value) => value >= lo && value <= hi;
+  const shown = ks.filter((k) => inRange(sums[k]) && (k === 0 || inRange(sums[k - 1])));
   const step = niceStep(hi - lo);
   const ticks = [];
   for (let v = Math.ceil(lo / step) * step; v <= hi + 1e-9; v += step) ticks.push({ value: v, label: String(Number(v.toFixed(2))) });
@@ -110,7 +114,7 @@ function SeriesPanels({ initial }) {
           series={[
             ...(converges ? [{ points: [[-0.5, limit], [TERMS + 0.5, limit]], kind: 'line', className: 'geometric-limit-line', dashed: true }] : []),
             { points: shown.map((k) => [k, k === 0 ? 0 : sums[k - 1], sums[k]]), kind: 'stems', className: 'geometric-terms', style: (k) => ({ stroke: `var(--ink-light-${Math.min(k, 4)})` }) },
-            { points: shown.map((k) => [k, sums[k]]), kind: 'dots', className: 'geometric-sums', radius: 4 },
+            { points: ks.map((k) => [k, sums[k]]), kind: 'dots', className: 'geometric-sums', radius: 4, edges: true },
           ]}
         />
       </div>

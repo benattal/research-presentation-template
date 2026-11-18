@@ -37,18 +37,36 @@ export function fitView(points, width, height, pad = 48) {
   return { width, height, scale, toScreen, toPlane, bounds };
 }
 
-/** Size of the plane on the Neumann series and spectral slides, in stage pixels. */
-const EIGEN_PLANE = [680, 520];
+/**
+ * Size of the plane on the fixed-point, Neumann series, and spectral
+ * slides, in stage pixels. With the equation column beside it
+ * (`.la-plane-equations` in linearAlgebra.css, 480 px) it fits the deck's
+ * 1168 px content width, at its right edge, so the plane sits in the same
+ * place on the three slides.
+ */
+const EXAMPLE_PLANE = [640, 520];
 
 /**
- * The one view of the Neumann series and spectral slides, so their
- * picture stays in place between them: it fits the origin, `b`,
- * (I − A)^{-1} b, and b's components along the eigenvectors `basis` before
- * and after (I − A)^{-1}, for the matrix with eigenvalues `lambda`.
+ * The one view of the section's example on the fixed-point, Neumann
+ * series, and spectral slides, so their picture stays in place between
+ * them: it fits the origin, `b`, (I − A)^{-1} b, and b's components along
+ * the eigenvectors `basis` before and after (I − A)^{-1}, for the matrix
+ * with eigenvalues `lambda`. A slide that draws other points checks them
+ * with `assertInView`.
  */
-export function eigenPlaneView(basis, lambda, b) {
+export function examplePlaneView(basis, lambda, b) {
   const { parts, limits } = eigenParts(basis, lambda, b);
-  return fitView([[0, 0], b, solve(spectralMatrix(basis, lambda), b), ...parts, ...limits], ...EIGEN_PLANE, 56);
+  return fitView([[0, 0], b, solve(spectralMatrix(basis, lambda), b), ...parts, ...limits], ...EXAMPLE_PLANE, 56);
+}
+
+/** Throws unless every plane point of `points` lies in `view`, at least `margin` stage pixels from its edges; `what` names them in the error. */
+export function assertInView(view, points, what, margin = 24) {
+  points.forEach((point) => {
+    const [x, y] = view.toScreen(point);
+    if (x < margin || x > view.width - margin || y < margin || y > view.height - margin) {
+      throw new Error(`${what}: the point (${point.map((v) => v.toFixed(2)).join(', ')}) leaves the plane`);
+    }
+  });
 }
 
 /** An arrow from `from` to `to` (plane points), drawn without a head when shorter than the head. */

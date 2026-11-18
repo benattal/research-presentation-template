@@ -1,5 +1,6 @@
-Question to the class: what is $(I - A)\,S_k$? Give them a moment to multiply it out. If they need a hint: what is $(1 - a)(1 + a + \cdots + a^k)$ for a number $a$?
+- Step 2: Only the left side, $(I - A)S_k$, with a question mark over the equals sign.
 
-Answer: $(I - A)S_k = S_k - AS_k = (I + A + \cdots + A^k) - (A + \cdots + A^k + A^{k+1}) = I - A^{k+1}$. Each power from $A$ to $A^k$ appears once with each sign and cancels; only $I$ and $-A^{k+1}$ remain. It is the identity $(1 - a)(1 + a + \cdots + a^k) = 1 - a^{k+1}$ for a number $a$, with the matrix $A$ in its place. The products commute because every term is a power of the same $A$.
+Stop (planned), at step 2: what is $(I - A)S_k$? Give them a moment to multiply it out. If they need a hint, ask for $(1 - a)(1 + a + \cdots + a^k)$ with a number $a$. Answer: $I - A^{k+1}$. In $S_k - AS_k$, every power from $A$ to $A^k$ appears once with each sign and cancels.
 
-Next click: the answer, with the cancellation written under it, and its counterpart in the picture, the next term $A^{k+1}b$ dashed from $S_k b$.
+If asked:
+- Why does the identity for a number carry over to the matrix? Every term is a power of the same $A$, so all the products commute.

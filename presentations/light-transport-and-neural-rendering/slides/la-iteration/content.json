@@ -6,9 +6,9 @@
   "eigenvectors": [[2, 1], [-1, 2]],
   "lambda": [0.8, 0.3],
   "b": [0, 1],
-  "update": "$x_{k+1} = \\htmlClass{term-emission}{b} + \\htmlClass{term-bounce-1}{A x_k}$",
+  "update": "$x_0 = 0, \\quad x_{k+1} = \\htmlClass{term-emission}{b} + \\htmlClass{term-bounce-1}{A x_k}$",
   "series": "$x_{k+1} = \\htmlClass{term-emission}{b} + \\htmlClass{term-bounce-1}{Ab} + \\cdots + A^k b$",
-  "takeaway": "$x_k \\to (I - A)^{-1} b$, using only products $Av$",
+  "takeaway": "$x_k \\to (I - A)^{-1} b$ if the spectral radius $\\rho(A) < 1$",
   "buildSteps": [
     { "k": 1 },
     { "k": 2 },

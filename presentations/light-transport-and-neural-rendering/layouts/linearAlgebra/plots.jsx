@@ -146,11 +146,26 @@ function axisScale({ min, max, log }, from, to) {
 }
 
 /**
+ * A triangle of size `r` (stage pixels) on the plot edge at height `edge`
+ * and `cx` across, pointing up out of the plot (`up`) or down out of it:
+ * a dot whose value lies past that edge.
+ */
+function EdgeMark({ cx, edge, up, r }) {
+  const out = up ? -1 : 1;
+  const tip = edge + out * 1.5 * r;
+  const base = edge - out * 0.5 * r;
+  return <polygon points={`${cx},${tip} ${cx - 1.1 * r},${base} ${cx + 1.1 * r},${base}`} />;
+}
+
+/**
  * A plot with thin axes. `x` and `y` are axes `{ min, max, log?, ticks:
  * [{ value, label }], label? }`. `series` are `{ points: [[x, y]], kind:
- * 'line' | 'dots' | 'stems', className, dashed?, radius? }`, clipped to the
- * axes; stems are vertical segments `[x, y0, y1]`. `notes` are labels at
- * data coordinates: `{ x, y, text, className?, dx?, dy?, align? }`.
+ * 'line' | 'dots' | 'stems', className, dashed?, radius?, edges? }`,
+ * clipped to the axes; stems are vertical segments `[x, y0, y1]`. A dots
+ * series with `edges: true` draws a dot above or below the y range as a
+ * triangle on that edge, pointing out of the plot, so a sequence that
+ * leaves the plot does not seem to stop. `notes` are labels at data
+ * coordinates: `{ x, y, text, className?, dx?, dy?, align? }`.
  */
 export function Plot({ width, height, x, y, series, notes = [] }) {
   const margin = { left: 64, right: 16, top: 30, bottom: 48 };
@@ -198,9 +213,14 @@ export function Plot({ width, height, x, y, series, notes = [] }) {
             }
             const points = s.points.filter(([px, py]) => valid(px, py));
             if (s.kind === 'dots') {
+              const r = s.radius ?? 4.5;
+              const past = ([px, py]) => px >= x.min && px <= x.max && (py > y.max || py < y.min);
               return (
                 <g key={index} className={s.className}>
-                  {points.filter(([px, py]) => inside(px, py)).map(([px, py], k) => <circle key={k} cx={sx(px)} cy={sy(py)} r={s.radius ?? 4.5} />)}
+                  {points.filter(([px, py]) => inside(px, py)).map(([px, py], k) => <circle key={k} cx={sx(px)} cy={sy(py)} r={r} />)}
+                  {s.edges && points.filter(past).map(([px, py], k) => (
+                    <EdgeMark key={`edge${k}`} cx={sx(px)} edge={sy(py > y.max ? y.max : y.min)} up={py > y.max} r={r} />
+                  ))}
                 </g>
               );
             }
