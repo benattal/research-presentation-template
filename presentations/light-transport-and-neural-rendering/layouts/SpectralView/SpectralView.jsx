@@ -5,7 +5,7 @@ import { seriesTerms, solve } from '../linearAlgebra/linear.js';
 import { eigenParts, normalize, spectralMatrix } from '../linearAlgebra/plane.js';
 import { useStepProgress } from '../linearAlgebra/useStepProgress.js';
 import VectorPlane, {
-  Arrow, Dot, PlaneLine, Ring, TermPath, eigenPlaneView, labelBeside, labelFits, lineLabel, revealTerms, sideOf, termInk,
+  Arrow, Dot, PlaneLine, Ring, TermPath, examplePlaneView, labelBeside, labelFits, lineLabel, revealTerms, sideOf, termInk,
 } from '../linearAlgebra/VectorPlane.jsx';
 import './SpectralView.css';
 
@@ -32,8 +32,9 @@ const LIMIT_LABEL = [96, 56];
  * the 2D path b, Ab, A²b, … of the Neumann series slide (faded); and the
  * limits c_i / (1 − λ_i) v_i (ticks), whose parallelogram closes at
  * (I − A)^{-1} b (the ring). A step's new marks grow or fade in when the
- * slide moves forward to it. The view is the Neumann series slide's
- * (`eigenPlaneView`).
+ * slide moves forward to it. The view is the section's
+ * (`examplePlaneView`), shared with the fixed-point and Neumann series
+ * slides.
  *
  * Slide data: `eigenvectors` [v1, v2], `lambda` [λ1, λ2] (each |λ_i| < 1),
  * `b`; `equations`, the lines of an `EquationStack` with the step each
@@ -67,7 +68,7 @@ export default function SpectralView({ slide, buildStep }) {
   const b = slide.b;
   const solution = solve(A, b);
   const { parts, limits } = eigenParts(basis, slide.lambda, b);
-  const view = eigenPlaneView(basis, slide.lambda, b);
+  const view = examplePlaneView(basis, slide.lambda, b);
   const series = parts.map((part, i) => Array.from({ length: SERIES_TERMS }, (_, j) => part.map((value) => value * slide.lambda[i] ** j)));
   const shownTerms = 1 + (SERIES_TERMS - 1) * ease(arriving('series'));
 
@@ -81,13 +82,15 @@ export default function SpectralView({ slide, buildStep }) {
   }
   if (reached('series')) labels.push({ at: solution, text: '$(I - A)^{-1} b$', dx: 78, dy: 0 });
   if (reached('limits')) {
-    // Beside the limit away from the parallelogram or, where that leaves the view, in the corner past it.
+    // The first placement that fits in the view: beside the limit, away from the parallelogram; in the
+    // corner past the limit; or away from the parallelogram, as far out along the line as fits.
     limits.forEach((limit, i) => {
       const text = `$\\dfrac{c_${i + 1}}{1 - \\lambda_${i + 1}}\\, v_${i + 1}$`;
       const away = -sideOf(basis[i], solution);
-      const options = { distance: Math.hypot(...limit), size: LIMIT_LABEL };
-      const beside = lineLabel(view, basis[i], text, { ...options, side: away });
-      labels.push(labelFits(view, beside) ? beside : lineLabel(view, basis[i], text, { ...options, side: -away, beyond: true }));
+      const distance = Math.hypot(...limit);
+      const placements = [{ side: away, distance }, { side: -away, distance, beyond: true }, { side: away }]
+        .map((placement) => lineLabel(view, basis[i], text, { ...placement, size: LIMIT_LABEL }));
+      labels.push(placements.find((label) => labelFits(view, label)) ?? placements.at(-1));
     });
   }
 
@@ -105,8 +108,8 @@ export default function SpectralView({ slide, buildStep }) {
   return (
     <div className="slide--spectral">
       <SlideTitle title={slide.title} subtitle={slide.subtitle} />
-      <div className="spectral-body">
-        <div className="spectral-equations">
+      <div className="la-plane-body">
+        <div className="la-plane-equations">
           <EquationStack
             lines={slide.equations}
             step={buildStep}

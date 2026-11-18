@@ -7,11 +7,10 @@ import { fixedPointIterates, multiply, solve } from '../linearAlgebra/linear.js'
 import { normalize, spectralMatrix } from '../linearAlgebra/plane.js';
 import { useStepProgress } from '../linearAlgebra/useStepProgress.js';
 import VectorPlane, {
-  Arrow, Dot, FixedPointUpdates, Ring, fitView, updateProgress,
+  Arrow, Dot, FixedPointUpdates, Ring, assertInView, examplePlaneView, updateProgress,
 } from '../linearAlgebra/VectorPlane.jsx';
 import './FixedPoint.css';
 
-const PLANE = [600, 520];
 /** Stage pixels from the tip of x within which a press starts dragging it. */
 const GRAB = 24;
 const SHOWS = ['source', 'trial', 'solution', 'prompt', 'iterate'];
@@ -32,7 +31,9 @@ const ITERATE_LABEL = { dx: 24, dy: 6 };
  * each drawn as the trial's construction, and the iterates (dots) reach
  * the ring. Beside the plane, `given` (the line naming A and b), then the
  * slide's equations, one more per build step. From the trial step on,
- * dragging the tip of x (x_0) moves it; the iterates follow at once.
+ * dragging the tip of x (x_0) moves it; the iterates follow at once. The
+ * view is the section's (`examplePlaneView`), shared with the Neumann
+ * series and spectral slides; the trial and its iterates must lie in it.
  *
  * Slide data: `eigenvectors` and `lambda` define A (as on the Neumann
  * series slides), `b` is in plain coordinates, `trial` is the trial x and
@@ -53,22 +54,20 @@ export default function FixedPoint({ slide, buildStep }) {
   // In the top component, which stays mounted across steps, so the updates play on the step change.
   const progress = useStepProgress(buildStep, step.show === 'iterate' ? step.updates * UPDATE_SECONDS * 1000 : 0);
 
-  const A = spectralMatrix(slide.eigenvectors.map(normalize), slide.lambda);
+  const basis = slide.eigenvectors.map(normalize);
+  const A = spectralMatrix(basis, slide.lambda);
   const b = slide.b;
   const solution = solve(A, b);
-  const image = (x) => {
-    const Ax = multiply(A, x);
-    return [b[0] + Ax[0], b[1] + Ax[1]];
-  };
-  // One view for every step, so the picture does not jump between clicks.
+  // The section's view on every step, so the picture stays in place between clicks and on the next slides.
+  const view = examplePlaneView(basis, slide.lambda, b);
   const updates = Math.max(1, ...steps.map((s) => s.updates ?? 0));
-  const view = fitView([[0, 0], b, solution, image(slide.trial), ...fixedPointIterates(A, b, slide.trial, updates)], ...PLANE, 64);
+  assertInView(view, fixedPointIterates(A, b, slide.trial, updates), 'fixedPoint: the trial x and its iterates');
 
   return (
     <div className="slide--fixed-point">
       <SlideTitle title={slide.title} subtitle={slide.subtitle} />
-      <div className="fixed-point-body">
-        <div className="fixed-point-equations">
+      <div className="la-plane-body">
+        <div className="la-plane-equations">
           <div className="fixed-point-data">
             <Text>{slide.given}</Text>
           </div>

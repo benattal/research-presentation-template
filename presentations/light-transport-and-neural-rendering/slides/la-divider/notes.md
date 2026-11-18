@@ -1,9 +1,8 @@
-Before any physics, plain linear algebra. The goal of this section is to solve a linear system $(I - A)x = b$, for a square matrix $A$ and a vector $b$, without ever forming $(I - A)^{-1}$.
+Transition: Before any physics, plain linear algebra.
 
-The picture is where the section ends up: starting from $x = 0$, the updates $x \leftarrow b + Ax$ step toward the solution, the ring. Each update costs one product with $A$.
+- Step 1: The goal: solve $(I - A)x = b$ for a square matrix $A$, using only products with $A$. The picture is where we end up: from $x = 0$, the updates $x \leftarrow b + Ax$ reach the solution, the ring.
 
-The next four slides: the system as a fixed point, the Neumann series, why the series converges (with eigenvectors), and why the updates compute it.
+Remember: a linear system can be solved using only products with its matrix.
 
-To remember: we want to solve $(I - A)x = b$ using only products with $A$.
-
-If asked why we would avoid the inverse: in light transport, $A$ has a row and a column for every surface point and direction, so it is far too large to store or invert. What we can do is apply it to a vector, by tracing one bounce of light.
+If asked:
+- Why avoid the inverse? In light transport, $A$ has a row and a column for every surface point and direction, far too many to store or invert. Applying $A$ to a vector is possible: it is one bounce of light.

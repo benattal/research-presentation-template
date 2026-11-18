@@ -1,19 +1,13 @@
-For questions about the Neumann series: the same series for one number instead of a matrix.
+Transition: For questions about the Neumann series: the same series for a number instead of a matrix.
 
-- For a number $a$, $\frac{1}{1-a}$ is the inverse of $1 - a$.
-- Its Taylor series at 0 is $1 + a + a^2 + \cdots$: the $k$-th derivative of $\frac{1}{1-a}$ at 0 is $k!$, so every coefficient is 1.
-- It converges because $(1 - a)(1 + a + \cdots + a^k) = 1 - a^{k+1}$, and $a^{k+1} \to 0$ exactly when $|a| < 1$. The Neumann series slide uses the same identity with the matrix $A$ in place of $a$.
-- Left: $\frac{1}{1-a}$ (black) and the Taylor polynomials $S_k(a) = 1 + a + \cdots + a^k$ (grey, degrees 1 to 20). Between the dashed lines, where $|a| < 1$, they approach the curve as $k$ grows; outside, they move away from it. The vertical line is the chosen $a$; its dots are $S_0(a), S_1(a), \ldots$
-- Right: the same partial sums against $k$. Each bar is one term $a^k$; the dashed line is the limit.
-- The error after $k + 1$ terms is $\frac{1}{1-a} - S_k = \frac{a^{k+1}}{1-a}$: for $a$ close to 1 it is large and falls slowly.
+- Step 1: $a = 0.5$. Left: $\frac{1}{1-a}$ in black, and its Taylor polynomials $S_k(a) = 1 + a + \cdots + a^k$ in grey. Between the dashed lines, where $|a| < 1$, they approach the curve as $k$ grows. Right: the partial sums at this $a$ against $k$. Each bar is one term $a^k$, and the dashed line is the limit, 2.
+- Step 2: $a = 0.9$: the limit is 10, and the sums approach it slowly.
+- Step 3: $a = -0.8$: the terms alternate in sign, and the sums oscillate around the limit, about 0.56.
+- Step 4: $a = 1.05$: the terms grow, and the sums have no limit. The triangles on the top edge are sums above the plot. The slider sets any $a$ from −1.2 to 1.2.
 
-Clicks, one value of $a$ each:
+Remember: the series converges when $|a| < 1$, and slowly when $|a|$ is close to 1. For a matrix, its eigenvalues play the role of $a$.
 
-1. $a = 0.5$: the limit is 2, and $S_6$ is within 1% of it.
-2. $a = 0.9$: the limit is 10, and only $S_{43}$ is within 1% of it.
-3. $a = -0.8$: the terms alternate in sign, and the sums oscillate around $\frac{1}{1.8} \approx 0.56$.
-4. $a = 1.05$: the terms grow, and the sums have no limit.
-
-To remember: the series converges when $|a| < 1$, and slowly when $|a|$ is close to 1. For a matrix, the eigenvalues play the role of $a$.
-
-The slider sets any $a$ between −1.2 and 1.2.
+If asked:
+- Why is every coefficient 1? The $k$-th derivative of $\frac{1}{1-a}$ at 0 is $k!$.
+- Why does it converge? $(1 - a)(1 + a + \cdots + a^k) = 1 - a^{k+1}$, and $a^{k+1} \to 0$ exactly when $|a| < 1$. The Neumann series slide uses the same identity, with the matrix $A$ in place of $a$.
+- How fast? After $k + 1$ terms the error is $\frac{a^{k+1}}{1-a}$. At $a = 0.5$, $S_6$ is within 1% of the limit; at $a = 0.9$, only $S_{43}$ is.

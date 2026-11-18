@@ -67,7 +67,8 @@
   stroke-linecap: butt;
 }
 
-.geometric-sums circle {
+.geometric-sums circle,
+.geometric-sums polygon {
   fill: var(--text-primary);
 }
 

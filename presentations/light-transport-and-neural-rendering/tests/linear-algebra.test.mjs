@@ -126,6 +126,15 @@ describe('the example matrix of the slides', () => {
     [[0.7, 0.2], [0.2, 0.4]].forEach((row, i) => row.forEach((value, j) => close(A[i][j], value, 1e-12, `(${i}, ${j})`)));
   });
 
+  it('the trial x of the fixed-point slide lies off both eigenvectors, so Ax is not drawn parallel to x', () => {
+    const { slide } = slides[0];
+    const A = spectralMatrix(slide.eigenvectors.map(normalize), slide.lambda);
+    const x = slide.trial;
+    const Ax = multiply(A, x);
+    const degrees = Math.abs(Math.atan2(Ax[1], Ax[0]) - Math.atan2(x[1], x[0])) * 180 / Math.PI;
+    assert.ok(degrees > 10, `x and Ax are ${degrees.toFixed(1)}° apart`);
+  });
+
   it('the iterates of the fixed-point slide end close to the solution', () => {
     const { slide } = slides[0];
     const A = spectralMatrix(slide.eigenvectors.map(normalize), slide.lambda);

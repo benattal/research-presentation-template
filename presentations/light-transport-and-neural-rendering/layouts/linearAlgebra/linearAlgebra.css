@@ -54,6 +54,28 @@
   text-align: center;
 }
 
+/* The fixed-point, Neumann series, and spectral slides: their equations
+   in a 480 px column on the left, the plane (examplePlaneView, 640 px
+   wide) at the right edge of the deck's 1168 px content width, so the
+   plane sits in the same place on the three slides. Top-aligned, so the
+   equations start at the same height on each. */
+.la-plane-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex: 1;
+  min-height: 0;
+}
+
+.la-plane-equations {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 30px;
+  width: 480px;
+  padding-top: 16px;
+}
+
 /* The plane: vectors as arrows on a faint grid. */
 .la-plane {
   position: relative;

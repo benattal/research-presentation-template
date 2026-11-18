@@ -5,7 +5,7 @@ import { seriesTerms, solve } from '../linearAlgebra/linear.js';
 import { normalize, spectralMatrix } from '../linearAlgebra/plane.js';
 import { useStepProgress } from '../linearAlgebra/useStepProgress.js';
 import VectorPlane, {
-  Dot, PlaneLine, Ring, TermPath, eigenPlaneView, labelBeside, lineLabel, pathEnd, revealTerms, sideOf, termInk,
+  Dot, PlaneLine, Ring, TermPath, examplePlaneView, labelBeside, lineLabel, pathEnd, revealTerms, sideOf, termInk,
 } from '../linearAlgebra/VectorPlane.jsx';
 import './NeumannSeries.css';
 
@@ -27,9 +27,11 @@ const LONGEST_MS = 1800;
  * ring). Beside it, the slide's equations, each with its counterpart in
  * the picture: S_k b; the next term A^{k+1} b dashed from S_k b's tip (the
  * residual b − (I − A) S_k b); more terms, shrinking, with the eigenvector
- * lines and their eigenvalues; and the path reaching the ring. A step's new
- * terms grow in when the slide moves forward to it. The view is the
- * spectral slide's (`eigenPlaneView`).
+ * lines and their eigenvalues; and the path reaching the ring. The dot and
+ * the dashed term are labelled with the step's k (S_2 b, A^3 b), so each
+ * step names the partial sum it draws. A step's new terms grow in when the
+ * slide moves forward to it. The view is the section's
+ * (`examplePlaneView`), shared with the fixed-point and spectral slides.
  *
  * Slide data: `eigenvectors` [v1, v2], `lambda` [λ1, λ2], `b`; `equations`,
  * the lines of an `EquationStack` with the step each appears at (a line
@@ -60,7 +62,7 @@ export default function NeumannSeries({ slide, buildStep }) {
   const A = spectralMatrix(basis, slide.lambda);
   const b = slide.b;
   const solution = solve(A, b);
-  const view = eigenPlaneView(basis, slide.lambda, b);
+  const view = examplePlaneView(basis, slide.lambda, b);
   const terms = seriesTerms(A, b, ALL_TERMS + 1);
   const shown = count(previous) + added * ease(progress);
   const drawn = revealTerms(terms, shown);
@@ -72,10 +74,10 @@ export default function NeumannSeries({ slide, buildStep }) {
   const labels = TERM_LABELS.slice(0, Math.floor(shown)).map((name, j) => (
     labelBeside(view, pathEnd(terms.slice(0, j)), pathEnd(terms.slice(0, j + 1)), `$${name}$`, { side: 1, offset: 26, className: termInk(j) })
   ));
-  if (step.k !== 'all') labels.push({ at: end, text: '$S_k b$', dx: 30, dy: 22 });
+  if (step.k !== 'all') labels.push({ at: end, text: `$S_{${step.k}} b$`, dx: 30, dy: 22 });
   if (step.next && next === 1) {
     const reach = [end[0] + nextTerm[0], end[1] + nextTerm[1]];
-    labels.push(labelBeside(view, end, reach, '$A^{k+1} b$', { side: 1, offset: 28, className: termInk(step.k + 1) }));
+    labels.push(labelBeside(view, end, reach, `$A^{${step.k + 1}} b$`, { side: 1, offset: 28, className: termInk(step.k + 1) }));
   }
   if (step.eigenvalues) {
     basis.forEach((v, i) => labels.push(lineLabel(view, v, `$\\lambda_${i + 1} = ${slide.lambda[i]}$`, {
@@ -87,8 +89,8 @@ export default function NeumannSeries({ slide, buildStep }) {
   return (
     <div className="slide--neumann">
       <SlideTitle title={slide.title} subtitle={slide.subtitle} />
-      <div className="neumann-body">
-        <div className="neumann-equations">
+      <div className="la-plane-body">
+        <div className="la-plane-equations">
           <EquationStack
             lines={slide.equations}
             step={buildStep}

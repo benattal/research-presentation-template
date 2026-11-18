@@ -1,9 +1,10 @@
-The remaining updates: on both planes the iterates reach the ring. The line under them is the section's result: $x_k \to (I - A)^{-1}b$, and each update costs one product $Av$. Neither $(I - A)^{-1}$ nor $A$ as a stored array is needed: a function that returns $Av$ for any $v$ is enough. In the next section, that function is one bounce of light.
+- Step 4: The remaining updates reach the ring on both planes. The line under them is the section's result: $x_k \to (I - A)^{-1}b$ when the spectral radius of $A$ is below 1. Each update costs one matrix–vector product. So we never need $(I - A)^{-1}$, or even $A$ stored as an array: a function that applies $A$ to a vector is enough. In the next section, light satisfies this fixed-point equation, with the source $b$ written as $e$, the emitted light.
 
-To remember: iterating $x \leftarrow b + Ax$ from 0 sums the Neumann series, one term per product $Av$, and converges to $(I - A)^{-1}b$ when $\rho(A) < 1$.
+Remember: from $x_0 = 0$, iterating $x \leftarrow b + Ax$ sums the Neumann series, one term per matrix–vector product, and converges to $(I - A)^{-1}b$ when $\rho(A) < 1$.
 
-Pause here for questions on the section before moving on to light. Questions that may come up:
+Pause for questions, at step 4, on the section. To start: does the starting point matter? Answer: not for the limit. From any $x_0$, $x_k = b + Ab + \cdots + A^{k-1}b + A^k x_0$, and $A^k x_0 \to 0$; the fixed-point slide started away from 0 and still reached the ring.
 
-- How many updates are needed? The error after $k$ updates is the tail of the series, $A^k b + A^{k+1} b + \cdots$, so it falls like $\rho(A)^k$: about $\log(1/\varepsilon) / \log(1/\rho(A))$ updates for a relative error $\varepsilon$. With any norm, $\|x - x_k\| \le \frac{\|A\|^k}{1 - \|A\|}\|b\|$, which needs only $\|A\|$ (the appendix slide "Large systems" shows this bound on a system with $10^6$ unknowns).
-- Why not a faster solver, such as GMRES? It also needs only products $Av$, and for the same number of products its residual is never larger: it minimizes the residual over every combination of $b, Ab, \ldots, A^{k-1}b$, and the iterate $x_k$ is one of them. In light transport, the plain iteration has a physical meaning, one bounce of light per update, and its sum is what path tracing estimates with random samples.
+If asked:
+- How many updates are needed? The error after $k$ updates is the tail of the series, $A^k b + A^{k+1} b + \cdots$, so it falls like $\rho(A)^k$. With any norm, $\|x - x_k\| \le \frac{\|A\|^k}{1 - \|A\|}\|b\|$. The appendix slide "Large systems" shows this bound with a million unknowns.
+- Why not a faster solver, such as GMRES? GMRES also needs only products with $A$, and for the same number of them its residual is never larger. But in light transport, each product with $A$ is a noisy Monte Carlo estimate, and $x$ is never stored. Krylov methods such as GMRES need stored basis vectors and exact inner products. Path tracing estimates the sum of the series one pixel at a time.
 - What if $\rho(A)$ is close to 1? Convergence is slow: a scene of white, highly reflective surfaces needs many bounces.
