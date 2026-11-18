@@ -30,6 +30,38 @@
   color: var(--text-secondary);
 }
 
+/* The title slide's figures: rows of three, each media filling its box, a short caption under it. */
+.lecture-title-figures {
+  display: grid;
+  column-gap: 32px;
+  row-gap: 14px;
+}
+
+.lecture-title-figure {
+  margin: 0;
+}
+
+.lecture-title-media {
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--render-bg);
+}
+
+.lecture-title-media img,
+.lecture-title-media video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.lecture-title-figure figcaption {
+  margin-top: 6px;
+  text-align: center;
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+}
+
 /* Section dividers: text on the left and a picture on the right, both
    centered vertically, so the title sits at the same height on every
    divider. */
@@ -69,29 +101,11 @@
   border-radius: 6px;
 }
 
-.series-plot {
-  display: block;
+/* The Neumann series divider's plane, on the light panel the outline's picture uses. */
+.section-title-plane {
+  overflow: hidden;
   background: var(--bg-elevated);
   border-radius: 6px;
-}
-
-.series-plot-limit {
-  stroke: var(--text-muted);
-  stroke-dasharray: 6 6;
-}
-
-.series-plot-axis {
-  stroke: var(--border-light);
-}
-
-.series-plot-term {
-  stroke: var(--ink-light-2);
-  stroke-width: 3;
-  opacity: 0.5;
-}
-
-.series-plot-dot {
-  fill: var(--ink-light-2);
 }
 
 /* Figures fill the area under the title. */

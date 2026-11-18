@@ -103,13 +103,18 @@ describe('the example matrix of the slides', () => {
   const read = (id) => JSON.parse(readFileSync(new URL(`../slides/${id}/content.json`, import.meta.url), 'utf8'));
   const slides = ['la-fixed-point', 'la-neumann', 'la-spectral', 'la-iteration'].map((id) => ({ id, slide: read(id) }));
 
-  it('is the same A and b on every plane slide and in the outline', () => {
+  it('is the same A and b on every plane slide, the divider, the outline, and the summary', () => {
     const [first, ...rest] = slides;
     assert.deepEqual(first.slide.lambda, [0.8, 0.3]);
     assert.deepEqual(first.slide.b, [0, 1]);
-    const outline = read('roadmap').sections.find((section) => section.iterates);
-    assert.ok(outline, 'the outline draws the Neumann series iterates');
-    [...rest, { id: 'roadmap', slide: outline.iterates }].forEach(({ id, slide }) => {
+    const divider = read('la-divider').iterates;
+    assert.ok(divider, 'the divider draws the Neumann series iterates');
+    const pictures = ['roadmap', 'summary'].map((id) => {
+      const row = read(id).sections.find((section) => section.iterates);
+      assert.ok(row, `${id} draws the Neumann series iterates`);
+      return { id, slide: row.iterates };
+    });
+    [...rest, { id: 'la-divider', slide: divider }, ...pictures].forEach(({ id, slide }) => {
       assert.deepEqual(slide.eigenvectors, first.slide.eigenvectors, `${id} eigenvectors`);
       assert.deepEqual(slide.lambda, first.slide.lambda, `${id} lambda`);
       assert.deepEqual(slide.b, first.slide.b, `${id} b`);
@@ -150,9 +155,11 @@ describe('iteration on a large sparse matrix', () => {
     for (let i = 1; i < offsets.length - 1; i += 1) close(x[i], (offsets[i] === 0 ? 1 : 0) + Ax[i], 1e-12, `i = ${offsets[i]}`);
   });
 
-  it('the error after k steps is within ‖A‖^{k+1}‖b‖/(1 − ‖A‖), with ‖A‖_∞ = 0.9', () => {
+  it('the error of x_k from x_0 = 0 is within ‖A‖^k‖b‖/(1 − ‖A‖), with ‖A‖_∞ = 0.9', () => {
+    assert.equal(errors.length, count + 1);
+    close(errors[0], chainSolution(weight, [0])[0], 1e-12, 'x_0 = 0: the error is ‖x‖');
     errors.forEach((error, k) => assert.ok(error <= errorBound(2 * weight, 1, k), `k = ${k}: ${error} vs ${errorBound(2 * weight, 1, k)}`));
-    assert.ok(errors[60] < 1e-3, `k = 60: ${errors[60]}`);
+    assert.ok(errors[count] < 1e-3, `k = ${count}: ${errors[count]}`);
   });
 
   it('the iterates agree with the dense direct solve on a chain long enough', () => {

@@ -10,28 +10,51 @@ import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
 import { renderMath } from '@core/stage/math.js';
 import RoomStill from '../flatland/RoomStill.jsx';
+import IterationPicture from '../linearAlgebra/IterationPicture.jsx';
 import { TextWithBolt } from './Bolt.jsx';
-import SeriesPlot from './SeriesPlot.jsx';
 import './Slides.css';
 
 /** Size of the title slide's room render, in stage pixels: the room's size on the slides that show it. */
 const TITLE_RENDER = [800, 480];
+/** Size of each title slide figure, in stage pixels (16 : 9): two rows of three fill the width under the title. */
+const TITLE_FIGURE = [368, 207];
 /** Size of a divider's picture, in stage pixels (5 : 3, as the room), the same on every divider. */
 const DIVIDER_VISUAL = [480, 288];
+/** Updates drawn in a divider's picture of x ← b + Ax, and the sizes of its marks at the divider's size. */
+const DIVIDER_UPDATES = 12;
+const DIVIDER_MARKS = { width: 2.5, head: 12, dot: 4, ring: 8 };
 
 /**
  * The title slide (also the closing "Questions" slide): `title`, on one
  * line, and `subtitle` (the speaker line, optional), centered, with a
- * render of the room (`render`, default 'light') centered below them.
+ * picture centered below them: either `figures`, media items each with a
+ * short `caption`, in rows of three of TITLE_FIGURE size (each filled
+ * and cropped to it, credited with the slide's `credits`), or a render of
+ * the room (`render`, default 'light').
  */
 export function LectureTitle({ slide }) {
+  if (slide.figures && slide.figures.some((figure) => !figure.caption)) {
+    throw new Error('lectureTitle: every figure needs a "caption"');
+  }
+  const [width, height] = TITLE_FIGURE;
   return (
     <div className="slide--lecture-title">
       <div className="lecture-title-text">
         <h1><Text>{slide.title}</Text></h1>
         {slide.subtitle && <p><Text>{slide.subtitle}</Text></p>}
       </div>
-      <RoomStill kind={slide.render ?? 'light'} width={TITLE_RENDER[0]} height={TITLE_RENDER[1]} className="lecture-title-render" />
+      {slide.figures ? (
+        <div className="lecture-title-figures" style={{ gridTemplateColumns: `repeat(3, ${width}px)` }}>
+          {slide.figures.map((figure) => (
+            <figure key={figure.src} className="lecture-title-figure">
+              <div className="lecture-title-media" style={{ width, height }}><Media item={figure} /></div>
+              <figcaption><Text>{figure.caption}</Text></figcaption>
+            </figure>
+          ))}
+        </div>
+      ) : (
+        <RoomStill kind={slide.render ?? 'light'} width={TITLE_RENDER[0]} height={TITLE_RENDER[1]} className="lecture-title-render" />
+      )}
     </div>
   );
 }
@@ -42,7 +65,8 @@ export function LectureTitle({ slide }) {
  * beside them on the right, one picture of DIVIDER_VISUAL size: a room
  * render (`render`: 'light', 'spot', 'pulse', or 'importance'), an image
  * (`image`, a media item filling the box and cropped to it, credited with
- * the slide's `credits`), or the series plot (`series: true`).
+ * the slide's `credits`), or the Neumann series section's updates
+ * x ← b + Ax on its example (`iterates`: `eigenvectors`, `lambda`, `b`).
  */
 export function SectionTitle({ slide }) {
   const [width, height] = DIVIDER_VISUAL;
@@ -55,7 +79,17 @@ export function SectionTitle({ slide }) {
       <div className="section-title-visual" style={{ width, height }}>
         {slide.render && <RoomStill kind={slide.render} width={width} height={height} className="section-title-render" />}
         {slide.image && <img className="section-title-render section-title-image" src={slide.image.src} alt={slide.image.alt ?? ''} />}
-        {slide.series && <SeriesPlot width={width} height={height} />}
+        {slide.iterates && (
+          <IterationPicture
+            example={slide.iterates}
+            width={width}
+            height={height}
+            updates={DIVIDER_UPDATES}
+            marks={DIVIDER_MARKS}
+            pad={28}
+            className="section-title-plane"
+          />
+        )}
       </div>
     </div>
   );

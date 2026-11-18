@@ -5,19 +5,28 @@
   "subtitle": "What to take away",
   "sections": [
     {
-      "title": "Light transport",
-      "subtitle": "A linear fixed-point problem, solved by summing bounces",
+      "title": "Neumann series",
+      "subtitle": "A linear system is solved by repeated matrix–vector products",
+      "iterates": {
+        "eigenvectors": [[2, 1], [-1, 2]],
+        "lambda": [0.8, 0.3],
+        "b": [0, 1]
+      }
+    },
+    {
+      "title": "Operator light transport",
+      "subtitle": "Global illumination is the sum of all bounces of light",
       "render": "light"
     },
     {
       "title": "Aside: computational imaging",
-      "subtitle": "Light transport can be measured and probed optically",
+      "subtitle": "Light transport can be measured and probed with projectors and cameras",
       "image": "/slides/summary/coded-photo.jpg",
       "aside": true
     },
     {
       "title": "Volume rendering",
-      "subtitle": "One operator equation for surfaces and participating media",
+      "subtitle": "Light in a medium has the same fixed-point form as between surfaces",
       "image": "/slides/summary/fog.jpg"
     },
     {
@@ -27,11 +36,12 @@
     },
     {
       "title": "Adjoint light transport ⚡",
-      "subtitle": "All gradients for the cost of one extra transport solve",
+      "subtitle": "All gradients together cost one extra transport solve",
       "render": "importance"
     }
   ],
   "buildSteps": [
+    {},
     {},
     {},
     {},

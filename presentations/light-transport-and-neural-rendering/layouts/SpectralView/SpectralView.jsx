@@ -36,19 +36,31 @@ const LIMIT_LABEL = [96, 56];
  * (`eigenPlaneView`).
  *
  * Slide data: `eigenvectors` [v1, v2], `lambda` [λ1, λ2] (each |λ_i| < 1),
- * `b`; build steps `{ show, equation }` with `show` one of eigenvectors,
- * components, series, limits, in that order.
+ * `b`; `equations`, the lines of an `EquationStack` with the step each
+ * appears at (a line may reveal its right side a step later); build steps
+ * `{ show }` with `show` one of eigenvectors, components, series, limits,
+ * in that order. A show may repeat on the next step, which keeps the
+ * picture while an equation asks its question.
  */
 export default function SpectralView({ slide, buildStep }) {
   const steps = slide.buildSteps;
   steps.forEach((s, i) => {
-    if (SHOWS.indexOf(s.show) !== i) throw new Error(`spectralView: step ${i + 1} must show "${SHOWS[i]}"`);
+    const index = SHOWS.indexOf(s.show);
+    const before = i === 0 ? -1 : SHOWS.indexOf(steps[i - 1].show);
+    if (index < 0 || !(index === before + 1 || (i > 0 && index === before))) {
+      throw new Error(`spectralView: step ${i + 1} shows "${s.show}"; the steps show ${SHOWS.join(', ')} in order, each once or twice in a row`);
+    }
   });
+  if (!Array.isArray(slide.equations) || slide.equations.some((line) => !Number.isInteger(line.step))) {
+    throw new Error('spectralView: the slide needs "equations", each line with its "step"');
+  }
   const shows = steps[buildStep].show;
+  const shownBefore = buildStep > 0 ? steps[buildStep - 1].show : null;
   const reached = (name) => SHOWS.indexOf(shows) >= SHOWS.indexOf(name);
-  const progress = useStepProgress(buildStep, { eigenvectors: 0, components: FADE_MS, series: SERIES_MS, limits: FADE_MS }[shows]);
+  const durations = { eigenvectors: 0, components: FADE_MS, series: SERIES_MS, limits: FADE_MS };
+  const progress = useStepProgress(buildStep, shows === shownBefore ? 0 : durations[shows]);
   // The marks a step adds come in with `progress`; earlier steps' marks stay whole.
-  const arriving = (name) => (shows === name ? progress : 1);
+  const arriving = (name) => (shows === name && shownBefore !== name ? progress : 1);
 
   const basis = slide.eigenvectors.map(normalize);
   const A = spectralMatrix(basis, slide.lambda);
@@ -96,7 +108,7 @@ export default function SpectralView({ slide, buildStep }) {
       <div className="spectral-body">
         <div className="spectral-equations">
           <EquationStack
-            lines={steps.map((s) => ({ tex: s.equation }))}
+            lines={slide.equations}
             step={buildStep}
             className="spectral-stack"
             lineClassName="spectral-equation"

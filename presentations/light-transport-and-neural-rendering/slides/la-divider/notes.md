@@ -1,3 +1,9 @@
-Before any physics, the equation as plain linear algebra, $x = b + Ax$: $x$ is a vector, $b$ a source vector, and $A$ a matrix with $\rho(A) < 1$.
+Before any physics, plain linear algebra. The goal of this section is to solve a linear system $(I - A)x = b$, for a square matrix $A$ and a vector $b$, without ever forming $(I - A)^{-1}$.
 
-The picture is the partial sums of the geometric series $1 + a + a^2 + \cdots$ for $a = 0.8$, rising to the limit $\frac{1}{1-a} = 5$ (dashed): the series this section extends from numbers to matrices.
+The picture is where the section ends up: starting from $x = 0$, the updates $x \leftarrow b + Ax$ step toward the solution, the ring. Each update costs one product with $A$.
+
+The next four slides: the system as a fixed point, the Neumann series, why the series converges (with eigenvectors), and why the updates compute it.
+
+To remember: we want to solve $(I - A)x = b$ using only products with $A$.
+
+If asked why we would avoid the inverse: in light transport, $A$ has a row and a column for every surface point and direction, so it is far too large to store or invert. What we can do is apply it to a vector, by tracing one bounce of light.

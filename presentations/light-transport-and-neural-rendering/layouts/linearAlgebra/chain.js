@@ -47,27 +47,29 @@ export function chainSolution(weight, offsets) {
 }
 
 /**
- * The error ‖x − x_k‖_∞ of each iterate x_k = b + Ab + … + A^k b for
- * k = 0 … terms.length − 1. Beyond the window x_k is zero and x falls with
- * |i|, so the largest error lies inside the window.
+ * The error ‖x − x_k‖_∞ of each iterate of x_{k+1} = b + A x_k from
+ * x_0 = 0, x_k = b + Ab + … + A^{k−1} b, for k = 0 … terms.length (x_0 = 0
+ * has error ‖x‖_∞). Beyond the window x_k is zero and x falls with |i|, so
+ * the largest error lies inside the window.
  */
 export function chainErrors(terms, weight) {
   const half = (terms[0].length - 1) / 2;
   const offsets = Array.from(terms[0], (_, index) => index - half);
   const x = chainSolution(weight, offsets);
   const sum = new Float64Array(terms[0].length);
-  return terms.map((term) => {
-    let error = 0;
-    for (let i = 0; i < sum.length; i += 1) {
-      sum[i] += term[i];
-      error = Math.max(error, Math.abs(x[i] - sum[i]));
-    }
-    return error;
-  });
+  const largest = () => sum.reduce((error, value, i) => Math.max(error, Math.abs(x[i] - value)), 0);
+  return [largest(), ...terms.map((term) => {
+    term.forEach((value, i) => { sum[i] += value; });
+    return largest();
+  })];
 }
 
-/** The bound ‖x − x_k‖ ≤ ‖A‖^{k+1} ‖b‖ / (1 − ‖A‖), for ‖A‖ < 1. */
+/**
+ * The bound ‖x − x_k‖ ≤ ‖A‖^k ‖b‖ / (1 − ‖A‖) on the iterate x_k of
+ * x_{k+1} = b + A x_k from x_0 = 0, for ‖A‖ < 1: x − x_k is the series'
+ * tail A^k b + A^{k+1} b + ….
+ */
 export function errorBound(normA, normB, k) {
   if (!(normA < 1)) throw new Error('errorBound: needs ‖A‖ < 1');
-  return normA ** (k + 1) * normB / (1 - normA);
+  return normA ** k * normB / (1 - normA);
 }

@@ -3,5 +3,9 @@
   "sectionLabel": "Neumann series",
   "title": "Neumann series",
   "subtitle": "Solving linear equations with a power series",
-  "series": true
+  "iterates": {
+    "eigenvectors": [[2, 1], [-1, 2]],
+    "lambda": [0.8, 0.3],
+    "b": [0, 1]
+  }
 }
