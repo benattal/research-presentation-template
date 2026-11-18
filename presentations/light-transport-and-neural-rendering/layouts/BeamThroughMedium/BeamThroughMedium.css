@@ -27,6 +27,18 @@
   white-space: nowrap;
 }
 
+/* The left side's label, wider than its math, hangs under it without widening the column. */
+.beam-term--lhs {
+  align-items: flex-start;
+}
+
+.beam-term--lhs .beam-term-label {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 4px);
+  color: var(--text-secondary);
+}
+
 /* A zero-width slot (its flex gap cancelled) that holds the 0 over the first term's place. */
 .beam-zero-slot {
   position: relative;
@@ -90,40 +102,21 @@
   opacity: 0.35;
 }
 
-.beam-slider-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-}
-
-.beam-slider-value {
-  font-size: 20px;
-  font-variant-numeric: tabular-nums;
-  color: var(--text-secondary);
-}
-
 .beam-slider input {
   width: 100%;
   accent-color: var(--ink-medium);
 }
 
-.beam-check {
-  display: grid;
-  grid-template-columns: auto auto;
-  justify-content: start;
-  align-items: baseline;
-  column-gap: 18px;
-  row-gap: 8px;
+.beam-transmittance {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   margin-top: 10px;
-  font-size: 20px;
-}
-
-.beam-check-label {
-  color: var(--text-muted);
-}
-
-.beam-check-value {
-  font-size: 22px;
-  font-variant-numeric: tabular-nums;
+  font-size: 24px;
   color: var(--text-primary);
+}
+
+.beam-transmittance-label {
+  font-size: 18px;
+  color: var(--text-muted);
 }

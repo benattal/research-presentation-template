@@ -7,8 +7,9 @@
   "coreDensity": 0.8,
   "pixel": 8,
   "assumptions": [
-    "$\\sigma_s = 0$: $A = 0$, $x = b$",
-    "$\\sigma_t = \\sigma_a = \\sigma$, $L_e = c$, $L(0) = C$"
+    "no scattering: $\\sigma_s = 0$, $x = b$",
+    "density $\\sigma = \\sigma_a$, color $c = L_e$",
+    "pixel color $C = L(0)$"
   ],
   "equations": [
     "$$C = \\int_0^d T(t)\\,\\sigma(t)\\,c(t)\\,dt$$",

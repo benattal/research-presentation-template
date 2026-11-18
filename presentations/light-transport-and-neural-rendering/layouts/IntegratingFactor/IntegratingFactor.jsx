@@ -7,7 +7,7 @@ import {
 } from '../volume/draw.js';
 import EquationLines from '../volume/EquationLines.jsx';
 import { useFigureSize } from '../volume/figure.js';
-import { solveTransfer, transferIntegral } from '../volume/ray.js';
+import { solveTransfer } from '../volume/ray.js';
 import { drawRayStrip } from '../volume/rayStrip.js';
 import './IntegratingFactor.css';
 
@@ -41,23 +41,20 @@ function figureGeometry({ width, height }) {
  * The transport operator D = ω·∇ + σₜ inverted along a ray by its
  * integrating factor: the derivation, one line per build step, beside a
  * ray from the camera to a lamp through a bump of medium. The strip shows the light travelling to the
- * camera, L(t); the plot shows σₜ(t) and the transmittance T(t). The check
- * compares L(0) from stepping the ODE with the integrating factor's formula.
+ * camera, L(t), from stepping the ODE (it agrees with the integrating
+ * factor's formula: tests/volume.test.mjs); the plot shows σₜ(t) and the
+ * transmittance T(t).
  *
- * Each build step is `{ label, equation, check? }`, shown with every
- * earlier one; the check appears from the step marked `check: true`. The
- * transmittance curve appears from the second step. Drag the bump's handle
- * to move it (horizontally) and change its height (vertically).
+ * Each build step is `{ label, equation }`, shown with every earlier one.
+ * The transmittance curve appears from the second step. Drag the bump's
+ * handle to move it (horizontally) and change its height (vertically).
  */
 export default function IntegratingFactor({ slide, buildStep }) {
   const lines = slide.buildSteps;
   if (!lines?.every((line) => typeof line.equation === 'string')) {
     throw new Error(`integratingFactor: every build step of "${slide.id}" needs an "equation"`);
   }
-  const checkStep = lines.findIndex((line) => line.check);
-  if (checkStep < 0) throw new Error(`integratingFactor: one build step of "${slide.id}" needs "check": true`);
   const showTransmittance = buildStep >= 1;
-  const showCheck = buildStep >= checkStep;
 
   const [bump, setBump] = useState({ center: 0.55, height: 6 });
   const [colors, setColors] = useState(null);
@@ -90,8 +87,6 @@ export default function IntegratingFactor({ slide, buildStep }) {
       density: t.map(density),
       transmittance,
       radiance: t.map((value) => stepped.radiance[Math.round((value / DEPTH) * 2000)]),
-      stepped: stepped.radiance[0],
-      formula: transferIntegral(ray, 20000).radiance,
     };
   }, [bump]);
 
@@ -158,12 +153,6 @@ export default function IntegratingFactor({ slide, buildStep }) {
       <div className="integrating-body">
         <div className="integrating-derivation">
           <EquationLines lines={lines} buildStep={buildStep} />
-          <div className="integrating-check" style={{ visibility: showCheck ? 'visible' : 'hidden' }}>
-            <span className="integrating-check-label">ODE solver</span>
-            <span className="integrating-check-value">{solution.stepped.toFixed(4)}</span>
-            <span className="integrating-check-label">formula</span>
-            <span className="integrating-check-value">{solution.formula.toFixed(4)}</span>
-          </div>
         </div>
         <div className="integrating-figure" ref={figureRef} data-no-swipe>
           <canvas

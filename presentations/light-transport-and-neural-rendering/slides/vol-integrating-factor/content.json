@@ -6,7 +6,7 @@
   "buildSteps": [
     {
       "label": "Along one ray, $DL = KL + Q$",
-      "equation": "$$-\\frac{dL}{dt} + \\sigma_t L = KL + Q$$"
+      "equation": "$$-\\frac{dL}{dt} + \\sigma_t L = \\underbrace{KL}_{\\text{in-scattering}} + \\underbrace{Q}_{\\text{emission}}$$"
     },
     {
       "label": "Multiply by $T(t) = e^{-\\int_0^t \\sigma_t\\,ds}$, with $T' = -\\sigma_t T$",
@@ -14,8 +14,7 @@
     },
     {
       "label": "Integrate from $0$ to $d$",
-      "equation": "$$L(0) = \\int_0^d T\\,(KL + Q)\\,dt + T(d)\\,L(d)$$",
-      "check": true
+      "equation": "$$L(0) = \\int_0^d T\\,(KL + Q)\\,dt + T(d)\\,L(d)$$"
     },
     {
       "label": "So $D^{-1}$ is an integral along rays",

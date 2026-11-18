@@ -6,9 +6,13 @@
   "surfaceWidth": 0.012,
   "coreDensity": 30,
   "equations": [
+    "$$C = \\int_0^d T\\,\\sigma\\,c\\,dt$$",
     "$$\\hat C = \\sum_i T_i\\,\\alpha_i\\,c_i$$",
     "$$\\alpha_i = 1 - e^{-\\sigma_i \\delta_i}$$",
     "$$T_i = \\prod_{j<i} (1 - \\alpha_j)$$"
+  ],
+  "remarks": [
+    "$\\delta_i$: length of interval $i$"
   ],
   "buildSteps": [
     {

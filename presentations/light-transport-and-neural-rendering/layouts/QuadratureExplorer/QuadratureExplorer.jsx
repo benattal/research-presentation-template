@@ -2,7 +2,9 @@ import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
 import { ease, useAnimation, useStageCanvas } from '../canvas/canvas.js';
-import { CLOUD_EXTENT, CORE_X, cloudBlobs, cloudRay, createCloud, renderCloud } from '../volume/cloud.js';
+import {
+  CLOUD_EXTENT, CORE_X, cloudBlobs, cloudRay, createCloud, mediumImage, renderCloud,
+} from '../volume/cloud.js';
 import {
   PIXEL_GAIN, drawCloudPanel, drawPixel, drawRayLine, figureGeometry, panelToT, worldToPanel,
 } from '../volume/cloudFigure.js';
@@ -24,6 +26,12 @@ const EDGE_RANGE = [0.2, 0.004];
 const COMPARISON_RAYS = Array.from({ length: 64 }, (_, i) => 0.2 + (0.55 * (i + 0.5)) / 64);
 /** The σ plot's range: the core's surface layer fits, its denser inside is clipped. */
 const DENSITY_MAX = 40;
+/**
+ * The panel shows the medium the samples fall in (`mediumImage`) over this
+ * length, in world units: the soft wisp and tail as on the emission–absorption
+ * slide, and the dense core in its two colors, outer layer and inside.
+ */
+const MEDIUM_LENGTH = 0.4;
 /**
  * Samplers by the name build steps use: each takes the ray's field, the
  * step, and a seeded random source, and returns `{ samples, coarse?, gaps? }`.
@@ -97,17 +105,19 @@ function drawSamples(field, step, seed) {
 
 /**
  * One ray through the glowing cloud and the piecewise-constant quadrature
- * of its emission–absorption integral: the samples on the ray, σ and its
- * piecewise-constant stand-in, the weights Tᵢαᵢ as bars against the exact
- * weight density Tσ, and the estimate Ĉ against the fine reference C.
+ * of its emission–absorption integral: the samples on the ray in the
+ * medium, σ and its piecewise-constant stand-in, the weights Tᵢαᵢ as bars
+ * against the exact weight density Tσ, and the estimate Ĉ beside the fine
+ * reference C.
  *
  * Each build step is `{ sampler: 'uniform' | 'random' | 'stratified' | 'hierarchical',
- * samples, coarse? }`. Slide fields: `surfaceWidth` (the core's surface
- * width in world units at first), `coreDensity` (see `cloudBlobs`),
- * `equations` (display math beside the figure), and `compareSamplers`
- * (show the error of every sampler in the steps, as the RMS over rays
- * across the cloud). Drag the figure to move the surface; the slider sets
- * its sharpness.
+ * samples, coarse?, note? }`, `note` a short label under the sample count.
+ * Slide fields: `surfaceWidth` (the core's surface width in world units at
+ * first), `coreDensity` (see `cloudBlobs`), `equations` (display math
+ * beside the figure), `remarks` (short labels under them), and
+ * `compareSamplers` (bars of every sampler's error in the steps, the RMS
+ * over rays across the cloud, in place of the two pixels). Drag the figure
+ * to move the surface; the slider sets its sharpness.
  */
 export default function QuadratureExplorer({ slide, buildStep }) {
   const step = slide.buildSteps?.[buildStep];
@@ -141,6 +151,7 @@ export default function QuadratureExplorer({ slide, buildStep }) {
   }, [colors, edge, coreX, slide.coreDensity]);
 
   const image = useMemo(() => cloud && renderCloud(cloud, 400, 100), [cloud]);
+  const medium = useMemo(() => image && mediumImage(image, MEDIUM_LENGTH), [image]);
 
   const ray = useMemo(() => {
     if (!cloud) return null;
@@ -148,13 +159,7 @@ export default function QuadratureExplorer({ slide, buildStep }) {
     const reference = referenceIntegral(field, 20000);
     const drawn = drawSamples(field, step, 7 + buildStep);
     const result = estimate(field, drawn.samples);
-    return {
-      drawn,
-      reference,
-      result,
-      error: relativeError(result.color, reference.color),
-      profile: rayProfile(field, 900),
-    };
+    return { drawn, reference, result, profile: rayProfile(field, 900) };
   }, [cloud, step, buildStep]);
 
   const comparison = useMemo(() => {
@@ -182,7 +187,7 @@ export default function QuadratureExplorer({ slide, buildStep }) {
     const grow = ease(progressRef.current);
     const { panel, upper: density, lower: weights } = geometry;
 
-    drawCloudPanel(ctx, geometry, image.seen, image, colors);
+    drawCloudPanel(ctx, geometry, medium, image, colors);
 
     // The ray, its samples, and the pixel it ends in.
     const [, yRay] = worldToPanel(panel, CLOUD_EXTENT.near, RAY_Y);
@@ -267,7 +272,7 @@ export default function QuadratureExplorer({ slide, buildStep }) {
     }
     strokeSeries(ctx, w, profile.t, profile.weight, { color: rgba(colors['text-primary'], 0.85), width: 1.5 });
     drawAxes(ctx, weights, colors['text-muted']);
-  }, [canvasRef, colors, ray, image, geometry, ratio]);
+  }, [canvasRef, colors, ray, image, medium, geometry, ratio]);
 
   useAnimation(buildStep, 700, (progress) => {
     progressRef.current = progress;
@@ -282,7 +287,6 @@ export default function QuadratureExplorer({ slide, buildStep }) {
     setCoreX(Math.min(3.35, Math.max(1.6, t + 0.56)));
   };
 
-  const errorLabel = ray ? `${(100 * ray.error).toFixed(1)}%` : '';
   const maxComparison = comparison ? Math.max(...comparison.map((c) => c.error)) : 1;
 
   return (
@@ -328,10 +332,14 @@ export default function QuadratureExplorer({ slide, buildStep }) {
           {slide.equations?.map((equation) => (
             <div key={equation} className="quadrature-equation"><Text>{equation}</Text></div>
           ))}
+          {slide.remarks?.map((remark) => (
+            <div key={remark} className="quadrature-remark"><Text>{remark}</Text></div>
+          ))}
           <div className="quadrature-count">
-            <Text>{`$N = ${step.samples}$`}</Text>
+            <span>{`${step.samples} samples`}</span>
             {slide.compareSamplers && <span className="quadrature-sampler">{step.sampler}</span>}
           </div>
+          {step.note && <div className="quadrature-note"><Text>{step.note}</Text></div>}
           {ray && !slide.compareSamplers && (
             <div className="quadrature-check">
               <div className="quadrature-pixel">
@@ -342,15 +350,11 @@ export default function QuadratureExplorer({ slide, buildStep }) {
                 <span className="quadrature-swatch" style={{ background: radianceCss(ray.reference.color, PIXEL_GAIN) }} />
                 <Text>{'$C$'}</Text>
               </div>
-              <div className="quadrature-error">
-                <span className="quadrature-error-label">error</span>
-                <span className="quadrature-error-value">{errorLabel}</span>
-              </div>
             </div>
           )}
           {comparison && (
             <div className="quadrature-comparison">
-              <div className="quadrature-comparison-title">{`RMS error, ${COMPARISON_RAYS.length} rays`}</div>
+              <div className="quadrature-comparison-title">error</div>
               {comparison.map((entry, index) => (
                 <div
                   key={entry.sampler}
@@ -361,7 +365,6 @@ export default function QuadratureExplorer({ slide, buildStep }) {
                   <span className="quadrature-bar-track">
                     <span className="quadrature-bar" style={{ width: `${(100 * entry.error) / maxComparison}%` }} />
                   </span>
-                  <span className="quadrature-bar-value">{`${(100 * entry.error).toFixed(1)}%`}</span>
                 </div>
               ))}
             </div>

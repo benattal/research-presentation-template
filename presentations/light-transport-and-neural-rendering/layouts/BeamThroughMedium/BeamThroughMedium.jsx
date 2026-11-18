@@ -49,14 +49,15 @@ function trailOf(photon, i, inScatteringShown) {
  * Photons crossing a slab of medium, one term of the radiative transfer
  * equation per build step: absorbed photons end in the medium, out-scattered
  * ones turn away, the medium emits new ones, and a lamp's light scatters
- * into the beam. Trails add up like a long exposure. The check compares the
- * fraction of the beam that crosses the slab without interacting with
- * e^{−σₜd}.
+ * into the beam. Trails add up like a long exposure. Once a loss term is
+ * shown, the side states the slab's transmittance, e^{−(σₐ + σₛ)d}; the
+ * simulation's beam matches it (tests/volume.test.mjs).
  *
- * Slide fields: `lhs` (math), `terms` (`[{ process, math, label, className }]`,
- * process one of absorption, outScattering, emission, inScattering),
- * `absorption` and `scattering` (σₐ and σₛ per unit length at first), and
- * build steps `{ terms: n }` showing the first n terms.
+ * Slide fields: `lhs` (math) and its optional short `lhsLabel`, `terms`
+ * (`[{ process, math, label, className }]`, process one of absorption,
+ * outScattering, emission, inScattering), `absorption` and `scattering`
+ * (σₐ and σₛ per unit length at first), and build steps `{ terms: n }`
+ * showing the first n terms.
  */
 export default function BeamThroughMedium({ slide, buildStep }) {
   const step = slide.buildSteps?.[buildStep];
@@ -187,14 +188,10 @@ export default function BeamThroughMedium({ slide, buildStep }) {
   });
   useLayoutEffect(draw, [draw]);
 
-  const { check } = simulation;
   const slabMiddle = geometry.panel.width * ((SLAB.start + SLAB.end) / 2 / PANEL.width);
   const slider = (label, value, set, enabled) => (
     <label className={`beam-slider${enabled ? '' : ' beam-slider--off'}`}>
-      <span className="beam-slider-head">
-        <Text>{label}</Text>
-        <span className="beam-slider-value">{value.toFixed(2)}</span>
-      </span>
+      <Text>{label}</Text>
       <input
         type="range"
         min={0}
@@ -213,7 +210,10 @@ export default function BeamThroughMedium({ slide, buildStep }) {
     <div className="slide--beam">
       <SlideTitle title={slide.title} subtitle={slide.subtitle} />
       <div className="beam-equation">
-        <span className="beam-term"><Text>{`$${slide.lhs}$`}</Text></span>
+        <span className="beam-term beam-term--lhs">
+          <Text>{`$${slide.lhs}$`}</Text>
+          {slide.lhsLabel && <span className="beam-term-label">{slide.lhsLabel}</span>}
+        </span>
         <span className="beam-term"><Text>{'$=$'}</Text></span>
         {/* With no term shown, the right side is 0, drawn where the first term will appear. */}
         <span className="beam-zero-slot">
@@ -252,11 +252,10 @@ export default function BeamThroughMedium({ slide, buildStep }) {
         <div className="beam-side" data-no-swipe>
           {slider('$\\sigma_a$', absorption, setAbsorption, active.absorption)}
           {slider('$\\sigma_s$', scattering, setScattering, active.outScattering)}
-          <div className="beam-check">
-            <span className="beam-check-label"><Text>{'$T = e^{-\\sigma_t d}$'}</Text></span>
-            <span className="beam-check-value">{check.expected.toFixed(2)}</span>
-            <span className="beam-check-label">photons</span>
-            <span className="beam-check-value">{`${check.fraction.toFixed(2)} ± ${check.standardError.toFixed(2)}`}</span>
+          {/* Space reserved from the first step, so nothing moves when the losses appear. */}
+          <div className="beam-transmittance" style={{ visibility: active.absorption || active.outScattering ? 'visible' : 'hidden' }}>
+            <span className="beam-transmittance-label">transmittance</span>
+            <Text>{'$T = e^{-(\\sigma_a + \\sigma_s)\\, d}$'}</Text>
           </div>
         </div>
       </div>

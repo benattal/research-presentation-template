@@ -20,25 +20,6 @@
   padding-top: 6px;
 }
 
-.integrating-check {
-  display: grid;
-  grid-template-columns: auto auto;
-  justify-content: start;
-  column-gap: 20px;
-  row-gap: 6px;
-  margin-top: 6px;
-  font-size: 20px;
-}
-
-.integrating-check-label {
-  color: var(--text-muted);
-}
-
-.integrating-check-value {
-  font-variant-numeric: tabular-nums;
-  color: var(--text-primary);
-}
-
 .integrating-figure {
   position: relative;
   flex: 1;
