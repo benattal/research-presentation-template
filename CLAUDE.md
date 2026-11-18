@@ -194,6 +194,13 @@ npm run capture -- <id>               # screenshot and check every slide
   (views, navigation, presenter tools, live features) or when two or more
   presentations use it. A layout used by one presentation lives in that
   presentation.
+- Widgets and patterns that layouts share (controls, readouts, equation
+  stacks, canvas and animation hooks, charts) belong in `core/` even when
+  one presentation uses them first. The user (2026-11-17): "If there are
+  additional widget/UI element classes that you want to create in core/
+  that would be helpful for this presentation you are welcome to do so."
+  and "I would also abstract out any common patterns that you already use
+  here into core/".
 - A presentation is data plus optional layouts. It has no `package.json`,
   build configuration, entry point, or server of its own.
 - Each behavior has one owner, and nothing else keeps a copy of it: the

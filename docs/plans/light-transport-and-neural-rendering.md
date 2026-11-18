@@ -240,6 +240,10 @@ The user's directions of 2026-11-17 are quoted in the
 - `nr-inverse`: the analysis-by-synthesis figure redrawn as the deck's own
   visual of the optimization loop, credited after Gkioulekas; other cut-out
   figures that do not fit, redrawn the same way.
+- Core abstractions, after the agents' branches merge and on `main` first:
+  move the deck's shared widgets and patterns (controls, readouts, equation
+  stacks, canvas and animation hooks, charts) into `core/`, then merge
+  `main` into this branch.
 - Then 3–4 cycles: (a) a text and notes pass by subagents (the notes read
   aloud, as the talk to graduate students), (b) other subagents vet
   the text and report, (c) the feedback consolidated and fixed.

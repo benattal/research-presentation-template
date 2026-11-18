@@ -16,6 +16,25 @@ before changing a slide.
 
 2026-11-17, while resuming:
 
+- "Showing a justification below (why terms cancel), which then fades out
+  when the next equation is shown (A^k+1 -> 0) could be nice"
+- "For some of the equations it would be nice if you faded the left and
+  right in separately (with different clicks/arrow key presses), so that
+  these could be a chance to ask students questions. Not all of them have
+  to do this, but some could be nice. Putting a question mark over the
+  equality before showing the RHS could also be an option. Do this for (I -
+  A)S_k in the Neumann series section"
+- "The presenter notes currently don't seem to render latex correctly. This
+  should be fixed."
+- "I would clean up AGENTS.md and CLAUDE.md so that they don't get bloated.
+  Try not to include direct quotes, while still retaining useful
+  informaiton"
+- "The neumann series image in the outline can be improved -- you can show
+  the 2D example of iterative x <- b + Ax updates"
+- "If there are additional widget/UI element classes that you want to
+  create in core/ that would be helpful for this presentation you are
+  welcome to do so." And: "I would also abstract out any common patterns
+  that you already use here into core/"
 - "I would also recommend re-designing the inverse monte carlo rendering
   slide from Gkioulekas, while still citing them. If a figure is simply
   cut from a paper or presentation, and doesn't exactly fit, you are
