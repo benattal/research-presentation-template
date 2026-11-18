@@ -1,0 +1,45 @@
+{
+  "layout": "identityPrompts",
+  "sectionLabel": "Math primer",
+  "title": "Primer: linear algebra",
+  "subtitle": "Along its eigenvectors, a matrix only scales",
+  "lines": [
+    {
+      "label": "eigenvector $v_i$, eigenvalue $\\lambda_i$",
+      "tex": "$A v_i$",
+      "rhs": "$\\lambda_i v_i$",
+      "step": 0
+    },
+    {
+      "label": "eigendecomposition: $V = [v_1 \\cdots v_n]$, $\\Lambda = \\mathrm{diag}(\\lambda_i)$",
+      "tex": "$A$",
+      "rhs": "$V \\Lambda V^{-1}$",
+      "step": 2
+    },
+    {
+      "label": "a vector in the eigenvectors: $x = \\sum_i c_i v_i$",
+      "tex": "$A x$",
+      "rhs": "$\\sum_i \\lambda_i\\, c_i\\, v_i$",
+      "step": 4
+    },
+    {
+      "label": "the inverse, if no $\\lambda_i$ is 0",
+      "tex": "$A^{-1} x$",
+      "rhs": "$\\sum_i \\dfrac{c_i}{\\lambda_i}\\, v_i$",
+      "step": 6
+    },
+    {
+      "label": "geometric series, $|\\lambda| < 1$",
+      "tex": "$\\sum_{k \\ge 0} \\lambda^k$",
+      "rhs": "$\\dfrac{1}{1 - \\lambda}$",
+      "step": 8
+    },
+    {
+      "label": "so, if every $|\\lambda_i| < 1$",
+      "tex": "$(I - A)^{-1} x$",
+      "rhs": "$\\sum_i \\dfrac{c_i}{1 - \\lambda_i}\\, v_i = \\sum_{k \\ge 0} A^k x$",
+      "step": 10
+    }
+  ],
+  "buildSteps": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}]
+}

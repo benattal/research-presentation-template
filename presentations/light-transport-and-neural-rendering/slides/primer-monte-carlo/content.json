@@ -1,0 +1,46 @@
+{
+  "layout": "identityPrompts",
+  "sectionLabel": "Math primer",
+  "title": "Primer: integrals and adjoints",
+  "subtitle": "Estimating an integral with random samples, and two identities for adjoints",
+  "lines": [
+    {
+      "label": "Monte Carlo: samples $x_i$ drawn with density $p$",
+      "tex": "$\\displaystyle\\int f(x)\\, dx$",
+      "rhs": "$\\dfrac{1}{N} \\sum_{i=1}^{N} \\dfrac{f(x_i)}{p(x_i)}$",
+      "relation": "\\approx",
+      "step": 0
+    },
+    {
+      "label": "why it is right on average",
+      "tex": "$\\mathbb{E}\\Big[\\dfrac{f(x)}{p(x)}\\Big]$",
+      "rhs": "$\\displaystyle\\int \\dfrac{f(x)}{p(x)}\\, p(x)\\, dx = \\int f(x)\\, dx$",
+      "step": 2
+    },
+    {
+      "label": "its error, from $N$ samples",
+      "tex": "$\\mathrm{std}\\Big[\\dfrac{1}{N} \\sum_i \\dfrac{f(x_i)}{p(x_i)}\\Big]$",
+      "rhs": "$\\dfrac{\\mathrm{std}[f(x)/p(x)]}{\\sqrt{N}}$",
+      "step": 4
+    },
+    {
+      "label": "decay along a ray: $T' = -\\sigma_t T$, $T(0) = 1$",
+      "tex": "$T(t)$",
+      "rhs": "$e^{-\\int_0^t \\sigma_t(s)\\, ds}$",
+      "step": 6
+    },
+    {
+      "label": "transpose",
+      "tex": "$\\langle A x, y \\rangle$",
+      "rhs": "$\\langle x, A^\\top y \\rangle$",
+      "step": 8
+    },
+    {
+      "label": "derivative of an inverse",
+      "tex": "$\\partial_\\theta (I - A)^{-1}$",
+      "rhs": "$(I - A)^{-1}\\, (\\partial_\\theta A)\\, (I - A)^{-1}$",
+      "step": 10
+    }
+  ],
+  "buildSteps": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}]
+}

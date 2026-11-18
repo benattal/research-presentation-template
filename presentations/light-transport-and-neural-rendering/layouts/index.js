@@ -11,6 +11,7 @@ import FigureRows from './FigureRows/FigureRows.jsx';
 import FixedPoint from './FixedPoint/FixedPoint.jsx';
 import IntegratingFactor from './IntegratingFactor/IntegratingFactor.jsx';
 import InverseRendering from './InverseRendering/InverseRendering.jsx';
+import IdentityPrompts from './IdentityPrompts/IdentityPrompts.jsx';
 import IterationSeries from './IterationSeries/IterationSeries.jsx';
 import LightPaths from './LightPaths/LightPaths.jsx';
 import MeasurementFields from './MeasurementFields/MeasurementFields.jsx';
@@ -48,6 +49,7 @@ export default {
   fixedPoint: FixedPoint,
   integratingFactor: IntegratingFactor,
   inverseRendering: InverseRendering,
+  identityPrompts: IdentityPrompts,
   iterationSeries: IterationSeries,
   lectureTitle: LectureTitle,
   lightPaths: LightPaths,
