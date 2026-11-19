@@ -17,6 +17,12 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, evening (on a new machine, a Mac):
 
+- "there is way too many of that ugly pitcher in all of the scenes. make
+  the tabletop digital twins more diverse if possible". Done: the speckled
+  jug is in no tabletop clip now; chef, lamp, bouquet, lavender, teapot,
+  from four layouts. Every orchid, fan, and cookiebox variant shows the
+  jug or a "CVPR" wall sign, so the bouquet (in the training set, not in
+  the user's list) stands in for them.
 - Of slide 18 (training data): "i want to add more than just one
   tabletop digital twin (also want to remove the current one.
   /Users/vhchu/Downloads/dual_relay_v2_turn90_download/scenes has a bunch
