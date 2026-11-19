@@ -245,7 +245,7 @@ function Callouts({ callouts, geometry, videoHolder, buildStep }) {
             const tail = gridPoint(geometry, arrow.tail);
             const end = shaftEnd(tail, gridPoint(geometry, arrow.head));
             return (
-              <path key={a} d={`M ${tail.x} ${tail.y} L ${end.x} ${end.y}`} markerEnd={`url(#panels-callout-head-${i})`} />
+              <path key={a} className="panels-callout-shaft" d={`M ${tail.x} ${tail.y} L ${end.x} ${end.y}`} markerEnd={`url(#panels-callout-head-${i})`} />
             );
           })}
         </svg>

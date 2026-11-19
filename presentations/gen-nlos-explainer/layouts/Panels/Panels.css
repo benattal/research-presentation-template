@@ -113,7 +113,7 @@
   overflow: visible;
 }
 
-.panels-callout-arrows path {
+.panels-callout-shaft {
   fill: none;
   stroke: var(--hidden);
   stroke-width: 2;
