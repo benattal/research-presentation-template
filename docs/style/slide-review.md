@@ -124,6 +124,16 @@ as the fix.
   3 before volume rendering) is awkwardly placed."
 - **Consistent from slide to slide.** The same kind of element has the same
   size and position on consecutive slides (room renders, titles, dividers).
+- **One type scale.** "Font sizes ... all over the place, id probably pick
+  2/3 font sizes and use those and only those consistently". List every
+  `font-size` in the deck's layouts and theme: besides the titles there
+  are at most three, each a custom property of the theme, and no layout
+  writes a literal size.
+- **Parts are compartmentalized.** "theres so much on there it gets a bit
+  chaotic to look at ... they could be better compartmentalized". On a
+  slide with several distinct parts, can each part be pointed to at a
+  glance? Group by spacing and alignment, then by a quiet panel behind
+  each part.
 
 ## Animation and interaction
 

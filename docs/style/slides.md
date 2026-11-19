@@ -110,6 +110,16 @@ space is not used effectively in these slides".
 - **Plain layouts.** A slide carries a title at the top left, one short
   subtitle under it, the visual, and short labels. No colored boxes,
   cards, pills, banners, or shapes with text in them.
+- **Separate parts are visibly separate.** A collaborator's review, passed
+  on by the user (2026-11-19): "add background behind things that are
+  separate (... theres so much on there it gets a bit chaotic to look at
+  ...) they could be better compartmentalized". A slide with several
+  distinct parts (inputs, a 3D view, a plot, a diagram) groups each part
+  so the eye finds them at once: by spacing and alignment first, and
+  where that is not enough, by a quiet panel behind each part (a shade
+  off the slide's background, one shade for the whole deck, no border).
+  This is grouping, not decoration: the rule above still bars colored
+  boxes and shapes around a line of text.
 - **Short labels, not explanations.** Label a figure or a state of an
   interactive visual with a symbol or a few words ("bounce 2", $Ge$); the
   speaker explains, and the explanation goes in the notes. No line of text
@@ -191,6 +201,18 @@ space is not used effectively in these slides".
   few per slide. What does not fit belongs in the notes.
 - Text is legible from the back of the room: nothing on the stage smaller
   than the framework's body size without a reason.
+- **One type scale per deck.** A collaborator's review, passed on by the
+  user (2026-11-19): "Font sizes (maybe types too not sure) all over the
+  place, id probably pick 2/3 font sizes and use those and only those
+  consistently throughout the pres"; the user: "The font sizing
+  feedback/feedback about visual consistency should probably apply to
+  other decks too". Besides its titles, a deck uses at most three text
+  sizes and one typeface, declared once as custom properties in its
+  `theme.css` (for example `--type-statement`, `--type-label`,
+  `--type-small`). A layout's stylesheet takes its sizes from those
+  properties and never writes a literal size, so a new layout cannot
+  add a fourth. The same kind of text (a panel label, an axis tick, a
+  caption) has the same size on every slide.
 - Define a necessary technical term and spell out an abbreviation at first
   use, on the slide or in the notes.
 - **Terms are clear where they are used.** The user (2026-11-17): "When
