@@ -23,6 +23,10 @@ next presentation starts with them.
 - **Recording.** `npm run record`: a run-through video of any deck, holds
   from the deck's `recording.json`, narration placed by the timeline and
   leveled per segment; `?bars=hidden` shows the stage alone.
+- **Project branches.** `main` is merged into `gen-nlos-explainer`,
+  `guest-lecture`, and `vision-workshop`. A project branch that deleted
+  `presentations/example/` deletes the files `main` adds there, on every
+  merge.
 - **Skills.** `start-presentation` and `narrated-video`, pointing at the
   workflows.
 - **Player features** that the explainer needed and every deck gets:
@@ -31,13 +35,7 @@ next presentation starts with them.
 
 ### Open
 
-1. **`vision-workshop`.** `main` is merged into `gen-nlos-explainer` and
-   `guest-lecture`. The merge into `vision-workshop` is made and tested
-   locally and not pushed: that branch is deployed as a live service, and
-   a push may redeploy it, so it waits for the user's word. A project
-   branch that deleted `presentations/example/` deletes the files `main`
-   adds there, on every merge.
-2. **The comparison grid in core.** The explainer's `panels` layout (a
+1. **The comparison grid in core.** The explainer's `panels` layout (a
    grid of labeled media over one stitched video, panels revealed and
    dimmed per step, timed boxes on a region, groups on a panel) is the
    layout other decks will want first. It moves to `core/client/layouts/`
@@ -45,27 +43,29 @@ next presentation starts with them.
    name that says what it is. It waits until the explainer's collaborators
    have stopped editing it: moving a file that someone is changing costs
    them a conflict.
-3. **Smaller layouts in core**, by the same procedure and the same wait:
+2. **Smaller layouts in core**, by the same procedure and the same wait:
    the annotated photo (callouts in the margins, one per step) and the
    section card.
-4. **A type scale and panel tokens in core.** Core defines the tokens a
+3. **A type scale and panel tokens in core.** Core defines the tokens a
    theme overrides (`--type-title`, `--type-text`, `--type-small`;
    `--bg-panel`, `--radius-panel`, `--panel-padding`, `--panel-gap`), core
    layouts take their sizes from them, and a repository test fails on a
    literal font size in a layout. Today the rule ("one type scale per
    deck") is kept by hand, and only the explainer's theme defines the
    tokens.
-5. **A frame-exact recorder.** `npm run record` captures in real time, so
+4. **A frame-exact recorder.** `npm run record` captures in real time, so
    a busy machine drops frames. A record view that advances a virtual
-   clock and screenshots every frame is unfinished on branch
-   `recorder-wip`; finish it behind the same command, or delete the
-   branch.
-6. **The recorder's open points**
+   clock and screenshots every frame was started and not finished. Its
+   branch was deleted from the remote at the user's word; the one commit
+   (b3a35a5) remains as the local branch `recorder-wip` on the machine it
+   was written on. Start from it if that machine is at hand, or write it
+   again behind the same command.
+5. **The recorder's open points**
    ([recording](../implementation/recording.md)): a real run with
    `--url`; the first step is filmed as loaded,
    without its entrance; this machine stalls for about a second in most
    full runs, which the command reports and cannot correct.
-7. **The narration tools' open points**
+6. **The narration tools' open points**
    ([narration](../implementation/narration.md)): the duration estimate
    (160 words a minute; the Kokoro voice measured 150, and the silence
    around segments is not counted); sentence splitting after a
