@@ -1,0 +1,11 @@
+{
+  "layout": "content",
+  "sectionLabel": "Related work",
+  "title": "Prior work",
+  "buildSteps": [
+    "step 0",
+    "step 1",
+    "step 2",
+    "step 3"
+  ]
+}

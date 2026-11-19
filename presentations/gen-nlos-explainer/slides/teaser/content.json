@@ -1,0 +1,28 @@
+{
+  "layout": "content",
+  "sectionLabel": "Introduction",
+  "title": "Novel view synthesis",
+  "buildSteps": [
+    "step 0",
+    "step 1",
+    "step 2"
+  ],
+  "media": [
+    {
+      "type": "image",
+      "src": "/slides/teaser/input-view.png"
+    },
+    {
+      "type": "video",
+      "src": "/slides/teaser/propagating-light.mp4"
+    },
+    {
+      "type": "video",
+      "src": "/slides/teaser/image-only-vs-ours.mp4"
+    },
+    {
+      "type": "image",
+      "src": "/slides/teaser/reference-photo.webp"
+    }
+  ]
+}

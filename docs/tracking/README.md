@@ -41,3 +41,5 @@ User direction (YYYY-MM-DD): "<quoted direction>".
   [its plan](../plans/template-restructure.md).
 - [Light transport and neural rendering](light-transport-and-neural-rendering.md),
   for [its plan](../plans/light-transport-and-neural-rendering.md).
+- [Generative view synthesis explainer](gen-nlos-explainer.md), for
+  [its plan](../plans/gen-nlos-explainer.md).

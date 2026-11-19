@@ -88,12 +88,19 @@ example with the project's presentations.
 [plan](docs/plans/light-transport-and-neural-rendering.md) orders the work.
 The user works from this branch and presents locally, with no server:
 
-- present with `npm run dev` (the only presentation, so no id is needed),
+- present the lecture with `npm run dev -- light-transport-and-neural-rendering`,
   or from a static build (`npm run build`, then `npm run preview` or any
   static file host);
 - do not use the live gateway (`npm run serve`, `npm start`), add
   deployment configuration, or use layouts that need the server (`poll`,
   `pollResults`, `numericPoll`);
+- a second presentation, `presentations/gen-nlos-explainer/`, is the
+  narrated explainer video for the anonymous CVPR submission
+  "Generative View Synthesis from Propagating Light"; its
+  [plan](docs/plans/gen-nlos-explainer.md) orders the work. It stays
+  anonymous, its assets are in the R2 bucket `presentations`
+  (`ASSETS_REMOTE=tcig:`), and with two presentations here the commands
+  take an id (`npm run dev -- gen-nlos-explainer --port 5174`);
 - the lecture's media go in
   `presentations/light-transport-and-neural-rendering/public/` and the
   bucket (`npm run assets -- push light-transport-and-neural-rendering`).
