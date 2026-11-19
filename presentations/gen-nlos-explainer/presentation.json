@@ -7,16 +7,54 @@
       "title": "Introduction",
       "slides": [
         "title",
-        "outline-introduction",
-        "motivation"
+        "teaser"
+      ]
+    },
+    {
+      "id": "propagating-light",
+      "title": "Propagating light",
+      "slides": [
+        "card-propagating-light",
+        "propagating-light",
+        "capture"
+      ]
+    },
+    {
+      "id": "related-work",
+      "title": "Related work",
+      "slides": [
+        "card-related-work",
+        "prior-work"
+      ]
+    },
+    {
+      "id": "method",
+      "title": "Method",
+      "slides": [
+        "card-method",
+        "approach",
+        "nlos-reconstruction",
+        "nlos-comparison"
+      ]
+    },
+    {
+      "id": "results",
+      "title": "Results",
+      "slides": [
+        "card-results",
+        "training-data",
+        "captured-results",
+        "guidance",
+        "room-results",
+        "numbers"
       ]
     },
     {
       "id": "conclusion",
       "title": "Conclusion",
       "slides": [
-        "outline-conclusion",
-        "closing"
+        "summary",
+        "end"
       ]
     }
   ]

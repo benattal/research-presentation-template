@@ -1,0 +1,9 @@
+{
+  "layout": "content",
+  "sectionLabel": "Results",
+  "title": "Captured scenes",
+  "buildSteps": [
+    "step 0",
+    "step 1"
+  ]
+}

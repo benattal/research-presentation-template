@@ -1,0 +1,10 @@
+{
+  "layout": "content",
+  "sectionLabel": "Method",
+  "title": "Overview",
+  "buildSteps": [
+    "step 0",
+    "step 1",
+    "step 2"
+  ]
+}
