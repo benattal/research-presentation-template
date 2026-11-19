@@ -26,6 +26,7 @@
   display: none;
 }
 
+.method-scene-panel,
 .method-scene-view,
 .method-scene-group,
 .method-scene-video,
@@ -36,20 +37,41 @@
   position: absolute;
 }
 
+/*
+ * Behind each part of the picture, over the area's height: the deck's one
+ * panel shade. The step clock clips the left one to its width.
+ */
+.method-scene-panel {
+  top: 0;
+  bottom: 0;
+  border-radius: var(--radius-panel);
+  background: var(--bg-panel);
+}
+
 /* Parts that show and leave together; their positions stay those of the area. */
 .method-scene-group {
   inset: 0;
 }
 
-/* Over a video, in the slide's black: its opacity changes where the video's must not. */
+/* Over a video, in the shade of the panel behind it: its opacity changes where the video's must not. */
 .method-scene-veil {
-  background: var(--bg-slide);
+  background: var(--bg-panel);
   pointer-events: none;
 }
 
-/* A label of the 3D view may follow its point past the view's edge during a camera move. */
+/* Over a video whose panel does not show yet. */
+.method-scene-veil--slide {
+  background: var(--bg-slide);
+}
+
+/*
+ * The 3D view is a panel: its canvas is drawn on the panel's shade, and the
+ * step clock clips it to begin after the left panel. A label may follow its
+ * point past the view's edge during a camera move.
+ */
 .method-scene-view {
   overflow: hidden;
+  border-radius: var(--radius-panel);
 }
 
 /* Leaving, the view is over the diagram that takes its place, which shows through it as it fades. */
@@ -68,13 +90,12 @@
 }
 
 /*
- * A stream panel is mostly black: a hairline shows the frame the three
- * videos share. It is a layer of its own on every slide, as it is over a
- * video, so its caption is drawn the same way (the same antialiasing) where
- * the panels are stills.
+ * A stream tile is mostly black, and the black square on the panel's shade
+ * is the frame the three videos share. Its caption is a layer of its own on
+ * every slide, as it is over a video, so it is drawn the same way (the same
+ * antialiasing) where the tiles are stills.
  */
-.method-scene-tile--outlined {
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22);
+.method-scene-tile--stream {
   will-change: opacity;
 }
 
@@ -113,6 +134,12 @@
 
 .method-scene-note--centered {
   transform: translateX(-50%);
+}
+
+/* A name longer than the part it names, on lines as wide as that part. */
+.method-scene-note--wrapped {
+  white-space: normal;
+  text-align: center;
 }
 
 /* A label of the 3D view: the step clock moves it to the point it names. */

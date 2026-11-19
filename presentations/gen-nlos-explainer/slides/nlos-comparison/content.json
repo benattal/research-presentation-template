@@ -2,11 +2,11 @@
   "layout": "panels",
   "title": "Reconstruction with nonplanar relays",
   "grid": {
-    "columns": 3,
+    "columns": 4,
     "rows": 2,
-    "panelWidth": 304,
-    "panelHeight": 232,
-    "columnGap": 28,
+    "panelWidth": 212,
+    "panelHeight": 162,
+    "columnGap": 36,
     "rowGap": 36
   },
   "rowLabels": [
@@ -29,20 +29,19 @@
   ],
   "videos": [
     {
-      "src": "/slides/nlos-comparison/ours-ccsocr-3dgtr.mp4",
-      "poster": "/slides/nlos-comparison/ours-ccsocr-3dgtr.poster.jpg",
+      "src": "/slides/nlos-comparison/scene-ours-ccsocr-3dgtr.mp4",
+      "poster": "/slides/nlos-comparison/scene-ours-ccsocr-3dgtr.poster.jpg",
       "row": 0,
       "column": 0,
       "rows": 2,
-      "columns": 3
+      "columns": 4
     }
   ],
   "panels": [
     {
       "row": 0,
       "column": 0,
-      "label": "Ours",
-      "ours": true
+      "label": "Scene"
     },
     {
       "row": 1,
@@ -51,7 +50,8 @@
     {
       "row": 0,
       "column": 1,
-      "label": "CC-SOCR"
+      "label": "Ours",
+      "ours": true
     },
     {
       "row": 1,
@@ -60,11 +60,20 @@
     {
       "row": 0,
       "column": 2,
-      "label": "3D-GTR"
+      "label": "CC-SOCR"
     },
     {
       "row": 1,
       "column": 2
+    },
+    {
+      "row": 0,
+      "column": 3,
+      "label": "3D-GTR"
+    },
+    {
+      "row": 1,
+      "column": 3
     }
   ]
 }

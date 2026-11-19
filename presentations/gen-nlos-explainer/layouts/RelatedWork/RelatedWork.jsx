@@ -1,83 +1,98 @@
+import { Fragment, useRef } from 'react';
 import { stepCount } from '@core/presentation/model.js';
 import Media from '@core/stage/Media.jsx';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
+import { Boxes } from '../Panels/Panels.jsx';
 import './RelatedWork.css';
 
-/** Opacity of a column's text, and of the veil's complement over its picture, out of the spotlight. */
+/** Opacity of a group's pictures and text out of the spotlight. */
 const DIMMED = 0.3;
 
 /**
- * Related work by category: one column per category (its name, a square
- * picture, a caption, and its named methods, each with what it lacks in
- * red), spotlighted one per build step; on the last step every column is
+ * Related work by category: one group per category on a quiet panel, each a
+ * row of method tiles. A tile is a picture produced by the method named
+ * under it, with a short citation and, in red, what the method lacks. One
+ * group is spotlighted per build step; on the last step every group is
  * dimmed and the contribution line shows, in green, under them.
  *
  * Fields:
  *   title          the slide's title.
- *   video          { src, poster?, alt? }: one video holding every column's
- *                  picture side by side, 280 stage pixels square each with
- *                  200 between them (encoded at 1.5x), so the clips stay in
- *                  step.
- *   columns        each { name, caption, methods, hidden? }: `methods` is
- *                  [{ names, limitation }], the methods named in one line
- *                  and what they lack in the next (a newline breaks it);
- *                  `hidden`
- *                  { x, y, width, height } marks the region hidden in the
- *                  input view with a thin red rectangle, as fractions of
- *                  the picture.
+ *   video          { src, poster?, alt? }: one video holding every tile's
+ *                  picture in a row, so the clips stay in step. Its geometry
+ *                  is the stage's (RelatedWork.css) at a uniform scale:
+ *                  squares of 200 stage pixels, 20 between the tiles of a
+ *                  group, 68 between the last tile of a group and the first
+ *                  of the next (two paddings of 20 and a gap of 28), the
+ *                  gaps black. assets/build/related-work.py writes it.
+ *   groups         each { name, tiles }: the category's name and its tiles,
+ *                  each { method, citation, limitation, boxes? }:
+ *                    method      the method's name, as the paper writes it;
+ *                    citation    "Authors et al. Year";
+ *                    limitation  a few words on what the method lacks (a
+ *                                newline breaks the line);
+ *                    boxes       hidden-region rectangles over the picture,
+ *                                as the panels layout's: { x, y, width,
+ *                                height } in fractions of the picture, with
+ *                                optional { from, to }, the seconds of the
+ *                                video during which the box shows.
+ *   note           optional: a short line under the panels, at their left
+ *                  edge (what an asterisk after a method's name marks).
  *   contribution   the line shown at the last step.
- *   buildSteps     one step per column, then the contribution step.
+ *   buildSteps     one step per group, then the contribution step.
  *
- * The methods of a column appear with its spotlight and stay.
- * A picture is dimmed by a veil over it, not by its own opacity: changing
- * the opacity of an element that holds a playing video makes some browsers
- * rebuild the video's layer, which shows as a flash.
+ * A group is dimmed by a veil in the panel's shade over its pictures and
+ * text, not by its own opacity: changing the opacity of an element that
+ * holds a playing video makes some browsers rebuild the video's layer,
+ * which shows as a flash. The video lies under the groups; each picture is
+ * a window onto its part, and the panel's shade is drawn around the
+ * windows.
  */
 export default function RelatedWork({ slide, buildStep }) {
-  const { columns, contribution, video } = slide;
-  if (stepCount(slide) !== columns.length + 1) {
-    throw new Error(`Slide "${slide.id}": the relatedWork layout needs ${columns.length + 1} build steps, one per column and one for the contribution`);
+  const { groups, note, contribution, video } = slide;
+  const videoHolder = useRef(null);
+  if (!Array.isArray(groups) || groups.length === 0) {
+    throw new Error(`Slide "${slide.id}": the relatedWork layout needs a non-empty "groups" list`);
+  }
+  if (stepCount(slide) !== groups.length + 1) {
+    throw new Error(`Slide "${slide.id}": the relatedWork layout needs ${groups.length + 1} build steps, one per group and one for the contribution`);
   }
   return (
     <div className="slide--related-work">
       <SlideTitle title={slide.title} />
       <div className="related-work-body">
-        <div className="related-work-columns">
-          <Media item={{ type: 'video', ...video }} className="related-work-video" />
-          {columns.map((column, index) => {
-            const textOpacity = buildStep === index ? 1 : DIMMED;
-            return (
-              <figure key={column.name} className="related-work-column">
-                <h3 className="related-work-name" style={{ opacity: textOpacity }}><Text>{column.name}</Text></h3>
-                <div className="related-work-picture">
-                  {column.hidden && (
-                    <div
-                      className="related-work-hidden"
-                      style={{
-                        left: `${100 * column.hidden.x}%`,
-                        top: `${100 * column.hidden.y}%`,
-                        width: `${100 * column.hidden.width}%`,
-                        height: `${100 * column.hidden.height}%`,
-                      }}
-                    />
-                  )}
-                  <div className="related-work-veil" style={{ opacity: 1 - textOpacity }} />
-                </div>
-                <figcaption className="related-work-caption" style={{ opacity: textOpacity }}><Text>{column.caption}</Text></figcaption>
-                <ul className="related-work-methods" style={{ opacity: buildStep >= index ? textOpacity : 0 }}>
-                  {column.methods.map((method) => (
-                    <li key={method.names}>
-                      <span className="related-work-method"><Text>{method.names}</Text></span>
-                      <span className="related-work-limitation"><Text>{method.limitation}</Text></span>
-                    </li>
+        <div className="related-work-figure">
+          <div ref={videoHolder} className="related-work-video">
+            <Media item={{ type: 'video', ...video }} className="related-work-video-media" />
+          </div>
+          {groups.map((group, index) => (
+            <Fragment key={group.name}>
+              {index > 0 && <div className="related-work-between" />}
+              <section className="related-work-group">
+                <h3 className="related-work-name"><Text>{group.name}</Text></h3>
+                <div className="related-work-pictures">
+                  {group.tiles.map((tile) => (
+                    <div key={tile.method} className="related-work-picture">
+                      {tile.boxes && <Boxes boxes={tile.boxes} videoHolder={videoHolder} />}
+                    </div>
                   ))}
-                </ul>
-              </figure>
-            );
-          })}
+                </div>
+                <div className="related-work-captions">
+                  {group.tiles.map((tile) => (
+                    <div key={tile.method} className="related-work-caption">
+                      <div className="related-work-method"><Text>{tile.method}</Text></div>
+                      <div className="related-work-citation"><Text>{tile.citation}</Text></div>
+                      <div className="related-work-limitation"><Text>{tile.limitation}</Text></div>
+                    </div>
+                  ))}
+                </div>
+                <div className="related-work-veil" style={{ opacity: buildStep === index ? 0 : 1 - DIMMED }} />
+              </section>
+            </Fragment>
+          ))}
+          {note && <p className="related-work-note"><Text>{note}</Text></p>}
         </div>
-        <p className="related-work-contribution" style={{ opacity: buildStep >= columns.length ? 1 : 0 }}>
+        <p className="related-work-contribution" style={{ opacity: buildStep >= groups.length ? 1 : 0 }}>
           <Text>{contribution}</Text>
         </p>
       </div>

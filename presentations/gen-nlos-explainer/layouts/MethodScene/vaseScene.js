@@ -272,6 +272,8 @@ function orbitPosition(trajectory, index) {
  * (`camera`: intrinsics and `depthRange`; `volume`: `size`, `box`;
  * `trajectory`: `center`, `radius`, `arcDegrees`, `frames`), `cloud` comes
  * from `pointCloudFromPixels` and `voxels` from `volumeFromAtlas`.
+ * `background` is the CSS color behind the scene: the canvas is opaque, so
+ * it is given the shade of the panel it sits in.
  *
  * Returns `{ canvas, resize(width, height, ratio), draw(picture),
  * invalidate(), project(point), dispose() }`: `resize` takes CSS pixels and
@@ -281,11 +283,12 @@ function orbitPosition(trajectory, index) {
  * last drawn; `dispose` frees every GPU resource and the context, after
  * which the canvas cannot draw again.
  */
-export function createVaseScene({ scene, cloud, voxels }) {
+export function createVaseScene({ scene, cloud, voxels, background }) {
   const canvas = document.createElement('canvas');
   canvas.style.display = 'block';
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: false, powerPreference: 'high-performance' });
-  renderer.setClearColor(0x000000, 1);
+  // The scene pass is cleared to it in linear values, and the composite pass shows it in display colors.
+  renderer.setClearColor(new THREE.Color(background), 1);
   const world = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(30, 1, 0.05, 20);
   const disposables = [];
@@ -434,7 +437,9 @@ export function createVaseScene({ scene, cloud, voxels }) {
    * Draw one frame. `picture`:
    *   eye, target    the viewing camera's position and look-at point, m
    *   fov            its vertical field of view, degrees
-   *   unproject      0..1: the image's pixels from the image plane to their depths
+   *   shift          CSS pixels the whole picture is moved right (a lens
+   *                  shift: the perspective stays that of `eye` and `target`)
+   *   unproject     0..1: the image's pixels from the image plane to their depths
    *   depthTint      0..1: the pixels colored by depth instead of by the image
    *   volume         0..1: how much of the NLOS volume shows, the densest parts first
    *   trajectory     0..1: how much of the target trajectory is drawn; it is
@@ -445,13 +450,14 @@ export function createVaseScene({ scene, cloud, voxels }) {
    * size as the arc leaves, and each fixed camera as the arc passes it.
    */
   function draw(picture) {
-    const glowKey = JSON.stringify([picture.eye, picture.target, picture.fov, picture.unproject, picture.volume]);
+    const glowKey = JSON.stringify([picture.eye, picture.target, picture.fov, picture.shift, picture.unproject, picture.volume]);
     const frameKey = JSON.stringify(picture);
     if (frameKey === drawn.frame) return;
 
     camera.position.set(...picture.eye);
     camera.fov = picture.fov;
-    camera.updateProjectionMatrix();
+    // The canvas shows the part of the camera's picture that begins `shift` pixels left of it; this updates the projection.
+    camera.setViewOffset(cssWidth, cssHeight, -picture.shift, 0, cssWidth, cssHeight);
     camera.lookAt(...picture.target);
     camera.updateMatrixWorld();
 

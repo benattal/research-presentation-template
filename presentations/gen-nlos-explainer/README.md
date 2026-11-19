@@ -54,13 +54,27 @@ bash assets/build/results.sh
 python assets/build/light-split.py
 ```
 
-`nlos-comparison.py` renders the rotating reconstructions of the slide
-`nlos-comparison` from the volumes in `assets/sources/nlos-comparison/`
-(copies from the bucket's `nlos_results_pages_20261114`; the script's
-docstring gives the paths). It needs Python with numpy and numba:
+`nlos-comparison.py` renders the slide `nlos-comparison`: the rotating
+reconstructions, from the volumes in `assets/sources/nlos-comparison/`
+(copies from the bucket's `nlos_results_pages_20261114`), and the scene
+column beside them, from the room's meshes and the Stanford capture's
+relay points and direct times of flight (copies from the bucket's
+`fk-torch/evaluation_and_comparisons_20261108`). The script's docstring
+gives every path. It needs Python with numpy, numba, h5py, and Pillow:
 
 ```bash
 python assets/build/nlos-comparison.py
+```
+
+`related-work.py` writes the video of the slide `related-work`: one tile
+per prior method, each the output of that method. It reads four clips
+from Dropbox (`7_conventionalnlos` besides the folders above) and renders
+the fast RSD volume in `assets/sources/related-work/nlos-volumes/` (a
+copy from the same bucket folder; the docstring gives the path) with
+`nlos-comparison.py`, which must sit beside it:
+
+```bash
+python assets/build/related-work.py
 ```
 
 After adding or changing media, push them (this copies only; it never

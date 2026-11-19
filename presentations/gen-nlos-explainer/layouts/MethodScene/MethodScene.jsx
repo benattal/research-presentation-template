@@ -46,7 +46,7 @@
  *               it. The conditioning slide shows them leaving, with the
  *               light video as its poster.
  *   streams     the three conditioning videos, stacked in a column with
- *               black gaps (PANEL and STREAM_TOPS below, times 1.5):
+ *               gaps (TILE and STREAM_TOPS below, times 1.5):
  *               { labels: [3], final } and, on the conditioning slide,
  *               { src, poster, fps, frames, lead, holdLast, stillSeconds }.
  *               The video shows the first target view for `lead` frames
@@ -59,10 +59,18 @@
  *   generation  (generation) { encoder, noisyTokens, transformer, lora,
  *               denoised, decoder, output }: the diagram's labels.
  *
+ * Each part of the picture has a panel behind it (`--bg-panel`), and the
+ * panels stand side by side over the area's height: at the left the inputs,
+ * and after them the stream tiles in a narrower one; the 3D view, whose
+ * canvas has the panel's shade and which begins where the left panel ends;
+ * and, in the generation phase, where the 3D view was, one for each stage
+ * of the diagram (STAGES). A flow line of the diagram crosses the black
+ * between two panels.
+ *
  * A slide holds one video element, so its clips cannot drift apart, and
- * nothing that holds a playing video changes opacity: a black veil over it
- * does. Everything moves by the step clock, as a function of the time since
- * the step began (`pictureAt`, and the diagram's `reveal` marks). The
+ * nothing that holds a playing video changes opacity: a veil over it, in
+ * the panel's shade, does. Everything moves by the step clock, as a
+ * function of the time since the step began (`pictureAt`, and the diagram's `reveal` marks). The
  * moving camera of the 3D view reads the time of the stream video itself,
  * so the two stay in step however the video is driven. A still frame shows
  * each step's end, with the video at `stillSeconds`.
@@ -84,15 +92,25 @@ import './MethodScene.css';
 
 /** Stage pixels inside the area under the title (1168 × 572). */
 const AREA = { width: 1168, height: 572 };
-/** The left column: the two inputs, or the three stream panels (one stitched file spans them). */
-const PANEL = 140;
-const STREAM_TOPS = [41, 231, 421];
-const STREAMS_HEIGHT = STREAM_TOPS[2] + PANEL - STREAM_TOPS[0];
-const INPUT_TOPS = [106, 346];
+/** Panels: stage pixels between a panel's edge and what it holds, and of black between two panels. */
+const INSET = 12;
+const GAP = 12;
+/** The left panel holds a column: the three stream tiles (one stitched file spans them), or the two inputs. */
+const TILE = 140;
+const STREAM_TOPS = [38, 228, 418];
+const STREAMS_HEIGHT = STREAM_TOPS[2] + TILE - STREAM_TOPS[0];
+const INPUT = 200;
+const INPUT_TOPS = [38, 302];
 /** Line height of a note (MethodScene.css), for notes stacked under a tile. */
 const NOTE_LINE = 24;
-/** The 3D view. */
-const VIEW = { left: 172, top: 0, width: 996, height: 572 };
+/** The left panel's width around the inputs (their longer caption sets it) and around the stream tiles. */
+const LEFT_PANEL = { inputs: 272, streams: INSET + TILE + INSET };
+/**
+ * The 3D view: a panel that begins GAP after the left panel. Its canvas has
+ * this size on every slide; while the left panel is the wider one, the
+ * view is clipped to begin after it (`panels.left` of a picture).
+ */
+const VIEW = { left: LEFT_PANEL.streams + GAP, top: 0, width: AREA.width - LEFT_PANEL.streams - GAP, height: AREA.height };
 /** Stage pixels a veil extends past the video it covers: a video's edge must not show around it. */
 const VEIL_MARGIN = 2;
 
@@ -104,11 +122,15 @@ const PHASES = {
 };
 const LAST_STEP = 3;
 
-/** Viewing cameras of the 3D view: for the point cloud, the volume, and the trajectory. */
+/**
+ * Viewing cameras of the 3D view: for the point cloud, the volume, and the
+ * trajectory. `shift` moves the picture right, in stage pixels: the first
+ * two are centered in the part of the view that the inputs' panel leaves.
+ */
 const VIEWS = {
-  cloud: { eye: [0.82, 0.43, 0.62], target: [-0.01, 0, -0.75], fov: 28 },
-  volume: { eye: [1.05, 0.85, 0.5], target: [0.03, 0.07, -0.75], fov: 29 },
-  trajectory: { eye: [1.45, 1.15, 1.3], target: [0.4, 0.14, -0.6], fov: 23 },
+  cloud: { eye: [0.82, 0.43, 0.62], target: [-0.01, 0, -0.75], fov: 28, shift: 102 },
+  volume: { eye: [1.05, 0.85, 0.5], target: [0.03, 0.07, -0.75], fov: 30.5, shift: 41 },
+  trajectory: { eye: [1.45, 1.15, 1.3], target: [0.4, 0.14, -0.6], fov: 23, shift: 0 },
 };
 
 /** How long each motion lasts, in seconds. */
@@ -121,7 +143,7 @@ const ARC_SECONDS = 0.9;
 /** A label, an arrow, or a part of the diagram appearing. */
 const FADE_SECONDS = 0.4;
 const REVEAL_SECONDS = 0.35;
-/** Conditioning: the inputs leave, then the stream panels appear one after the other. */
+/** Conditioning: the inputs leave, then the stream tiles appear one after the other. */
 const INPUTS_OUT_SECONDS = 0.4;
 const STREAMS_IN = { start: 0.45, stagger: 0.12, seconds: 0.45 };
 /** Generation: the 3D view leaves, to this share of its size; the generated video appears. */
@@ -140,28 +162,40 @@ const HANDOVER_MS = 1000;
  */
 const ANCHORS = {
   'label-point-cloud': { point: [0, -0.2, -0.84], dx: -24, dy: 48, side: 'top', leader: true },
-  'label-volume': { point: [0, -0.04, -1.27], dx: 225, dy: -54, side: 'left', leader: true },
+  'label-volume': { point: [0, -0.04, -1.27], dx: 180, dy: -54, side: 'left', leader: true },
   'label-trajectory': { point: [0.6, 0, -0.16], dx: 0, dy: 14, side: 'top', leader: false },
 };
 /** Stage pixels a leader stops short of its text and of the point it names. */
 const LEADER_GAP = { text: 6, point: 5 };
 
-/** The generation diagram, in stage pixels of the area; rows are the stream panels' centers. */
-const ROWS = STREAM_TOPS.map((top) => top + PANEL / 2);
+/**
+ * The generation diagram, in stage pixels of the area; rows are the stream
+ * tiles' centers. STAGES are the panels of its three stages, after the
+ * stream tiles' panel and where the 3D view was: the encoding into tokens,
+ * with the noisy target tokens; the transformer; the decoding into the
+ * generated video. A panel shows at its `cue`, the cue of the first part
+ * it holds.
+ */
+const ROWS = STREAM_TOPS.map((top) => top + TILE / 2);
 const MIDDLE = ROWS[1];
-const TOKEN = { size: 16, gap: 4, count: 6, pitch: 22 };
+const TOKEN = { size: 14, gap: 4, count: 6, pitch: 20 };
 const TOKEN_ROW_WIDTH = TOKEN.count * TOKEN.size + (TOKEN.count - 1) * TOKEN.gap;
+const STAGES = {
+  encoding: { cue: 'encoder', left: 176, width: 285 },
+  transformer: { cue: 'transformer', left: 473, width: 156 },
+  decoding: { cue: 'denoised', left: 641, width: 527 },
+};
 const DIAGRAM = {
-  encoder: { left: 190, right: 234, wide: 34, narrow: 18 },
+  encoder: { left: 199, right: 243, wide: 34, narrow: 18 },
   stack: {
-    left: 314,
+    left: 321,
     tops: [-1.5, -0.5, 0.5].map((row) => MIDDLE + row * TOKEN.pitch - TOKEN.size / 2),
     noisyTop: MIDDLE + 1.5 * TOKEN.pitch - TOKEN.size / 2 + 8,
   },
-  transformer: { left: 478, right: 618, top: MIDDLE - 130, bottom: MIDDLE + 130, layers: 5, layerHeight: 34, layerGap: 13 },
-  denoised: { left: 656 },
-  decoder: { left: 800, right: 844, wide: 34, narrow: 18 },
-  output: { left: 880, size: 288 },
+  transformer: { left: 485, right: 617, top: MIDDLE - 130, bottom: MIDDLE + 130, layers: 5, layerHeight: 34, layerGap: 13 },
+  denoised: { left: 655 },
+  decoder: { left: 794, right: 838, wide: 34, narrow: 18 },
+  output: { left: 872, size: 284 },
 };
 /** Fill of each conditioning stream's tokens: warped RGB, MIP, MIP depth. */
 const TOKEN_COLORS = ['#e8e8e8', '#f08a24', '#8fd05a'];
@@ -181,6 +215,7 @@ function mixView(a, b, t) {
     eye: a.eye.map((value, i) => mix(value, b.eye[i], t)),
     target: a.target.map((value, i) => mix(value, b.target[i], t)),
     fov: mix(a.fov, b.fov, t),
+    shift: mix(a.shift, b.shift, t),
   };
 }
 
@@ -193,12 +228,14 @@ function noise(i) {
 /**
  * The picture at `seconds` into global step `step` (0 and 1: processing; 2:
  * conditioning; 3: generation): `scene`, what the 3D view draws (vaseScene.js
- * `draw`), and `parts`, the opacity of each named part of the page. A motion
+ * `draw`); `panels.left`, the left panel's width in stage pixels, after
+ * which the 3D view's panel begins; and `parts`, the opacity of each named
+ * part of the page. A motion
  * of an earlier step is finished; one of a later step has not begun, so
  * each step starts on the picture the step before ends on. `cues` are the
  * current step's. The moving camera is on target view `scene.targetIndex`:
  * the first until the stream video moves it, the last (`lastView`) once the
- * stream panels are stills of that view.
+ * stream tiles are stills of that view.
  */
 function pictureAt(step, seconds, cues, lastView) {
   /** Progress, 0 to 1, of a motion of step `at` that lasts `duration` from `delay` after the cue `name` (null: the step's start). */
@@ -222,6 +259,8 @@ function pictureAt(step, seconds, cues, lastView) {
       trajectory: ease(motion(2, 'trajectory', ARC_SECONDS)),
       targetIndex: step === LAST_STEP ? lastView : 0,
     },
+    // As the view turns, the left panel narrows from the inputs to the stream tiles, and the view widens after it.
+    panels: { left: mix(LEFT_PANEL.inputs, LEFT_PANEL.streams, ease(toTrajectory)) },
     parts: {
       inputs: 1 - motion(2, null, INPUTS_OUT_SECONDS),
       direct: motion(0, 'depth', FADE_SECONDS),
@@ -231,6 +270,8 @@ function pictureAt(step, seconds, cues, lastView) {
       'label-trajectory': motion(2, 'trajectory', FADE_SECONDS, ARC_SECONDS / 2),
       ...Object.fromEntries(streams.flatMap((shown, i) => [[`stream-${i}`, shown], [`stream-veil-${i}`, 1 - shown]])),
       view: 1 - ease(motion(3, null, VIEW_OUT_SECONDS)),
+      // Over the generated video: the slide's black until the panel behind it shows, then that panel's shade.
+      'output-cover': 1 - motion(3, STAGES.decoding.cue, REVEAL_SECONDS),
       'output-veil': 1 - motion(3, 'output', OUTPUT_SECONDS),
     },
   };
@@ -310,6 +351,16 @@ function setStyle(element, property, value) {
   if (element.style[property] !== value) element.style[property] = value;
 }
 
+/** The clip last given to each element: the browser rewrites the value it is given, so the style cannot be compared. */
+const clips = new WeakMap();
+
+/** Clip a panel by `inset` (the four insets of CSS `inset()`), keeping the panels' rounded corners. */
+function setClip(element, inset) {
+  if (clips.get(element) === inset) return;
+  clips.set(element, inset);
+  element.style.clipPath = `inset(${inset} round var(--radius-panel))`;
+}
+
 /** In a still frame, show the slide's video at `seconds`: a chosen moment of its loop. */
 function useStillVideo(area, seconds) {
   useEffect(() => {
@@ -364,32 +415,33 @@ function TokenRow({ left, top, fill, opacities, cue, delay = 0 }) {
 }
 
 /**
- * The two inputs of the processing phase. Nothing is drawn from them to the
- * 3D view: the image sits on the input camera's image plane there, and its
- * pixels move out to the point cloud. Under the light video, the two parts
+ * The two inputs of the processing phase, in the left panel. Nothing is
+ * drawn from them to the 3D view in the panel beside it: the image sits on
+ * the input camera's image plane there, and its pixels move out to the
+ * point cloud. Under the light video, the two parts
  * of the light are named in their colors, each when the step that uses it
  * begins. `leaving`: the inputs are a named part that the step clock fades
  * out, and the light video is its poster.
  */
 function Inputs({ inputs, image, leaving }) {
-  const notesTop = INPUT_TOPS[1] + PANEL + 8;
+  const notesTop = INPUT_TOPS[1] + INPUT + 8;
   const lightVideo = leaving
     ? { type: 'image', src: inputs.lightVideo.poster }
     : { type: 'video', src: inputs.lightVideo.src, poster: inputs.lightVideo.poster };
   return (
     <div className="method-scene-group" data-part={leaving ? 'inputs' : undefined}>
-      <figure className="method-scene-tile" style={{ left: 0, top: INPUT_TOPS[0], width: PANEL, height: PANEL }}>
+      <figure className="method-scene-tile" style={{ left: INSET, top: INPUT_TOPS[0], width: INPUT, height: INPUT }}>
         <figcaption className="method-scene-caption"><Text>{inputs.image.label}</Text></figcaption>
         <img className="method-scene-media" src={image} alt="" />
       </figure>
-      <figure className="method-scene-tile" style={{ left: 0, top: INPUT_TOPS[1], width: PANEL, height: PANEL }}>
+      <figure className="method-scene-tile" style={{ left: INSET, top: INPUT_TOPS[1], width: INPUT, height: INPUT }}>
         <figcaption className="method-scene-caption"><Text>{inputs.lightVideo.label}</Text></figcaption>
         <Media item={lightVideo} className="method-scene-media" />
       </figure>
-      <span data-part="direct" className="method-scene-note method-scene-note--direct" style={{ left: 0, top: notesTop }}>
+      <span data-part="direct" className="method-scene-note method-scene-note--direct" style={{ left: INSET, top: notesTop }}>
         <Text>{inputs.direct}</Text>
       </span>
-      <span data-part="indirect" className="method-scene-note method-scene-note--indirect" style={{ left: 0, top: notesTop + NOTE_LINE }}>
+      <span data-part="indirect" className="method-scene-note method-scene-note--indirect" style={{ left: INSET, top: notesTop + NOTE_LINE }}>
         <Text>{inputs.indirect}</Text>
       </span>
     </div>
@@ -397,8 +449,10 @@ function Inputs({ inputs, image, leaving }) {
 }
 
 /**
- * The three stream panels: the stitched file under them, and each panel's
- * veil over the file and its outline and caption, both named parts.
+ * The three stream tiles, in the left panel: the stitched file under them,
+ * the panel's shade over the file's black between two tiles, and each
+ * tile's veil over the file and its caption, both named parts. A tile is
+ * the black square its video is drawn on, with no outline.
  * `playing`: the file is the video; otherwise it is the still of the last
  * view. `fromLast`: the video will start on its hold of the last view, so
  * that still is what shows until it has a frame.
@@ -409,25 +463,37 @@ function Streams({ streams, playing, fromLast }) {
     : { type: 'image', src: streams.final };
   return (
     <>
-      <div className="method-scene-video" style={{ left: 0, top: STREAM_TOPS[0], width: PANEL, height: STREAMS_HEIGHT }}>
+      <div className="method-scene-video" style={{ left: INSET, top: STREAM_TOPS[0], width: TILE, height: STREAMS_HEIGHT }}>
         <Media item={file} className="method-scene-media method-scene-media--stitched" />
       </div>
+      {STREAM_TOPS.slice(1).map((top, i) => (
+        <div
+          key={top}
+          className="method-scene-veil"
+          style={{
+            left: INSET - VEIL_MARGIN,
+            top: STREAM_TOPS[i] + TILE,
+            width: TILE + 2 * VEIL_MARGIN,
+            height: top - STREAM_TOPS[i] - TILE,
+          }}
+        />
+      ))}
       {streams.labels.map((label, i) => (
         <Fragment key={label}>
           <div
             data-part={`stream-veil-${i}`}
             className="method-scene-veil"
             style={{
-              left: -VEIL_MARGIN,
+              left: INSET - VEIL_MARGIN,
               top: STREAM_TOPS[i] - VEIL_MARGIN,
-              width: PANEL + 2 * VEIL_MARGIN,
-              height: PANEL + 2 * VEIL_MARGIN,
+              width: TILE + 2 * VEIL_MARGIN,
+              height: TILE + 2 * VEIL_MARGIN,
             }}
           />
           <div
             data-part={`stream-${i}`}
-            className="method-scene-tile method-scene-tile--outlined"
-            style={{ left: 0, top: STREAM_TOPS[i], width: PANEL, height: PANEL }}
+            className="method-scene-tile method-scene-tile--stream"
+            style={{ left: INSET, top: STREAM_TOPS[i], width: TILE, height: TILE }}
           >
             <div className="method-scene-caption"><Text>{label}</Text></div>
           </div>
@@ -438,9 +504,12 @@ function Streams({ streams, playing, fromLast }) {
 }
 
 /**
- * The diagram of the generation phase, from the stream panels to the
+ * The diagram of the generation phase, from the stream tiles to the
  * generated video (`generated`, the slide's one video, under a veil until
- * its cue). Every part carries the cue that reveals it (`reveal`).
+ * its cue, and under a second one in the slide's black until the panel
+ * behind it shows), over the panels of its stages. Every part carries the
+ * cue that reveals it (`reveal`). The transformer's name is as wide as the
+ * transformer, on two lines.
  */
 function GenerationDiagram({ generation, generated }) {
   const { encoder, stack, transformer, denoised, decoder, output } = DIAGRAM;
@@ -448,18 +517,29 @@ function GenerationDiagram({ generation, generated }) {
   const layersHeight = transformer.layers * transformer.layerHeight + (transformer.layers - 1) * transformer.layerGap;
   const layerTop = (i) => MIDDLE - layersHeight / 2 + i * (transformer.layerHeight + transformer.layerGap);
   const denoisedRight = denoised.left + TOKEN_ROW_WIDTH;
+  const speckle = (TOKEN.size - 6) / 2;
   const head = 'url(#method-scene-arrowhead)';
   const outputBox = { left: output.left, top: MIDDLE - output.size / 2, width: output.size, height: output.size };
+  const transformerWidth = transformer.right - transformer.left;
   const notes = [
     { text: generation.encoder, left: (encoder.left + encoder.right) / 2, top: ROWS[0] - encoder.wide - 32, at: reveal('encoder', 0.15) },
     { text: generation.noisyTokens, left: stack.left + TOKEN_ROW_WIDTH / 2, top: stack.noisyTop + TOKEN.size + 8, at: reveal('noisy', 0.2) },
-    { text: generation.transformer, left: (transformer.left + transformer.right) / 2, top: transformer.top - 34, at: reveal('transformer', 0.2) },
+    {
+      text: generation.transformer,
+      left: (transformer.left + transformer.right) / 2,
+      top: transformer.top - 2 * NOTE_LINE - 8,
+      width: transformerWidth,
+      at: reveal('transformer', 0.2),
+    },
     { text: generation.lora, left: (transformer.left + transformer.right) / 2, top: transformer.bottom + 8, accent: true, at: reveal('lora', 0.1) },
     { text: generation.denoised, left: denoised.left + TOKEN_ROW_WIDTH / 2, top: MIDDLE + TOKEN.size / 2 + 8, at: reveal('denoised', 0.3) },
     { text: generation.decoder, left: (decoder.left + decoder.right) / 2, top: MIDDLE - decoder.wide - 32, at: reveal('decoder', 0.15) },
   ];
   return (
     <>
+      {Object.entries(STAGES).map(([name, { cue, left, width }]) => (
+        <div key={name} {...reveal(cue)} className="method-scene-panel" style={{ left, width }} />
+      ))}
       <svg className="method-scene-diagram" viewBox={`0 0 ${AREA.width} ${AREA.height}`}>
         <Arrowhead id="method-scene-arrowhead" />
         {ROWS.map((y, i) => {
@@ -470,7 +550,7 @@ function GenerationDiagram({ generation, generated }) {
               <path
                 {...reveal('encoder', i * STAGGER.row)}
                 className="method-scene-flow"
-                d={`M ${PANEL + 8} ${y} L ${encoder.left - 5} ${y}`}
+                d={`M ${INSET + TILE + 8} ${y} L ${encoder.left - 5} ${y}`}
                 markerEnd={head}
               />
               <path
@@ -500,10 +580,10 @@ function GenerationDiagram({ generation, generated }) {
                 return (
                   <rect
                     key={k}
-                    x={x + 2 + (i % 2) * 7}
-                    y={stack.noisyTop + 2 + (Math.floor(i / 2) % 2) * 7}
-                    width="5"
-                    height="5"
+                    x={x + 2 + (i % 2) * (speckle + 2)}
+                    y={stack.noisyTop + 2 + (Math.floor(i / 2) % 2) * (speckle + 2)}
+                    width={speckle}
+                    height={speckle}
                     fill={noise(i + 40) > 0.5 ? '#ffffff' : '#000000'}
                     fillOpacity={0.25 + 0.5 * noise(i + 90)}
                   />
@@ -576,12 +656,16 @@ function GenerationDiagram({ generation, generated }) {
           markerEnd={head}
         />
       </svg>
-      {notes.map(({ text, left, top, accent, at }) => (
+      {notes.map(({ text, left, top, width, accent, at }) => (
         <span
           key={text}
           {...at}
-          className={`method-scene-note method-scene-note--centered${accent ? ' method-scene-note--accent' : ''}`}
-          style={{ left, top }}
+          className={[
+            'method-scene-note method-scene-note--centered',
+            width ? 'method-scene-note--wrapped' : '',
+            accent ? 'method-scene-note--accent' : '',
+          ].join(' ')}
+          style={{ left, top, width }}
         >
           <Text>{text}</Text>
         </span>
@@ -590,16 +674,19 @@ function GenerationDiagram({ generation, generated }) {
       <div className="method-scene-video" style={outputBox}>
         <Media item={{ type: 'video', src: generated.src, poster: generated.poster }} className="method-scene-media" />
       </div>
-      <div
-        data-part="output-veil"
-        className="method-scene-veil"
-        style={{
-          left: outputBox.left - VEIL_MARGIN,
-          top: outputBox.top - VEIL_MARGIN,
-          width: outputBox.width + 2 * VEIL_MARGIN,
-          height: outputBox.height + 2 * VEIL_MARGIN,
-        }}
-      />
+      {['output-veil', 'output-cover'].map((part) => (
+        <div
+          key={part}
+          data-part={part}
+          className={`method-scene-veil${part === 'output-cover' ? ' method-scene-veil--slide' : ''}`}
+          style={{
+            left: outputBox.left - VEIL_MARGIN,
+            top: outputBox.top - VEIL_MARGIN,
+            width: outputBox.width + 2 * VEIL_MARGIN,
+            height: outputBox.height + 2 * VEIL_MARGIN,
+          }}
+        />
+      ))}
       <div className="method-scene-tile" style={outputBox}>
         <div {...reveal('output')} className="method-scene-caption method-scene-caption--ours"><Text>{generation.output}</Text></div>
       </div>
@@ -636,6 +723,7 @@ export default function MethodScene({ slide, buildStep }) {
 
   // The area has a fixed size in stage pixels, so it measures the stage's scale as a canvas would.
   const [areaRef, ratio] = useStageCanvas();
+  const leftPanelRef = useRef(null);
   const viewRef = useRef(null);
   const canvasHolder = useRef(null);
   const imageRef = useRef(null);
@@ -664,6 +752,10 @@ export default function MethodScene({ slide, buildStep }) {
     const video = playing ? areaRef.current.querySelector('video') : null;
     if (video) picture.scene.targetIndex = targetViewAt(video.currentTime, streams);
     lastDrawn = { step, picture, at: performance.now() };
+
+    // The left panel is as wide as the picture says, and the 3D view's panel begins GAP after it.
+    setClip(leftPanelRef.current, `0 ${LEFT_PANEL.inputs - picture.panels.left}px 0 0`);
+    setClip(viewRef.current, `0 0 0 ${picture.panels.left + GAP - VIEW.left}px`);
 
     for (const [name, elements] of parts.current) {
       if (picture.parts[name] === undefined) throw new Error(`methodScene: no part named "${name}"`);
@@ -726,8 +818,11 @@ export default function MethodScene({ slide, buildStep }) {
     if (!viewNeeded || !(dataLoaded || hasParkedVaseScene(sceneKey))) return undefined;
     const view = acquireVaseScene(sceneKey, canvasHolder.current, () => {
       const [image, depth, volume] = [imageRef.current, depthRef.current, volumeRef.current];
+      const background = getComputedStyle(canvasHolder.current).getPropertyValue('--bg-panel').trim();
+      if (!background) throw new Error('methodScene: the theme does not define --bg-panel');
       return createVaseScene({
         scene,
+        background,
         cloud: pointCloudFromPixels({ rgba: imagePixels(image), depthRgba: imagePixels(depth), camera: scene.camera }),
         voxels: volumeFromAtlas({
           rgba: imagePixels(volume), atlasWidth: volume.naturalWidth, size: scene.volume.size, columns: scene.volume.columns,
@@ -769,8 +864,8 @@ export default function MethodScene({ slide, buildStep }) {
 
   useStillVideo(areaRef, (generated ?? (playing ? streams : inputs.lightVideo)).stillSeconds);
 
-  // Back from the generation slide, whose stream panels are stills of the last view, the video
-  // starts on its hold of that view: the panels go on from what they showed.
+  // Back from the generation slide, whose stream tiles are stills of the last view, the video
+  // starts on its hold of that view: the tiles go on from what they showed.
   const [fromLast] = useState(() => playing && !timeline.play && !stillFrames());
   useLayoutEffect(() => {
     if (fromLast) areaRef.current.querySelector('video').currentTime = (streams.lead + streams.frames - 0.5) / streams.fps;
@@ -783,6 +878,7 @@ export default function MethodScene({ slide, buildStep }) {
         <img ref={imageRef} className="method-scene-data" src={scene.image} alt="" onLoad={onDataLoad} />
         <img ref={depthRef} className="method-scene-data" src={scene.camera.depth} alt="" onLoad={onDataLoad} />
         <img ref={volumeRef} className="method-scene-data" src={scene.volume.src} alt="" onLoad={onDataLoad} />
+        <div ref={leftPanelRef} className="method-scene-panel" style={{ left: 0, width: LEFT_PANEL.inputs }} />
         <div
           ref={viewRef}
           data-part="view"
@@ -804,7 +900,7 @@ export default function MethodScene({ slide, buildStep }) {
           )}
         </div>
         {streams && <Streams streams={streams} playing={playing} fromLast={fromLast} />}
-        {/* After the stream panels: the inputs leave over the veils of the panels that take their place. */}
+        {/* After the stream tiles: the inputs leave over the veils of the tiles that take their place. */}
         {slide.phase !== 'generation' && <Inputs inputs={inputs} image={scene.image} leaving={playing} />}
         {generation && <GenerationDiagram generation={generation} generated={generated} />}
       </div>
