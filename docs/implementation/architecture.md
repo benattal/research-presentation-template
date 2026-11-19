@@ -41,6 +41,7 @@ core/client/layouts/index.js ─────────┘                     
 | Whether a live server hosts the build | the hosting script, through `__LIVE_SERVER__` |
 | Validating a presentation; slide order; step counts | `core/client/presentation/model.js` |
 | Asset URLs (`/slides/...` → base-relative) | `prefixAssetPaths` in `model.js`; `assetUrl` for code |
+| Getting slides ready before they are reached (media in memory, a layout's `prepare`) | `core/client/presentation/preload.js`, started by the audience view and the presenter's preview |
 | Which notes file a step shows and saves to | `notesFileName` in `model.js` |
 | The 1280×720 design size and scaling | `core/client/stage/Stage.jsx` |
 | Slide transitions | `core/client/stage/transitions.js`, applied by `SlideFrame.jsx` |

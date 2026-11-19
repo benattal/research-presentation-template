@@ -8,7 +8,7 @@ import { LIVE_SERVER, PRESENTATION_ID } from '../live/liveApi.js';
 import { resetPoll } from '../live/polls.js';
 import { useAudienceChannel } from '../presenter/presenterChannel.js';
 import { usePresenterAccess } from '../presenter/presenterAccess.jsx';
-import { preloadMedia } from '../presentation/preload.js';
+import { preloadSlides } from '../presentation/preload.js';
 import Stage from '../stage/Stage.jsx';
 import SlideFrame from '../stage/SlideFrame.jsx';
 import Navigation from './Navigation.jsx';
@@ -27,8 +27,8 @@ function openPresenterWindow() {
  * two bars and the stage are stacked, so the stage fits the space the bars
  * leave and never sits under them.
  *
- * Every slide's media is fetched ahead of time (`preloadMedia`), so slides
- * show their images and videos on arrival.
+ * Every slide is got ready ahead of time (`preloadSlides`: its media, and
+ * what its layout prepares), so slides show at once on arrival.
  *
  * Input comes from the keyboard (see `useKeyboardNavigation` for the keys),
  * swipes, the navigation bar, and the presenter window. While the live
@@ -50,8 +50,8 @@ export default function AudienceView({ presentation }) {
   // The slides after the one the view opened on first, then the ones before it.
   const openedAt = useState(navigation.position.index)[0];
   useEffect(() => {
-    const { slides } = presentation;
-    return preloadMedia([...slides.slice(openedAt), ...slides.slice(0, openedAt)]);
+    const { slides, layouts } = presentation;
+    return preloadSlides([...slides.slice(openedAt), ...slides.slice(0, openedAt)], layouts);
   }, [presentation, openedAt]);
 
   const onPresenterCommand = useCallback((command) => {
