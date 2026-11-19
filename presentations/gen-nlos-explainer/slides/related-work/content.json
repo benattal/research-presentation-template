@@ -21,7 +21,16 @@
     {
       "name": "Non-line-of-sight imaging",
       "caption": "NLOS volume of a captured scene",
-      "limitation": "Geometry, not photorealistic appearance"
+      "methods": [
+        {
+          "names": "f-k migration, phasor fields",
+          "limitation": "Geometry, not photorealistic appearance"
+        },
+        {
+          "names": "HOLI-1-to-3",
+          "limitation": "One object, per-scene optimization"
+        }
+      ]
     },
     {
       "name": "Generative view synthesis",
@@ -32,7 +41,12 @@
         "width": 0.4,
         "height": 0.7
       },
-      "limitation": "Hidden content is hallucinated"
+      "methods": [
+        {
+          "names": "GEN3C, Lyra 2",
+          "limitation": "Conditioned on visible observations:\nhidden content is hallucinated"
+        }
+      ]
     }
   ],
   "contribution": "Ours: generative view synthesis from propagating light"

@@ -9,24 +9,27 @@ const DIMMED = 0.3;
 
 /**
  * Related work by category: one column per category (its name, a square
- * picture, a caption, and one limitation line in red), spotlighted one per
- * build step; on the last step every column is dimmed and the contribution
- * line shows, in green, under them.
+ * picture, a caption, and its named methods, each with what it lacks in
+ * red), spotlighted one per build step; on the last step every column is
+ * dimmed and the contribution line shows, in green, under them.
  *
  * Fields:
  *   title          the slide's title.
  *   video          { src, poster?, alt? }: one video holding every column's
- *                  picture side by side, 340 stage pixels square each with
- *                  150 between them (encoded at 1.5x), so the clips stay in
+ *                  picture side by side, 280 stage pixels square each with
+ *                  200 between them (encoded at 1.5x), so the clips stay in
  *                  step.
- *   columns        each { name, caption, limitation, hidden? }: `hidden`
+ *   columns        each { name, caption, methods, hidden? }: `methods` is
+ *                  [{ names, limitation }], the methods named in one line
+ *                  and what they lack in the next (a newline breaks it);
+ *                  `hidden`
  *                  { x, y, width, height } marks the region hidden in the
  *                  input view with a thin red rectangle, as fractions of
  *                  the picture.
  *   contribution   the line shown at the last step.
  *   buildSteps     one step per column, then the contribution step.
  *
- * The limitation line of a column appears with its spotlight and stays.
+ * The methods of a column appear with its spotlight and stay.
  * A picture is dimmed by a veil over it, not by its own opacity: changing
  * the opacity of an element that holds a playing video makes some browsers
  * rebuild the video's layer, which shows as a flash.
@@ -62,9 +65,14 @@ export default function RelatedWork({ slide, buildStep }) {
                   <div className="related-work-veil" style={{ opacity: 1 - textOpacity }} />
                 </div>
                 <figcaption className="related-work-caption" style={{ opacity: textOpacity }}><Text>{column.caption}</Text></figcaption>
-                <p className="related-work-limitation" style={{ opacity: buildStep >= index ? textOpacity : 0 }}>
-                  <Text>{column.limitation}</Text>
-                </p>
+                <ul className="related-work-methods" style={{ opacity: buildStep >= index ? textOpacity : 0 }}>
+                  {column.methods.map((method) => (
+                    <li key={method.names}>
+                      <span className="related-work-method"><Text>{method.names}</Text></span>
+                      <span className="related-work-limitation"><Text>{method.limitation}</Text></span>
+                    </li>
+                  ))}
+                </ul>
               </figure>
             );
           })}
