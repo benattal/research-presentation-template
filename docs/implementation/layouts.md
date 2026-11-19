@@ -65,6 +65,7 @@ module's docstring gives its fields; this table says what to reach for.
 | `EquationStack.jsx` | `EquationStack` (default) | equations revealed one per build step, earlier ones dimmed; a line can ask before its right side (`rhs`), show a one-step justification under it, or grow term by term (`parts`) |
 | `Controls.jsx` | `Slider`, `Readout` | a range input for exploring with the mouse that gives the arrow keys back to the slides; named values side by side |
 | `Chart.jsx` | `Chart` (default) | a plot with thin axes and lines, dots, bars, or areas, colored by class names; optionally a scrubber |
+| `playback.js` | `useStepClock`, `SETTLED_MS` | an animation that runs over time on a build step (`draw(ms)` from the step's start, on every frame); one still frame in the capture view; a virtual clock for recording |
 
 A layout restyles a widget from its own stylesheet, scoped under its own
 class (`.my-layout .slider input`); the widgets' colors are core tokens.
