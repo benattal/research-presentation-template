@@ -10,7 +10,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import {
   BEAM, BUNNY, LIDAR, LIGHT_SPEED, RELAY_NORMAL, RELAY_POINT, ROOM, SCAN_COLUMNS, SCAN_ROWS, TEAPOT, TIMES,
-  createCaster, distance, measureIndirect, pulse, scanBeamDirection, scanPoints, teapotGeometry,
+  distance, pulse, scanBeamDirection, scanPoints, sceneCaster, teapotGeometry,
 } from './cornerScene.js';
 
 /**
@@ -583,21 +583,33 @@ function buildLights(scene, renderer) {
  * The render.
  * ------------------------------------------------------------------------ */
 
+/** The size the render is drawn at before a slide shows it, in stage pixels. */
+const STAGE = { width: 1280, height: 720 };
+
 /**
- * Draw the scene into `canvas` (created for this render; it owns the WebGL
- * context). `colors` are CSS color strings: `direct` and `indirect` light
- * and the `scan` dots. Returns:
+ * A render of the scene, into a canvas of its own (`canvas`; it owns the
+ * WebGL context). Building one is the slow part of showing the slide, so
+ * slides take the page's render (`acquireLidarRender`) instead of calling
+ * this. Returns:
  *
- * - `setHiddenObject(geometry)`: add the bunny (cornerScene.js's
- *   `bunnyGeometry`), once; the indirect light is drawn from then on;
- * - `indirect()`: the indirect transient of the measurement at x_p
- *   (`measureIndirect`), or null before the bunny is set;
+ * - `canvas`: the element to place on the slide;
+ * - `setColors({ direct, indirect, scan })`: CSS color strings of the direct
+ *   and indirect light and of the scan's dots (the theme's, which only an
+ *   element on the page can say); until then the light is white;
+ * - `setHiddenObject({ geometry, indirect })`: add the bunny
+ *   (cornerScene.js's `bunnyGeometry`) and the indirect transient of the
+ *   measurement at x_p (`measureIndirect`), once; the indirect light is
+ *   drawn from then on;
+ * - `indirect()`: that transient, or null before the bunny is set;
  * - `setSize(width, height, ratio)` in stage pixels;
+ * - `compile()`: compile the scene's shaders without blocking the page; the
+ *   promise resolves when they are ready;
  * - `draw(frame)` for a frame of timeline.js;
  * - `project(point)` from world (m) to canvas pixels;
  * - `dispose()`, which frees every GPU resource and the context.
  */
-export function createLidarRender(canvas, colors) {
+function createLidarRender() {
+  const canvas = document.createElement('canvas');
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.NeutralToneMapping;
@@ -609,9 +621,9 @@ export function createLidarRender(canvas, colors) {
   renderer.shadowMap.needsUpdate = true;
   renderer.setClearColor('#000000', 1);
 
-  const direct = new THREE.Color(colors.direct);
-  const indirect = new THREE.Color(colors.indirect);
-  const scanColor = new THREE.Color(colors.scan);
+  const direct = new THREE.Color('#ffffff');
+  const indirect = new THREE.Color('#ffffff');
+  const scanColor = new THREE.Color('#ffffff');
   const white = new THREE.Color('#ffffff');
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(CAMERA.fov, 16 / 9, 0.5, 30);
@@ -649,7 +661,7 @@ export function createLidarRender(canvas, colors) {
   // Both sides: the lid's rim and the spout's mouth show the inside of the surface.
   teapotMaterial.side = THREE.DoubleSide;
   scene.add(shadowed(new THREE.Mesh(teapot, teapotMaterial)));
-  const caster = createCaster({ teapot });
+  const caster = sceneCaster();
   let hidden = null;
 
   // Light along the beam's path: laser → beamsplitter → mirrors → a point of the scene, and mirrors → beamsplitter → detector.
@@ -689,7 +701,7 @@ export function createLidarRender(canvas, colors) {
   scene.add(outgoingShell.mesh, returningShell.mesh);
 
   // The scan's points: flat dots on the surfaces, each drawn from the moment the beam passes it.
-  const points = scanPoints(caster);
+  const points = scanPoints();
   const scanCells = SCAN_ROWS * SCAN_COLUMNS;
   const dots = new THREE.InstancedMesh(
     new THREE.CircleGeometry(DOT_RADIUS, 28),
@@ -707,8 +719,20 @@ export function createLidarRender(canvas, colors) {
   const dotScale = new THREE.Vector3();
   const dotColor = new THREE.Color();
 
-  let width = 1;
-  let height = 1;
+  let width = 0;
+  let height = 0;
+
+  function setSize(nextWidth, nextHeight, ratio) {
+    if (nextWidth === width && nextHeight === height && renderer.getPixelRatio() === ratio) return;
+    width = nextWidth;
+    height = nextHeight;
+    renderer.setPixelRatio(ratio);
+    renderer.setSize(width, height, false);
+    camera.aspect = width / height;
+    camera.setViewOffset(width, height, -CAMERA.shift[0] * width, -CAMERA.shift[1] * height, width, height);
+    camera.updateProjectionMatrix();
+  }
+  setSize(STAGE.width, STAGE.height, 1);
 
   function along(start, end, u) {
     const span = distance(start, end);
@@ -832,28 +856,32 @@ export function createLidarRender(canvas, colors) {
   }
 
   return {
-    setHiddenObject(geometry) {
+    canvas,
+    setColors(colors) {
+      direct.set(colors.direct);
+      indirect.set(colors.indirect);
+      scanColor.set(colors.scan);
+      // The glows hold copies of their colors.
+      packet.material.color.copy(direct);
+      indirectPacket.material.color.copy(indirect);
+      hiddenGlow.material.color.copy(indirect);
+    },
+    setHiddenObject({ geometry, indirect: transient }) {
       if (hidden) throw new Error('lidarCapture: the hidden object is already in the scene');
       const material = addLightWaves(standard('bunny'), waves, { seams: [0, 0.5, 0], hidden: true });
       const mesh = shadowed(new THREE.Mesh(geometry, material));
       scene.add(mesh);
-      hidden = { mesh, indirect: measureIndirect(geometry, caster) };
-      waves.uWaveCenter1.value.set(...hidden.indirect.nearest.point);
-      pathBeam.place(RELAY_POINT, hidden.indirect.nearest.point);
+      hidden = { mesh, indirect: transient };
+      waves.uWaveCenter1.value.set(...transient.nearest.point);
+      pathBeam.place(RELAY_POINT, transient.nearest.point);
       renderer.shadowMap.needsUpdate = true;
     },
     indirect() {
       return hidden ? hidden.indirect : null;
     },
-    setSize(nextWidth, nextHeight, ratio) {
-      if (nextWidth === width && nextHeight === height && renderer.getPixelRatio() === ratio) return;
-      width = nextWidth;
-      height = nextHeight;
-      renderer.setPixelRatio(ratio);
-      renderer.setSize(width, height, false);
-      camera.aspect = width / height;
-      camera.setViewOffset(width, height, -CAMERA.shift[0] * width, -CAMERA.shift[1] * height, width, height);
-      camera.updateProjectionMatrix();
+    setSize,
+    compile() {
+      return renderer.compileAsync(scene, camera);
     },
     draw(frame) {
       drawMeasurement(frame);
@@ -876,10 +904,60 @@ export function createLidarRender(canvas, colors) {
           material.dispose();
         }
       });
-      caster.dispose();
       environment.dispose();
       renderer.dispose();
       renderer.forceContextLoss();
     },
   };
+}
+
+/* ---------------------------------------------------------------------------
+ * The page's render.
+ * ------------------------------------------------------------------------ */
+
+/**
+ * The render the page keeps: built once (ahead of time by
+ * `prepareLidarRender`, otherwise when a slide first asks for it), with its
+ * compiled shaders, its shadows, and its WebGL context, and lent to the
+ * slide for as long as it is shown. Arriving on the slide then costs one
+ * frame, and leaving it frees nothing.
+ */
+const page = { render: null, lent: false };
+
+/**
+ * The render for a slide to show, until it gives it back with
+ * `releaseLidarRender`: the page's, or one of its own for a second copy of
+ * the slide shown at the same time.
+ */
+export function acquireLidarRender() {
+  page.render ??= createLidarRender();
+  if (page.lent) return createLidarRender();
+  page.lent = true;
+  return page.render;
+}
+
+export function releaseLidarRender(render) {
+  if (render === page.render) page.lent = false;
+  else render.dispose();
+}
+
+/**
+ * Make the page's render ready before a slide asks for it: build it, add
+ * the hidden object, compile its shaders, and draw each of `frames` (frames
+ * of timeline.js that between them show every kind of light), so that the
+ * GPU has compiled and uploaded everything the slide draws. `pause()`
+ * resolves when the page has time for the next part. A slide may take the
+ * render at any point; the parts left are then done as the slide draws.
+ */
+export async function prepareLidarRender(hiddenObject, frames, pause) {
+  page.render ??= createLidarRender();
+  const { render } = page;
+  if (!render.indirect()) render.setHiddenObject(hiddenObject);
+  await pause();
+  await render.compile();
+  for (const frame of frames) {
+    await pause();
+    if (page.lent) return;
+    render.draw(frame);
+  }
 }

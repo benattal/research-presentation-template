@@ -1,12 +1,12 @@
-import { mediaUrl } from '@core/presentation/preload.js';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { mediaUrl, whenIdle } from '@core/presentation/preload.js';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
 import { useStageCanvas } from '@core/stage/canvas.js';
 import { useStepClock } from '@core/stage/playback.js';
-import { BUNNY, ROOM, TEAPOT, TIMES, bunnyGeometry, lidarPoint, pulse } from './cornerScene.js';
-import { createLidarRender } from './lidarRender.js';
-import { PLOT_END, STEPS, frameAt, stillAt } from './timeline.js';
+import { BUNNY, ROOM, TEAPOT, TIMES, bunnyGeometry, lidarPoint, measureIndirect, pulse } from './cornerScene.js';
+import { acquireLidarRender, prepareLidarRender, releaseLidarRender } from './lidarRender.js';
+import { PLOT_END, STEPS, frameAt, settledAt, stillAt } from './timeline.js';
 import './LidarCapture.css';
 
 /** The labels a slide must give, by key. */
@@ -127,6 +127,21 @@ function imagePixels(image) {
 }
 
 /**
+ * The hidden object of each mesh image, by the image's path in the slide:
+ * its surface and the indirect light it returns to x_p. Both follow from
+ * the image alone, so they are worked out once for the page.
+ */
+const hiddenObjects = new Map();
+
+function hiddenObjectOf(meshPath, image) {
+  if (!hiddenObjects.has(meshPath)) {
+    const geometry = bunnyGeometry(imagePixels(image));
+    hiddenObjects.set(meshPath, { geometry, indirect: measureIndirect(geometry) });
+  }
+  return hiddenObjects.get(meshPath);
+}
+
+/**
  * Lidar capture: a three.js render of the website's corner scene (two
  * relay walls, the teapot occluder, the bunny hidden behind it) and of a
  * confocal lidar on a breadboard in front of it, with a plot of the
@@ -165,18 +180,14 @@ export default function LidarCapture({ slide, buildStep }) {
   const plotLabelRefs = useRef({});
   const [view, setView] = useState(null);
   // The render while it can be drawn: React detaches the layout's elements, and this effect's
-  // cleanup frees the render, before the step clock stops, and a frame may fall in between.
+  // cleanup gives the render back, before the step clock stops, and a frame may fall in between.
   const liveRender = useRef(null);
-  const [meshLoaded, setMeshLoaded] = useState(false);
-  // The render the hidden object has been added to: a new render (a remount) starts without it.
-  const [renderWithHidden, setRenderWithHidden] = useState(null);
+  const meshPath = slide.hiddenObject.mesh;
+  const [hiddenObject, setHiddenObject] = useState(() => hiddenObjects.get(meshPath) ?? null);
 
-  // The renderer: one canvas and WebGL context per mount, freed on unmount.
+  // The render: the page's, with its canvas placed on this slide for as long as the slide is shown.
   useLayoutEffect(() => {
     const host = hostRef.current;
-    const canvas = document.createElement('canvas');
-    canvas.className = 'lidar-capture-canvas';
-    host.appendChild(canvas);
     const style = getComputedStyle(host);
     const token = (name) => style.getPropertyValue(name).trim();
     const colors = {
@@ -186,26 +197,30 @@ export default function LidarCapture({ slide, buildStep }) {
       axis: token('--text-secondary'),
       cursor: token('--text-primary'),
     };
-    const render = createLidarRender(canvas, colors);
+    const render = acquireLidarRender();
+    render.setColors(colors);
+    render.canvas.className = 'lidar-capture-canvas';
+    host.appendChild(render.canvas);
     liveRender.current = render;
     setView({ render, colors, width: host.offsetWidth, height: host.offsetHeight });
     return () => {
       liveRender.current = null;
-      render.dispose();
-      canvas.remove();
+      render.canvas.remove();
+      releaseLidarRender(render);
     };
   }, [hostRef]);
 
+  // In the commit that places the render, so the first frame drawn has the hidden object when it is known.
+  useLayoutEffect(() => {
+    if (view && hiddenObject && !view.render.indirect()) view.render.setHiddenObject(hiddenObject);
+  }, [view, hiddenObject]);
+  const hiddenShown = Boolean(view && hiddenObject);
+
   // The image may have loaded before React listened for it.
   useEffect(() => {
-    if (meshRef.current.complete && meshRef.current.naturalWidth > 0) setMeshLoaded(true);
-  }, []);
-
-  useEffect(() => {
-    if (!view || !meshLoaded || renderWithHidden === view.render) return;
-    view.render.setHiddenObject(bunnyGeometry(imagePixels(meshRef.current)));
-    setRenderWithHidden(view.render);
-  }, [view, meshLoaded, renderWithHidden]);
+    const image = meshRef.current;
+    if (image.complete && image.naturalWidth > 0) setHiddenObject(hiddenObjectOf(meshPath, image));
+  }, [meshPath]);
 
   useStepClock(buildStep, (ms) => {
     if (!view || liveRender.current !== view.render) return;
@@ -228,14 +243,20 @@ export default function LidarCapture({ slide, buildStep }) {
     plotLabels.direct.style.opacity = frame.plot.opacity * frame.plot.direct;
     plotLabels.indirect.style.opacity = transient ? frame.plot.opacity * frame.plot.indirect : 0;
     if (transient) plotLabels.indirect.style.left = `${plotX(TIMES.direct + transient.peakDelay)}px`;
-  }, { still: stillAt(buildStep) });
+  }, { still: stillAt(buildStep), until: settledAt(buildStep) });
 
   return (
     <div className="lidar-capture">
       <SlideTitle title={slide.title} />
-      <div className="lidar-capture-figure" data-hidden-object={view && renderWithHidden === view.render ? 'shown' : 'loading'}>
+      <div className="lidar-capture-figure" data-hidden-object={hiddenShown ? 'shown' : 'loading'}>
         <div className="lidar-capture-render" ref={hostRef} />
-        <img className="lidar-capture-mesh" ref={meshRef} src={mediaUrl(slide.hiddenObject.mesh)} alt="" onLoad={() => setMeshLoaded(true)} />
+        <img
+          className="lidar-capture-mesh"
+          src={mediaUrl(meshPath)}
+          alt=""
+          ref={meshRef}
+          onLoad={(event) => setHiddenObject(hiddenObjectOf(meshPath, event.currentTarget))}
+        />
         {SCENE_LABELS.map(({ key, side }) => (
           <div key={key} className={`lidar-capture-label lidar-capture-label--${side}`} ref={(element) => { labelRefs.current[key] = element; }}>
             <span><Text>{slide.labels[key]}</Text></span>
@@ -269,3 +290,19 @@ export default function LidarCapture({ slide, buildStep }) {
     </div>
   );
 }
+
+/**
+ * Ahead of the slide (the audience view calls it while the page is idle):
+ * the hidden object from its mesh image, and the page's render with its
+ * shaders compiled and each step's still frame drawn once.
+ */
+LidarCapture.prepare = async (slide) => {
+  const meshPath = slide.hiddenObject.mesh;
+  const image = new Image();
+  image.src = mediaUrl(meshPath);
+  await image.decode();
+  await whenIdle();
+  const hiddenObject = hiddenObjectOf(meshPath, image);
+  await whenIdle();
+  await prepareLidarRender(hiddenObject, STEPS.map((_, step) => frameAt(step, stillAt(step))), whenIdle);
+};

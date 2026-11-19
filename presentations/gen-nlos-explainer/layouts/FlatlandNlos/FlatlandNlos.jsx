@@ -1,11 +1,12 @@
 import { useMemo, useRef } from 'react';
+import { whenIdle } from '@core/presentation/preload.js';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
 import { ease, useStageCanvas } from '@core/stage/canvas.js';
 import { useStepClock } from '@core/stage/playback.js';
 import {
   BIN, FRAME, GRID, HIDDEN_OUTLINE, ITERATIONS, LIDAR, OCCLUDER_OUTLINE, SETUPS,
-  flatlandNlos, hiddenSurface, roundTrip, visible,
+  flatlandMeasurements, flatlandNlos, hiddenSurface, roundTrip, visible,
 } from './nlos.js';
 import './FlatlandNlos.css';
 
@@ -731,7 +732,6 @@ export default function FlatlandNlos({ slide, buildStep }) {
   const model = useFlatland();
   const [canvasRef, ratio] = useStageCanvas();
   const colorsRef = useRef(null);
-  const settledRef = useRef(null);
   const planarLabels = useRef(null);
   const sceneLabels = useRef(null);
   const gridLabel = useRef(null);
@@ -744,12 +744,6 @@ export default function FlatlandNlos({ slide, buildStep }) {
   const paint = (ms) => {
     const canvas = canvasRef.current;
     const step = Math.min(buildStep, 1);
-    // A settled step draws once.
-    const settledKey = `${step}:${ratio}`;
-    const settled = ms >= settledAfter(step);
-    if (settled && settledRef.current === settledKey) return;
-    settledRef.current = settled ? settledKey : null;
-
     colorsRef.current ??= themeColors(canvas);
     const colors = colorsRef.current;
     if (model.measurements?.ratio !== ratio) model.measurements = measurementImage(model, ratio, colors.indirectRgb);
@@ -845,7 +839,7 @@ export default function FlatlandNlos({ slide, buildStep }) {
     forwardLabel.current.style.opacity = String(forwardStrength);
     adjointLabel.current.style.opacity = String(gridIn);
   };
-  useStepClock(buildStep, paint);
+  useStepClock(buildStep, paint, { until: settledAfter(Math.min(buildStep, 1)) });
 
   const box = (left, width, top) => ({ left, width, top });
   const arrowLabel = (top) => box(ARROWS.from - 10, ARROWS.to - ARROWS.from + 20, top);
@@ -921,3 +915,14 @@ export default function FlatlandNlos({ slide, buildStep }) {
     </div>
   );
 }
+
+/**
+ * Ahead of the slide (the audience view calls it while the page is idle):
+ * the measurements, then the reconstruction, which the slide would
+ * otherwise solve on the key press that arrives at it.
+ */
+FlatlandNlos.prepare = async () => {
+  flatlandMeasurements();
+  await whenIdle();
+  flatlandNlos();
+};

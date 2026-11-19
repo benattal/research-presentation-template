@@ -357,23 +357,34 @@ export function cgls(op, b, weights, iterations) {
 }
 
 /**
- * Everything the slide draws, computed on first use and kept for the
- * page's lifetime (deterministic): both settings' scan points, the
- * nonplanar setting's operator and measurements b, the bin weights D, each
- * scan point's weighted backprojection (they sum to Aᵀ D² b), and the CGLS
- * iterates.
+ * What is measured, computed on first use and kept for the page's lifetime
+ * (deterministic): both settings' scan points, the nonplanar setting's
+ * operator and measurements b, and the bin weights D.
  */
-let solved = null;
-export function flatlandNlos() {
-  if (solved) return solved;
+let measured = null;
+export function flatlandMeasurements() {
+  if (measured) return measured;
   const planar = scanPoints('planar');
   const scans = scanPoints('nonplanar');
   const op = forwardOperator('nonplanar', scans);
   const b = measure('nonplanar', scans, op.timeBins);
-  const weights = binWeights(op);
+  measured = { planar, scans, op, b, weights: binWeights(op) };
+  return measured;
+}
+
+/**
+ * Everything the slide draws, computed on first use and kept for the
+ * page's lifetime (deterministic): the measurements
+ * (`flatlandMeasurements`), each scan point's weighted backprojection (they
+ * sum to Aᵀ D² b), and the CGLS iterates.
+ */
+let solved = null;
+export function flatlandNlos() {
+  if (solved) return solved;
+  const { scans, op, b, weights } = flatlandMeasurements();
   const weighted = weighRows(op, weights, weighRows(op, weights, b));
   const backprojections = scans.map((_, s) => Float32Array.from(applyAdjoint(op, weighted, s)));
   const iterates = cgls(op, b, weights, ITERATIONS);
-  solved = { planar, scans, op, b, weights, backprojections, iterates };
+  solved = { ...flatlandMeasurements(), backprojections, iterates };
   return solved;
 }

@@ -47,6 +47,16 @@ export function stillAt(step) {
   return STILL_MS[STEPS[step]];
 }
 
+/** The time into each step (ms) from which its frames no longer change: the measurement complete (its still frame); the scan complete. */
+const SETTLED_MS = {
+  measurement: STILL_MS.measurement,
+  scan: SCAN_START_MS + SCAN_MS,
+};
+
+export function settledAt(step) {
+  return SETTLED_MS[STEPS[step]];
+}
+
 /**
  * The frame at `ms` into build step `step`:
  *

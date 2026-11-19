@@ -40,8 +40,10 @@ export const TEAPOT = { position: [0.759, 0, 0.857], height: 0.4186, widthScale:
 /** The hidden object: the Stanford bunny, its base centered at `position`, the head along -x before `yaw`. */
 export const BUNNY = { position: [0.36, 0, 0.36], height: 0.46, yaw: radians(145) };
 
-/** The teapot's surface in world coordinates. */
+/** The teapot's surface in world coordinates: built once for the page and shared. */
+let teapot = null;
 export function teapotGeometry() {
+  if (teapot) return teapot;
   const geometry = new TeapotGeometry(1, 16);
   geometry.computeBoundingBox();
   const { min, max } = geometry.boundingBox;
@@ -51,7 +53,8 @@ export function teapotGeometry() {
   geometry.rotateY(TEAPOT.yaw);
   geometry.translate(...TEAPOT.position);
   geometry.computeBoundingSphere();
-  return geometry;
+  teapot = geometry;
+  return teapot;
 }
 
 /** Bytes of the bunny's mesh image before its vertices (make-bunny-mesh.mjs, among the slide's sources, documents the format). */
@@ -205,32 +208,29 @@ function inRoom([x, y, z]) {
 }
 
 /**
- * Ray casting in the scene, against the room and the given meshes' surfaces
- * (`{ teapot, bunny }` geometries in world coordinates; the bunny may be
- * left out). Returns:
+ * Ray casting in the scene, against the room and the teapot: the surfaces
+ * the lidar sees. Built once for the page and shared. Returns:
  *
  * - `cast(origin, direction)`: the first surface a ray along unit
  *   `direction` reaches, `{ point, normal, distance, surface }` with
- *   `surface` one of 'floor', 'wallX', 'wallZ', 'teapot', 'bunny' and the
- *   normal toward the ray's origin, or null when the ray leaves the scene;
- * - `clear(a, b)`: true when no mesh lies between the points a and b.
+ *   `surface` one of 'floor', 'wallX', 'wallZ', 'teapot' and the normal
+ *   toward the ray's origin, or null when the ray leaves the scene;
+ * - `clear(a, b)`: true when the teapot does not lie between the points a
+ *   and b.
  */
-export function createCaster(geometries) {
-  const material = new THREE.MeshBasicMaterial({ side: THREE.DoubleSide });
-  const meshes = Object.entries(geometries).map(([surface, geometry]) => {
-    const mesh = new THREE.Mesh(geometry, material);
-    mesh.name = surface;
-    return mesh;
-  });
+let caster = null;
+export function sceneCaster() {
+  if (caster) return caster;
+  const occluder = new THREE.Mesh(teapotGeometry(), new THREE.MeshBasicMaterial({ side: THREE.DoubleSide }));
   const raycaster = new THREE.Raycaster();
 
-  function castMeshes(origin, direction, far) {
+  function castTeapot(origin, direction, far) {
     raycaster.set(new THREE.Vector3(...origin), new THREE.Vector3(...direction));
     raycaster.far = far;
-    return raycaster.intersectObjects(meshes, false)[0] ?? null;
+    return raycaster.intersectObject(occluder, false)[0] ?? null;
   }
 
-  return {
+  caster = {
     cast(origin, direction) {
       let best = null;
       for (const { surface, axis, normal } of ROOM_PLANES) {
@@ -240,23 +240,21 @@ export function createCaster(geometries) {
         point[axis] = 0;
         if (t > 1e-6 && inRoom(point) && (!best || t < best.distance)) best = { point, normal, distance: t, surface };
       }
-      const hit = castMeshes(origin, direction, best ? best.distance : Infinity);
+      const hit = castTeapot(origin, direction, best ? best.distance : Infinity);
       if (hit) {
         const faceNormal = hit.face.normal.toArray();
         const facing = dot(faceNormal, direction) < 0 ? 1 : -1;
-        best = { point: hit.point.toArray(), normal: faceNormal.map((value) => value * facing), distance: hit.distance, surface: hit.object.name };
+        best = { point: hit.point.toArray(), normal: faceNormal.map((value) => value * facing), distance: hit.distance, surface: 'teapot' };
       }
       return best;
     },
     clear(a, b) {
       const span = distance(a, b);
       const direction = sub(b, a).map((value) => value / span);
-      return castMeshes(a, direction, span - 1e-4) === null;
-    },
-    dispose() {
-      material.dispose();
+      return castTeapot(a, direction, span - 1e-4) === null;
     },
   };
+  return caster;
 }
 
 /* ---------------------------------------------------------------------------
@@ -300,15 +298,17 @@ export function scanBeamDirection(progress) {
  * The points the scan reaches, in scan order: each `{ point, normal,
  * surface, order }`, where `order` is the grid point's place in the scan
  * (the beam is there at progress `(order + 0.5) / (rows · columns)`). Grid
- * directions that leave the scene have no point.
+ * directions that leave the scene have no point. Cast once for the page.
  */
-export function scanPoints(caster) {
-  const points = [];
+let scanned = null;
+export function scanPoints() {
+  if (scanned) return scanned;
+  scanned = [];
   for (let order = 0; order < SCAN_ROWS * SCAN_COLUMNS; order++) {
-    const hit = caster.cast(BEAM.mirrors, scanBeamDirection((order + 0.5) / (SCAN_ROWS * SCAN_COLUMNS)));
-    if (hit) points.push({ ...hit, order });
+    const hit = sceneCaster().cast(BEAM.mirrors, scanBeamDirection((order + 0.5) / (SCAN_ROWS * SCAN_COLUMNS)));
+    if (hit) scanned.push({ ...hit, order });
   }
-  return points;
+  return scanned;
 }
 
 /* ---------------------------------------------------------------------------
@@ -332,7 +332,8 @@ const DELAY_BINS = 600;
  * bunny point closest to x_p among those x_p illuminates, `{ point,
  * normal, distance }`.
  */
-export function measureIndirect(bunny, caster) {
+export function measureIndirect(bunny) {
+  const caster = sceneCaster();
   const positions = bunny.getAttribute('position');
   const normals = bunny.getAttribute('normal');
   const histogram = new Float64Array(DELAY_BINS);
