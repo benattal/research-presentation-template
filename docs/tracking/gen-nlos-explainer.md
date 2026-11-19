@@ -85,6 +85,10 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- Of the junctions that led a cleanup to empty the lecture's media: "Yeah
+  don't use simlinks like that". No junctions or symlinks between
+  checkouts; a worktree gets its own copy of the media. Rule in both
+  agent files ("Shell safety").
 - "By the way my collaborators will be working on the repo
   simultaneously, so do your best to work well with them". Fetch and
   merge before every push; small commits, pushed often; their decisions
