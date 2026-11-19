@@ -17,6 +17,11 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- "Also use the "video (6).mp4" file in my downloads directory (flipped
+  horizontally) as ours for the real lamp scene": copied to
+  `assets/sources/captured-comparison/ours-lamp-20261119.mp4` and used,
+  flipped, as ours on the captured comparison's lamp row (791cbf2). "Also
+  please push frequently".
 - "For related work, more methods should be listed/more visual examples of
   methods should be shown. The visuals should also ideally be tied to a
   concrete technique". A builder is redoing the slide: each visual is the
