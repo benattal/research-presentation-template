@@ -1,2 +1,2 @@
-Our method recovers the correct hidden object in twenty of twenty seeds,
-for both scenes.
+For both scenes, our method recovers the correct hidden object for
+twenty out of twenty random seeds.

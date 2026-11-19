@@ -1,1 +1,1 @@
-The second is trained on rooms generated with Infinigen.
+The second uses rooms generated with Infinigen.

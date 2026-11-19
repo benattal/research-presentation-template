@@ -1,1 +1,1 @@
-A pair of scanning mirrors steers the beam across the scene.
+A pair of scanning mirrors steers the beam.

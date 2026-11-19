@@ -13,7 +13,7 @@
   "labels": {
     "laser": "pulsed laser",
     "mirrors": "scanning mirrors",
-    "detector": "SPAD",
+    "detector": "single-photon detector",
     "relays": "relay walls",
     "occluder": "occluder",
     "hidden": "hidden object",
