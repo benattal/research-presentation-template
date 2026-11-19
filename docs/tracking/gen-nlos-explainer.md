@@ -20,6 +20,19 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- "In "processing the capture" there's a hanging arrow from RGB image in
+  the first slide which doesn't lead to anything until the later slides."
+  Passed to the builder smoothing the method slides: no element may point
+  at nothing.
+- On the rotating comparison: "Instead of "captured letters" cite the
+  stanford f-k dataset"; "You can show all rotating comparisons at the
+  same time, no need for an ease in for 3d-gtr"; "Showing the ground
+  truth scene would also be nice if you can pull it", "Same rotation
+  animation for the scene. Also showing the position of the camera/its
+  fov in the scene" (a builder is rendering it).
+- "For future development, add docs and instructions making storyboarding
+  a requirement for future presentations": framework commit 870af47
+  (both agent files, slide style, plan conventions).
 - "Okay the rotating comparison actually looks very very cool. Please
   include it": it follows the reconstruction slide in the method section.
 - "For the lidar capture, I might shorten this to a single animation that
