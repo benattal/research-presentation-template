@@ -1,16 +1,20 @@
-@import '@fontsource-variable/jost';
-
 /*
- * Generative view synthesis from propagating light: the reference decks'
- * colors (black slides, white text, orange titles and accents, a
- * Futura-like face) on the light-transport lecture's layout (title at top
- * left, the visual filling the slide, short labels, credits at bottom
- * right). Slides have a title and no subtitle line.
+ * Generative view synthesis from propagating light, styled after the
+ * SIGGRAPH Asia holography deck (`priorart/SIGASIApresentation_FINAL.pptx`):
+ * black slides, white Optima text, titles at top left in white, color only
+ * for marks and for "ours" (that deck's green). No text is orange or
+ * yellow. Layout from the light-transport lecture (the visual filling the
+ * slide, short labels, credits at bottom right). Slides have a title and
+ * no subtitle line.
+ *
+ * Optima is a macOS system font; it is not bundled. Elsewhere the deck
+ * falls back to the next face in `--font`.
  *
  * Roles shared by text, plots, and renders:
- *   --accent        titles; "ours" in comparisons
+ *   --accent        "ours" in comparisons, our contribution
  *   --direct        direct light (white, as in the captured light videos)
- *   --indirect      indirect light (amber, as in the captured light videos)
+ *   --indirect      indirect light (amber, as in the captured light
+ *                   videos); marks only, never text
  *   --hidden        the hidden region (boxes around it)
  *   --baseline      baselines in comparisons
  */
@@ -19,11 +23,11 @@
   --bg-slide: #000000;
   --bg-elevated: #121212;
   --bg-card: #161616;
-  --text-primary: #f4f4f4;
-  --text-secondary: #cfcfcf;
+  --text-primary: #ffffff;
+  --text-secondary: #d6d6d6;
   --text-muted: #8c8c8c;
-  --accent: #ffcc66;
-  --accent-glow: rgba(255, 204, 102, 0.25);
+  --accent: #54ff6b;
+  --accent-glow: rgba(84, 255, 107, 0.25);
   --accent-secondary: #6ec6ff;
   --accent-secondary-glow: rgba(110, 198, 255, 0.25);
   --border: rgba(255, 255, 255, 0.1);
@@ -40,13 +44,12 @@
   --hidden: #ff5a5a;
   --baseline: #9aa4b2;
 
-  /* Type scale: every text size in the deck is one of these. Slide titles
-     are 40px (core); credits keep the core's size. */
-  --type-display: 44px;   /* the title card and section cards */
-  --type-statement: 26px; /* sentences that are a slide's content */
-  --type-label: 22px;     /* labels, captions, column and row names */
-  --type-small: 17px;     /* axis ticks, notes under a label */
-  --font: 'Jost Variable', 'Jost', 'Futura PT', Futura, 'Century Gothic', sans-serif;
+  /* Type scale: every text in the deck is one of these three sizes, in
+     one weight (400). */
+  --type-title: 40px; /* slide titles, the title card, section cards */
+  --type-text: 22px;  /* statements, labels, captions, row and column names */
+  --type-small: 16px; /* axis ticks, notes under a label, credits */
+  --font: Optima, 'Optima nova', 'URW Classico', Candara, sans-serif;
   --font-display: var(--font);
 }
 
@@ -63,31 +66,31 @@
 }
 
 .slide-title {
-  color: var(--accent);
-  font-weight: 500;
+  color: var(--text-primary);
+  font-size: var(--type-title);
+  font-weight: 400;
   letter-spacing: 0;
 }
 
-/* The title and closing card (core `title` layout): the paper's title in
-   the accent color on one line, the venue line small under it. Scoped
-   under .slide to override the core layout's own stylesheet. */
+.slide-credits {
+  font-size: var(--type-small);
+}
+
+/* The title and closing card (core `title` layout): the paper's title on
+   one line, the venue line under it. Scoped under .slide to override the
+   core layout's own stylesheet. */
 .slide .slide--title h1 {
   background: none;
   -webkit-text-fill-color: currentColor;
-  color: var(--accent);
-  font-size: var(--type-display);
-  font-weight: 500;
+  color: var(--text-primary);
+  font-size: var(--type-title);
+  font-weight: 400;
   letter-spacing: 0;
   margin-bottom: 1.4rem;
 }
 
 .slide .slide--title .subtitle {
   color: var(--text-secondary);
-  font-size: var(--type-label);
+  font-size: var(--type-text);
   font-weight: 400;
 }
-
-.term-direct { color: var(--direct); }
-.term-indirect { color: var(--indirect); }
-.term-hidden { color: var(--hidden); }
-.term-accent { color: var(--accent); }

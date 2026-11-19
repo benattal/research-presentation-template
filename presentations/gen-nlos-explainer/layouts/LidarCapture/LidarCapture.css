@@ -50,7 +50,7 @@
 .lidar-capture-label > span {
   position: absolute;
   color: var(--text-primary);
-  font-size: var(--type-label);
+  font-size: var(--type-text);
   line-height: 1.1;
   /* A label breaks only where its text has a line break. */
   white-space: pre;
@@ -108,7 +108,7 @@
   display: block;
   margin-bottom: 10px;
   color: var(--text-primary);
-  font-size: var(--type-label);
+  font-size: var(--type-text);
   line-height: 1;
   white-space: nowrap;
 }
@@ -156,7 +156,7 @@
 /* A name on the plot, centered over what it names. */
 .lidar-capture-plot-mark {
   color: var(--text-primary);
-  font-size: var(--type-label);
+  font-size: var(--type-text);
   opacity: 0;
   transform: translateX(-50%);
 }
@@ -166,5 +166,6 @@
 }
 
 .lidar-capture-plot-mark--indirect {
-  color: var(--indirect);
+  /* Amber is for marks, never for text (theme). */
+  color: var(--text-primary);
 }

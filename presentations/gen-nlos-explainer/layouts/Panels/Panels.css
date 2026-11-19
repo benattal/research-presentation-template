@@ -27,7 +27,7 @@
 }
 
 .panels-row-label {
-  font-size: var(--type-label);
+  font-size: var(--type-text);
   line-height: 1.2;
   color: var(--text-secondary);
   white-space: nowrap;
@@ -73,7 +73,7 @@
 
 .panels-label {
   bottom: calc(100% + 9px);
-  font-size: var(--type-label);
+  font-size: var(--type-text);
   line-height: 26px;
   color: var(--text-primary);
 }

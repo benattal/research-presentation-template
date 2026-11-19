@@ -43,7 +43,7 @@
 .annotated-photo-label {
   position: absolute;
   transform: translateY(-50%);
-  font-size: var(--type-label);
+  font-size: var(--type-text);
   line-height: 27px;
   color: var(--text-primary);
   white-space: pre;
@@ -65,7 +65,7 @@
 
 .annotated-photo-inset figcaption {
   margin-top: 8px;
-  font-size: var(--type-label);
+  font-size: var(--type-text);
   line-height: 26px;
   text-align: center;
   color: var(--text-primary);

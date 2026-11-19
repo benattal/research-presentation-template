@@ -4,7 +4,8 @@
 
 Current state: gate 2, refinement cycle 1, pass (a) nearly complete (see
 the newest entry). Iteration is on the slides; narrated run-throughs test
-whole drafts.
+whole drafts. On the Mac (2026-11-19, evening): the deck is restyled
+after the SIGASIA deck (Optima, white text, three sizes).
 
 Resume from the newest entry below.
 
@@ -13,6 +14,22 @@ Resume from the newest entry below.
 Every direction of the user for this work, quoted, newest first. General
 slide rules are in [slide style](../style/slides.md) and
 [slide review](../style/slide-review.md).
+
+2026-11-19, evening (on a new machine, a Mac):
+
+- "can you read in @priorart/SIGASIApresentation_FINAL.pptx . can we use
+  the styling in this? use optimal and no orange yellow font. also Font
+  sizes (maybe types too not sure) all over the place, id probably pick
+  2/3 font sizes and use those and only those consistenlty throguhout the
+  pres". Read as Optima (the SIGASIA deck's face). Done: the theme takes
+  that deck's look (black, white Optima titles at top left, regular
+  weight); every text is white, "ours" and the contribution line are
+  its green `#54FF6B` (also the target trajectory and denoised tokens in
+  the method scene); indirect-light labels are white, amber stays on the
+  plots, bands, and renders; three sizes, 40 / 22 / 16 px, credits
+  included (was six: 44, 40, 26, 22, 17, 11.5). Optima is a macOS
+  system font, not bundled: a Windows recording would fall back to
+  Candara. `priorart/` (190 MB) is excluded locally, not committed.
 
 2026-11-19, while building:
 
