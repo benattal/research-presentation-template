@@ -34,7 +34,10 @@ its check passes.
    check`, a capture with no errors or warnings, and every frame read
    against its storyboard row. Reviewer findings on drafted sections are
    logged in the tracker for gate 2, not acted on yet.
-2. **Gate 2: whole deck, refinement cycles 1 and 2.** A pass on all
+   When the draft is complete: commit, push to git and the bucket, and
+   stop. The user looks at everything before the second pass starts.
+2. **Gate 2: whole deck, refinement cycles 1 and 2.** Opens only on the
+   user's word. A pass on all
    slides and notes, vetting by reviewers who see the deck fresh,
    consolidation with the logged findings and the user's comments, fixes;
    twice. Check: a full capture with no errors or warnings, and a cycle

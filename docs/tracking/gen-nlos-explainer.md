@@ -20,6 +20,12 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- "I will ask you to pause before doing the second pass (once this first
+  draft is complete, soon) just so that I have a chance to take a look at
+  everything. Commit and push when this happens too." The first draft
+  ends with a commit, a push, and a stop; gate 2 waits for the user.
+- "I think you can make the pulse animation on the hardware vis slide (for
+  both direct and indirect) slightly faster": 340 ms per ns, from 420.
 - "The warped RGB animation also resets between pipeline slides. I might
   just make the others beside the first that animates the warped RGB
   originally just show the last frame?" The streams animate on
