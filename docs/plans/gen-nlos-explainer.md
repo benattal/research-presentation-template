@@ -172,7 +172,6 @@ classifier-free guidance result and the ablations are left out.
 | 9 | Conditioning videos | same 3D view, the camera moves along the target trajectory; warped RGB, MIP, MIP depth appear as synchronized panels | three.js, teaser `presentation/*.mp4` | drafted |
 | 10 | Video generation | diagram: three streams and noisy target tokens into the video diffusion transformer; the output video plays | drawn | drafted |
 | 11 | NLOS reconstruction | flatland: (1) planar relay wall versus the visible surfaces of a scene as relays; (2) forward and adjoint operators, CGLS iterations sharpening | canvas, labeled illustration | drafted |
-| 12 | Reconstruction with nonplanar relays | rotating renders of the reconstructed volumes, in step: (1) ours and CC-SOCR; (2) 3D-GTR; simulated room and captured scenes | rendered from the bucket's volumes (`nonplanar_nlos_results/*.npy`), the paper figure's variants | building |
 |  | **results** (card) |  |  | drafted |
 | 13 | Training data (simulated) | (1) a tabletop digital twin, as a trajectory; (2) six Infinigen rooms, as trajectories | `4_overview` twin ground truth; `test100_paper_8020_cfg3/gt` | drafted |
 | 14 | Captured scenes: same line of sight | rows: hidden lamp, hidden globe; four columns on the comparison slide's grid, one per step: reference photo (the scenes differ), input view (identical), direct light (identical), indirect light (differs) | website refs and `lamp.png`; direct and indirect videos rendered from `aligned_transients.h5` | drafted |
@@ -180,6 +179,8 @@ classifier-free guidance result and the ablations are left out.
 | 16 | Simulated scenes: comparison | two rooms, all methods in step: (1) ground truth and ours; (2) GEN3C\*; (3) HOLI-1-to-3\* and Lyra 2 (no boxes yet) | `test100_paper_8020_cfg3`, Dropbox HOLI folder | drafted |
 | 17 | Summary | our vase result at the left; one line per step: the takeaway, the limitation, the outlook | teaser `prediction` | drafted |
 | 18 | Title card | as slide 1 | — | drafted |
+|  | **appendix** (after the closing card; the user is deciding whether to keep it) |  |  |  |
+| A1 | Reconstruction with nonplanar relays | rotating renders of the reconstructed volumes, in step: (1) ours and CC-SOCR; (2) 3D-GTR; rows: the simulated room, the captured letters (Stanford f-k data) | rendered from the bucket's volumes (`nonplanar_nlos_results`), the paper figure's variants, matched by PSNR | drafted |
 
 ## Visualizations
 

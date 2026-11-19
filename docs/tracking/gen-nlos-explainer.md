@@ -20,6 +20,14 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- "Can you also put the rotating NLOS comparison *after* the last slide?
+  I'm not sure I want to have it, since there's already a lot of content.
+  But I would like to look at it". It is in an appendix section after the
+  closing card.
+- "Hmm, you removed the line sweeping across the histogram, animating in
+  the pulses on the lhs? You didn't need to do that". It was delayed, not
+  removed (a 3.8 s lead in the first step; in the indirect step the cursor
+  started only past the direct peak). Both steps now sweep from time 0.
 - "To me, the first pulse animation (before showing direct) is
   unnecessary. Also "a different smaller vase" is not really the right
   thing to say. Just say that it hallucinates the wrong object". The

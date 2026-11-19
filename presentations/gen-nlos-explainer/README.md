@@ -54,6 +54,15 @@ bash assets/build/results.sh
 python assets/build/light-split.py
 ```
 
+`nlos-comparison.py` renders the rotating reconstructions of the slide
+`nlos-comparison` from the volumes in `assets/sources/nlos-comparison/`
+(copies from the bucket's `nlos_results_pages_20261114`; the script's
+docstring gives the paths). It needs Python with numpy and numba:
+
+```bash
+python assets/build/nlos-comparison.py
+```
+
 After adding or changing media, push them (this copies only; it never
 deletes anything in the bucket):
 

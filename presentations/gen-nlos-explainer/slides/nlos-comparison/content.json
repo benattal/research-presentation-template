@@ -1,0 +1,76 @@
+{
+  "layout": "panels",
+  "title": "Reconstruction with nonplanar relays",
+  "grid": {
+    "columns": 3,
+    "rows": 2,
+    "panelWidth": 304,
+    "panelHeight": 232,
+    "columnGap": 28,
+    "rowGap": 36
+  },
+  "rowLabels": [
+    "Simulated room",
+    "Captured letters"
+  ],
+  "buildSteps": [
+    "ours and CC-SOCR",
+    "3D-GTR"
+  ],
+  "credits": [
+    {
+      "source": "liu2023",
+      "what": "CC-SOCR"
+    },
+    {
+      "source": "wang2026",
+      "what": "3D-GTR"
+    },
+    {
+      "source": "lindell2019",
+      "what": "captured scene"
+    }
+  ],
+  "videos": [
+    {
+      "src": "/slides/nlos-comparison/ours-ccsocr-3dgtr.mp4",
+      "poster": "/slides/nlos-comparison/ours-ccsocr-3dgtr.poster.jpg",
+      "row": 0,
+      "column": 0,
+      "rows": 2,
+      "columns": 3
+    }
+  ],
+  "panels": [
+    {
+      "row": 0,
+      "column": 0,
+      "label": "Ours",
+      "ours": true
+    },
+    {
+      "row": 1,
+      "column": 0
+    },
+    {
+      "row": 0,
+      "column": 1,
+      "label": "CC-SOCR"
+    },
+    {
+      "row": 1,
+      "column": 1
+    },
+    {
+      "row": 0,
+      "column": 2,
+      "step": 1,
+      "label": "3D-GTR"
+    },
+    {
+      "row": 1,
+      "column": 2,
+      "step": 1
+    }
+  ]
+}

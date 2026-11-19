@@ -14,9 +14,7 @@ export const STEPS = ['direct', 'indirect', 'scan'];
 /** Playback speed of the light: ms of the slide per ns of scene time. */
 const MS_PER_NS = 340;
 /** Per step, the pause before its light moves, in ms: the narration's first words name what is about to move. */
-const LEAD_MS = { direct: 3800, indirect: 500 };
-/** When the plot's axes appear in the first step, in ms: before the pulse leaves. */
-const AXES_IN_MS = [2600, 3300];
+const LEAD_MS = { direct: 1200, indirect: 500 };
 /** When the scan starts and how long it takes, in ms. */
 const SCAN_START_MS = 600;
 const SCAN_MS = 5200;
@@ -102,7 +100,6 @@ export function frameAt(step, ms) {
     frame.outgoing = frame.time < TIMES.hit;
     frame.directReturn = !frame.outgoing;
     frame.spot = smoothstep(TIMES.hit - 0.1, TIMES.hit + 0.25, frame.time);
-    frame.plot.opacity = smoothstep(...AXES_IN_MS, ms);
     frame.plot.sweep = frame.time;
     frame.plot.cursor = 1 - smoothstep(DIRECT_END - 0.4, DIRECT_END, frame.time);
     frame.plot.direct = smoothstep(TIMES.direct + 0.2, TIMES.direct + 0.7, frame.time);
@@ -121,9 +118,9 @@ export function frameAt(step, ms) {
     frame.indirect = !frame.outgoing;
     frame.spot = smoothstep(TIMES.hit - 0.1, TIMES.hit + 0.25, frame.time);
     frame.path = frame.indirect ? 1 : 0;
-    // The plot waits where the direct return left it until the light's time passes that point.
-    frame.plot.sweep = Math.max(DIRECT_END, frame.time);
-    frame.plot.cursor = frame.time > DIRECT_END ? 1 - smoothstep(INDIRECT_END - 0.4, INDIRECT_END, frame.time) : 0;
+    // The plot is swept again from time 0: the direct peak, then the indirect light.
+    frame.plot.sweep = frame.time;
+    frame.plot.cursor = 1 - smoothstep(INDIRECT_END - 0.4, INDIRECT_END, frame.time);
     frame.plot.indirect = smoothstep(INDIRECT_END - 1.6, INDIRECT_END - 0.9, frame.time);
     return frame;
   }

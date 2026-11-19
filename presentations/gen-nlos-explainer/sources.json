@@ -8,5 +8,17 @@
   "stanford-bunny": {
     "authors": "Stanford bunny: Stanford Computer Graphics Laboratory",
     "title": "The Stanford 3D Scanning Repository"
+  },
+  "liu2023": {
+    "authors": "Liu et al.",
+    "title": "Non-line-of-sight imaging with arbitrary illumination and detection pattern",
+    "venue": "Nature Communications",
+    "year": 2023
+  },
+  "wang2026": {
+    "authors": "Wang et al.",
+    "title": "Non-line-of-sight imaging with arbitrary relay surface geometries via 3D Gaussian Transient Rendering",
+    "venue": "SIGGRAPH",
+    "year": 2026
   }
 }
