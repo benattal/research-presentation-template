@@ -17,15 +17,25 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, evening (on a new machine, a Mac):
 
+- Of the method diagram (slide 14): "arrows in slide 14 are kinda
+  scuffed. shaft overlaps the tip making it not look clean". Cause: each
+  shaft ran to the tip under its arrowhead, and the curved ones bent out
+  past its sides. The shafts now end at the head's base (`arrowTo`).
+- Superseding the late start below: "ok lets get rid of the shitty delay
+  thing in slide 19. revert to old timing. just freeze frame the frame
+  that we like and add a red box around the nice two arcs in the first
+  row and the singular arc in the second row". Done: both columns start
+  together; the indirect light plays from its first lit frame and
+  freezes at 9.82 ns 1.44 s in; both hold 3 s after the direct light
+  ends (9.9 s loop). Red boxes from 1.44 s: the lamp's two arcs, the
+  globe's thin arc.
 - Of slide 19 (captured scenes, same line of sight), with a screenshot of
   the indirect column: "i want to freeze frame the indirect light when it
   is on the attached frame. delay the start of the indirect light video
   so that the indirect and directl light stop at roughly the same time?"
-  The screenshot is bin 294 from 5.12 ns (9.82 ns) in both rows. Done
-  (`light-split.py`): the indirect column waits on its first lit frame,
-  starts 5.44 s in, and freezes at 9.82 ns at 6.88 s, as the direct
-  column ends; both hold 6 s, then the 12.9 s video loops (the core
-  `Media` always loops).
+  The screenshot is bin 294 from 5.12 ns (9.82 ns) in both rows. Built
+  as a late start (indirect from 5.44 s, frozen as the direct light
+  ended), then withdrawn by the user (above).
 - "can you read in @priorart/SIGASIApresentation_FINAL.pptx . can we use
   the styling in this? use optimal and no orange yellow font. also Font
   sizes (maybe types too not sure) all over the place, id probably pick

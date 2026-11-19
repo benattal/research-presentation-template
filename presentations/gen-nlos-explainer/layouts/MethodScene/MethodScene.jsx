@@ -387,14 +387,36 @@ function reveal(cue, delay = 0) {
   return { 'data-cue': cue, 'data-delay': delay };
 }
 
+/** Length of an arrowhead along its arrow, in diagram pixels. */
+const ARROW_HEAD = 10;
+
+/**
+ * The arrowhead of the diagram's arrows. Its base sits at the end of the path and it extends ARROW_HEAD past
+ * it, so a path that ends ARROW_HEAD before the point it shows (`arrowTo`) has its shaft stop at the head's
+ * base instead of running under it to the tip.
+ */
 function Arrowhead({ id }) {
   return (
     <defs>
-      <marker id={id} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <marker
+        id={id}
+        viewBox="0 0 10 10"
+        refX="0"
+        refY="5"
+        markerWidth={ARROW_HEAD}
+        markerHeight={ARROW_HEAD}
+        markerUnits="userSpaceOnUse"
+        orient="auto"
+      >
         <path d="M 0 1 L 10 5 L 0 9 z" fill="context-stroke" />
       </marker>
     </defs>
   );
+}
+
+/** Where a rightward arrow's path ends for its head's tip to be at `x`. */
+function arrowTo(x) {
+  return x - ARROW_HEAD;
 }
 
 /** A row of tokens; with `cue`, they appear one after the other from `delay` after it. */
@@ -550,7 +572,7 @@ function GenerationDiagram({ generation, generated }) {
               <path
                 {...reveal('encoder', i * STAGGER.row)}
                 className="method-scene-flow"
-                d={`M ${INSET + TILE + 8} ${y} L ${encoder.left - 5} ${y}`}
+                d={`M ${INSET + TILE + 8} ${y} L ${arrowTo(encoder.left - 3)} ${y}`}
                 markerEnd={head}
               />
               <path
@@ -561,7 +583,7 @@ function GenerationDiagram({ generation, generated }) {
               <path
                 {...reveal('tokens', i * STAGGER.row)}
                 className="method-scene-flow"
-                d={`M ${encoder.right + 4} ${y} C ${bend} ${y}, ${bend} ${rowY}, ${stack.left - 8} ${rowY}`}
+                d={`M ${encoder.right + 4} ${y} C ${bend} ${y}, ${bend} ${rowY}, ${arrowTo(stack.left - 6)} ${rowY}`}
                 markerEnd={head}
               />
               <TokenRow left={stack.left} top={stack.tops[i]} fill={TOKEN_COLORS[i]} cue="tokens" delay={i * STAGGER.row + 0.3} />
@@ -596,7 +618,7 @@ function GenerationDiagram({ generation, generated }) {
         <path
           {...reveal('transformer')}
           className="method-scene-flow"
-          d={`M ${stackRight + 10} ${MIDDLE} L ${transformer.left - 7} ${MIDDLE}`}
+          d={`M ${stackRight + 10} ${MIDDLE} L ${arrowTo(transformer.left - 5)} ${MIDDLE}`}
           markerEnd={head}
         />
         <rect
@@ -634,14 +656,14 @@ function GenerationDiagram({ generation, generated }) {
         <path
           {...reveal('denoised')}
           className="method-scene-flow"
-          d={`M ${transformer.right + 8} ${MIDDLE} L ${denoised.left - 9} ${MIDDLE}`}
+          d={`M ${transformer.right + 8} ${MIDDLE} L ${arrowTo(denoised.left - 7)} ${MIDDLE}`}
           markerEnd={head}
         />
         <TokenRow left={denoised.left} top={MIDDLE - TOKEN.size / 2} fill="var(--accent)" cue="denoised" delay={0.2} />
         <path
           {...reveal('decoder')}
           className="method-scene-flow"
-          d={`M ${denoisedRight + 8} ${MIDDLE} L ${decoder.left - 5} ${MIDDLE}`}
+          d={`M ${denoisedRight + 8} ${MIDDLE} L ${arrowTo(decoder.left - 3)} ${MIDDLE}`}
           markerEnd={head}
         />
         <path
@@ -652,7 +674,7 @@ function GenerationDiagram({ generation, generated }) {
         <path
           {...reveal('output')}
           className="method-scene-flow"
-          d={`M ${decoder.right + 4} ${MIDDLE} L ${output.left - 7} ${MIDDLE}`}
+          d={`M ${decoder.right + 4} ${MIDDLE} L ${arrowTo(output.left - 5)} ${MIDDLE}`}
           markerEnd={head}
         />
       </svg>
