@@ -4,7 +4,7 @@ Three layers, each run by Node's built-in test runner or a script:
 
 | Command | What it checks | Needs |
 |---|---|---|
-| `npm test` | pure modules (presentation model, slide positions, poll state, live API) and repository structure | Node |
+| `npm test` | pure modules (presentation model, slide positions, poll state, live API, narration export) and repository structure | Node |
 | `npm run test:ui` | every view, core layout, and live feature, driven in a real browser | a browser |
 | `npm run check` and `npm run capture -- <id>` | the presentations of the branch: loading, assets, rendering | assets; a browser for capture |
 
