@@ -300,7 +300,10 @@ try {
   // second ("Screencast is already active"). A request made while a
   // restart is under way is met by it, because its start comes later.
   let restarting = null;
+  /** False once the run-through is over: frames still on their way from the browser are then left out. */
+  let filming = true;
   const requestFreshFrame = () => {
+    if (!filming) return;
     awaitingFreshFrame = true;
     restarting ??= client.send('Page.stopScreencast')
       .then(() => client.send('Page.startScreencast', screencast))
@@ -310,6 +313,7 @@ try {
 
   client.on('Page.screencastFrame', ({ data, metadata, sessionId }) => {
     client.send('Page.screencastFrameAck', { sessionId }).catch((error) => failures.push(error));
+    if (!filming) return;
     if (metadata.deviceWidth !== size.width || metadata.deviceHeight !== size.height) {
       failures.push(new Error(`The browser sent a frame of a ${metadata.deviceWidth}×${metadata.deviceHeight} page; the recording is ${size.width}×${size.height}.`));
       return;
@@ -370,6 +374,7 @@ try {
   }
   await waitUntil(due);
   const seconds = clock();
+  filming = false;
   clearTimeout(quietTimer);
   await restarting;
   await client.send('Page.stopScreencast');
