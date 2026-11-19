@@ -17,6 +17,7 @@
     "new": "node scripts/new-presentation.mjs",
     "check": "node scripts/check.mjs",
     "capture": "node scripts/capture.mjs",
+    "record": "node scripts/record.mjs",
     "assets": "node scripts/assets.mjs",
     "narration": "node scripts/narration.mjs",
     "extract-pptx": "node scripts/extract-pptx.mjs",

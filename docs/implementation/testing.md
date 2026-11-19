@@ -4,7 +4,7 @@ Three layers, each run by Node's built-in test runner or a script:
 
 | Command | What it checks | Needs |
 |---|---|---|
-| `npm test` | pure modules (presentation model, slide positions, poll state, live API, narration export) and repository structure | Node |
+| `npm test` | pure modules (presentation model, slide positions, poll state, live API, narration export, recording plans) and repository structure | Node |
 | `npm run test:ui` | every view, core layout, and live feature, driven in a real browser | a browser |
 | `npm run check` and `npm run capture -- <id>` | the presentations of the branch: loading, assets, rendering | assets; a browser for capture |
 
@@ -28,7 +28,7 @@ file at a time:
 | File | Covers |
 |---|---|
 | `layouts.test.mjs` | every core layout at every build step: its content, loaded media, and no errors or overflow; fails when a core layout is added without a fixture slide; and the overflow report on slides that do not fit |
-| `audience.test.mjs` | keys, buttons, dots, overview, swipes (and drags on controls that are not swipes), focus handling, position persistence, toolbar, progress bar; the stage and each slide heading holding still across every slide and build step, and every `SlideTitle` header alike (math in a title included); at nine window sizes, for the fixture and a generated 70-slide deck (`longDeck` in `harness.mjs`), the navigator is centered and the stage stays clear of the navigation bar, toolbar, and progress bar |
+| `audience.test.mjs` | keys, buttons, dots, overview, swipes (and drags on controls that are not swipes), focus handling, position persistence, toolbar, progress bar, the stage alone with `?bars=hidden`; the stage and each slide heading holding still across every slide and build step, and every `SlideTitle` header alike (math in a title included); at nine window sizes, for the fixture and a generated 70-slide deck (`longDeck` in `harness.mjs`), the navigator is centered and the stage stays clear of the navigation bar, toolbar, and progress bar |
 | `presenter.test.mjs` | the presenter window following and driving the audience window, per-step notes, the preview, the timer, and saving edited notes without reloading the audience |
 | `live.test.mjs` | presenter login and logout, votes across browsers, changing a vote, live results, reset with C, numeric polls, closed voting, follow-the-presenter |
 | `errorsAndHosting.test.mjs` | the load-error screen, unknown modes, and a static build served under a URL prefix |

@@ -17,6 +17,8 @@
  *     exists in the presentation's `public/` directory (pull assets first:
  *     npm run assets -- pull <id>); a missing asset of a draft slide (one
  *     presentation.json does not list) is a warning, not an error;
+ *   - validate its recording.json, if it has one (the holds of
+ *     npm run record);
  *   - list the draft slides.
  *
  * Exits with status 1 when any presentation has an error. Rendering
@@ -29,6 +31,7 @@ import { slideIdFromPath } from '../core/client/presentation/model.js';
 import { notesMathProblems } from '../core/client/presentation/notesMath.js';
 import { readPronunciationMap } from '../core/tooling/narration.js';
 import { REPO_ROOT, selectPresentations } from '../core/tooling/presentations.js';
+import { recordingFileProblems } from '../core/tooling/recording.js';
 import { createViteConfig } from '../core/tooling/viteConfig.js';
 
 const ASSET_PATH_PATTERN = /\/slides\/[A-Za-z0-9_\-./ ]+\.[A-Za-z0-9]+/g;
@@ -96,6 +99,7 @@ for (const presentation of selectPresentations(process.argv.slice(2))) {
   }
 
   errors.push(...readPronunciationMap(presentation).problems);
+  if (loaded) errors.push(...recordingFileProblems(presentation.dir, loaded.slides));
 
   const assets = referencedAssets(presentation);
   const publicDir = join(presentation.dir, 'public');

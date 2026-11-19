@@ -163,6 +163,7 @@ npm test                              # unit and repository tests
 npm run test:ui                       # browser tests of every view and core layout
 npm run capture -- <id>               # screenshot and check every slide
 npm run narration -- <id>             # notes as a script for narration/narrate.py
+npm run record -- <id>                # record a run-through video (needs ffmpeg)
 ```
 
 ## Architecture and code aesthetics

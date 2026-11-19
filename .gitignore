@@ -4,6 +4,7 @@ node_modules/
 # Builds and generated data
 /dist/
 /data/captures/
+/data/recordings/
 
 # Live server state (poll votes)
 /.live-state/
