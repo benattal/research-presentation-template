@@ -1,16 +1,15 @@
-# Example Presentation
+# Example
 
-The template's example: it demonstrates the presentation format and is the
-target of the template's own checks and captures. A project branch deletes
-it and adds its own presentations.
+The template's example presentation: a tour of the core layouts and
+conventions. A project branch deletes it and adds its own presentations.
 
 ## Assets: pull them before presenting
 
-The slides' media (`public/`) and source material (`assets/`) are not in
-git. Their durable copy is the R2 bucket described in [DATA.md](../../DATA.md),
-under `tcig-projects/research-presentation-template/presentations/example/`.
-
-On a fresh checkout:
+This presentation references no assets. A presentation that does keeps its
+slides' media (`public/`) and source material (`assets/`) out of git, in
+the R2 bucket described in [DATA.md](../../DATA.md), under
+`tcig-projects/research-presentation-template/presentations/<id>/`. On a
+fresh checkout:
 
 ```bash
 npm install
