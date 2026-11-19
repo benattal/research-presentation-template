@@ -11,7 +11,7 @@
   },
   "rowLabels": [
     "Simulated room",
-    "Captured letters"
+    "Stanford-FK dataset"
   ],
   "buildSteps": [
     "ours and CC-SOCR",
@@ -28,7 +28,7 @@
     },
     {
       "source": "lindell2019",
-      "what": "captured scene"
+      "what": "Stanford-FK dataset"
     }
   ],
   "videos": [
