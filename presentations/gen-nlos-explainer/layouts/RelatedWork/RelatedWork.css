@@ -50,7 +50,7 @@
 .related-work-name {
   height: 30px;
   margin-bottom: 12px;
-  font-size: 24px;
+  font-size: var(--type-label);
   font-weight: 500;
   line-height: 30px;
   color: var(--text-primary);
@@ -77,21 +77,21 @@
 
 .related-work-caption {
   margin-top: 6px;
-  font-size: 16px;
+  font-size: var(--type-small);
   line-height: 20px;
   color: var(--text-muted);
 }
 
 .related-work-limitation {
   margin-top: 8px;
-  font-size: 22px;
+  font-size: var(--type-label);
   line-height: 28px;
   color: var(--hidden);
   white-space: nowrap;
 }
 
 .related-work-contribution {
-  font-size: 26px;
+  font-size: var(--type-statement);
   font-weight: 500;
   line-height: 32px;
   text-align: center;

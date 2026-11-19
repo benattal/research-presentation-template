@@ -30,7 +30,7 @@
 
 .summary-label {
   margin-top: 8px;
-  font-size: 21px;
+  font-size: var(--type-label);
   line-height: 26px;
   text-align: center;
   color: var(--accent);
@@ -45,14 +45,14 @@
 }
 
 .summary-point {
-  font-size: 27px;
+  font-size: var(--type-statement);
   line-height: 36px;
   color: var(--text-primary);
 }
 
 .summary-heading {
   display: block;
-  font-size: 19px;
+  font-size: var(--type-small);
   line-height: 26px;
   color: var(--text-muted);
 }

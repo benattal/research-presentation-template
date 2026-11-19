@@ -94,7 +94,7 @@
   position: absolute;
   left: 0;
   bottom: calc(100% + 6px);
-  font-size: 21px;
+  font-size: var(--type-label);
   line-height: 24px;
   white-space: nowrap;
   color: var(--text-primary);
@@ -105,7 +105,7 @@
 }
 
 .method-scene-note {
-  font-size: 19px;
+  font-size: var(--type-small);
   line-height: 24px;
   white-space: nowrap;
   color: var(--text-primary);
