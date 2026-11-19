@@ -23,7 +23,7 @@
 .panels-row-labels {
   display: grid;
   align-items: center;
-  justify-items: end;
+  justify-items: start;
 }
 
 .panels-row-label {
