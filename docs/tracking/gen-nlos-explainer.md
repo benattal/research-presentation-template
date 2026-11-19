@@ -18,6 +18,11 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- "honestly, it is most useful to show results in a video that can't be
+  demonstrated easily in a paper/pdf supplement. try not to just repeat
+  results. we can use videos that are used/highlighted in the
+  supplemental web page on the other hand (in addition to other ones
+  maybe)". The quantitative slide is out; results are shown in motion.
 - "Including classifier free guidance results, and ablations is not
   necessarily important in the presentation. we do not have to exactly
   follow the structure of the paper." The guidance slide and the

@@ -33,7 +33,7 @@ its check passes.
 3. **Gate 3: propagating light** (slides 5–6, with the WebGL render).
 4. **Gate 4: related work** (slide 7).
 5. **Gate 5: method** (slides 8–12, with the WebGL scene and flatland).
-6. **Gate 6: results and summary** (slides 13–19).
+6. **Gate 6: results and summary** (slides 13–18).
 7. **Gate 7: whole deck, refinement cycles 1 and 2.** A pass on all
    slides and notes, vetting by reviewers who see the deck fresh,
    consolidation and fixes; twice. Check: a full capture with no errors
@@ -88,6 +88,11 @@ tracker (findings, what changed, what was declined and why):
   (`data/gen-nlos/standalone.html`, Dropbox `figures/website/`) and the
   Dropbox figure folders, with the paper's scenes. NLOS reconstructions
   and comparisons from the bucket. WebGL for the visualizations.
+- **Show what a PDF cannot.** The video is for what the paper and a PDF
+  supplement cannot show: camera trajectories, light propagating, 3D
+  views, comparisons in motion. It does not restate static results
+  (tables, still comparisons). The videos the supplemental website
+  highlights are used, with others where they help.
 - **Composed slides, not pasted figures.** Slides are built from result
   media and our own visuals in designed layouts.
 - **Look.** Colors from the reference decks: black, white text, orange
@@ -143,15 +148,14 @@ classifier-free guidance result and the ablations are left out.
 | 9 | Conditioning videos | same 3D view, the camera moves along the target trajectory; warped RGB, MIP, MIP depth appear as synchronized panels | three.js, teaser `presentation/*.mp4` |
 | 10 | Video generation | diagram: three streams and noisy target tokens into the video diffusion transformer; the output video plays | drawn |
 | 11 | NLOS reconstruction | flatland: (1) planar relay wall versus the visible surfaces of a scene as relays; (2) forward and adjoint operators, CGLS iterations sharpening | canvas, labeled illustration |
-| 12 | Reconstruction with nonplanar relays | ours, CC-SOCR, 3D-GTR on the simulated room and captured scenes | bucket `nonplanar_nlos_results` |
+| 12 | Reconstruction with nonplanar relays | rotating renders of the reconstructed volumes: ours, CC-SOCR, 3D-GTR, on the simulated room and captured scenes | rendered from the bucket's volumes (`nonplanar_nlos_results/*.npy`) |
 | | **results** (card) | | |
 | 13 | Training data (simulated) | tabletop digital twins; Infinigen rooms | bucket real2sim, website room GT |
-| 14 | Captured scenes: same line of sight | (1) the shared input view and warped input; (2) reference photos: lamp or globe behind the occluder; (3) the NLOS conditioning differs | website, `6_QualExperimental` |
+| 14 | Captured scenes: same line of sight | (1) the shared input view; (2) reference photos: lamp or globe behind the occluder; (3) the two videos of propagating light side by side: the indirect light differs | website `lamp.png`, `*-ref-square.webp`, `{lamp,globe}-light-clean.mp4` |
 | 15 | Captured scenes: comparison | per method, one step each: GEN3C\* (0/20 seeds), HOLI-1-to-3\* (fails), ours (20/20 seeds); then all play | `rgb_only`, Dropbox HOLI folder, `prediction` |
 | 16 | Simulated room-scale scenes | ground truth and ours, then GEN3C\*, HOLI-1-to-3\*, Lyra 2; red boxes on hidden regions; second room | `test100_paper_8020_cfg3`, Dropbox HOLI folder |
-| 17 | Quantitative evaluation | GEN3C\* versus ours: detection mAP, then Chamfer distance of occluded objects | paper Table 1 |
-| 18 | Summary | takeaway lines one per step; limitation and outlook | — |
-| 19 | Title card | as slide 1 | — |
+| 17 | Summary | takeaway lines one per step over a result video; limitation and outlook | — |
+| 18 | Title card | as slide 1 | — |
 
 ## Visualizations
 
