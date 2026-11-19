@@ -4,9 +4,8 @@
 
 Current state: `main` holds the rules, workflows, the glossary, the
 `media/` convention, the narration tools, the recorder, and two skills;
-`gen-nlos-explainer` and `guest-lecture` have merged it; the merge into
-`vision-workshop` is local, waiting for the user's word. Resume from the
-newest entry below.
+all three presentation branches have merged it, and the remote holds
+only `main` and those three. Resume from the newest entry below.
 
 ## Standing directions
 
@@ -29,7 +28,30 @@ Every direction the user gives about this work, quoted and dated.
   a presentation when you get the chance to (once their work is complete).
   main, gen-nlos-explainer, guest-lecture, vision-workshop should all
   stay".
+- "Yes push please and delete those remote branches" (answering whether
+  to push the `vision-workshop` merge, which may redeploy the live
+  service, and whether to delete `recorder-wip` and
+  `nlos-comparison-polish-wip`, each holding one unfinished commit that
+  no other branch has).
 - "Yeah don't use simlinks like that" (of junctions between checkouts).
+
+## 2026-11-19 21:45 — `vision-workshop` pushed; the remote has four branches
+
+User direction (2026-11-19): "Yes push please and delete those remote
+branches".
+
+- `vision-workshop` pushed (dba4b0e to 4008d1d, a fast-forward of the
+  remote). Whether the push redeployed the live service was not checked
+  from here.
+- Deleted from the remote: `recorder-wip` and
+  `nlos-comparison-polish-wip`. Both remain as local branches on the
+  machine this was done on (b3a35a5, 2316b1f). The second is also a patch
+  in the explainer's bucket,
+  `assets/parked/nlos-comparison-polish-wip/tracked-changes.patch`,
+  beside its media.
+- The remote now holds `main`, `gen-nlos-explainer`, `guest-lecture`,
+  `vision-workshop`.
+- Next: the open items of the plan, in order.
 
 ## 2026-11-19 20:30 — `main` merged into the presentation branches
 
