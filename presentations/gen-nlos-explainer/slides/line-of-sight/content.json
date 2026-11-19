@@ -128,5 +128,50 @@
         }
       ]
     }
+  ],
+  "callouts": [
+    {
+      "text": "different indirect light",
+      "at": {
+        "row": 0,
+        "column": 3,
+        "x": 1.0,
+        "y": 1.089
+      },
+      "align": "right",
+      "arrows": [
+        {
+          "tail": {
+            "row": 0,
+            "column": 3,
+            "x": 0.91,
+            "y": 1.02
+          },
+          "head": {
+            "row": 0,
+            "column": 3,
+            "x": 0.91,
+            "y": 0.9
+          }
+        },
+        {
+          "tail": {
+            "row": 1,
+            "column": 3,
+            "x": 0.887,
+            "y": -0.02
+          },
+          "head": {
+            "row": 1,
+            "column": 3,
+            "x": 0.887,
+            "y": 0.385
+          }
+        }
+      ],
+      "step": 2,
+      "from": 1.42,
+      "to": 2.92
+    }
   ]
 }

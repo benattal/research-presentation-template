@@ -17,6 +17,11 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, evening (on a new machine, a Mac):
 
+- "on that frame. add some red text and arrow sto the boxes when present
+  that say "different indirect light"". Done: the panels layout has
+  `callouts` (red text, red arrows, timed like the boxes); slide 19's
+  sits between the rows under the indirect column, with arrows up to the
+  lamp's box and down to the globe's, during the pause (1.42 to 2.92 s).
 - "for slide 19 only hold the red box for a second or two. before
   continuing the video to the end". Done: the indirect light pauses on
   9.82 ns from 1.42 s to 2.92 s with the red boxes, then plays to its

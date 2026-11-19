@@ -98,3 +98,31 @@
   border: 3px solid var(--hidden);
   pointer-events: none;
 }
+
+/* A callout: red text, and red arrows to what it names, over the grid. */
+.panels-callout {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.panels-callout-arrows {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+}
+
+.panels-callout-arrows path {
+  fill: none;
+  stroke: var(--hidden);
+  stroke-width: 2;
+}
+
+.panels-callout-text {
+  position: absolute;
+  font-size: var(--type-text);
+  line-height: 26px;
+  color: var(--hidden);
+  white-space: nowrap;
+}

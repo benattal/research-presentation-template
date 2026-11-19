@@ -45,6 +45,14 @@
  *                                that marks one view of a moving camera.
  *   spotlights  optional: [{ step, panels: [id, ...] }]: at that step, the
  *               panels not listed are dimmed.
+ *   callouts    optional: red text with red arrows, for what the boxes
+ *               mark: each { text, at, align?, arrows, step?, from?, to? }.
+ *               Points are { row, column, x, y }: fractions of that cell,
+ *               which may run past 0 and 1 into the gaps. `at` is where
+ *               the text sits (`align` 'left', 'center', or 'right' of
+ *               it, vertically centered); each arrow is { tail, head }.
+ *               `step`, `from`, and `to` are as for boxes, `from` and `to`
+ *               on the clock of the slide's stitched video.
  *
  * A slide plays one video: separate video elements drift apart, so clips
  * that are on screen together are stitched into one file. A second video
@@ -76,8 +84,10 @@ const DIMMED = 0.25;
  * the cell it is drawn in.
  */
 const MASK_BLEED = 2;
-/** Seconds a timed box takes to fade in after `from` and out before `to`. */
+/** Seconds a timed box or callout takes to fade in after `from` and out before `to`. */
 const BOX_FADE_S = 0.15;
+/** Length of a callout's arrowhead along its arrow, in stage pixels. */
+const ARROW_HEAD = 10;
 
 /** Where each block of cells sits, from the slide's `grid` and whether labels and notes need bands. */
 function gridGeometry(grid, panels) {
@@ -116,18 +126,18 @@ function windowOpacity(seconds, { from, to }) {
 }
 
 /**
- * Sets each timed box's opacity from the current time of the video inside
- * `videoHolder`, on every animation frame and on every seek. A layout
- * effect: its cleanup runs in the commit that detaches the boxes' refs, so
- * no frame runs after them.
+ * Sets the opacity of each timed item (a box or a callout, with `from` and
+ * `to`) from the current time of the video inside `videoHolder`, on every
+ * animation frame and on every seek. A layout effect: its cleanup runs in
+ * the commit that detaches the items' refs, so no frame runs after them.
  */
-function useBoxWindows(videoHolder, boxes, boxElements) {
+function useTimedWindows(videoHolder, items, elements) {
   useLayoutEffect(() => {
-    if (!boxes.some((box) => box.from !== undefined)) return undefined;
-    const video = videoHolder.current?.querySelector('video');
-    if (!video) throw new Error('panels layout: a box with "from" and "to" needs a video under its panel');
-    const show = () => boxes.forEach((box, i) => {
-      boxElements.current[i].style.opacity = String(windowOpacity(video.currentTime, box));
+    if (!items.some((item) => item.from !== undefined)) return undefined;
+    const video = videoHolder?.current?.querySelector('video');
+    if (!video) throw new Error('panels layout: a box or callout with "from" and "to" needs a video under it');
+    const show = () => items.forEach((item, i) => {
+      elements.current[i].style.opacity = String(windowOpacity(video.currentTime, item));
     });
     let frame = requestAnimationFrame(function tick() {
       show();
@@ -138,7 +148,7 @@ function useBoxWindows(videoHolder, boxes, boxElements) {
       cancelAnimationFrame(frame);
       video.removeEventListener('seeked', show);
     };
-  }, [videoHolder, boxes, boxElements]);
+  }, [videoHolder, items, elements]);
 }
 
 /**
@@ -163,7 +173,7 @@ function useRestartOnReveal(videoHolder, shown) {
  */
 export function Boxes({ boxes, videoHolder, buildStep = Infinity }) {
   const boxElements = useRef([]);
-  useBoxWindows(videoHolder, boxes, boxElements);
+  useTimedWindows(videoHolder, boxes, boxElements);
   return boxes.map((box, i) => (
     <div
       key={i}
@@ -179,6 +189,75 @@ export function Boxes({ boxes, videoHolder, buildStep = Infinity }) {
       }}
     />
   ));
+}
+
+/** A point { row, column, x, y } of a callout, in the grid's stage pixels. */
+function gridPoint(geometry, { row, column, x, y }) {
+  const cell = geometry.box({ row, column });
+  return { x: cell.left + x * cell.width, y: cell.top + y * cell.height };
+}
+
+/** Where an arrow's line ends for its head, which extends ARROW_HEAD past the line's end, to touch `head`. */
+function shaftEnd(tail, head) {
+  const length = Math.hypot(head.x - tail.x, head.y - tail.y);
+  return { x: head.x - ((head.x - tail.x) / length) * ARROW_HEAD, y: head.y - ((head.y - tail.y) / length) * ARROW_HEAD };
+}
+
+const ALIGN_SHIFT = { left: '0', center: '-50%', right: '-100%' };
+
+/**
+ * Red text with arrows to what it names, over the grid, each shown from its
+ * build step on and during its window of the stitched video in
+ * `videoHolder`. Placed after the stitched video, whose holder's ref is
+ * attached by then.
+ */
+function Callouts({ callouts, geometry, videoHolder, buildStep }) {
+  const elements = useRef([]);
+  useTimedWindows(videoHolder, callouts, elements);
+  return callouts.map((callout, i) => {
+    const at = gridPoint(geometry, callout.at);
+    return (
+      <div
+        key={callout.text}
+        ref={(element) => { elements.current[i] = element; }}
+        className="panels-callout"
+        style={{
+          opacity: callout.from === undefined ? 1 : 0,
+          visibility: buildStep >= (callout.step ?? 0) ? 'visible' : 'hidden',
+        }}
+      >
+        <svg className="panels-callout-arrows" width={geometry.width} height={geometry.height}>
+          <defs>
+            <marker
+              id={`panels-callout-head-${i}`}
+              viewBox="0 0 10 10"
+              refX="0"
+              refY="5"
+              markerWidth={ARROW_HEAD}
+              markerHeight={ARROW_HEAD}
+              markerUnits="userSpaceOnUse"
+              orient="auto"
+            >
+              <path d="M 0 1 L 10 5 L 0 9 z" fill="var(--hidden)" />
+            </marker>
+          </defs>
+          {callout.arrows.map((arrow, a) => {
+            const tail = gridPoint(geometry, arrow.tail);
+            const end = shaftEnd(tail, gridPoint(geometry, arrow.head));
+            return (
+              <path key={a} d={`M ${tail.x} ${tail.y} L ${end.x} ${end.y}`} markerEnd={`url(#panels-callout-head-${i})`} />
+            );
+          })}
+        </svg>
+        <div
+          className="panels-callout-text"
+          style={{ left: at.x, top: at.y, transform: `translate(${ALIGN_SHIFT[callout.align ?? 'center']}, -50%)` }}
+        >
+          <Text>{callout.text}</Text>
+        </div>
+      </div>
+    );
+  });
 }
 
 /** One stitched video over the block of cells it covers; `shown` is how many of its panels show. */
@@ -262,6 +341,7 @@ export default function Panels({ slide, buildStep }) {
       throw new Error(`Slide "${slide.id}": the panel at row ${panel.row}, column ${panel.column} has no media and no stitched video`);
     }
   });
+  const callouts = slide.callouts ?? [];
 
   return (
     <div className="slide--panels">
@@ -301,6 +381,7 @@ export default function Panels({ slide, buildStep }) {
                 stitchedHolder={videoOf[i] === -1 ? null : holders[videoOf[i]]}
               />
             ))}
+            <Callouts callouts={callouts} geometry={geometry} videoHolder={holders[0] ?? null} buildStep={buildStep} />
           </div>
         </div>
       </div>
