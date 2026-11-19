@@ -6,5 +6,19 @@
     "step 0",
     "step 1",
     "step 2"
+  ],
+  "media": [
+    {
+      "type": "video",
+      "src": "/slides/approach/light-video.mp4"
+    },
+    {
+      "type": "video",
+      "src": "/slides/approach/conditioning-streams.mp4"
+    },
+    {
+      "type": "video",
+      "src": "/slides/approach/generated.mp4"
+    }
   ]
 }

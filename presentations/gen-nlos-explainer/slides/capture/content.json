@@ -5,5 +5,11 @@
   "buildSteps": [
     "step 0",
     "step 1"
+  ],
+  "media": [
+    {
+      "type": "video",
+      "src": "/slides/capture/captured-light-video.mp4"
+    }
   ]
 }
