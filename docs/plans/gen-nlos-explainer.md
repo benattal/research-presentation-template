@@ -18,7 +18,7 @@ figures folder.
 Work these in order, one at a time; research agents run in parallel at the
 start.
 
-### Open
+### Done
 
 1. **Research.** Four reports: the reference decks (`data/gen-nlos/*.pptx`,
    primary) and the contrastive path marginalization video (secondary);
@@ -41,31 +41,37 @@ start.
    paper; clarity for a CVPR reader outside NLOS imaging; narrative and
    pacing against the reference decks. Gate: every finding fixed or
    answered in the tracker; script v2.
-5. **Framework: recording.** On `framework-sync` (main's next state): a
-   step clock for layouts that animate, a `record` view, `npm run video`
-   (narration export, recording, assembly), its documentation and tests,
-   and the `three` dependency for WebGL. Gate: `npm test`, `npm run check`,
-   a recording of the example deck whose frames match its capture, then a
-   merge into this branch.
-6. **Media.** Select, trim, stitch, and encode the slide media from the
-   website, the Dropbox figures, and the bucket; keep sources in
-   `assets/`. Comparison videos that play together become one file. Gate:
-   `npm run check`; each file's source recorded in the tracker.
-7. **Slides v1.** Content, layouts, and the WebGL visualizations (below).
+### Open
+
+5. **Slides v1.** Builders, in parallel, each owning its layouts and
+   slides (brief: `data/gen-nlos/script/BUILD-BRIEF.md`): results panels
+   and numbers; title, section cards, prior work, and capture; WebGL
+   propagating light; WebGL method overview (the vase scene's point cloud
+   and NLOS volume); flatland NLOS reconstruction. Slides are composed
+   from result media and our own visuals, never pasted paper figures.
    Gate: `npm run capture` with no errors or warnings, every frame looked
-   at.
-8. **Narration v1.** Synthesize every step's notes with the chosen local
-   model; transcribe it back with a local ASR. Gate: word error rate at
-   most 3%, every technical term recognized, total narration 3:50 to 4:40.
+   at, merged and served.
+6. **Deck review cycles.** Repeat 3–4 times: vet slides and notes with
+   subagents (content, clarity, layout and text, motion), consolidate,
+   fix, merge, push to git and the bucket. Gate: a cycle with no findings
+   above cosmetic.
+7. **Narration.** Only after the deck gate: synthesize every step's notes
+   with the chosen local model (environment in `../rpt-tts`); transcribe
+   it back with a local ASR. Gate: word error rate at most 3%, every
+   technical term recognized, total narration 3:50 to 4:40.
+8. **Framework: recording.** Only after the narration gate: finish the
+   recorder parked on `recorder-wip` (record view, `npm run video`,
+   docs, tests) on `framework-sync`, then merge. Gate: `npm test`, a
+   recording of the example deck.
 9. **Video v1.** Record and assemble. Gate: 4:00 to 5:00, 1920×1080 at
    30 fps, loudness −16 LUFS ±1 with true peak below −1.5 dBTP, file
    under 80 MB, and every narrated sentence on screen with the visual it
    refers to.
-10. **Review, cycle 2.** Content reviewers (paper correctness, clarity),
+10. **Video review, cycle 1.** Content reviewers (paper correctness, clarity),
     a layout and text vetter (docs/style/slide-review.md), and a video
     reviewer working from contact sheets, the final mix's transcript, and
     the timeline. Fixes, then v2 of slides, narration, and video.
-11. **Review, cycle 3.** A fresh full review of v2, a sync of every number
+11. **Video review, cycle 2.** A fresh full review of v2, a sync of every number
     and name with the paper source as it stands, and the anonymity audit.
     Fixes, then the final recording.
 12. **Delivery.** Push `public/` and `assets/` (including the narration and

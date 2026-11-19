@@ -3,9 +3,11 @@
 [Plan](../plans/gen-nlos-explainer.md)
 
 Current state: research done, HOLI-1-to-3 upload done, script v2 in the
-deck skeleton (served at http://localhost:5174/). Running: the recorder
-(framework), the TTS evaluation, the website and Dropbox inventory.
-Next: media, layouts, narration v1, video v1.
+deck (served at http://localhost:5174/ from `../rpt-gen-nlos`). Five
+builders are making the slides (results panels; cards, prior work, and
+capture; WebGL propagating light; WebGL method overview; flatland NLOS).
+Gates, in order: the deck (built, reviewed, fixed), then narration, then
+the recording.
 
 Resume from the newest entry below.
 
@@ -14,6 +16,23 @@ Resume from the newest entry below.
 Every direction of the user for this work, quoted, newest first. General
 slide rules are in [slide style](../style/slides.md) and
 [slide review](../style/slide-review.md).
+
+2026-11-19, while building:
+
+- "None of the slides appear to be filled out. Also where are you storing
+  the presentation? I don't see it in the source tree": the deck lives in
+  the worktrees `../rpt-gen-nlos` (served) and `../rpt-gen-nlos-work`, not
+  in the main checkout (which stays on `guest-lecture`).
+- "No, I'm not asking you to put the paper's own figures on the slides"
+  and "I gave you specific instructions for making the deck, which is not
+  "put the papers figures there". The instructions are to make a deck that
+  looks polished." Slides are composed from result media and our own
+  visualizations, in designed layouts; no pasted paper figures.
+- "You also do not need to work on video recording before any part of the
+  deck is finished. If that's what's overloading things, then don't do it
+  yet. You can have sequential gates". The recorder (parked on
+  `recorder-wip`) and the TTS evaluation (stopped; its environment is in
+  `../rpt-tts`) wait until the deck passes its review gate.
 
 2026-11-18, while planning:
 
