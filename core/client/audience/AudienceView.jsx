@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import useSlidePosition from '../navigation/useSlidePosition.js';
 import useKeyboardNavigation from '../navigation/useKeyboardNavigation.js';
@@ -8,6 +8,7 @@ import { LIVE_SERVER, PRESENTATION_ID } from '../live/liveApi.js';
 import { resetPoll } from '../live/polls.js';
 import { useAudienceChannel } from '../presenter/presenterChannel.js';
 import { usePresenterAccess } from '../presenter/presenterAccess.jsx';
+import { preloadMedia } from '../presentation/preload.js';
 import Stage from '../stage/Stage.jsx';
 import SlideFrame from '../stage/SlideFrame.jsx';
 import Navigation from './Navigation.jsx';
@@ -26,6 +27,9 @@ function openPresenterWindow() {
  * two bars and the stage are stacked, so the stage fits the space the bars
  * leave and never sits under them.
  *
+ * Every slide's media is fetched ahead of time (`preloadMedia`), so slides
+ * show their images and videos on arrival.
+ *
  * Input comes from the keyboard (see `useKeyboardNavigation` for the keys),
  * swipes, the navigation bar, and the presenter window. While the live
  * server's follow-the-presenter mode is on, a non-presenter browser ignores
@@ -42,6 +46,13 @@ export default function AudienceView({ presentation }) {
   });
   const { isFullscreen, toggleFullscreen } = useFullscreen();
   const [showOverview, setShowOverview] = useState(false);
+
+  // The slides after the one the view opened on first, then the ones before it.
+  const openedAt = useState(navigation.position.index)[0];
+  useEffect(() => {
+    const { slides } = presentation;
+    return preloadMedia([...slides.slice(openedAt), ...slides.slice(0, openedAt)]);
+  }, [presentation, openedAt]);
 
   const onPresenterCommand = useCallback((command) => {
     if (command === 'next') navigation.next();
