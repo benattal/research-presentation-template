@@ -2,15 +2,16 @@
  * The lidar slide's render: the corner scene of cornerScene.js as clean CG
  * on black (matte materials, soft shadows, a fixed three-quarter view from
  * above), and the light of a frame of timeline.js drawn into it: the pulse
- * and its returns along the beam, the wavefronts between x_p and the
- * hidden object, and the points of the raster scan.
+ * and its returns along the beam, the wavefronts between the measured
+ * point and the hidden object, the lit spots at the points measured so
+ * far, and the points of the raster scan.
  */
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import {
-  BEAM, BUNNY, LIDAR, LIGHT_SPEED, RELAY_NORMAL, RELAY_POINT, ROOM, SCAN_COLUMNS, SCAN_ROWS, TEAPOT, TIMES,
-  distance, pulse, scanBeamDirection, scanPoints, sceneCaster, teapotGeometry,
+  BEAM, BUNNY, LIDAR, LIGHT_SPEED, RELAYS, ROOM, SCAN_COLUMNS, SCAN_ROWS, TEAPOT, VIEW,
+  distance, pulse, scanBeamDirection, scanPoints, sceneCaster, teapotGeometry, viewPixel,
 } from './cornerScene.js';
 
 /**
@@ -20,7 +21,7 @@ import {
  * `elevation` above the floor (degrees); `shift` moves the picture on the
  * canvas (fractions of its width and height, right and down).
  */
-const CAMERA = { target: [0.85, 0.3, 1.15], azimuth: 24, elevation: 32, distance: 7.15, fov: 20, shift: [0.11, 0.03] };
+const CAMERA = { target: [0.85, 0.3, 1.15], azimuth: 24, elevation: 32, distance: 7.15, fov: 20, shift: [0.16, 0.03] };
 
 /** Surface colors (linear RGB triples as in the website's scene, or sRGB strings) and roughness. */
 const SURFACES = {
@@ -48,9 +49,10 @@ const BEAM_GLOW = 0.019;
 /** Samples of light along a beam segment, and the largest light value a sample stores (as a byte). */
 const PROFILE_SAMPLES = 256;
 const PROFILE_RANGE = 4;
-/** Brightness of a pulse at its peak, and of the faint trace the beam leaves along its path. */
+/** Brightness of a pulse at its peak, of the faint trace the beam leaves along its path, and what the trace gains where the slide points at it. */
 const PULSE_LEVEL = 1.8;
 const TRACE_LEVEL = 0.12;
+const MARKED_LEVEL = 0.3;
 /** Brightness of the beam while it scans: faint, since its glow is added to the pale walls behind it. */
 const SCAN_LEVEL = 0.06;
 /** Radius of a scan dot (m). */
@@ -375,11 +377,12 @@ function createGlow(texture, color) {
 }
 
 /**
- * A soft round glow lying on a surface with the given normal: the sprites'
- * falloff, in the surface's plane. A sprite faces the camera, so on a wall
- * seen at an angle it reads as a disc standing off the wall.
+ * A soft round glow lying on a surface (`placeSurfaceGlow` turns it to the
+ * surface's normal): the sprites' falloff, in the surface's plane. A
+ * sprite faces the camera, so on a wall seen at an angle it reads as a
+ * disc standing off the wall.
  */
-function createSurfaceGlow(texture, color, normal) {
+function createSurfaceGlow(texture, color) {
   const mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({
     map: texture,
     color,
@@ -388,10 +391,18 @@ function createSurfaceGlow(texture, color, normal) {
     depthWrite: false,
     toneMapped: false,
   }));
-  mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), toVector(normal).normalize());
   mesh.renderOrder = 5;
   mesh.visible = false;
   return mesh;
+}
+
+/** The direction flat geometry (a circle, a plane) faces before it is turned to a surface's normal. */
+const FACING = new THREE.Vector3(0, 0, 1);
+
+/** Show a surface glow at `point` of a surface with `normal`: in the surface's plane, just off it so the two do not fight for depth. */
+function placeSurfaceGlow(glow, point, normal, size, level) {
+  placeGlow(glow, point.map((value, axis) => value + 0.004 * normal[axis]), size, level);
+  glow.quaternion.setFromUnitVectors(FACING, toVector(normal));
 }
 
 function placeGlow(sprite, position, size, level) {
@@ -596,11 +607,12 @@ const STAGE = { width: 1280, height: 720 };
  * - `setColors({ direct, indirect, scan })`: CSS color strings of the direct
  *   and indirect light and of the scan's dots (the theme's, which only an
  *   element on the page can say); until then the light is white;
- * - `setHiddenObject({ geometry, indirect })`: add the bunny
- *   (cornerScene.js's `bunnyGeometry`) and the indirect transient of the
- *   measurement at x_p (`measureIndirect`), once; the indirect light is
+ * - `setHiddenObject({ geometry, transients, video })`: add the bunny
+ *   (cornerScene.js's `bunnyGeometry`), the indirect transient of the
+ *   measurement at each of `RELAYS` (`measureIndirect`), and the video of
+ *   propagating light (`lightVideoRows`), once; the indirect light is
  *   drawn from then on;
- * - `indirect()`: that transient, or null before the bunny is set;
+ * - `hasHiddenObject()`: whether that was done;
  * - `setSize(width, height, ratio)` in stage pixels;
  * - `compile()`: compile the scene's shaders without blocking the page; the
  *   promise resolves when they are ready;
@@ -637,7 +649,7 @@ function createLidarRender() {
 
   const waves = {
     uWaveColor: { value: indirect },
-    uWaveCenter0: { value: toVector(RELAY_POINT) },
+    uWaveCenter0: { value: toVector(RELAYS[0].point) },
     uWaveRadius0: { value: 0 },
     uWaveStrength0: { value: 0 },
     uWaveCenter1: { value: new THREE.Vector3() },
@@ -673,28 +685,30 @@ function createLidarRender() {
   const pathBeam = createBeam(beamColors);
   laserBeam.place(BEAM.laser, BEAM.beamsplitter);
   sharedBeam.place(BEAM.beamsplitter, BEAM.mirrors);
-  mainBeam.place(BEAM.mirrors, RELAY_POINT);
   detectorBeam.place(BEAM.beamsplitter, BEAM.detector);
   scene.add(laserBeam.group, sharedBeam.group, mainBeam.group, detectorBeam.group, pathBeam.group);
   const laserSpan = laserBeam.length;
   const sharedSpan = sharedBeam.length;
-  const relaySpan = mainBeam.length;
 
   const glowTexture = createGlowTexture();
   const packet = createGlow(glowTexture, direct);
   const indirectPacket = createGlow(glowTexture, indirect);
-  const spotGlow = createSurfaceGlow(glowTexture, direct, RELAY_NORMAL);
-  // Just off the wall, so the glow does not fight the wall for depth.
-  const spotGlowPoint = toVector(RELAY_POINT).addScaledVector(toVector(RELAY_NORMAL), 0.004).toArray();
+  const spotGlow = createSurfaceGlow(glowTexture, direct);
   const hiddenGlow = createGlow(glowTexture, indirect);
   scene.add(packet, indirectPacket, spotGlow, hiddenGlow);
 
-  const spotMaterial = new THREE.MeshBasicMaterial({ color: direct.clone(), transparent: true, toneMapped: false, depthWrite: false });
-  const spot = new THREE.Mesh(new THREE.CircleGeometry(0.014, 40), spotMaterial);
-  spot.position.set(...RELAY_POINT).addScaledVector(toVector(RELAY_NORMAL), 0.003);
-  spot.lookAt(toVector(RELAY_POINT).add(toVector(RELAY_NORMAL)));
-  spot.renderOrder = 2;
-  scene.add(spot);
+  // A lit spot on the surface at each measured point.
+  const spotGeometry = new THREE.CircleGeometry(0.014, 40);
+  const spots = RELAYS.map(({ point, normal }) => {
+    const material = new THREE.MeshBasicMaterial({ color: direct.clone(), transparent: true, toneMapped: false, depthWrite: false });
+    const spot = new THREE.Mesh(spotGeometry, material);
+    spot.position.set(...point).addScaledVector(toVector(normal), 0.003);
+    spot.quaternion.setFromUnitVectors(FACING, toVector(normal));
+    spot.renderOrder = 2;
+    spot.visible = false;
+    scene.add(spot);
+    return spot;
+  });
 
   const outgoingShell = createShell(indirect);
   const returningShell = createShell(indirect);
@@ -712,6 +726,11 @@ function createLidarRender() {
     position: toVector(p.point).addScaledVector(toVector(p.normal), 0.0025),
     quaternion: new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), toVector(p.normal)),
   }));
+  /** The pixel of the video of propagating light that each scan point is seen in. */
+  const dotPixels = points.map((p) => {
+    const [x, y] = viewPixel(p.point);
+    return Math.floor(y) * VIEW.columns + Math.floor(x);
+  });
   dots.count = 0;
   dots.renderOrder = 1;
   scene.add(dots);
@@ -739,29 +758,35 @@ function createLidarRender() {
     return start.map((s, k) => s + ((end[k] - s) * u) / span);
   }
 
-  /** The measurement at x_p: the pulse out, its direct return, and the indirect light back, along the beam. */
+  /**
+   * The measurement at the frame's point: the beam's trace, the pulse out
+   * and the direct return and the indirect light back along the beam, and
+   * the lit spots at the points measured so far.
+   */
   function drawMeasurement(frame) {
     const T = frame.time;
-    const transient = hidden?.indirect ?? null;
-    const sinceHit = T - TIMES.hit;
+    const relay = RELAYS[frame.relay];
+    const relaySpan = distance(BEAM.mirrors, relay.point);
+    const transient = hidden?.transients[frame.relay] ?? null;
+    const sinceHit = T - relay.hit;
     /** Light at a distance s (m) from the laser on the way out: the pulse, and the trace it leaves. */
     const out = (s) => {
       if (!frame.outgoing) return TRACE_LEVEL * frame.trace;
       return PULSE_LEVEL * pulse(T - s / LIGHT_SPEED) + (s < LIGHT_SPEED * T ? TRACE_LEVEL : 0);
     };
-    /** Light at a distance s (m) from x_p on the way back: [direct, indirect]. */
+    /** Light at a distance s (m) from the point on the way back: [direct, indirect]. */
     const back = (s) => [
-      frame.directReturn ? PULSE_LEVEL * pulse(sinceHit - s / LIGHT_SPEED) : 0,
-      frame.indirect && transient ? 0.85 * transient.at(sinceHit - s / LIGHT_SPEED) : 0,
+      frame.returns ? PULSE_LEVEL * pulse(sinceHit - s / LIGHT_SPEED) : 0,
+      frame.returns && transient ? 0.85 * transient.at(sinceHit - s / LIGHT_SPEED) : 0,
     ];
     /** The trace of the return path, from the moment the direct return has passed. */
     const returned = (s) => {
       if (frame.outgoing) return 0;
-      if (frame.directReturn) return s < LIGHT_SPEED * sinceHit ? TRACE_LEVEL : 0;
+      if (frame.returns) return s < LIGHT_SPEED * sinceHit ? TRACE_LEVEL : 0;
       return TRACE_LEVEL * frame.trace;
     };
 
-    mainBeam.place(BEAM.mirrors, RELAY_POINT);
+    mainBeam.place(BEAM.mirrors, relay.point);
     laserBeam.fill((u) => [out(u), 0]);
     sharedBeam.fill((u) => {
       const [white, amber] = back(relaySpan + sharedSpan - u);
@@ -769,7 +794,7 @@ function createLidarRender() {
     });
     mainBeam.fill((u) => {
       const [white, amber] = back(relaySpan - u);
-      return [out(laserSpan + sharedSpan + u) + white, amber];
+      return [out(laserSpan + sharedSpan + u) + white + MARKED_LEVEL * frame.depth, amber];
     });
     detectorBeam.fill((u) => {
       const s = relaySpan + sharedSpan + u;
@@ -777,38 +802,44 @@ function createLidarRender() {
       return [white + returned(s), amber];
     });
 
-    // A glow where the pulse is, while it is between the mirrors and x_p.
+    // A glow where the pulse is, while it is between the mirrors and the point.
     let packetAt = null;
     if (frame.outgoing) packetAt = LIGHT_SPEED * T - laserSpan - sharedSpan;
-    if (frame.directReturn) packetAt = relaySpan - LIGHT_SPEED * sinceHit;
+    if (frame.returns) packetAt = relaySpan - LIGHT_SPEED * sinceHit;
     const onBeam = packetAt !== null && packetAt > 0 && packetAt < relaySpan;
-    placeGlow(packet, onBeam ? along(BEAM.mirrors, RELAY_POINT, packetAt) : RELAY_POINT, 0.11, onBeam ? 0.9 : 0);
+    placeGlow(packet, onBeam ? along(BEAM.mirrors, relay.point, packetAt) : relay.point, 0.11, onBeam ? 0.9 : 0);
     const indirectAt = transient ? relaySpan - LIGHT_SPEED * (sinceHit - transient.peakDelay) : 0;
-    const indirectOnBeam = frame.indirect && transient && indirectAt > 0 && indirectAt < relaySpan;
-    placeGlow(indirectPacket, indirectOnBeam ? along(BEAM.mirrors, RELAY_POINT, indirectAt) : RELAY_POINT, 0.16, indirectOnBeam ? 0.5 : 0);
+    const indirectOnBeam = frame.returns && transient && indirectAt > 0 && indirectAt < relaySpan;
+    placeGlow(indirectPacket, indirectOnBeam ? along(BEAM.mirrors, relay.point, indirectAt) : relay.point, 0.16, indirectOnBeam ? 0.5 : 0);
 
-    // x_p: a flash when the pulse arrives, then a lit spot; amber while the indirect light returns through it.
-    const flash = frame.outgoing || frame.directReturn ? pulse(sinceHit / 2.5) : 0;
+    // The point: a flash when the pulse arrives, then a lit spot; amber while the indirect light returns through it.
+    const flash = frame.flash ? pulse(sinceHit / 2.5) : 0;
     const amber = frame.indirect && transient ? transient.at(sinceHit) : 0;
-    spotMaterial.color.copy(direct).lerp(indirect, 0.85 * amber);
-    spotMaterial.opacity = frame.spot;
-    spot.visible = frame.spot > 0.003;
-    placeGlow(spotGlow, spotGlowPoint, 0.1 + 0.1 * flash + 0.06 * amber, 0.5 * frame.spot + flash);
-    spotGlow.material.color.copy(spotMaterial.color);
+    spots.forEach((spot, k) => {
+      spot.material.color.copy(direct);
+      if (k === frame.relay) spot.material.color.lerp(indirect, 0.85 * amber);
+      spot.material.opacity = frame.spots[k];
+      spot.visible = frame.spots[k] > 0.003;
+    });
+    placeSurfaceGlow(spotGlow, relay.point, relay.normal, 0.1 + 0.1 * flash + 0.06 * amber, 0.5 * frame.glow + flash);
+    spotGlow.material.color.copy(spots[frame.relay].material.color);
   }
 
-  /** The wavefront from x_p, the hidden object's light, and the wavefront back. */
+  /** The wavefront from the frame's point, the hidden object's light, and the wavefront back. */
   function drawWaves(frame) {
-    const transient = hidden?.indirect ?? null;
+    const relay = RELAYS[frame.relay];
+    const transient = hidden?.transients[frame.relay] ?? null;
     const running = frame.indirect && transient !== null;
     const reach = transient ? transient.nearest.distance : 0;
-    const r0 = running ? LIGHT_SPEED * (frame.time - TIMES.hit) : 0;
+    const r0 = running ? LIGHT_SPEED * (frame.time - relay.hit) : 0;
     const r1 = r0 - reach;
     const strength0 = running && r0 > 0 ? Math.min(1, r0 / 0.06) * (1 - smoothstep(reach + 0.35, reach + 0.75, r0)) : 0;
     const strength1 = running && r1 > 0 ? Math.min(1, r1 / 0.05) * (1 - smoothstep(reach - 0.05, reach + 0.25, r1)) : 0;
-    outgoingShell.set(RELAY_POINT, r0, strength0);
-    returningShell.set(transient ? transient.nearest.point : RELAY_POINT, r1, 0.8 * strength1);
+    outgoingShell.set(relay.point, r0, strength0);
+    returningShell.set(transient ? transient.nearest.point : relay.point, r1, 0.8 * strength1);
 
+    waves.uWaveCenter0.value.set(...relay.point);
+    if (transient) waves.uWaveCenter1.value.set(...transient.nearest.point);
     waves.uWaveRadius0.value = running ? r0 : 100;
     waves.uWaveStrength0.value = strength0;
     waves.uWaveRadius1.value = r1;
@@ -817,15 +848,21 @@ function createLidarRender() {
     const crossing = running && r1 > 0 ? Math.exp(-r1 / 0.2) : 0;
     const lit = running ? (r1 > 0 ? 0.34 + 0.56 * crossing : 0.9) : 0.34;
     waves.uHiddenGlow.value = transient ? lit * frame.hiddenGlow : 0;
-    placeGlow(hiddenGlow, transient ? transient.nearest.point : RELAY_POINT, 0.2, 0.55 * crossing);
+    placeGlow(hiddenGlow, transient ? transient.nearest.point : relay.point, 0.2, 0.55 * crossing * frame.hiddenGlow);
 
-    // The path of the indirect light, once it has returned to x_p.
-    const returnedAt = TIMES.hit + (2 * reach) / LIGHT_SPEED;
+    // The path of the indirect light, once it has returned to the point.
+    const returnedAt = relay.hit + (2 * reach) / LIGHT_SPEED;
     const shown = transient ? frame.path * (frame.indirect ? smoothstep(returnedAt - 0.3, returnedAt + 0.5, frame.time) : 1) : 0;
+    if (transient) pathBeam.place(relay.point, transient.nearest.point);
     pathBeam.fill(() => [0, 0.3 * shown]);
   }
 
-  /** The raster scan: the beam at its current direction, and a dot at every grid point it has passed. */
+  /**
+   * The raster scan: the beam at its current direction, and a dot at every
+   * grid point it has passed. Once the video plays, each dot shows the
+   * light of its pixel at the video's time: the direct return, then the
+   * indirect light.
+   */
   function drawScan(frame) {
     const progress = frame.scan ?? 0;
     const passed = progress * scanCells;
@@ -833,12 +870,19 @@ function createLidarRender() {
     while (lit < points.length && points[lit].order + 0.5 <= passed) lit++;
     if (frame.scan !== null && progress >= 1) lit = points.length;
     dots.count = lit;
+    const video = hidden?.video ?? null;
+    const playing = video ? frame.video.light : 0;
     for (let i = 0; i < lit; i++) {
       // A dot flashes as the beam passes it, then settles.
       const flash = progress < 1 ? Math.exp(-(passed - points[i].order - 0.5) / 2.5) : 0;
-      dotMatrix.compose(dotPlacements[i].position, dotPlacements[i].quaternion, dotScale.setScalar(1 + 0.7 * flash));
+      const delay = playing > 0 ? frame.video.time - video.direct[dotPixels[i]] : 0;
+      const directLight = playing > 0 ? playing * pulse(delay) : 0;
+      const indirectLight = playing > 0 ? playing * video.indirectAt(dotPixels[i], delay) : 0;
+      dotMatrix.compose(dotPlacements[i].position, dotPlacements[i].quaternion, dotScale.setScalar(1 + 0.7 * Math.max(flash, directLight, indirectLight)));
       dots.setMatrixAt(i, dotMatrix);
-      dots.setColorAt(i, dotColor.copy(scanColor).lerp(white, 0.75 * flash));
+      // While the video plays the dots dim, so the ones the light is at stand out.
+      dotColor.copy(scanColor).multiplyScalar(1 - 0.55 * playing).lerp(indirect, Math.min(1, 2 * indirectLight)).lerp(white, Math.max(0.75 * flash, directLight));
+      dots.setColorAt(i, dotColor);
     }
     dots.instanceMatrix.needsUpdate = true;
     if (dots.instanceColor) dots.instanceColor.needsUpdate = true;
@@ -866,18 +910,16 @@ function createLidarRender() {
       indirectPacket.material.color.copy(indirect);
       hiddenGlow.material.color.copy(indirect);
     },
-    setHiddenObject({ geometry, indirect: transient }) {
+    setHiddenObject({ geometry, transients, video }) {
       if (hidden) throw new Error('lidarCapture: the hidden object is already in the scene');
       const material = addLightWaves(standard('bunny'), waves, { seams: [0, 0.5, 0], hidden: true });
       const mesh = shadowed(new THREE.Mesh(geometry, material));
       scene.add(mesh);
-      hidden = { mesh, indirect: transient };
-      waves.uWaveCenter1.value.set(...transient.nearest.point);
-      pathBeam.place(RELAY_POINT, transient.nearest.point);
+      hidden = { mesh, transients, video };
       renderer.shadowMap.needsUpdate = true;
     },
-    indirect() {
-      return hidden ? hidden.indirect : null;
+    hasHiddenObject() {
+      return hidden !== null;
     },
     setSize,
     compile() {
@@ -968,7 +1010,7 @@ export function releaseLidarRender(render) {
  */
 export async function prepareLidarRender(hiddenObject, frames, pause) {
   const render = pageRender();
-  if (!render.indirect()) render.setHiddenObject(hiddenObject);
+  if (!render.hasHiddenObject()) render.setHiddenObject(hiddenObject);
   await pause();
   await render.compile();
   for (const frame of frames) {

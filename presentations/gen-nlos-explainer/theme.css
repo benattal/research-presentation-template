@@ -19,6 +19,8 @@
   --bg-slide: #000000;
   --bg-elevated: #121212;
   --bg-card: #161616;
+  /* The quiet panel behind a part of a slide that has several distinct parts: one shade for the whole deck. */
+  --bg-panel: #111111;
   --text-primary: #f4f4f4;
   --text-secondary: #cfcfcf;
   --text-muted: #8c8c8c;
