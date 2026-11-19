@@ -19,6 +19,10 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- "Again, I want to re-iterate that the goal is not necessarily to do this
+  fast. It's to follow the plan and instructions I gave and craft a very
+  high quality presentation". Passed to every builder; each gate waits for
+  quality, not for the clock.
 - "None of the slides appear to be filled out. Also where are you storing
   the presentation? I don't see it in the source tree": the deck lives in
   the worktrees `../rpt-gen-nlos` (served) and `../rpt-gen-nlos-work`, not
