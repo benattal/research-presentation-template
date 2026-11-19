@@ -163,7 +163,7 @@ classifier-free guidance result and the ablations are left out.
 | 3 | Video of propagating light | (1) the captured light video with a time readout, a time axis with a playhead; (2) direct light: its intervals on the axis and a still at 5.98 ns; (3) indirect light: its interval and a still at 11.06 ns | website `teaser-light-clean.mp4` (16 ps per frame from 5.12 ns) | drafted |
 | 4 | Novel views from propagating light | one step: the reference photo, generation with propagating light (ours), generation without, in step; red boxes on the hidden region | teaser `prediction`, `rgb_only` | drafted |
 |  | **propagating light** (card) |  |  | drafted |
-| 5 | Lidar capture | WebGL render of the lidar hardware and the website's corner scene (relay walls, teapot occluder, hidden bunny), in the manner of the reference decks' hardware renders, parts labeled; (1) the pulse leaves the laser, reaches a visible point, and its direct return comes back: the measurement's first peak, depth; (2) the pulse again, then the wavefront to the hidden object and back: the weak later peak; (3) the scan over all visible surfaces | three.js | drafted |
+| 5 | Lidar capture | WebGL render of the lidar hardware and the website's corner scene (relay walls, teapot occluder, hidden bunny), in the manner of the reference decks' hardware renders, parts labeled; (1) one measurement as a single animation: the pulse leaves the laser and reaches a visible point, the direct return and the indirect light from the hidden object come back, and the plot is swept once across both peaks; (2) the scan over all visible surfaces | three.js | drafted |
 | 6 | Hardware prototype | the photo of the prototype; parts named one per step by a line: pulsed laser, scanning mirrors, single-photon avalanche diode; then the steady-state image beside it | `hardware_figure` photo, masked, sticker blurred | drafted |
 |  | **related work** (card) |  |  | drafted |
 | 7 | Related work | two columns, one lit per step, each with a red limitation line: NLOS imaging (an NLOS volume of the bike scene along a trajectory; "Geometry, not photorealistic appearance"), generative view synthesis (GEN3C\* on the hidden-lamp scene; "Hidden content is hallucinated"); last step: "Ours: generative view synthesis from propagating light" in green | bucket conventional results (data of Lindell et al., credited); `6_QualExperimental` `rgb_only` | drafted |
@@ -172,6 +172,7 @@ classifier-free guidance result and the ablations are left out.
 | 9 | Conditioning videos | same 3D view, the camera moves along the target trajectory; warped RGB, MIP, MIP depth appear as synchronized panels | three.js, teaser `presentation/*.mp4` | drafted |
 | 10 | Video generation | diagram: three streams and noisy target tokens into the video diffusion transformer; the output video plays | drawn | drafted |
 | 11 | NLOS reconstruction | flatland: (1) planar relay wall versus the visible surfaces of a scene as relays; (2) forward and adjoint operators, CGLS iterations sharpening | canvas, labeled illustration | drafted |
+| 12 | Reconstruction with nonplanar relays | rotating renders of the reconstructed volumes, in step: (1) ours and CC-SOCR; (2) 3D-GTR; rows: the simulated room, the captured letters (Stanford f-k data) | rendered from the bucket's volumes (`nonplanar_nlos_results`), the paper figure's variants, matched by PSNR | drafted |
 |  | **results** (card) |  |  | drafted |
 | 13 | Training data (simulated) | (1) a tabletop digital twin, as a trajectory; (2) six Infinigen rooms, as trajectories | `4_overview` twin ground truth; `test100_paper_8020_cfg3/gt` | drafted |
 | 14 | Captured scenes: same line of sight | rows: hidden lamp, hidden globe; four columns on the comparison slide's grid, one per step: reference photo (the scenes differ), input view (identical), direct light (identical), indirect light (differs) | website refs and `lamp.png`; direct and indirect videos rendered from `aligned_transients.h5` | drafted |
@@ -179,8 +180,6 @@ classifier-free guidance result and the ablations are left out.
 | 16 | Simulated scenes: comparison | two rooms, all methods in step: (1) ground truth and ours; (2) GEN3C\*; (3) HOLI-1-to-3\* and Lyra 2 (no boxes yet) | `test100_paper_8020_cfg3`, Dropbox HOLI folder | drafted |
 | 17 | Summary | our vase result at the left; one line per step: the takeaway, the limitation, the outlook | teaser `prediction` | drafted |
 | 18 | Title card | as slide 1 | — | drafted |
-|  | **appendix** (after the closing card; the user is deciding whether to keep it) |  |  |  |
-| A1 | Reconstruction with nonplanar relays | rotating renders of the reconstructed volumes, in step: (1) ours and CC-SOCR; (2) 3D-GTR; rows: the simulated room, the captured letters (Stanford f-k data) | rendered from the bucket's volumes (`nonplanar_nlos_results`), the paper figure's variants, matched by PSNR | drafted |
 
 ## Visualizations
 

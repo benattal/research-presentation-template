@@ -1,2 +1,2 @@
-Compared with recent methods that support nonplanar relays, our
-reconstructions are sharper,
+Compared with CC-SOCR, a recent method that supports nonplanar relays,
+our reconstructions are sharper.

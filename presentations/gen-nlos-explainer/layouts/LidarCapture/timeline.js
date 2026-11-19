@@ -2,26 +2,27 @@
  * What the lidar slide shows at each moment of each build step, as a pure
  * function of the step and the time since it began: the scene time of the
  * light (ns, 0 when the pulse leaves the laser), which light is drawn, and
- * how far the measurement plot is swept. The direct and indirect steps each
- * run the measurement from the pulse leaving the laser, so the light is seen
- * going out before it comes back. Each step ends in a settled frame.
+ * how far the measurement plot is swept. The first step is one measurement
+ * in one run: the pulse leaves the laser, its direct return comes back, the
+ * light from x_p reaches the hidden object and returns, and the plot is
+ * swept once across both peaks. The second step is the scan. Each step ends
+ * in a settled frame.
  */
-import { BUNNY, LIGHT_SPEED, RELAY_POINT, TIMES, distance } from './cornerScene.js';
+import { TIMES } from './cornerScene.js';
 
-/** The three build steps, in order. */
-export const STEPS = ['direct', 'indirect', 'scan'];
+/** The two build steps, in order. */
+export const STEPS = ['measurement', 'scan'];
 
 /** Playback speed of the light: ms of the slide per ns of scene time. */
 const MS_PER_NS = 340;
-/** Per step, the pause before its light moves, in ms: the narration's first words name what is about to move. */
-const LEAD_MS = { direct: 1200, indirect: 500 };
+/** The pause before the pulse leaves, in ms: the narration's first words name what is about to move. */
+const LEAD_MS = 1200;
 /** When the scan starts and how long it takes, in ms. */
 const SCAN_START_MS = 600;
 const SCAN_MS = 5200;
 
-/** Scene times (ns): where each step's light starts and ends. */
+/** Scene times (ns): where the measurement's light starts, and where its indirect light has passed. */
 const PULSE_START = -0.4;
-const DIRECT_END = TIMES.direct + 1.5;
 const INDIRECT_END = TIMES.direct + 9;
 
 /** The plot's time axis ends here (ns). */
@@ -36,25 +37,9 @@ function smoothstep(from, to, v) {
   return t * t * (3 - 2 * t);
 }
 
-/** Scene time (ns) at `ms` into a step whose light runs from `start` to `end` after `lead` ms. */
-function sceneTime(ms, lead, start, end) {
-  return Math.min(end, start + Math.max(0, ms - lead) / MS_PER_NS);
-}
-
-/** The time into a step (ms) at which its light is at scene time `time`. */
-function msAt(time, lead, start) {
-  return lead + (time - start) * MS_PER_NS;
-}
-
-/**
- * The moment of each step a still frame shows (ms into the step): the
- * direct return measured; the wavefront from
- * x_p crossing the hidden object; the scan complete.
- */
-const HIDDEN_CENTER = [BUNNY.position[0], BUNNY.height / 2, BUNNY.position[2]];
+/** The moment of each step a still frame shows (ms into the step): the measurement complete; the scan complete. */
 const STILL_MS = {
-  direct: msAt(DIRECT_END, LEAD_MS.direct, PULSE_START),
-  indirect: msAt(TIMES.hit + distance(RELAY_POINT, HIDDEN_CENTER) / LIGHT_SPEED, LEAD_MS.indirect, PULSE_START),
+  measurement: LEAD_MS + (INDIRECT_END - PULSE_START) * MS_PER_NS,
   scan: SCAN_START_MS + SCAN_MS + 1000,
 };
 
@@ -68,12 +53,12 @@ export function stillAt(step) {
  * - `time`: scene time (ns);
  * - `outgoing`, `directReturn`, `indirect`: which light runs at `time`
  *   (the laser's pulse; its direct return from x_p; the light from x_p to
- *   the hidden object and back);
+ *   the hidden object and back). The two returns run together;
  * - `trace`, `spot`, `path`: opacity of the beam's faint trace between the
  *   lidar and x_p, of the lit spot at x_p, and of the line between x_p and
  *   the hidden object;
- * - `hiddenGlow`: how much of the hidden object's faint light shows (none
- *   before the indirect step; the scan fades it);
+ * - `hiddenGlow`: how much of the hidden object's faint light shows (the
+ *   scan fades it);
  * - `scan`: progress of the raster scan, 0 to 1, or null before it;
  * - `plot`: the measurement plot's opacity, how far its trace is drawn
  *   (`sweep`, ns), the cursor's opacity, and its two labels' opacities.
@@ -81,57 +66,42 @@ export function stillAt(step) {
 export function frameAt(step, ms) {
   const phase = STEPS[step];
   if (!phase) throw new Error(`lidarCapture: no build step ${step}; the slide has ${STEPS.length}`);
-  const frame = {
-    time: 0,
-    outgoing: false,
-    directReturn: false,
-    indirect: false,
-    trace: 1,
-    spot: 1,
-    path: 0,
-    hiddenGlow: 0,
-    scan: null,
-    plot: { opacity: 1, sweep: DIRECT_END, cursor: 0, direct: 1, indirect: 0 },
-  };
 
-  if (phase === 'direct') {
-    // The measurement: the pulse leaves the laser, then its direct return comes back.
-    frame.time = sceneTime(ms, LEAD_MS.direct, PULSE_START, DIRECT_END);
-    frame.outgoing = frame.time < TIMES.hit;
-    frame.directReturn = !frame.outgoing;
-    frame.spot = smoothstep(TIMES.hit - 0.1, TIMES.hit + 0.25, frame.time);
-    frame.plot.sweep = frame.time;
-    frame.plot.cursor = 1 - smoothstep(DIRECT_END - 0.4, DIRECT_END, frame.time);
-    frame.plot.direct = smoothstep(TIMES.direct + 0.2, TIMES.direct + 0.7, frame.time);
-    return frame;
-  }
-
-  frame.path = 1;
-  frame.hiddenGlow = 1;
-  frame.plot.sweep = INDIRECT_END;
-  frame.plot.indirect = 1;
-
-  if (phase === 'indirect') {
-    // The measurement once more: the pulse leaves the laser, then the light from x_p reaches the hidden object and returns.
-    frame.time = sceneTime(ms, LEAD_MS.indirect, PULSE_START, INDIRECT_END);
-    frame.outgoing = frame.time < TIMES.hit;
-    frame.indirect = !frame.outgoing;
-    frame.spot = smoothstep(TIMES.hit - 0.1, TIMES.hit + 0.25, frame.time);
-    frame.path = frame.indirect ? 1 : 0;
-    // The plot is swept again from time 0: the direct peak, then the indirect light.
-    frame.plot.sweep = frame.time;
-    frame.plot.cursor = 1 - smoothstep(INDIRECT_END - 0.4, INDIRECT_END, frame.time);
-    frame.plot.indirect = smoothstep(INDIRECT_END - 1.6, INDIRECT_END - 0.9, frame.time);
-    return frame;
+  if (phase === 'measurement') {
+    const time = Math.min(INDIRECT_END, PULSE_START + Math.max(0, ms - LEAD_MS) / MS_PER_NS);
+    const returning = time >= TIMES.hit;
+    return {
+      time,
+      outgoing: !returning,
+      directReturn: returning,
+      indirect: returning,
+      trace: 1,
+      spot: smoothstep(TIMES.hit - 0.1, TIMES.hit + 0.25, time),
+      path: returning ? 1 : 0,
+      hiddenGlow: 1,
+      scan: null,
+      plot: {
+        opacity: 1,
+        sweep: time,
+        cursor: 1 - smoothstep(INDIRECT_END - 0.4, INDIRECT_END, time),
+        direct: smoothstep(TIMES.direct + 0.2, TIMES.direct + 0.7, time),
+        indirect: smoothstep(INDIRECT_END - 1.6, INDIRECT_END - 0.9, time),
+      },
+    };
   }
 
   // The scan: the light of the one measurement fades and the laser visits every scan point.
   const fade = 1 - smoothstep(0, SCAN_START_MS, ms);
-  frame.time = INDIRECT_END;
-  frame.trace = fade;
-  frame.spot = fade;
-  frame.path = fade;
-  frame.hiddenGlow = fade;
-  frame.scan = clamp01((ms - SCAN_START_MS) / SCAN_MS);
-  return frame;
+  return {
+    time: INDIRECT_END,
+    outgoing: false,
+    directReturn: false,
+    indirect: false,
+    trace: fade,
+    spot: fade,
+    path: fade,
+    hiddenGlow: fade,
+    scan: clamp01((ms - SCAN_START_MS) / SCAN_MS),
+    plot: { opacity: 1, sweep: INDIRECT_END, cursor: 0, direct: 1, indirect: 1 },
+  };
 }

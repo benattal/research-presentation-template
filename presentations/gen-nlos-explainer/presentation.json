@@ -39,7 +39,8 @@
         "processing",
         "conditioning",
         "generation",
-        "nlos-reconstruction"
+        "nlos-reconstruction",
+        "nlos-comparison"
       ]
     },
     {
@@ -59,13 +60,6 @@
       "slides": [
         "summary",
         "end"
-      ]
-    },
-    {
-      "id": "appendix",
-      "title": "Appendix",
-      "slides": [
-        "nlos-comparison"
       ]
     }
   ]

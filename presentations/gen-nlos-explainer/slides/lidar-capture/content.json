@@ -2,8 +2,7 @@
   "layout": "lidarCapture",
   "title": "Lidar capture",
   "buildSteps": [
-    "the pulse to a visible point, its direct return, and the first peak",
-    "indirect light from the hidden object and the later peak",
+    "one measurement: the pulse, its direct return, and the indirect light, with the plot swept once",
     "the scan over the visible surfaces"
   ],
   "hiddenObject": {

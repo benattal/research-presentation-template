@@ -20,6 +20,12 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- "Okay the rotating comparison actually looks very very cool. Please
+  include it": it follows the reconstruction slide in the method section.
+- "For the lidar capture, I might shorten this to a single animation that
+  doesn't require a slide switch -- showing pulses that correspond to both
+  direct and indirect, sweeping once over the histogram". The capture
+  slide is one measurement animation, then the scan.
 - "Can you also put the rotating NLOS comparison *after* the last slide?
   I'm not sure I want to have it, since there's already a lot of content.
   But I would like to look at it". It is in an appendix section after the
