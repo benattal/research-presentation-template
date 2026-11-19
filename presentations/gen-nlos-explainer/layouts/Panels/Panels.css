@@ -129,3 +129,18 @@
   color: var(--hidden);
   white-space: nowrap;
 }
+
+/* A group's panel, over the stitched video with its cells cut out. */
+.panels-group {
+  position: absolute;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.panels-group-shape {
+  rx: var(--radius-panel);
+}
+
+.panels-group-fill {
+  fill: var(--bg-panel);
+}

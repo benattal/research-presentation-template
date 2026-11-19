@@ -6,8 +6,8 @@
     "rows": 2,
     "panelWidth": 208,
     "panelHeight": 208,
-    "columnGap": 28,
-    "rowGap": 40
+    "columnGap": 16,
+    "rowGap": 84
   },
   "buildSteps": [
     "tabletop digital twins",
@@ -15,8 +15,8 @@
   ],
   "videos": [
     {
-      "src": "/slides/training-data/twin-and-rooms.mp4",
-      "poster": "/slides/training-data/twin-and-rooms.poster.jpg",
+      "src": "/slides/training-data/tabletops-and-rooms.mp4",
+      "poster": "/slides/training-data/tabletops-and-rooms.poster.jpg",
       "row": 0,
       "column": 0,
       "rows": 2,
@@ -27,39 +27,27 @@
     {
       "row": 0,
       "column": 0,
-      "rows": 2,
-      "columns": 2,
-      "label": "Tabletop digital twin"
+      "columns": 5,
+      "label": "Tabletop digital twins"
     },
     {
-      "row": 0,
-      "column": 2,
-      "step": 1
-    },
-    {
-      "row": 0,
-      "column": 3,
+      "row": 1,
+      "column": 0,
+      "columns": 5,
       "step": 1,
       "label": "Infinigen rooms"
-    },
+    }
+  ],
+  "groups": [
     {
       "row": 0,
-      "column": 4,
-      "step": 1
+      "column": 0,
+      "columns": 5
     },
     {
       "row": 1,
-      "column": 2,
-      "step": 1
-    },
-    {
-      "row": 1,
-      "column": 3,
-      "step": 1
-    },
-    {
-      "row": 1,
-      "column": 4,
+      "column": 0,
+      "columns": 5,
       "step": 1
     }
   ]

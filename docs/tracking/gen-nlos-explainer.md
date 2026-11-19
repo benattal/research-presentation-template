@@ -17,6 +17,20 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, evening (on a new machine, a Mac):
 
+- Of slide 18 (training data): "i want to add more than just one
+  tabletop digital twin (also want to remove the current one.
+  /Users/vhchu/Downloads/dual_relay_v2_turn90_download/scenes has a bunch
+  of training scenes. pick an equal amount of table top and infinigen
+  rooms. not sure how many you want to have in each section, but include
+  chef, lamp, orchid, fan, cookiebox, pitcher, lavender, teapot in
+  thatorder. might need to have section outlines like in slide 13", then
+  "dont need to include all 8. just pick a reaosnable number. pick what
+  looks nice". Done: two rows of five, each on a panel (panels `groups`):
+  tabletops chef, lamp, orchid, lavender, teapot (ccw90 ground truth; the
+  eight chosen variants copied to `assets/sources/training-data/`), and
+  five Infinigen rooms; `assets/build/training-data.sh` writes
+  `tabletops-and-rooms.mp4`. The overview twin is gone; the label is now
+  "Tabletop digital twins". Five, not four, so the rows fill the width.
 - "hold it for another second" (slide 19's pause): 2.5 s, 1.42 to
   3.92 s. "make the arrow head filled in as well": the callout's
   `fill: none` rule also matched the marker's triangle; it now applies

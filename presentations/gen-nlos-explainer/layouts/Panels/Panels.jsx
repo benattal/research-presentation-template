@@ -45,6 +45,13 @@
  *                                that marks one view of a moving camera.
  *   spotlights  optional: [{ step, panels: [id, ...] }]: at that step, the
  *               panels not listed are dimmed.
+ *   groups      optional: a panel (`--bg-panel`) behind each block of cells
+ *               that belong together, each { row, column, rows?, columns?,
+ *               step? }: the block's cells and the gaps between them, with
+ *               GROUP_PADDING around them and room for a label above. It
+ *               is drawn over a stitched video's gaps with the cells cut
+ *               out, so the video must leave enough gap between groups
+ *               for both paddings and the label (`rowGap`).
  *   callouts    optional: red text with red arrows, for what the boxes
  *               mark: each { text, at, align?, arrows, step?, from?, to? }.
  *               Points are { row, column, x, y }: fractions of that cell,
@@ -86,6 +93,13 @@ const DIMMED = 0.25;
 const MASK_BLEED = 2;
 /** Seconds a timed box or callout takes to fade in after `from` and out before `to`. */
 const BOX_FADE_S = 0.15;
+/** Stage pixels a group's panel reaches past its cells, at the sides and below; above, past the label band too. */
+const GROUP_PADDING = 12;
+/**
+ * Stage pixels a group's cut-out for a cell falls short of the cell on each side, so that the black gap of a
+ * stitched video, scaled to a fraction of a pixel, never shows as a hairline between a cell and the panel.
+ */
+const GROUP_OVERLAP = 1;
 /** Length of a callout's arrowhead along its arrow, in stage pixels. */
 const ARROW_HEAD = 10;
 
@@ -189,6 +203,52 @@ export function Boxes({ boxes, videoHolder, buildStep = Infinity }) {
       }}
     />
   ));
+}
+
+/**
+ * The panels behind each group of cells, over the stitched video: a rounded
+ * rectangle in the panel shade with each of the group's cells cut out.
+ * Hidden before the group's step.
+ */
+function Groups({ groups, geometry, buildStep }) {
+  return groups.map((group) => {
+    const block = geometry.box(group);
+    const left = block.left - GROUP_PADDING;
+    const top = block.top - LABEL_BAND - GROUP_PADDING;
+    const width = block.width + 2 * GROUP_PADDING;
+    const height = block.height + LABEL_BAND + 2 * GROUP_PADDING;
+    const cells = [];
+    for (let row = group.row; row < group.row + (group.rows ?? 1); row++) {
+      for (let column = group.column; column < group.column + (group.columns ?? 1); column++) {
+        cells.push(geometry.box({ row, column }));
+      }
+    }
+    const id = `panels-group-${group.row}-${group.column}`;
+    return (
+      <svg
+        key={id}
+        className="panels-group"
+        style={{ left, top, visibility: buildStep >= (group.step ?? 0) ? 'visible' : 'hidden' }}
+        width={width}
+        height={height}
+      >
+        <mask id={id}>
+          <rect className="panels-group-shape" width={width} height={height} fill="white" />
+          {cells.map((cell) => (
+            <rect
+              key={`${cell.left},${cell.top}`}
+              x={cell.left - left + GROUP_OVERLAP}
+              y={cell.top - top + GROUP_OVERLAP}
+              width={cell.width - 2 * GROUP_OVERLAP}
+              height={cell.height - 2 * GROUP_OVERLAP}
+              fill="black"
+            />
+          ))}
+        </mask>
+        <rect className="panels-group-shape panels-group-fill" width={width} height={height} mask={`url(#${id})`} />
+      </svg>
+    );
+  });
 }
 
 /** A point { row, column, x, y } of a callout, in the grid's stage pixels. */
@@ -371,6 +431,7 @@ export default function Panels({ slide, buildStep }) {
                 shown={states.filter((state, i) => videoOf[i] === v && state !== 'hidden').length}
               />
             ))}
+            <Groups groups={slide.groups ?? []} geometry={geometry} buildStep={buildStep} />
             {panels.map((panel, i) => (
               <Panel
                 key={`${panel.row},${panel.column}`}
