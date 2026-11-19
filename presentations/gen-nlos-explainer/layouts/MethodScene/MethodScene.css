@@ -12,8 +12,12 @@
   color: var(--text-primary);
 }
 
-/* The step clock shows and hides every named part; until its first frame none shows. */
-.method-scene [data-part] {
+/*
+ * The step clock sets the opacity of every named part and of every part of
+ * the diagram that a cue reveals; until its first frame none shows.
+ */
+.method-scene [data-part],
+.method-scene [data-cue] {
   opacity: 0;
 }
 
@@ -23,16 +27,34 @@
 }
 
 .method-scene-view,
+.method-scene-group,
 .method-scene-video,
+.method-scene-veil,
 .method-scene-tile,
 .method-scene-diagram,
 .method-scene-note {
   position: absolute;
 }
 
+/* Parts that show and leave together; their positions stay those of the area. */
+.method-scene-group {
+  inset: 0;
+}
+
+/* Over a video, in the slide's black: its opacity changes where the video's must not. */
+.method-scene-veil {
+  background: var(--bg-slide);
+  pointer-events: none;
+}
+
 /* A label of the 3D view may follow its point past the view's edge during a camera move. */
 .method-scene-view {
   overflow: hidden;
+}
+
+/* Leaving, the view is over the diagram that takes its place, which shows through it as it fades. */
+.method-scene-view--leaving {
+  z-index: 1;
 }
 
 .method-scene-canvas {
@@ -45,9 +67,15 @@
   margin: 0;
 }
 
-/* A stream panel is mostly black: a hairline shows the frame the three videos share. */
+/*
+ * A stream panel is mostly black: a hairline shows the frame the three
+ * videos share. It is a layer of its own on every slide, as it is over a
+ * video, so its caption is drawn the same way (the same antialiasing) where
+ * the panels are stills.
+ */
 .method-scene-tile--outlined {
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22);
+  will-change: opacity;
 }
 
 .method-scene-media {
@@ -110,9 +138,6 @@
   stroke: var(--text-secondary);
   stroke-width: 1.5;
 }
-
-.method-scene-flow--direct { stroke: var(--direct); }
-.method-scene-flow--indirect { stroke: var(--indirect); }
 
 .method-scene-leader {
   stroke: var(--text-secondary);

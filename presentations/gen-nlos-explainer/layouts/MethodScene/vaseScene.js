@@ -34,6 +34,11 @@ const TARGET_PLANE_DEPTH = 0.11;
 /** Target frames drawn as fixed cameras along the trajectory. */
 const KEY_FRAMES = [7, 14, 21, 28];
 const ARC_SEGMENTS = 120;
+/** Target frames of the growing arc over which a camera on it grows to its size; fewer at the arc's end. */
+const APPEAR_FRAMES = 6;
+const END_FRAMES = 1;
+/** The moving camera's size, relative to the fixed cameras. */
+const MOVING_CAMERA_SCALE = 1.5;
 
 /**
  * The volume's look. It is drawn as the conditioning videos draw it, by the
@@ -269,11 +274,12 @@ function orbitPosition(trajectory, index) {
  * from `pointCloudFromPixels` and `voxels` from `volumeFromAtlas`.
  *
  * Returns `{ canvas, resize(width, height, ratio), draw(picture),
- * project(point), dispose() }`: `resize` takes CSS pixels and the device
- * pixel ratio to draw at, and makes the next `draw` draw; `project` maps a
- * world point to CSS pixels in the canvas, for the view last drawn;
- * `dispose` frees every GPU resource and the context, after which the
- * canvas cannot draw again.
+ * invalidate(), project(point), dispose() }`: `resize` takes CSS pixels and
+ * the device pixel ratio to draw at, does nothing when they are the view's
+ * already, and otherwise makes the next `draw` draw, as `invalidate` does;
+ * `project` maps a world point to CSS pixels in the canvas, for the view
+ * last drawn; `dispose` frees every GPU resource and the context, after
+ * which the canvas cannot draw again.
  */
 export function createVaseScene({ scene, cloud, voxels }) {
   const canvas = document.createElement('canvas');
@@ -365,7 +371,6 @@ export function createVaseScene({ scene, cloud, voxels }) {
     color: COLORS.target, transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide,
   }));
   movingCamera.add(new THREE.Mesh(planeGeometry, planeMaterial));
-  movingCamera.scale.setScalar(1.5);
   world.add(movingCamera);
 
   // NLOS volume: ray marched on a screen-filling pair of triangles.
@@ -412,6 +417,7 @@ export function createVaseScene({ scene, cloud, voxels }) {
   let drawn = { frame: '', glow: '' };
 
   function resize(width, height, ratio) {
+    if (width === cssWidth && height === cssHeight && ratio === renderer.getPixelRatio()) return;
     cssWidth = width;
     cssHeight = height;
     renderer.setPixelRatio(ratio);
@@ -434,6 +440,9 @@ export function createVaseScene({ scene, cloud, voxels }) {
    *   trajectory     0..1: how much of the target trajectory is drawn; it is
    *                  drawn at least as far as the moving camera
    *   targetIndex    fractional target frame of the moving camera
+   *
+   * The arc grows from the input camera. The moving camera grows to its
+   * size as the arc leaves, and each fixed camera as the arc passes it.
    */
   function draw(picture) {
     const glowKey = JSON.stringify([picture.eye, picture.target, picture.fov, picture.unproject, picture.volume]);
@@ -451,15 +460,26 @@ export function createVaseScene({ scene, cloud, voxels }) {
     pointMaterial.uniforms.uUnproject.value = picture.unproject;
     pointMaterial.uniforms.uDepthTint.value = picture.depthTint;
 
-    // The arc grows from the input camera; each fixed camera appears when the arc reaches it.
     const lastFrame = trajectory.frames - 1;
-    const reached = picture.trajectory > 0 ? Math.max(picture.trajectory * lastFrame, picture.targetIndex) : -1;
+    const reached = picture.trajectory > 0 ? Math.max(picture.trajectory * lastFrame, picture.targetIndex) : 0;
+    /**
+     * Size, 0 to 1, of the camera at `frame`: it grows over the APPEAR_FRAMES
+     * after the arc reaches it, and the one at the arc's end over the arc's
+     * last END_FRAMES.
+     */
+    const grown = (frame) => {
+      const from = Math.min(frame, lastFrame - END_FRAMES);
+      const t = THREE.MathUtils.clamp((reached - from) / (Math.min(frame + APPEAR_FRAMES, lastFrame) - from), 0, 1);
+      return 1 - (1 - t) ** 3;
+    };
+    const show = (object, size) => {
+      object.visible = size > 0;
+      if (size > 0) object.scale.setScalar(size);
+    };
     arc.visible = reached > 0;
     arc.geometry.instanceCount = Math.round((ARC_SEGMENTS * reached) / lastFrame);
-    keyCameras.forEach((object, i) => {
-      object.visible = reached >= KEY_FRAMES[i];
-    });
-    movingCamera.visible = reached >= 0;
+    keyCameras.forEach((object, i) => show(object, grown(KEY_FRAMES[i])));
+    show(movingCamera, MOVING_CAMERA_SCALE * grown(0));
     placeOnOrbit(movingCamera, picture.targetIndex);
 
     renderer.setRenderTarget(sceneTarget);
@@ -474,6 +494,10 @@ export function createVaseScene({ scene, cloud, voxels }) {
     drawn = { frame: frameKey, glow: glowKey };
   }
 
+  function invalidate() {
+    drawn = { ...drawn, frame: '' };
+  }
+
   function project(point) {
     const ndc = new THREE.Vector3(...point).project(camera);
     return { x: (ndc.x + 1) * 0.5 * cssWidth, y: (1 - ndc.y) * 0.5 * cssHeight };
@@ -485,7 +509,7 @@ export function createVaseScene({ scene, cloud, voxels }) {
     renderer.forceContextLoss();
   }
 
-  return { canvas, resize, draw, project, dispose };
+  return { canvas, resize, draw, invalidate, project, dispose };
 }
 
 /** Views given back and not yet taken again or disposed, each `{ key, view, timer }`. */
@@ -497,8 +521,9 @@ export function hasParkedVaseScene(key) {
 
 /**
  * A view of the scene named `key` with its canvas in `holder`: the one a
- * slide just gave back, or a new one from `create()` (which calls
- * `createVaseScene`).
+ * slide just gave back, at the size it had, or a new one from `create()`
+ * (which calls `createVaseScene`). Its next `draw` draws, whatever the
+ * picture: a canvas that moved in the page is drawn again.
  */
 export function acquireVaseScene(key, holder, create) {
   const index = parked.findIndex((entry) => entry.key === key);
@@ -510,6 +535,7 @@ export function acquireVaseScene(key, holder, create) {
     [{ view }] = parked.splice(index, 1);
   }
   holder.append(view.canvas);
+  view.invalidate();
   return view;
 }
 
