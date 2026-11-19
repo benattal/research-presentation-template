@@ -28,7 +28,17 @@
     {
       "row": 0,
       "column": 0,
-      "label": "Ground truth"
+      "label": "Ground truth",
+      "boxes": [
+        {
+          "x": 0,
+          "y": 0.40625,
+          "width": 0.625,
+          "height": 0.3125,
+          "from": 1.9,
+          "to": 3.95
+        }
+      ]
     },
     {
       "row": 1,
@@ -38,7 +48,17 @@
       "row": 0,
       "column": 1,
       "label": "Ours",
-      "ours": true
+      "ours": true,
+      "boxes": [
+        {
+          "x": 0,
+          "y": 0.40625,
+          "width": 0.625,
+          "height": 0.3125,
+          "from": 1.9,
+          "to": 3.95
+        }
+      ]
     },
     {
       "row": 1,
@@ -48,7 +68,17 @@
       "row": 0,
       "column": 2,
       "step": 1,
-      "label": "GEN3C*"
+      "label": "GEN3C*",
+      "boxes": [
+        {
+          "x": 0,
+          "y": 0.40625,
+          "width": 0.625,
+          "height": 0.3125,
+          "from": 1.9,
+          "to": 3.95
+        }
+      ]
     },
     {
       "row": 1,
@@ -59,7 +89,17 @@
       "row": 0,
       "column": 3,
       "step": 2,
-      "label": "HOLI-1-to-3*"
+      "label": "HOLI-1-to-3*",
+      "boxes": [
+        {
+          "x": 0,
+          "y": 0.40625,
+          "width": 0.625,
+          "height": 0.3125,
+          "from": 1.9,
+          "to": 3.95
+        }
+      ]
     },
     {
       "row": 1,
@@ -70,7 +110,17 @@
       "row": 0,
       "column": 4,
       "step": 2,
-      "label": "Lyra 2"
+      "label": "Lyra 2",
+      "boxes": [
+        {
+          "x": 0,
+          "y": 0.40625,
+          "width": 0.625,
+          "height": 0.3125,
+          "from": 1.9,
+          "to": 3.95
+        }
+      ]
     },
     {
       "row": 1,

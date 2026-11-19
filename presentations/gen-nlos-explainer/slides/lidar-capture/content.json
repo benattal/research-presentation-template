@@ -2,8 +2,10 @@
   "layout": "lidarCapture",
   "title": "Lidar capture",
   "buildSteps": [
-    "one measurement: the pulse, its direct return, and the indirect light, with the plot swept once",
-    "the scan over the visible surfaces"
+    "the lidar and the scene, with the scene's video of propagating light playing",
+    "one measurement: the pulse, its direct return, and the indirect light, with the plot swept once; then the time of flight marked",
+    "the measurements at three other visible points, each with its wavefronts and its peaks",
+    "the scan over the visible surfaces, the video filling in the scan's order and playing"
   ],
   "hiddenObject": {
     "mesh": "/slides/lidar-capture/stanford-bunny-mesh.png"
@@ -11,12 +13,14 @@
   "labels": {
     "laser": "pulsed laser",
     "mirrors": "scanning mirrors",
-    "detector": "single-photon detector",
+    "detector": "single-photon\ndetector",
     "relays": "relay walls",
     "occluder": "occluder",
     "hidden": "hidden object",
+    "video": "video of propagating light",
     "direct": "direct",
     "indirect": "indirect",
+    "flight": "time of flight",
     "time": "time (ns)",
     "counts": "photon counts"
   },

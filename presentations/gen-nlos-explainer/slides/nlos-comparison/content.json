@@ -11,7 +11,7 @@
   },
   "rowLabels": [
     "Simulated room",
-    "Stanford-FK dataset"
+    "Stanford f-k dataset"
   ],
   "credits": [
     {
@@ -24,7 +24,7 @@
     },
     {
       "source": "lindell2019",
-      "what": "Stanford-FK dataset"
+      "what": "Stanford f-k dataset"
     }
   ],
   "videos": [

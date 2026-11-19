@@ -83,7 +83,7 @@
     {
       "row": 1,
       "column": 1,
-      "note": "20/20 seeds",
+      "note": "Correct object: 20/20 seeds",
       "boxes": [
         {
           "x": 0.33,
@@ -115,7 +115,7 @@
       "row": 1,
       "column": 2,
       "step": 1,
-      "note": "0/20 seeds",
+      "note": "Correct object: 0/20 seeds",
       "boxes": [
         {
           "x": 0.33,
@@ -147,7 +147,7 @@
       "row": 1,
       "column": 3,
       "step": 2,
-      "note": "method fails",
+      "note": "No coherent view",
       "boxes": [
         {
           "x": 0.33,

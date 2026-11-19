@@ -38,8 +38,8 @@
   ],
   "inset": {
     "src": "/slides/hardware/steady-state-image.png",
-    "alt": "The steady-state image of the vase scene",
-    "label": "Steady-state image",
+    "alt": "The steady-state RGB image of the vase scene",
+    "label": "Steady-state RGB image",
     "step": 3,
     "size": 210
   }

@@ -41,7 +41,7 @@
     {
       "row": 0,
       "column": 1,
-      "label": "With propagating light",
+      "label": "Image and propagating light",
       "ours": true,
       "boxes": [
         {
@@ -57,7 +57,7 @@
     {
       "row": 0,
       "column": 2,
-      "label": "Without propagating light",
+      "label": "Image only",
       "boxes": [
         {
           "x": 0.3,

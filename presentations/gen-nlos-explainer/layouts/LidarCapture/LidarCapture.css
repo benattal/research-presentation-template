@@ -1,4 +1,4 @@
-/* Lidar capture: a render filling the slide behind its title, labels beside its parts, and a plot at the right. */
+/* Lidar capture: a render filling the slide behind its title, labels beside its parts, and at the left the video of propagating light over the measurement plot, each on a panel. */
 .lidar-capture {
   --lidar-capture-scan: #ff4a57;
   display: flex;
@@ -51,8 +51,9 @@
   position: absolute;
   color: var(--text-primary);
   font-size: var(--type-text);
-  line-height: 1;
-  white-space: nowrap;
+  line-height: 1.1;
+  /* A label breaks only where its text has a line break. */
+  white-space: pre;
   /* Legible over the pale walls as well as on black. */
   text-shadow: 0 0 4px rgba(0, 0, 0, 0.9), 0 0 12px rgba(0, 0, 0, 0.7);
 }
@@ -60,6 +61,7 @@
 .lidar-capture-label--left > span {
   right: 0;
   top: 0;
+  text-align: right;
   transform: translateY(-50%);
 }
 
@@ -81,27 +83,53 @@
   transform: translateX(-50%);
 }
 
-.lidar-capture-plot {
+/* The video and the plot: a column at the left, under the title, each part on its own panel. */
+.lidar-capture-parts {
   position: absolute;
   left: 56px;
-  top: 164px;
+  top: 110px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-.lidar-capture-plot canvas {
+.lidar-capture-part {
+  padding: 14px;
+  border-radius: var(--radius-panel);
+  background: var(--bg-panel);
+  opacity: 0;
+}
+
+.lidar-capture-part canvas {
   display: block;
+}
+
+.lidar-capture-part-label {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--text-primary);
+  font-size: var(--type-text);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* The video's frame is the slide's black, so an empty frame still shows on the panel. */
+.lidar-capture-video canvas {
+  background: var(--bg-slide);
+}
+
+.lidar-capture-plot-box {
+  position: relative;
+}
+
+.lidar-capture-plot-box canvas {
   width: 100%;
   height: 100%;
 }
 
-.lidar-capture-plot-axes {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-}
-
 .lidar-capture-plot-label,
 .lidar-capture-plot-tick,
-.lidar-capture-plot-peak {
+.lidar-capture-plot-mark {
   position: absolute;
   line-height: 1;
   white-space: nowrap;
@@ -125,16 +153,19 @@
   transform: translateX(-50%);
 }
 
-.lidar-capture-plot-peak {
+/* A name on the plot, centered over what it names. */
+.lidar-capture-plot-mark {
+  color: var(--text-primary);
   font-size: var(--type-text);
   opacity: 0;
+  transform: translateX(-50%);
 }
 
-.lidar-capture-plot-peak--direct {
+.lidar-capture-plot-mark--direct {
   color: var(--direct);
 }
 
-.lidar-capture-plot-peak--indirect {
+.lidar-capture-plot-mark--indirect {
+  /* Amber is for marks, never for text (theme). */
   color: var(--text-primary);
-  transform: translateX(-50%);
 }

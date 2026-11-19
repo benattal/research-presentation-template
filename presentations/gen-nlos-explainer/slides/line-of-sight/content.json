@@ -16,8 +16,7 @@
   ],
   "buildSteps": [
     "the two scenes",
-    "the shared input view",
-    "direct light",
+    "the shared input view and direct light",
     "indirect light"
   ],
   "videos": [
@@ -90,24 +89,24 @@
     {
       "row": 0,
       "column": 2,
-      "step": 2,
+      "step": 1,
       "label": "Direct light"
     },
     {
       "row": 1,
       "column": 2,
-      "step": 2
+      "step": 1
     },
     {
       "row": 0,
       "column": 3,
-      "step": 3,
+      "step": 2,
       "label": "Indirect light"
     },
     {
       "row": 1,
       "column": 3,
-      "step": 3
+      "step": 2
     }
   ]
 }
