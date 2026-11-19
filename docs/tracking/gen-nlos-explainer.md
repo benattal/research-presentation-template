@@ -17,6 +17,27 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- Goal (2026-11-19, afternoon): "Continue with docs\plans\gen-nlos-explainer.md
+  plan. Repeat 3-4 times: (a) do a pass on the slides, notes, recorded
+  video with subagents, (b) have subagents vet the slides, notes, recorded
+  video and report feedback, (c) consolidate feedback, check for bugs, and
+  repeat. Merge work often. Commit and push (to both git and R2) often."
+  Gate 2 is open.
+- A collaborator's feedback, passed on by the user: "Font sizes (maybe
+  types too not sure) all over the place, id probably pick 2/3 font sizes
+  and use those and only those consistenlty throguhout the pres"; "add
+  background behind things that are separate (like the slide im attaching
+  theres so much on there it ghets a bit chaotic to look at and theres a
+  few others, it hink they could be better compartamentalized"; "the
+  related works probably needs to be expanded to elaborate on holi1to3,
+  gen3c etc". And the user: "The font sizing feedback/feedback about
+  visual consistency should probably apply to other decks too (so it
+  should be recorded somewhere permanent)". Done: one type scale in the
+  theme (7876039); both rules in the slide style guide and the review
+  checklist (a3fbf34). Open: the attached slide did not reach this
+  session (which slide?); compartmentalizing the busy slides; related
+  work, where this meets the user's earlier "I may not put too much
+  emphasis on Holi. Just focus on the 2" (asked).
 - Of the narrated run-through: "We can continue to iterate without the
   voiceover for now, but this was useful for testing for the final version
   of a draft". Iteration is on the slides; a narrated run-through is
