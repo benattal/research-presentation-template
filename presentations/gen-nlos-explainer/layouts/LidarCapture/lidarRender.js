@@ -924,16 +924,33 @@ function createLidarRender() {
  */
 const page = { render: null, lent: false };
 
+function pageRender() {
+  if (page.render) return page.render;
+  const render = createLidarRender();
+  // A context the browser takes away (a GPU reset, a driver update) does not come back with
+  // what was drawn into it once, the shadows: the page forgets the render and builds another
+  // when a slide next asks. The slide showing it, if any, frees it when it gives it back.
+  render.canvas.addEventListener('webglcontextlost', () => {
+    if (page.render !== render) return;
+    const { lent } = page;
+    page.render = null;
+    page.lent = false;
+    if (!lent) render.dispose();
+  });
+  page.render = render;
+  return render;
+}
+
 /**
  * The render for a slide to show, until it gives it back with
  * `releaseLidarRender`: the page's, or one of its own for a second copy of
  * the slide shown at the same time.
  */
 export function acquireLidarRender() {
-  page.render ??= createLidarRender();
+  const render = pageRender();
   if (page.lent) return createLidarRender();
   page.lent = true;
-  return page.render;
+  return render;
 }
 
 export function releaseLidarRender(render) {
@@ -950,14 +967,13 @@ export function releaseLidarRender(render) {
  * render at any point; the parts left are then done as the slide draws.
  */
 export async function prepareLidarRender(hiddenObject, frames, pause) {
-  page.render ??= createLidarRender();
-  const { render } = page;
+  const render = pageRender();
   if (!render.indirect()) render.setHiddenObject(hiddenObject);
   await pause();
   await render.compile();
   for (const frame of frames) {
     await pause();
-    if (page.lent) return;
+    if (page.render !== render || page.lent) return;
     render.draw(frame);
   }
 }
