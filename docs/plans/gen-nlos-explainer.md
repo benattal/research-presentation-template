@@ -49,8 +49,10 @@ its check passes.
    step: compare the narration's length with how long its visual keeps
    changing (the recording's timeline gives both), and either add a
    visual beat, split the step, or shorten the sentence.
-2. **Gate 2: whole deck, refinement cycles 1 and 2.** Opens only on the
-   user's word. A pass on all
+2. **Gate 2: whole deck, refinement cycles 1 and 2.** Open since
+   2026-11-19. Cycle 1: the pass and the vetting are done; the
+   consolidation is paused at the user's request with its open list in
+   the tracker's newest entry. A pass on all
    slides and notes, vetting by reviewers who see the deck fresh,
    consolidation with the logged findings and the user's comments, fixes;
    twice. Check: a full capture with no errors or warnings, and a cycle

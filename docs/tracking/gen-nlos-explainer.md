@@ -2,10 +2,10 @@
 
 [Plan](../plans/gen-nlos-explainer.md)
 
-Current state: gate 2, refinement cycle 1, pass (a) nearly complete (see
-the newest entry). Iteration is on the slides; narrated run-throughs test
-whole drafts. On the Mac (2026-11-19, evening): the deck is restyled
-after the SIGASIA deck (Optima, white text, three sizes).
+Current state: paused at the user's request (2026-11-19, 16:10) while
+collaborators work on the branch. Refinement cycle 1: pass and vetting
+done, consolidation partly done; the open list is in the newest entry.
+Nothing of this session is running.
 
 Resume from the newest entry below.
 
@@ -85,6 +85,9 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- "I think it may be best to pause for a bit, and let my collaborators
+  work ... Record progress and pause", after "You did a really wonderful
+  job". Paused; see the newest entry for the state and the open list.
 - Of the junctions that led a cleanup to empty the lecture's media: "Yeah
   don't use simlinks like that". No junctions or symlinks between
   checkouts; a worktree gets its own copy of the media. Rule in both
@@ -486,6 +489,84 @@ slide rules are in [slide style](../style/slides.md) and
 
 None open. Resolved: "my presentations bucket" is the R2 bucket
 `presentations` (the user, 2026-11-18).
+
+## 2026-11-19 16:10 — paused at the user's request, in cycle 1 (c)
+
+User directions (2026-11-19): "I think it may be best to pause for a bit,
+and let my collaborators work, just because I don't have any specific
+guidance for you at the moment and they may have some ideas they're
+implementing." and "Record progress and pause".
+
+- State: the deck has 23 slides and 45 build steps on `gen-nlos-explainer`,
+  pushed (git and the bucket). Refinement cycle 1: the pass (a) and the
+  vetting (b) are complete (three reviews: content and clarity; layout and
+  consistency; animations and transitions); the consolidation (c) is
+  partly done. Nothing of this session is running; the user's dev server on
+  port 5174 is left up.
+- Done in (c), all pushed: text-level content fixes (8e5e156); the first
+  room's hidden couch boxed on the simulated comparison (9f4e9e0); one top
+  line for every grid, lining figures, sentence-case labels, a larger
+  summary result, one-line credits (7c413c2, 462b028); shared panel
+  padding and gap tokens in the theme (16e72b0); the recorder's motion
+  table for the four-step capture slide and `--disable-lcd-text`.
+- Open in (c), not started (two builders were about to start when the
+  pause came; their briefs are in this entry's list):
+  1. Method slides (`layouts/MethodScene`). Must: a `prepare` and
+     `mediaUrl`, since the 3D view appears 200 ms late on a first visit;
+     the stream tiles jump when leaving `conditioning` outside the clip's
+     hold (re-render the clip to end on a 10 s hold, ease to the last
+     view). Should: the light-video tile snaps to its poster on the way to
+     `conditioning`; callouts at 22 px; the theme's panel padding and gap;
+     `until` on the step clock.
+  2. Related work (`layouts/RelatedWork`). The first step in two (f-k
+     migration and phasor fields; then HOLI-1-to-3*), four steps in all;
+     an "Ours" tile (the new lamp result, "Feed-forward", "Multiple
+     objects, nonplanar relays") in place of the green line; the f-k tile
+     re-centered; a Lyra 2 clip in which the failure is visible, boxed;
+     the theme's panel tokens.
+  3. Flatland (`layouts/FlatlandNlos`). Must: arriving backward replays
+     the animation (use the capture slide's arrival rule). Should: its
+     step 0 runs 10 s under a longer narration (stretch the timeline, or
+     shorten the note that 8e5e156 lengthened); panels behind its three
+     parts; "scan point" 15 px from the arrow tips.
+  4. Light video: two panels (the video; the stills and the timeline).
+  5. Capture slide: the time-of-flight mark about 2.3 s later
+     (`FLIGHT_START_MS`); the scan beam runs past the right wall's edge at
+     1.17 s of the scan; its panels' metrics on the theme's tokens.
+  6. Comparison slides: a footnote for the asterisks ("* our
+     reimplementation"), as on related work; one reference-photo file for
+     both captured slides.
+  7. The nonplanar comparison's polish, stopped partway: branch
+     `nlos-comparison-polish-wip` (2316b1f: grid geometry, plan row) and
+     `assets/parked/nlos-comparison-polish-wip/` (the modified render
+     script and its latest render, unreviewed). Goals: cells filled with
+     content and larger; capture marks in white (they are still the old
+     orange); the method slides' colormap; the Stanford relay's curvature
+     visible.
+  8. Pace under narration, when a narrated draft is next tested: hardware
+     (12 s over one photo), line-of-sight step 0 (7 s over two stills),
+     training-data step 1 (2.6 s for the new clips).
+- For the user and collaborators to decide (not changed): green marks
+  "ours" and also the target trajectory and a token row; red marks the
+  hidden region and also the limitation lines and the scan points; amber
+  marks indirect light and also the "adjoint" arrow on the flatland slide;
+  the typeface is not bundled (a Windows recording is in Candara); where
+  the reconstruction slides sit (after `generation` now; the content
+  review advised keeping them there); the lecture branch still carries the
+  explainer up to f39f8df.
+- Not reproduced in a headless browser, still to confirm on the user's
+  screen: the flash between related-work steps; the navigation bar changing
+  size; four `getContext` page errors seen once during a merge.
+- Framework: `framework-sync` is 17 commits ahead of `main` (all in this
+  branch). `main` moves after `npm run test:ui` passes on an idle machine;
+  not run yet.
+- Later gates, unchanged: narration (v4 notes have since changed: re-export
+  and re-synthesize; the editor's cuts for length are in the 12:50 and
+  content-review notes), the frame-exact recorder (`recorder-wip`), two
+  more cycles with the video.
+- Resume: fetch and merge `origin/gen-nlos-explainer` first (collaborators
+  are committing), read the newest "Standing directions", then take the
+  open list above in order, one builder per layout so commits stay small.
 
 ## 2026-11-19 15:25 — a cleanup emptied the lecture's media; restored
 
