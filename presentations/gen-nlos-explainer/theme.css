@@ -9,8 +9,8 @@
  *
  * Roles shared by text, plots, and renders:
  *   --accent        titles; "ours" in comparisons
- *   --direct        direct light: the first return, depth
- *   --indirect      indirect light: returns from hidden surfaces
+ *   --direct        direct light (white, as in the captured light videos)
+ *   --indirect      indirect light (amber, as in the captured light videos)
  *   --hidden        the hidden region (boxes around it)
  *   --baseline      baselines in comparisons
  */
@@ -29,8 +29,8 @@
   --border: rgba(255, 255, 255, 0.1);
   --border-light: rgba(255, 255, 255, 0.2);
 
-  --direct: #7ee08a;
-  --indirect: #c58cff;
+  --direct: #ffffff;
+  --indirect: #e69f00;
   --hidden: #ff5a5a;
   --baseline: #9aa4b2;
 

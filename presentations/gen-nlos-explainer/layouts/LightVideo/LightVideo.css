@@ -1,0 +1,132 @@
+/* A captured light video beside its time axis. */
+.slide--light-video {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.light-video-stage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 72px;
+}
+
+.light-video-frame {
+  position: relative;
+  flex: none;
+}
+
+.light-video-media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The time the frame shows, in the frame's corner as in the paper's figure. */
+.light-video-readout {
+  position: absolute;
+  right: 12px;
+  bottom: 8px;
+  font-size: 22px;
+  line-height: 28px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+  text-shadow: 0 0 6px #000, 0 0 2px #000;
+}
+
+.light-video-tau {
+  font-style: italic;
+}
+
+.light-video-panel {
+  position: relative;
+  flex: none;
+}
+
+.light-video-light,
+.light-video-leader {
+  position: absolute;
+  inset: 0;
+}
+
+.light-video-still {
+  position: absolute;
+  top: 0;
+  margin: 0;
+}
+
+.light-video-still img {
+  display: block;
+}
+
+.light-video-caption {
+  margin-top: 6px;
+  font-size: 21px;
+  line-height: 26px;
+  text-align: center;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.light-video-caption--direct { color: var(--direct); }
+.light-video-caption--indirect { color: var(--indirect); }
+
+.light-video-leader line {
+  stroke: var(--text-muted);
+  stroke-width: 1;
+}
+
+.light-video-band {
+  position: absolute;
+  border-radius: 2px;
+}
+
+.light-video-band--direct { background: var(--direct); }
+.light-video-band--indirect { background: var(--indirect); }
+
+.light-video-axis {
+  position: absolute;
+  height: 1px;
+  background: var(--text-secondary);
+}
+
+.light-video-tick {
+  position: absolute;
+  width: 1px;
+  height: 6px;
+  background: var(--text-secondary);
+}
+
+.light-video-tick span {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  transform: translateX(-50%);
+  font-size: 16px;
+  line-height: 20px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.light-video-axis-label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 16px;
+  line-height: 20px;
+  color: var(--text-muted);
+}
+
+.light-video-playhead {
+  position: absolute;
+  left: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--accent);
+}

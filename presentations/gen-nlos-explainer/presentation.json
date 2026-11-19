@@ -3,58 +3,14 @@
   "defaultTransition": "fade",
   "sections": [
     {
-      "id": "introduction",
-      "title": "Introduction",
+      "id": "problem-statement",
+      "title": "Problem statement",
       "slides": [
         "title",
-        "teaser"
-      ]
-    },
-    {
-      "id": "propagating-light",
-      "title": "Propagating light",
-      "slides": [
-        "card-propagating-light",
-        "propagating-light",
-        "capture"
-      ]
-    },
-    {
-      "id": "related-work",
-      "title": "Related work",
-      "slides": [
-        "card-related-work",
-        "prior-work"
-      ]
-    },
-    {
-      "id": "method",
-      "title": "Method",
-      "slides": [
-        "card-method",
-        "approach",
-        "nlos-reconstruction",
-        "nlos-comparison"
-      ]
-    },
-    {
-      "id": "results",
-      "title": "Results",
-      "slides": [
-        "card-results",
-        "training-data",
-        "captured-results",
-        "guidance",
-        "room-results",
-        "numbers"
-      ]
-    },
-    {
-      "id": "conclusion",
-      "title": "Conclusion",
-      "slides": [
-        "summary",
-        "end"
+        "card-problem-statement",
+        "single-image",
+        "light-video",
+        "novel-views"
       ]
     }
   ]

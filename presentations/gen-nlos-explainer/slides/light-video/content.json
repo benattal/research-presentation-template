@@ -1,0 +1,54 @@
+{
+  "layout": "lightVideo",
+  "title": "Video of propagating light",
+  "buildSteps": [
+    "the captured video",
+    "direct light",
+    "indirect light"
+  ],
+  "video": {
+    "src": "/slides/light-video/propagating-light.mp4",
+    "startNs": 5.12,
+    "nsPerSecond": 0.768
+  },
+  "axis": [
+    5,
+    13
+  ],
+  "lights": [
+    {
+      "kind": "direct",
+      "label": "Direct light",
+      "step": 1,
+      "intervals": [
+        [
+          5.55,
+          7.18
+        ],
+        [
+          8.67,
+          10.69
+        ]
+      ],
+      "still": {
+        "src": "/slides/light-video/direct-5.98ns.png",
+        "ns": 5.98
+      }
+    },
+    {
+      "kind": "indirect",
+      "label": "Indirect light",
+      "step": 2,
+      "intervals": [
+        [
+          9.97,
+          11.49
+        ]
+      ],
+      "still": {
+        "src": "/slides/light-video/indirect-11.06ns.png",
+        "ns": 11.06
+      }
+    }
+  ]
+}

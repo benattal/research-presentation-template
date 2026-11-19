@@ -1,9 +1,0 @@
-{
-  "layout": "content",
-  "sectionLabel": "Method",
-  "title": "NLOS reconstruction",
-  "buildSteps": [
-    "step 0",
-    "step 1"
-  ]
-}

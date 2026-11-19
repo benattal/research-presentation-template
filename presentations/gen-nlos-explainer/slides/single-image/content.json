@@ -1,0 +1,69 @@
+{
+  "layout": "panels",
+  "title": "Novel views from a single image",
+  "grid": {
+    "columns": 3,
+    "rows": 1,
+    "panelWidth": 360,
+    "panelHeight": 360,
+    "columnGap": 44,
+    "rowGap": 0
+  },
+  "buildSteps": [
+    "the input view",
+    "views generated from it",
+    "the actual scene"
+  ],
+  "panels": [
+    {
+      "row": 0,
+      "column": 0,
+      "label": "Input view",
+      "media": {
+        "type": "image",
+        "src": "/slides/single-image/input-view.png",
+        "alt": "A tabletop with flowers in a basket and two potted plants, seen from the front"
+      }
+    },
+    {
+      "row": 0,
+      "column": 1,
+      "step": 1,
+      "label": "Generated novel views",
+      "media": {
+        "type": "video",
+        "src": "/slides/single-image/image-only.mp4",
+        "alt": "The camera moves to the right; a small patterned vase appears behind the flowers"
+      },
+      "boxes": [
+        {
+          "x": 0.3,
+          "y": 0.34,
+          "width": 0.42,
+          "height": 0.62,
+          "from": 1.5,
+          "to": 3.2
+        }
+      ]
+    },
+    {
+      "row": 0,
+      "column": 2,
+      "step": 2,
+      "label": "Reference photo",
+      "media": {
+        "type": "image",
+        "src": "/slides/single-image/reference-photo.png",
+        "alt": "A photograph of the scene from above: a large white vase stands behind the flowers"
+      },
+      "boxes": [
+        {
+          "x": 0.55,
+          "y": 0.27,
+          "width": 0.28,
+          "height": 0.43
+        }
+      ]
+    }
+  ]
+}
