@@ -18,6 +18,7 @@ presentations/<id>/
   assets/...                          assets (DATA.md)
   theme.css                           optional
   sources.json                        optional: citations of borrowed material
+  pronunciation.json                  optional: how a narration voice says a term
   layouts/<LayoutName>/...            optional, registered in layouts/index.js
   media/...                           optional: the scripts that build the media
 ```
@@ -175,6 +176,21 @@ formula that does not render. A slide with build steps can add
 other step shows `notes.md`. Under the development server the presenter
 window can edit notes and saves them to the file that was on screen; saving
 does not reload the audience view.
+
+## Pronunciation map
+
+The notes are also the script of a narrated video
+([narration](narration.md)). An optional `pronunciation.json` maps a term
+as the notes write it to the spelling a text-to-speech voice should read:
+
+```json
+{ "NLOS": "en-loss", "Lyra 2": "Lyra two" }
+```
+
+It is a flat object of non-empty strings; `npm run check` reports anything
+else. `npm run narration -- <id>` copies it into the narration directory,
+where the synthesis applies it; the notes and the slides keep the real
+spelling.
 
 ## Custom layouts
 

@@ -129,6 +129,8 @@ presentations/
                    that build its media), public/ and assets/ (both from
                    the bucket, ignored by git)
 scripts/           command-line entry points (dev, build, serve, check, ...)
+narration/         Python tools: local text-to-speech of the notes and its check
+                   by transcription (their environments live outside the tree)
 tests/             node:test suites; tests/ui/ drives the browser
 docs/
   implementation/  how the framework works
@@ -160,6 +162,7 @@ npm run check                         # static checks of every presentation
 npm test                              # unit and repository tests
 npm run test:ui                       # browser tests of every view and core layout
 npm run capture -- <id>               # screenshot and check every slide
+npm run narration -- <id>             # notes as a script for narration/narrate.py
 ```
 
 ## Architecture and code aesthetics

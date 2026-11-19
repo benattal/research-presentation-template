@@ -50,6 +50,7 @@ core/client/layouts/index.js ─────────┘                     
 | Audience ⇄ presenter window messages | `core/client/presenter/presenterChannel.js` |
 | Who counts as the presenter | `core/client/presenter/presenterAccess.jsx` |
 | Saving edited notes (development only) | `core/tooling/notesWriter.js` (a Vite plugin) |
+| Notes as a narration script: which step speaks which notes, segment ids | `core/tooling/narration.js`; synthesis and transcription in `narration/` ([narration](narration.md)) |
 | Live API, votes, presenter position | `core/server/liveApi.js`, `pollState.js` |
 | Presenter password and token | `core/server/presenterAuth.js` |
 | Voting open, follow-the-presenter on | the server's environment, served at `api/settings` |

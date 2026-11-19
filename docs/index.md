@@ -16,6 +16,8 @@ and checks.
 - [Visual validation](implementation/visual-validation.md): capturing and
   reviewing every slide
 - [Testing](implementation/testing.md): unit, repository, and browser tests
+- [Narration](implementation/narration.md): notes as a script, local
+  text-to-speech, and checking it by transcription
 
 ## Style
 
@@ -38,6 +40,8 @@ and checks.
 
 [Environments and setup](environments/index.md) is the authoritative setup
 guide. Assets and the bucket are described in [DATA.md](../DATA.md).
+[Narration environments](environments/narration.md) sets up the Python
+tools for narrated videos.
 
 ## Plans and tracking
 
