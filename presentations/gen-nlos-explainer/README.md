@@ -33,49 +33,41 @@ the R2 bucket `presentations` (media). Nothing else is needed to present.
    ```
 
    `public/` holds what the slides show; `assets/` holds what they were
-   made from: the build scripts (`assets/build/`), source files that are
-   not in Dropbox (`assets/sources/`, for example the Stanford bunny mesh),
-   and parked media of earlier drafts (`assets/parked/`).
+   made from and what else is too large for git: source files that are
+   not in Dropbox (`assets/sources/`, for example the Stanford bunny
+   mesh), narration audio (`assets/narration/`), and parked media of
+   earlier drafts (`assets/parked/`). The scripts that build the media
+   are in git, in `media/`.
 
 ## Rebuilding the media
 
 Only needed to change a clip; the built media are in the bucket. The
-scripts in `assets/build/` read the paper's results from the group's
-Dropbox folder `tcig-transient-nvs/figures` (the supplemental website's
-assets, `1_teaser`, `5_QualSimulation`, `6_QualExperimental`,
-`holi_1_to_3_trajectories`) and write `public/slides/`. Each script names
-the Dropbox path at its top (`W=`); change it if Dropbox is mounted
-elsewhere. They need ffmpeg, and `light-split.py` needs Python with numpy
-and h5py. Run them from this directory:
+scripts that build them are in git, in `media/`
+([presentation format](../../docs/implementation/presentations.md)); edit
+them there, not in the bucket (the copies under `assets/build/` in the
+bucket are from before 2026-11-19 and are superseded). They read the
+paper's results from the group's Dropbox folder
+`tcig-transient-nvs/figures` (the supplemental website's assets,
+`1_teaser`, `5_QualSimulation`, `6_QualExperimental`, `7_conventionalnlos`,
+`holi_1_to_3_trajectories`) and sources kept under `assets/sources/`, and
+write `public/slides/`. `media/figures.sh` and `media/figures.py` find the
+Dropbox folder on Windows and macOS; set `GEN_NLOS_FIGURES` to its path if
+it is mounted elsewhere. Run the scripts from this directory:
 
-```bash
-bash assets/build/problem-statement.sh
-bash assets/build/results.sh
-python assets/build/light-split.py
-```
+| Script | Slides | Needs |
+|---|---|---|
+| `bash media/problem-statement.sh` | single-image, light-video, novel-views | ffmpeg |
+| `bash media/results.sh` | captured-comparison, room-scale, line-of-sight stills | ffmpeg |
+| `python media/light-split.py` | line-of-sight (direct and indirect light) | ffmpeg; numpy, h5py |
+| `bash media/training-data.sh` | training-data | ffmpeg |
+| `bash media/summary.sh` | summary | ffmpeg |
+| `python media/related-work.py` | related-work | ffmpeg; numpy, numba |
+| `python media/nlos-comparison.py` | nlos-comparison | ffmpeg; numpy, numba, h5py, Pillow |
 
-`nlos-comparison.py` renders the slide `nlos-comparison`: the rotating
-reconstructions, from the volumes in `assets/sources/nlos-comparison/`
-(copies from the bucket's `nlos_results_pages_20261114`), and the scene
-column beside them, from the room's meshes and the Stanford capture's
-relay points and direct times of flight (copies from the bucket's
-`fk-torch/evaluation_and_comparisons_20261108`). The script's docstring
-gives every path. It needs Python with numpy, numba, h5py, and Pillow:
-
-```bash
-python assets/build/nlos-comparison.py
-```
-
-`related-work.py` writes the video of the slide `related-work`: one tile
-per prior method, each the output of that method. It reads four clips
-from Dropbox (`7_conventionalnlos` besides the folders above) and renders
-the fast RSD volume in `assets/sources/related-work/nlos-volumes/` (a
-copy from the same bucket folder; the docstring gives the path) with
-`nlos-comparison.py`, which must sit beside it:
-
-```bash
-python assets/build/related-work.py
-```
+The method slides' media (`public/slides/processing/`) are built by
+`assets/sources/processing/prepare_media.py`, and the capture slide's mesh
+by `assets/sources/lidar-capture/make-bunny-mesh.mjs`; both are still in
+the bucket only and should move to `media/` when next edited.
 
 After adding or changing media, push them (this copies only; it never
 deletes anything in the bucket):

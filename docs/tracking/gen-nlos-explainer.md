@@ -85,6 +85,17 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- "If you could actually spend some time on organizing the code a bit,
+  merging useful work into the main branches/other branches that would
+  be great (incl. feedback that is general to other presentations as
+  well). Might be nice to have a glossary of different presentation types
+  as well." and the goal "Clean up the code to make it more extensible,
+  merge useful work and insights into main/into the core codebase. Some
+  of the work for video recordings and voice recordings is also quite
+  valuable as well. Some durable instructions for workflows here would be
+  great". Framework work, on `framework-sync` and then `main`; this
+  deck's part: its media build scripts are in git under `media/`, and
+  its pronunciation map is `pronunciation.json`.
 - "I think it may be best to pause for a bit, and let my collaborators
   work ... Record progress and pause", after "You did a really wonderful
   job". Paused; see the newest entry for the state and the open list.
