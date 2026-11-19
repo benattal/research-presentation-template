@@ -60,9 +60,9 @@ its check passes.
 3. **Gate 3: narration.** A local text-to-speech model reads each step's
    notes; a local transcription checks them. Check: word error rate at
    most 3%, every term recognized, total 3:50 to 4:40.
-4. **Gate 4: recording.** Finish the recorder parked on branch
-   `recorder-wip` (framework, on `framework-sync`), record video v1.
-   Check: 4:00 to 5:00, 1920×1080 at 30 fps, −16 LUFS ±1, under 80 MB.
+4. **Gate 4: recording.** Record video v1 with `npm run record`
+   ([narrated video](../workflows/narrated-video.md)). Check: 4:00 to
+   5:00, 1920×1080 at 30 fps, −16 LUFS ±1, under 80 MB.
 5. **Gate 5: refinement cycles 3 and 4, with the video.** Reviewers
    watch the recording (contact sheets, the mix's transcript, the
    timeline) as well as the slides and notes; fixes, re-recording.
@@ -233,11 +233,15 @@ The stopped builders' partial versions of these are on branch
 
 ## Narration and recording (gates 3 to 5)
 
-Each build step's notes are its narration. A local model reads them, one
-file per step, with a fixed voice and a pronunciation map; a local
-transcription checks every file. The recorder renders each slide step on
-a virtual clock at 1920×1080 and 30 fps, cross-fades between steps and
-slides, places the narration by the same timeline, and writes captions.
+Each build step's notes are its narration, and the tools are the
+framework's ([narrated video](../workflows/narrated-video.md)):
+`npm run narration -- gen-nlos-explainer` writes the script from the
+notes, a local model reads it, one file per step, with a fixed voice and
+the deck's `pronunciation.json`, and a local transcription checks every
+file. `npm run record -- gen-nlos-explainer --narration <dir>` films the
+deck at 1920×1080 and 30 fps, holds each step for its narration or for
+its motion (`recording.json`), and places the narration by the same
+timeline. Captions are not written by the tools yet.
 
 ## Completion criteria
 

@@ -73,6 +73,27 @@ deletes anything in the bucket):
 ASSETS_REMOTE=tcig: npm run assets -- push gen-nlos-explainer
 ```
 
+## Recording and narration
+
+The framework's commands do both
+([narrated video](../../docs/workflows/narrated-video.md)); everything
+runs on this machine, because the script is confidential.
+
+```bash
+npm run record -- gen-nlos-explainer                      # a silent run-through
+npm run record -- gen-nlos-explainer --only 10-13         # some steps only
+npm run narration -- gen-nlos-explainer                   # the notes as a script; prints how to synthesize and check it
+npm run record -- gen-nlos-explainer --narration <dir>    # held for, and mixed with, the narration
+```
+
+`recording.json` says how long each animated step's motion takes (keep it
+current when an animation's length changes), and `pronunciation.json` how
+the voice says the paper's terms. Recordings are written to
+`data/recordings/gen-nlos-explainer/`, which git ignores; narration audio
+goes in `assets/narration/<name>/` and to the bucket. Narration is made
+again after the slides change: a narration made for other steps is
+refused by the recorder.
+
 The paper source (`../gen-nlos`), the compiled PDFs, and the reference
 decks (`data/gen-nlos/`, local and ignored) are references for writing the
 deck; the deck does not load them.

@@ -1,0 +1,28 @@
+{
+  "defaultHold": 7,
+  "silentHold": 2.5,
+  "holds": {
+    "title": [{ "seconds": 3 }],
+    "card-problem-statement": [{ "seconds": 1.5 }],
+    "light-video": [{ "seconds": 10 }, { "seconds": 5 }, { "seconds": 6 }],
+    "card-propagating-light": [{ "seconds": 1.5 }],
+    "lidar-capture": [
+      { "seconds": 3.5, "oneShot": true },
+      { "seconds": 11, "oneShot": true },
+      { "seconds": 6.3, "oneShot": true },
+      { "seconds": 8.2, "oneShot": true }
+    ],
+    "hardware": [{ "seconds": 2.5 }, { "seconds": 2.5 }, { "seconds": 2.5 }, { "seconds": 3 }],
+    "card-related-work": [{ "seconds": 1.5 }],
+    "related-work": [{ "seconds": 5 }, { "seconds": 5 }, { "seconds": 4 }],
+    "card-method": [{ "seconds": 1.5 }],
+    "processing": [{ "seconds": 8.5, "oneShot": true }, { "seconds": 4, "oneShot": true }],
+    "conditioning": [{ "seconds": 10.5, "oneShot": true }],
+    "generation": [{ "seconds": 13, "oneShot": true }],
+    "nlos-reconstruction": [{ "seconds": 11, "oneShot": true }, { "seconds": 11.2, "oneShot": true }],
+    "nlos-comparison": [{ "seconds": 6 }],
+    "card-results": [{ "seconds": 1.5 }],
+    "summary": [{ "seconds": 4 }, { "seconds": 3.5 }, { "seconds": 3.5 }],
+    "end": [{ "seconds": 3 }]
+  }
+}

@@ -2,10 +2,12 @@
 
 [Plan](../plans/gen-nlos-explainer.md)
 
-Current state: paused at the user's request (2026-11-19, 16:10) while
-collaborators work on the branch. Refinement cycle 1: pass and vetting
-done, consolidation partly done; the open list is in the newest entry.
-Nothing of this session is running.
+Current state: slide work is paused at the user's request (2026-11-19,
+16:10) while collaborators work on the branch. Refinement cycle 1: pass
+and vetting done, consolidation partly done; its open list is in the
+16:10 entry. Since then the tools were organized (newest entry): media
+scripts in `media/`, recording and narration through the framework's
+commands.
 
 Resume from the newest entry below.
 
@@ -500,6 +502,45 @@ slide rules are in [slide style](../style/slides.md) and
 
 None open. Resolved: "my presentations bucket" is the R2 bucket
 `presentations` (the user, 2026-11-18).
+
+## 2026-11-19 19:55 — organized: media scripts, recorder, narration
+
+User directions (2026-11-19): "If you could actually spend some time on
+organizing the code a bit, merging useful work into the main
+branches/other branches that would be great (incl. feedback that is
+general to other presentations as well). Might be nice to have a glossary
+of different presentation types as well."; "Clean up the code to make it
+more extensible, merge useful work and insights into main/into the core
+codebase. Some of the work for video recordings and voice recordings is
+also quite valuable as well. Some durable instructions for workflows here
+would be great"; "Please clean up the extraneous branches on the remote
+not representing a presentation when you get the chance to (once their
+work is complete). main, gen-nlos-explainer, guest-lecture,
+vision-workshop should all stay".
+
+No slide, layout, or note changed in this entry. The framework side is in
+the [consolidation tracker](framework-consolidation.md).
+
+- Every script that builds this deck's media is in git, in
+  `presentations/gen-nlos-explainer/media/` (nine scripts, one definition
+  of where the paper's results are: `figures.sh`, `figures.py`). Re-run to
+  identical files: `summary.sh`, `method-scene.py scene`,
+  `lidar-capture-mesh.mjs`. The others were not re-run.
+- `main` merged (the recorder, the narration tools, workflows, the
+  glossary, two skills). `recording.json` holds the old recorder's hold
+  table in the framework's format; `assets/build/record-run-through.mjs`
+  and `../rpt-tts` are superseded by `npm run record` and `narration/`.
+- Recorded with the framework's recorder: steps 6 to 10 silent (26.6 s,
+  contact sheet correct), steps 6 to 8 with narration (audio at
+  −16.4 LUFS). Two recorder bugs found on this deck and fixed on `main`.
+- `npm run narration -- gen-nlos-explainer`: 46 steps, 40 narrated, 738
+  words, about 277 s at 160 words a minute.
+- The narration in `assets/narration/v4-kokoro-heart/` was made when
+  `line-of-sight` had four steps; the recorder refuses it as it is. It is
+  made again at gate 3.
+- Checked: `npm run check`, `npm test` (79 pass). On `main`:
+  `npm run test:ui`, 36 of 36.
+- Next, on the user's word: the open list of the 16:10 entry.
 
 ## 2026-11-19 16:10 — paused at the user's request, in cycle 1 (c)
 
