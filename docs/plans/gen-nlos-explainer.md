@@ -33,7 +33,7 @@ its check passes.
 3. **Gate 3: propagating light** (slides 5–6, with the WebGL render).
 4. **Gate 4: related work** (slide 7).
 5. **Gate 5: method** (slides 8–12, with the WebGL scene and flatland).
-6. **Gate 6: results and summary** (slides 13–20).
+6. **Gate 6: results and summary** (slides 13–19).
 7. **Gate 7: whole deck, refinement cycles 1 and 2.** A pass on all
    slides and notes, vetting by reviewers who see the deck fresh,
    consolidation and fixes; twice. Check: a full capture with no errors
@@ -122,8 +122,9 @@ the method on one evolving picture; results by experimental condition.
 Each section opens with a silent card. Every key press changes what is on
 screen: one narration beat is one build step with its own visual change.
 Titles name what is on screen. Scenes: the vase capture carries the
-opening and the method; lamp and globe, the fan, and the two paper rooms
-carry the results.
+opening and the method; lamp and globe and the two paper rooms
+carry the results. The deck does not follow the paper's structure: the
+classifier-free guidance result and the ablations are left out.
 
 | # | Slide (title) | Steps: what appears | Source |
 |---|---|---|---|
@@ -140,18 +141,17 @@ carry the results.
 | | **method** (card) | | |
 | 8 | Processing the capture | WebGL, the vase scene: (1) RGB image and direct light give the colored point cloud; (2) indirect light gives the NLOS volume behind the occluder | three.js: `rgbd_aligned.npz`, `nlos.npy` |
 | 9 | Conditioning videos | same 3D view, the camera moves along the target trajectory; warped RGB, MIP, MIP depth appear as synchronized panels | three.js, teaser `presentation/*.mp4` |
-| 10 | Video generation | diagram: three streams and noisy target tokens into the video diffusion transformer; the output video plays; classifier-free guidance noted | drawn |
+| 10 | Video generation | diagram: three streams and noisy target tokens into the video diffusion transformer; the output video plays | drawn |
 | 11 | NLOS reconstruction | flatland: (1) planar relay wall versus the visible surfaces of a scene as relays; (2) forward and adjoint operators, CGLS iterations sharpening | canvas, labeled illustration |
 | 12 | Reconstruction with nonplanar relays | ours, CC-SOCR, 3D-GTR on the simulated room and captured scenes | bucket `nonplanar_nlos_results` |
 | | **results** (card) | | |
 | 13 | Training data (simulated) | tabletop digital twins; Infinigen rooms | bucket real2sim, website room GT |
 | 14 | Captured scenes: same line of sight | (1) the shared input view and warped input; (2) reference photos: lamp or globe behind the occluder; (3) the NLOS conditioning differs | website, `6_QualExperimental` |
 | 15 | Captured scenes: comparison | per method, one step each: GEN3C\* (0/20 seeds), HOLI-1-to-3\* (fails), ours (20/20 seeds); then all play | `rgb_only`, Dropbox HOLI folder, `prediction` |
-| 16 | Classifier-free guidance | the fan: guidance scale 1, then 5 | `8_cfg_ablation` |
-| 17 | Simulated room-scale scenes | ground truth and ours, then GEN3C\*, HOLI-1-to-3\*, Lyra 2; red boxes on hidden regions; second room | `test100_paper_8020_cfg3`, Dropbox HOLI folder |
-| 18 | Quantitative evaluation | GEN3C\* versus ours: detection mAP, then Chamfer distance of occluded objects | paper Table 1 |
-| 19 | Summary | takeaway lines one per step; limitation and outlook | — |
-| 20 | Title card | as slide 1 | — |
+| 16 | Simulated room-scale scenes | ground truth and ours, then GEN3C\*, HOLI-1-to-3\*, Lyra 2; red boxes on hidden regions; second room | `test100_paper_8020_cfg3`, Dropbox HOLI folder |
+| 17 | Quantitative evaluation | GEN3C\* versus ours: detection mAP, then Chamfer distance of occluded objects | paper Table 1 |
+| 18 | Summary | takeaway lines one per step; limitation and outlook | — |
+| 19 | Title card | as slide 1 | — |
 
 ## Visualizations
 

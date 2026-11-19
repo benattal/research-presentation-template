@@ -18,6 +18,10 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- "Including classifier free guidance results, and ablations is not
+  necessarily important in the presentation. we do not have to exactly
+  follow the structure of the paper." The guidance slide and the
+  ablations are out of the storyboard.
 - "For related work, I may not put too much emphasis on Holi. Just focus
   on the 2---NLOS imaging and generative view synthesis". Slide 7 has
   two columns; HOLI-1-to-3 appears only as a baseline in the results.
