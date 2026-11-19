@@ -1,1 +1,1 @@
-and a single-photon avalanche diode.
+A single-photon avalanche diode detects the returning photons.

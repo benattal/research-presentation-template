@@ -1,1 +1,2 @@
-From the indirect light, we reconstruct an NLOS volume of the hidden scene.
+From the indirect light, we reconstruct a non-line-of-sight volume, or
+NLOS volume, of the hidden scene.

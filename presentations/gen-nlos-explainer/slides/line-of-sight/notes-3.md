@@ -1,1 +1,1 @@
-The indirect light changes with the hidden object.
+Only the indirect light changes with the hidden object.

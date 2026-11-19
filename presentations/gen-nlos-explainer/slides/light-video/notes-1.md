@@ -1,1 +1,1 @@
-Direct light sweeps across the visible surfaces first.
+Direct light reaches the visible surfaces first.

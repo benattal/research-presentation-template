@@ -1,1 +1,1 @@
-so the direct light is the same.
+The direct light is therefore the same.

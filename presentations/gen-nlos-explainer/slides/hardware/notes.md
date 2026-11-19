@@ -1,1 +1,1 @@
-Our prototype uses a pulsed laser,
+Our prototype uses a pulsed laser.

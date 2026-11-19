@@ -1,1 +1,3 @@
-Much weaker indirect light, scattered by occluded surfaces, arrives later. The delay depends on where those surfaces are.
+Later returns are indirect light, which travels from the visible point
+to occluded surfaces and back. The arrival time of this light depends on
+where those surfaces are.
