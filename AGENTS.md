@@ -278,10 +278,14 @@ Use evidence proportional to risk:
   `rm -f -- "${DIR:?}/file"`; never `rm -rf $DIR/*`.
 - Run the selection of any delete loop as a dry run first and read its
   counts.
+- Do not link directories with junctions or symlinks. A worktree gets its
+  own copy of `public/` and `assets/` (copy them, or `npm run assets --
+  pull <id>`). On Windows a recursive delete follows a junction and
+  deletes what it points to.
 - Before removing a worktree or any directory tree, list the links inside
-  it (junctions and symlinks: `public/` and `assets/` are often linked to
-  another checkout's) and unlink them first. On Windows a recursive
-  delete follows a junction and deletes what it points to.
+  it (`Get-ChildItem -Recurse -Force -Attributes ReparsePoint`) and
+  unlink any that an earlier session left; afterwards run `npm run
+  check` for every presentation.
 - Use `rclone copy`, never `rclone sync` (DATA.md).
 - Do multi-file refactors on a branch or in a `git worktree`, and merge them
   in one step.
