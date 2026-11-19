@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useRef } from 'react';
 import { whenIdle } from '@core/presentation/preload.js';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
@@ -166,66 +166,67 @@ function positiveQuantile(values, fraction) {
 }
 
 /**
- * The solved scene (cached for the page) and what the drawing derives from
- * it once per mount: each scan point's peak measurement, the time range of
- * the measurement image, the marked scan points (each with the reach of
- * its wavefront in every direction and the hidden outline's points it
- * sees), the other scan points with a return, and the canvases the grid
- * and the measurements are drawn through.
+ * The solved scene and what the drawing derives from it, worked out on
+ * first use and kept for the page: each scan point's peak measurement, the
+ * time range of the measurement image, the marked scan points (each with
+ * the reach of its wavefront in every direction and the hidden outline's
+ * points it sees), the other scan points with a return, and the canvases
+ * the grid and the measurements are drawn through.
  */
-function useFlatland() {
-  return useMemo(() => {
-    const model = flatlandNlos();
-    const { scans, op, b } = model;
-    const all = SETUPS.nonplanar.all;
+let drawing = null;
+function flatlandDrawing() {
+  if (drawing) return drawing;
+  const model = flatlandNlos();
+  const { scans, op, b } = model;
+  const all = SETUPS.nonplanar.all;
 
-    let firstReturn = op.timeBins;
-    let lastReturn = 0;
-    const peaks = scans.map((_, s) => {
-      let peak = { value: 0, bin: 0 };
-      for (let k = 0; k < op.timeBins; k += 1) {
-        const value = b[s * op.timeBins + k];
-        if (value > 0) {
-          firstReturn = Math.min(firstReturn, k);
-          lastReturn = Math.max(lastReturn, k);
-        }
-        if (value > peak.value) peak = { value, bin: k };
+  let firstReturn = op.timeBins;
+  let lastReturn = 0;
+  const peaks = scans.map((_, s) => {
+    let peak = { value: 0, bin: 0 };
+    for (let k = 0; k < op.timeBins; k += 1) {
+      const value = b[s * op.timeBins + k];
+      if (value > 0) {
+        firstReturn = Math.min(firstReturn, k);
+        lastReturn = Math.max(lastReturn, k);
       }
-      return peak;
-    });
-    /** The time bins the measurement image spans: from a little before the first return to a little after the last. */
-    const shownBins = [Math.floor(firstReturn * 0.82), Math.min(op.timeBins, Math.ceil(lastReturn * 1.05))];
+      if (value > peak.value) peak = { value, bin: k };
+    }
+    return peak;
+  });
+  /** The time bins the measurement image spans: from a little before the first return to a little after the last. */
+  const shownBins = [Math.floor(firstReturn * 0.82), Math.min(op.timeBins, Math.ceil(lastReturn * 1.05))];
 
-    const surface = hiddenSurface(0.003);
-    const nearest = (target) => scans.reduce((best, scan, s) => (
-      Math.hypot(scan.point[0] - target[0], scan.point[1] - target[1])
-        < Math.hypot(scans[best].point[0] - target[0], scans[best].point[1] - target[1]) ? s : best
-    ), 0);
-    const marked = MARKED.map((target) => {
-      const index = nearest(target);
-      const scan = scans[index];
-      if (peaks[index].value === 0) throw new Error('FlatlandNlos: a marked scan point has no return');
-      return {
-        index,
-        scan,
-        wavefront: wavefrontReach(scan, all),
-        touches: surface
-          .filter(({ point }) => roundTrip(scan, point).weight > 0 && visible(scan.point, point, all))
-          .map(({ point }) => ({ point, r: roundTrip(scan, point).r })),
-      };
-    });
-    const markedRows = new Set(marked.map((each) => each.index));
-    /** The other scan points with a return, in pixel order: the adjoint's second phase. */
-    const otherRows = scans.map((_, s) => s).filter((s) => peaks[s].value > 0 && !markedRows.has(s));
-
-    const grid = document.createElement('canvas');
-    grid.width = GRID.n;
-    grid.height = GRID.n;
+  const surface = hiddenSurface(0.003);
+  const nearest = (target) => scans.reduce((best, scan, s) => (
+    Math.hypot(scan.point[0] - target[0], scan.point[1] - target[1])
+      < Math.hypot(scans[best].point[0] - target[0], scans[best].point[1] - target[1]) ? s : best
+  ), 0);
+  const marked = MARKED.map((target) => {
+    const index = nearest(target);
+    const scan = scans[index];
+    if (peaks[index].value === 0) throw new Error('FlatlandNlos: a marked scan point has no return');
     return {
-      ...model, peaks, shownBins, marked, otherRows, grid,
-      wavefronts: new Map(), quantiles: new Map(), measurements: null,
+      index,
+      scan,
+      wavefront: wavefrontReach(scan, all),
+      touches: surface
+        .filter(({ point }) => roundTrip(scan, point).weight > 0 && visible(scan.point, point, all))
+        .map(({ point }) => ({ point, r: roundTrip(scan, point).r })),
     };
-  }, []);
+  });
+  const markedRows = new Set(marked.map((each) => each.index));
+  /** The other scan points with a return, in pixel order: the adjoint's second phase. */
+  const otherRows = scans.map((_, s) => s).filter((s) => peaks[s].value > 0 && !markedRows.has(s));
+
+  const grid = document.createElement('canvas');
+  grid.width = GRID.n;
+  grid.height = GRID.n;
+  drawing = {
+    ...model, peaks, shownBins, marked, otherRows, grid,
+    wavefronts: new Map(), quantiles: new Map(), measurements: null,
+  };
+  return drawing;
 }
 
 /**
@@ -706,6 +707,101 @@ function adjointAt(model, spread, accumulate) {
 }
 
 /**
+ * Draws the figure at `ms` into `step` (0 or 1) on `ctx`, a 2D context of a
+ * canvas of the figure's size times `ratio`. Returns what the labels over
+ * the canvas show at that moment: `planarOut` and `gridIn` (how far the
+ * planar setting has left and the grid has appeared, 0 to 1), `sceneLeft`
+ * (the scene panel's left edge), `spreading` (the adjoint is being
+ * applied), `iteration` (the CGLS iteration shown, or null), and
+ * `forwardStrength` (the forward operator's opacity).
+ */
+function drawFigure(ctx, model, colors, ratio, step, ms) {
+  if (model.measurements?.ratio !== ratio) model.measurements = measurementImage(model, ratio, colors.indirectRgb);
+  const frame = frameAt(step, ms);
+  const sweeps = model.marked.map((_, i) => clamp01(frame.sweep * model.marked.length - i));
+  const planarOut = clamp01(frame.focus / 0.35);
+  const move = ease(clamp01((frame.focus - 0.15) / 0.65));
+  const gridIn = clamp01((frame.focus - 0.6) / 0.4);
+
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  ctx.clearRect(0, 0, FIGURE.width, FIGURE.height);
+
+  // The planar setting.
+  if (planarOut < 1) {
+    ctx.save();
+    ctx.globalAlpha = 1 - planarOut;
+    const planar = sceneTransform(LEFT.planar);
+    const rays = mix(0.42, 0.2, phase(ms, [TIMELINE.planarGrid[1], TIMELINE.planarGrid[1] + 600]));
+    drawScene(
+      ctx, planar, SETUPS.planar, model.planar,
+      (i) => staggered(frame.planarGrid, i, model.planar.length, 1.5), step === 0 ? rays : 0.2, colors,
+    );
+    strokeHiddenRegion(ctx, planar, colors);
+    ctx.restore();
+  }
+
+  // The adjoint, then the iterations, on the grid.
+  let spreadRow = null;
+  let iteration = null;
+  if (gridIn > 0) {
+    let values = null;
+    if (frame.iterations > 0) {
+      ({ values, iteration } = iterateAt(model, frame.iterations));
+    } else if (frame.spread > 0) {
+      const spread = frame.spread * model.marked.length;
+      const accumulate = frame.accumulate * model.otherRows.length;
+      values = adjointAt(model, spread, accumulate);
+      if (frame.spread < 1) {
+        const i = Math.min(model.marked.length - 1, Math.floor(spread));
+        spreadRow = { index: model.marked[i].index, strength: Math.sin(Math.PI * clamp01(spread - i)) ** 0.5 };
+      } else if (frame.accumulate > 0 && frame.accumulate < 1) {
+        const i = Math.min(model.otherRows.length - 1, Math.floor(accumulate));
+        spreadRow = { index: model.otherRows[i], strength: 1 };
+      }
+    }
+    ctx.save();
+    ctx.globalAlpha = gridIn;
+    drawGrid(ctx, model, values, colors);
+    ctx.restore();
+  }
+
+  // The scene, with the visible surfaces as relays: wavefronts under it, what they light over it.
+  const sceneLeft = mix(LEFT.scene[0], LEFT.scene[1], move);
+  const scene = sceneTransform(sceneLeft);
+  const shown = (i) => staggered(frame.pixels, i, model.scans.length, 4);
+  const rays = step === 0 ? mix(0.3, 0.13, phase(ms, [TIMELINE.pixels[1], TIMELINE.pixels[1] + 600])) : 0.13;
+  const marking = (i) => clamp01(sweeps[i] / SWEEP_EDGES.appear) * (1 - planarOut);
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(sceneLeft, PANEL.top, PANEL.size, PANEL.size);
+  ctx.clip();
+  drawWavefronts(ctx, scene, model, sweeps, colors);
+  if (spreadRow) drawSpread(ctx, scene, model, spreadRow.index, spreadRow.strength, colors, { inGrid: false });
+  ctx.restore();
+  fadeOpenEdges(ctx, sceneLeft);
+  drawScene(ctx, scene, SETUPS.nonplanar, model.scans, shown, rays, colors);
+  strokeHiddenRegion(ctx, scene, colors);
+  drawTouches(ctx, scene, model, sweeps, colors);
+  model.marked.forEach((each, i) => strokeRing(ctx, scene, each.scan, colors, marking(i)));
+  if (spreadRow) {
+    drawSpread(ctx, scene, model, spreadRow.index, spreadRow.strength, colors, { inGrid: true });
+    strokeRing(ctx, scene, model.scans[spreadRow.index], colors, spreadRow.strength);
+  }
+
+  // The measurements.
+  drawMeasurements(ctx, model, sweeps, frame.fill, spreadRow, marking, colors);
+
+  // The operators; the forward operator is dim while only the adjoint is applied.
+  const forwardStrength = gridIn * (frame.iterations > 0 ? 1 : 0.35);
+  if (gridIn > 0) {
+    drawArrow(ctx, ARROWS.from, ARROWS.to, ARROWS.forward, colors.direct, forwardStrength);
+    drawArrow(ctx, ARROWS.to, ARROWS.from, ARROWS.adjoint, colors.indirect, gridIn);
+  }
+
+  return { planarOut, sceneLeft, gridIn, spreading: frame.spread > 0 && iteration === null, iteration, forwardStrength };
+}
+
+/**
  * NLOS reconstruction in 2D, computed live. Step 0: a planar relay wall
  * scanned on a uniform grid beside a scene whose visible surfaces are the
  * relays, scanned where the lidar's pixels land; around three scan points
@@ -729,7 +825,7 @@ function adjointAt(model, spread, accumulate) {
  */
 export default function FlatlandNlos({ slide, buildStep }) {
   const { labels } = slide;
-  const model = useFlatland();
+  const model = flatlandDrawing();
   const [canvasRef, ratio] = useStageCanvas();
   const colorsRef = useRef(null);
   const planarLabels = useRef(null);
@@ -743,101 +839,18 @@ export default function FlatlandNlos({ slide, buildStep }) {
 
   const paint = (ms) => {
     const canvas = canvasRef.current;
-    const step = Math.min(buildStep, 1);
     colorsRef.current ??= themeColors(canvas);
-    const colors = colorsRef.current;
-    if (model.measurements?.ratio !== ratio) model.measurements = measurementImage(model, ratio, colors.indirectRgb);
-    const frame = frameAt(step, ms);
-    const sweeps = model.marked.map((_, i) => clamp01(frame.sweep * model.marked.length - i));
-    const planarOut = clamp01(frame.focus / 0.35);
-    const move = ease(clamp01((frame.focus - 0.15) / 0.65));
-    const gridIn = clamp01((frame.focus - 0.6) / 0.4);
-
-    const ctx = canvas.getContext('2d');
-    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-    ctx.clearRect(0, 0, FIGURE.width, FIGURE.height);
-
-    // The planar setting.
-    if (planarOut < 1) {
-      ctx.save();
-      ctx.globalAlpha = 1 - planarOut;
-      const planar = sceneTransform(LEFT.planar);
-      const rays = mix(0.42, 0.2, phase(ms, [TIMELINE.planarGrid[1], TIMELINE.planarGrid[1] + 600]));
-      drawScene(
-        ctx, planar, SETUPS.planar, model.planar,
-        (i) => staggered(frame.planarGrid, i, model.planar.length, 1.5), step === 0 ? rays : 0.2, colors,
-      );
-      strokeHiddenRegion(ctx, planar, colors);
-      ctx.restore();
-    }
-
-    // The adjoint, then the iterations, on the grid.
-    let spreadRow = null;
-    let iteration = null;
-    if (gridIn > 0) {
-      let values = null;
-      if (frame.iterations > 0) {
-        ({ values, iteration } = iterateAt(model, frame.iterations));
-      } else if (frame.spread > 0) {
-        const spread = frame.spread * model.marked.length;
-        const accumulate = frame.accumulate * model.otherRows.length;
-        values = adjointAt(model, spread, accumulate);
-        if (frame.spread < 1) {
-          const i = Math.min(model.marked.length - 1, Math.floor(spread));
-          spreadRow = { index: model.marked[i].index, strength: Math.sin(Math.PI * clamp01(spread - i)) ** 0.5 };
-        } else if (frame.accumulate > 0 && frame.accumulate < 1) {
-          const i = Math.min(model.otherRows.length - 1, Math.floor(accumulate));
-          spreadRow = { index: model.otherRows[i], strength: 1 };
-        }
-      }
-      ctx.save();
-      ctx.globalAlpha = gridIn;
-      drawGrid(ctx, model, values, colors);
-      ctx.restore();
-    }
-
-    // The scene, with the visible surfaces as relays: wavefronts under it, what they light over it.
-    const sceneLeft = mix(LEFT.scene[0], LEFT.scene[1], move);
-    const scene = sceneTransform(sceneLeft);
-    const shown = (i) => staggered(frame.pixels, i, model.scans.length, 4);
-    const rays = step === 0 ? mix(0.3, 0.13, phase(ms, [TIMELINE.pixels[1], TIMELINE.pixels[1] + 600])) : 0.13;
-    const marking = (i) => clamp01(sweeps[i] / SWEEP_EDGES.appear) * (1 - planarOut);
-    ctx.save();
-    ctx.beginPath();
-    ctx.rect(sceneLeft, PANEL.top, PANEL.size, PANEL.size);
-    ctx.clip();
-    drawWavefronts(ctx, scene, model, sweeps, colors);
-    if (spreadRow) drawSpread(ctx, scene, model, spreadRow.index, spreadRow.strength, colors, { inGrid: false });
-    ctx.restore();
-    fadeOpenEdges(ctx, sceneLeft);
-    drawScene(ctx, scene, SETUPS.nonplanar, model.scans, shown, rays, colors);
-    strokeHiddenRegion(ctx, scene, colors);
-    drawTouches(ctx, scene, model, sweeps, colors);
-    model.marked.forEach((each, i) => strokeRing(ctx, scene, each.scan, colors, marking(i)));
-    if (spreadRow) {
-      drawSpread(ctx, scene, model, spreadRow.index, spreadRow.strength, colors, { inGrid: true });
-      strokeRing(ctx, scene, model.scans[spreadRow.index], colors, spreadRow.strength);
-    }
-
-    // The measurements.
-    drawMeasurements(ctx, model, sweeps, frame.fill, spreadRow, marking, colors);
-
-    // The operators; the forward operator is dim while only the adjoint is applied.
-    const forwardStrength = gridIn * (frame.iterations > 0 ? 1 : 0.35);
-    if (gridIn > 0) {
-      drawArrow(ctx, ARROWS.from, ARROWS.to, ARROWS.forward, colors.direct, forwardStrength);
-      drawArrow(ctx, ARROWS.to, ARROWS.from, ARROWS.adjoint, colors.indirect, gridIn);
-    }
+    const shown = drawFigure(canvas.getContext('2d'), model, colorsRef.current, ratio, Math.min(buildStep, 1), ms);
 
     // Labels that follow the clock.
-    planarLabels.current.style.opacity = String(1 - planarOut);
-    sceneLabels.current.style.transform = `translateX(${sceneLeft}px)`;
-    gridLabel.current.style.opacity = String(gridIn);
-    backprojectionLabel.current.style.opacity = String(frame.spread > 0 && iteration === null ? 1 : 0);
-    iterationLabel.current.style.opacity = String(iteration === null ? 0 : 1);
-    if (iteration !== null) iterationCount.current.textContent = String(iteration);
-    forwardLabel.current.style.opacity = String(forwardStrength);
-    adjointLabel.current.style.opacity = String(gridIn);
+    planarLabels.current.style.opacity = String(1 - shown.planarOut);
+    sceneLabels.current.style.transform = `translateX(${shown.sceneLeft}px)`;
+    gridLabel.current.style.opacity = String(shown.gridIn);
+    backprojectionLabel.current.style.opacity = String(shown.spreading ? 1 : 0);
+    iterationLabel.current.style.opacity = String(shown.iteration === null ? 0 : 1);
+    if (shown.iteration !== null) iterationCount.current.textContent = String(shown.iteration);
+    forwardLabel.current.style.opacity = String(shown.forwardStrength);
+    adjointLabel.current.style.opacity = String(shown.gridIn);
   };
   useStepClock(buildStep, paint, { until: settledAfter(Math.min(buildStep, 1)) });
 
@@ -917,12 +930,47 @@ export default function FlatlandNlos({ slide, buildStep }) {
 }
 
 /**
+ * Moments of the two steps, `[step, ms]`, that between them use every kind
+ * of drawing the figure does: scan points and rays, a wavefront lighting
+ * the hidden object, the measurements filling in, the planar setting
+ * fading, the scene moving, the grid fading in, the adjoint spreading over
+ * the grid, the iterations.
+ */
+const KINDS_OF_FRAME = [
+  [0, TIMELINE.pixels[1] - 300],
+  [0, (TIMELINE.sweep[0] + TIMELINE.sweep[1]) / 2 - 200],
+  [0, TIMELINE.fill[1]],
+  [1, TIMELINE.focus[1] * 0.2],
+  [1, TIMELINE.focus[1] * 0.5],
+  [1, TIMELINE.focus[1] * 0.8],
+  [1, (TIMELINE.spread[0] + TIMELINE.spread[1]) / 2],
+  [1, (TIMELINE.accumulate[0] + TIMELINE.accumulate[1]) / 2],
+  [1, TIMELINE.iterations[1]],
+];
+
+/**
  * Ahead of the slide (the audience view calls it while the page is idle):
  * the measurements, then the reconstruction, which the slide would
- * otherwise solve on the key press that arrives at it.
+ * otherwise solve on the key press that arrives at it; then a frame of
+ * each kind, drawn on canvases that are never shown. The browser compiles
+ * the GPU's part of each kind of drawing (a gradient, a blend, a smoothed
+ * image) when a page first uses it, which holds up that frame; reading a
+ * pixel back makes it draw now.
  */
 FlatlandNlos.prepare = async () => {
   flatlandMeasurements();
   await whenIdle();
   flatlandNlos();
+  await whenIdle();
+  const model = flatlandDrawing();
+  const colors = themeColors(document.documentElement);
+  for (const [step, ms] of KINDS_OF_FRAME) {
+    await whenIdle();
+    const canvas = document.createElement('canvas');
+    canvas.width = FIGURE.width;
+    canvas.height = FIGURE.height;
+    const ctx = canvas.getContext('2d');
+    drawFigure(ctx, model, colors, 1, step, ms);
+    ctx.getImageData(0, 0, 1, 1);
+  }
 };
