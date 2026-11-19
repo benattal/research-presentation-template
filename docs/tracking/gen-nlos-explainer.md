@@ -16,6 +16,12 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-18, while planning:
 
+- "I'm also not asking you to change the language from what's in the
+  paper, unless it helps with clarity (which sometimes it does, but you
+  don't need to "correct" things in the paper)". The narration takes the
+  paper's wording by default (its terms, its phrasing of claims) and
+  departs from it only for clarity; reviewer rewrites that only "correct"
+  the paper's language are not applied.
 - Of a reviewer's objection that "feed-forward" conflicts with the
   iterative NLOS solver: "The generative method is also feed forward.
   That's a fine way to classify it." The script keeps "feed-forward" for
