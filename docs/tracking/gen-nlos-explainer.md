@@ -18,6 +18,27 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- On the results slides: "The simulated scenes are also a comparison. If
+  you use captured scenes: comparison, use consistent naming for the
+  simulated slide title too"; "For the comparisons, I would also try to
+  be consistent about which method is shown first/in particular when our
+  method appears. In one slide it appears last in another first";
+  "Internal consistency in storytelling is very important"; "I would
+  make ours first probably"; "For the "same line of sight" slide, I
+  might split the propagating light video into direct and indirect to
+  make it 4 columns. That way, it looks better when we transition to the
+  next slide which also has 4 columns" and "the same layout can be used
+  (the images don't jump from one place to another)".
+- "Some strange thin outlines where videos *will* appear, before they do
+  appear. Also sometimes the content is not fully loaded when I change
+  slides". Outlines: a stitched video's edge showed around the covers of
+  cells not yet revealed (brightest pixel 219 of 255; 4 after the covers
+  reach 2 px past their cells). Loading: media preloading in the
+  framework (in progress).
+- "The hardware prototype image is nice. Make sure to include a web-gl
+  animation of the capture procedure (as in the other reference decks),
+  ideally showing direct and indirect light, ideally using the bunny
+  scene". Slide 5, being built.
 - "The arrow key controls are still a bit unresponsive. Could you also add
   an option to hide the top progress bar?" Measured: a slide change took
   0.8 s (fade out 0.4 s, then fade in 0.4 s); with `defaultTransition:

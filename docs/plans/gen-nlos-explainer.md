@@ -94,6 +94,12 @@ declined and why). Gate 1 runs its build and look steps per section:
   views, comparisons in motion. It does not restate static results
   (tables, still comparisons). The videos the supplemental website
   highlights are used, with others where they help.
+- **Internally consistent.** One order in every comparison, on screen
+  and in the narration: reference or ground truth, ours, GEN3C\*,
+  HOLI-1-to-3\*, Lyra 2. Slides that follow one another share a grid
+  where they share content, so images do not jump. Titles of parallel
+  slides are parallel ("Captured scenes: comparison", "Simulated
+  scenes: comparison").
 - **Composed slides, not pasted figures.** Slides are built from result
   media and our own visuals in designed layouts.
 - **Look.** Colors from the reference decks: black, white text, orange
@@ -140,10 +146,10 @@ classifier-free guidance result and the ablations are left out.
 |  | **problem statement** (card) |  |  | drafted |
 | 2 | Novel views from a single image | (1) the input view of the vase scene; (2) the views generated from the image alone, the camera moving right, a red box on the hidden region when it comes into view; (3) the reference photo, the real vase boxed | website `vase.png`, teaser `rgb_only`, reference photo | drafted |
 | 3 | Video of propagating light | (1) the captured light video with a time readout, a time axis with a playhead; (2) direct light: its intervals on the axis and a still at 5.98 ns; (3) indirect light: its interval and a still at 11.06 ns | website `teaser-light-clean.mp4` (16 ps per frame from 5.12 ns) | drafted |
-| 4 | Novel views from propagating light | (1) generation without and with propagating light, side by side and in step, red boxes on the hidden region; (2) the reference photo | teaser `rgb_only`, `prediction` | drafted |
-|  | **propagating light** (card) |  |  |  |
+| 4 | Novel views from propagating light | one step: the reference photo, generation with propagating light (ours), generation without, in step; red boxes on the hidden region | teaser `prediction`, `rgb_only` | drafted |
+|  | **propagating light** (card) |  |  | drafted |
 | 5 | Lidar capture | WebGL render of the lidar hardware and the website's corner scene (relay walls, teapot occluder, hidden bunny), in the manner of the reference decks' hardware renders, parts labeled; (1) a pulse travels to a visible point; (2) direct return, the measurement inset shows the first peak: depth; (3) wavefront to the hidden object and back, the weak later peak; (4) the scan over all visible surfaces | three.js | building |
-| 6 | Hardware prototype | the photo with the parts named one by one (laser, scanning mirrors, beamsplitter, SPAD) | `hardware_figure/IMG_4018`, stickers blurred | planned |
+| 6 | Hardware prototype | the photo of the prototype; parts named one per step by a line: pulsed laser, scanning mirrors, single-photon avalanche diode; then the steady-state image beside it | `hardware_figure` photo, masked, sticker blurred | drafted |
 |  | **related work** (card) |  |  |  |
 | 7 | Related work | two columns, one lit per step: NLOS imaging and generative view synthesis, each with one red limitation line; last step: our contribution lines in green (HOLI-1-to-3 is not given a column) | our own results as thumbnails | planned |
 |  | **method** (card) |  |  |  |
@@ -154,9 +160,9 @@ classifier-free guidance result and the ablations are left out.
 | 12 | Reconstruction with nonplanar relays | rotating renders of the reconstructed volumes: ours, CC-SOCR, 3D-GTR, on the simulated room and captured scenes | rendered from the bucket's volumes (`nonplanar_nlos_results/*.npy`) | planned |
 |  | **results** (card) |  |  | drafted |
 | 13 | Training data (simulated) | tabletop digital twins; Infinigen rooms | bucket real2sim, website room GT | planned |
-| 14 | Captured scenes: same line of sight | rows: hidden lamp, hidden globe; (1) the shared input view; (2) reference photos, the hidden object boxed; (3) the two videos of propagating light, in step | website `lamp.png`, `*-ref-square.webp`, `{lamp,globe}-light-clean.mp4` | drafted |
-| 15 | Captured scenes: comparison | rows: hidden lamp, hidden globe; reference photo, then one method per step, all in step: GEN3C\* (0/20 seeds), HOLI-1-to-3\* (method fails), ours (20/20 seeds); red boxes on the hidden region at the held final view | `6_QualExperimental` `rgb_only`, `prediction`; Dropbox HOLI folder | drafted |
-| 16 | Simulated room-scale scenes | two rooms, all methods in step: (1) ground truth and ours; (2) GEN3C\*; (3) HOLI-1-to-3\* and Lyra 2 (no boxes yet) | `test100_paper_8020_cfg3`, Dropbox HOLI folder | drafted |
+| 14 | Captured scenes: same line of sight | rows: hidden lamp, hidden globe; four columns on the comparison slide's grid, one per step: reference photo (the scenes differ), input view (identical), direct light (identical), indirect light (differs) | website refs and `lamp.png`; direct and indirect videos rendered from `aligned_transients.h5` | building |
+| 15 | Captured scenes: comparison | same grid as slide 14, the reference photo staying in place; one method per step, all in step: ours (20/20 seeds), GEN3C\* (0/20 seeds), HOLI-1-to-3\* (method fails); red boxes on the hidden region at the held final view | `6_QualExperimental` `prediction`, `rgb_only`; Dropbox HOLI folder | drafted |
+| 16 | Simulated scenes: comparison | two rooms, all methods in step: (1) ground truth and ours; (2) GEN3C\*; (3) HOLI-1-to-3\* and Lyra 2 (no boxes yet) | `test100_paper_8020_cfg3`, Dropbox HOLI folder | drafted |
 | 17 | Summary | takeaway lines one per step over a result video; limitation and outlook | — | planned |
 | 18 | Title card | as slide 1 | — | planned |
 

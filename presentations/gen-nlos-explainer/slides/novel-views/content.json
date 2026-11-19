@@ -9,15 +9,11 @@
     "columnGap": 44,
     "rowGap": 0
   },
-  "buildSteps": [
-    "generation without and with the light video",
-    "the actual scene"
-  ],
   "videos": [
     {
-      "src": "/slides/novel-views/without-and-with-propagating-light.mp4",
+      "src": "/slides/novel-views/with-and-without-propagating-light.mp4",
       "row": 0,
-      "column": 0,
+      "column": 1,
       "rows": 1,
       "columns": 2
     }
@@ -26,15 +22,18 @@
     {
       "row": 0,
       "column": 0,
-      "label": "Without propagating light",
+      "label": "Reference photo",
+      "media": {
+        "type": "image",
+        "src": "/slides/novel-views/reference-photo.png",
+        "alt": "A photograph of the scene from above: a large white vase stands behind the flowers"
+      },
       "boxes": [
         {
-          "x": 0.3,
-          "y": 0.34,
-          "width": 0.42,
-          "height": 0.62,
-          "from": 1.5,
-          "to": 3.2
+          "x": 0.55,
+          "y": 0.27,
+          "width": 0.28,
+          "height": 0.43
         }
       ]
     },
@@ -57,19 +56,15 @@
     {
       "row": 0,
       "column": 2,
-      "step": 1,
-      "label": "Reference photo",
-      "media": {
-        "type": "image",
-        "src": "/slides/novel-views/reference-photo.png",
-        "alt": "A photograph of the scene from above: a large white vase stands behind the flowers"
-      },
+      "label": "Without propagating light",
       "boxes": [
         {
-          "x": 0.55,
-          "y": 0.27,
-          "width": 0.28,
-          "height": 0.43
+          "x": 0.3,
+          "y": 0.34,
+          "width": 0.42,
+          "height": 0.62,
+          "from": 1.5,
+          "to": 3.2
         }
       ]
     }

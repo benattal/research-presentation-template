@@ -1,2 +1,1 @@
-Our method recovers the correct object in twenty of twenty seeds, for
-both scenes.
+HOLI-1-to-3-star fails to produce a coherent view.
