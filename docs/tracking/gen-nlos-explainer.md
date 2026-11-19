@@ -503,6 +503,22 @@ slide rules are in [slide style](../style/slides.md) and
 None open. Resolved: "my presentations bucket" is the R2 bucket
 `presentations` (the user, 2026-11-18).
 
+## 2026-11-19 21:45 — the two work-in-progress branches left the remote
+
+User direction (2026-11-19): "Yes push please and delete those remote
+branches".
+
+- `nlos-comparison-polish-wip` (item 7 of the 16:10 open list) is deleted
+  from the remote. Its one commit (2316b1f: the comparison's grid
+  geometry and a plan row) is kept as
+  `assets/parked/nlos-comparison-polish-wip/tracked-changes.patch`, in
+  the bucket beside the modified render script and clip, and as a local
+  branch on the machine it was made on. Apply it with `git apply` when
+  that polish resumes.
+- `recorder-wip` (the frame-exact recorder) is deleted from the remote
+  too; the [consolidation plan](../plans/framework-consolidation.md)
+  says what remains of it.
+
 ## 2026-11-19 19:55 — organized: media scripts, recorder, narration
 
 User directions (2026-11-19): "If you could actually spend some time on
