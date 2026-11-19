@@ -59,6 +59,13 @@
   border: 2px solid var(--hidden);
 }
 
+/* Dims the picture out of the spotlight. */
+.related-work-veil {
+  position: absolute;
+  inset: -1px;
+  background: var(--bg-slide);
+}
+
 .related-work-caption {
   margin-top: 6px;
   font-size: 16px;

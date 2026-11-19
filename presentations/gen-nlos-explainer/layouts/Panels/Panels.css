@@ -39,19 +39,15 @@
 }
 
 .panels-stitched,
+.panels-own-media,
 .panels-mask,
 .panels-panel {
   position: absolute;
 }
 
-/* Covers a stitched video's cell until its panel appears, or dims it. */
+/* Covers a panel's media until the panel appears, or dims it. */
 .panels-mask {
   background: var(--bg-slide);
-}
-
-.panels-own-media {
-  position: absolute;
-  inset: 0;
 }
 
 .panels-media {

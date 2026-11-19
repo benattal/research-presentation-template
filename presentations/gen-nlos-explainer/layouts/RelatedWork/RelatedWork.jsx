@@ -4,7 +4,7 @@ import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
 import './RelatedWork.css';
 
-/** Opacity of a column out of the spotlight. */
+/** Opacity of a column's text, and of the veil's complement over its picture, out of the spotlight. */
 const DIMMED = 0.3;
 
 /**
@@ -23,6 +23,9 @@ const DIMMED = 0.3;
  *   buildSteps     one step per column, then the contribution step.
  *
  * The limitation line of a column appears with its spotlight and stays.
+ * A picture is dimmed by a veil over it, not by its own opacity: changing
+ * the opacity of an element that holds a playing video makes some browsers
+ * rebuild the video's layer, which shows as a flash.
  */
 export default function RelatedWork({ slide, buildStep }) {
   const { columns, contribution } = slide;
@@ -34,29 +37,33 @@ export default function RelatedWork({ slide, buildStep }) {
       <SlideTitle title={slide.title} />
       <div className="related-work-body">
         <div className="related-work-columns">
-          {columns.map((column, index) => (
-            <figure key={column.name} className="related-work-column" style={{ opacity: buildStep === index ? 1 : DIMMED }}>
-              <h3 className="related-work-name"><Text>{column.name}</Text></h3>
-              <div className="related-work-picture">
-                <Media item={column.media} className="related-work-media" />
-                {column.hidden && (
-                  <div
-                    className="related-work-hidden"
-                    style={{
-                      left: `${100 * column.hidden.x}%`,
-                      top: `${100 * column.hidden.y}%`,
-                      width: `${100 * column.hidden.width}%`,
-                      height: `${100 * column.hidden.height}%`,
-                    }}
-                  />
-                )}
-              </div>
-              <figcaption className="related-work-caption"><Text>{column.caption}</Text></figcaption>
-              <p className="related-work-limitation" style={{ opacity: buildStep >= index ? 1 : 0 }}>
-                <Text>{column.limitation}</Text>
-              </p>
-            </figure>
-          ))}
+          {columns.map((column, index) => {
+            const textOpacity = buildStep === index ? 1 : DIMMED;
+            return (
+              <figure key={column.name} className="related-work-column">
+                <h3 className="related-work-name" style={{ opacity: textOpacity }}><Text>{column.name}</Text></h3>
+                <div className="related-work-picture">
+                  <Media item={column.media} className="related-work-media" />
+                  {column.hidden && (
+                    <div
+                      className="related-work-hidden"
+                      style={{
+                        left: `${100 * column.hidden.x}%`,
+                        top: `${100 * column.hidden.y}%`,
+                        width: `${100 * column.hidden.width}%`,
+                        height: `${100 * column.hidden.height}%`,
+                      }}
+                    />
+                  )}
+                  <div className="related-work-veil" style={{ opacity: 1 - textOpacity }} />
+                </div>
+                <figcaption className="related-work-caption" style={{ opacity: textOpacity }}><Text>{column.caption}</Text></figcaption>
+                <p className="related-work-limitation" style={{ opacity: buildStep >= index ? textOpacity : 0 }}>
+                  <Text>{column.limitation}</Text>
+                </p>
+              </figure>
+            );
+          })}
         </div>
         <p className="related-work-contribution" style={{ opacity: buildStep >= columns.length ? 1 : 0 }}>
           <Text>{contribution}</Text>

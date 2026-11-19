@@ -169,8 +169,12 @@ function StitchedVideo({ video, geometry, holder, visible }) {
 }
 
 /**
- * One panel: its own media, or a mask over its part of a stitched video;
- * its label, note, and boxes. `state` is 'hidden', 'dimmed', or 'shown'.
+ * One panel: its own media, a cover over the media (its own or its part of
+ * a stitched video), and its label, note, and boxes. `state` is 'hidden',
+ * 'dimmed', or 'shown'. The media always stays at full opacity, and the
+ * cover hides or dims it: changing the opacity of an element that holds a
+ * playing video makes some browsers rebuild the video's layer, which shows
+ * as a flash.
  */
 function Panel({ panel, geometry, state, stitchedHolder }) {
   const ownHolder = useRef(null);
@@ -179,24 +183,22 @@ function Panel({ panel, geometry, state, stitchedHolder }) {
   const box = geometry.box(panel);
   return (
     <>
-      {!panel.media && (
-        <div
-          className="panels-mask"
-          style={{
-            left: box.left - MASK_BLEED,
-            top: box.top - MASK_BLEED,
-            width: box.width + 2 * MASK_BLEED,
-            height: box.height + 2 * MASK_BLEED,
-            opacity: 1 - opacity,
-          }}
-        />
+      {panel.media && (
+        <div ref={ownHolder} className="panels-own-media" style={box}>
+          <Media item={panel.media} className="panels-media" />
+        </div>
       )}
+      <div
+        className="panels-mask"
+        style={{
+          left: box.left - MASK_BLEED,
+          top: box.top - MASK_BLEED,
+          width: box.width + 2 * MASK_BLEED,
+          height: box.height + 2 * MASK_BLEED,
+          opacity: 1 - opacity,
+        }}
+      />
       <div className="panels-panel" style={{ ...box, opacity }}>
-        {panel.media && (
-          <div ref={ownHolder} className="panels-own-media">
-            <Media item={panel.media} className="panels-media" />
-          </div>
-        )}
         {panel.boxes && <Boxes boxes={panel.boxes} videoHolder={panel.media ? ownHolder : stitchedHolder} />}
         {panel.label && (
           <div className={`panels-label${panel.ours ? ' panels-label--ours' : ''}`}><Text>{panel.label}</Text></div>
