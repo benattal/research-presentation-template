@@ -1,0 +1,29 @@
+{
+  "layout": "summary",
+  "title": "Summary",
+  "buildSteps": [
+    "takeaway",
+    "limitation",
+    "outlook"
+  ],
+  "media": {
+    "type": "video",
+    "src": "/slides/summary/ours-vase.mp4",
+    "poster": "/slides/summary/ours-vase.poster.jpg",
+    "alt": "Our generated views of the vase scene: the camera moves right and the hidden vase comes into view"
+  },
+  "label": "Ours",
+  "points": [
+    {
+      "text": "Videos of propagating light provide physical constraints for generative view synthesis"
+    },
+    {
+      "heading": "Limitation",
+      "text": "Relay surfaces that do not face the hidden scene convey less information"
+    },
+    {
+      "heading": "Outlook",
+      "text": "Lidar on robots and phones, in cluttered and heavily occluded environments"
+    }
+  ]
+}

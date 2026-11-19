@@ -1,0 +1,72 @@
+{
+  "layout": "panels",
+  "title": "Training data (simulated)",
+  "grid": {
+    "columns": 5,
+    "rows": 2,
+    "panelWidth": 208,
+    "panelHeight": 208,
+    "columnGap": 28,
+    "rowGap": 40
+  },
+  "buildSteps": [
+    "tabletop digital twins",
+    "Infinigen rooms"
+  ],
+  "videos": [
+    {
+      "src": "/slides/training-data/infinigen-rooms.mp4",
+      "poster": "/slides/training-data/infinigen-rooms.poster.jpg",
+      "row": 0,
+      "column": 2,
+      "rows": 2,
+      "columns": 3
+    }
+  ],
+  "panels": [
+    {
+      "row": 0,
+      "column": 0,
+      "rows": 2,
+      "columns": 2,
+      "label": "Tabletop digital twin",
+      "media": {
+        "type": "video",
+        "src": "/slides/training-data/tabletop-twin.mp4",
+        "poster": "/slides/training-data/tabletop-twin.poster.jpg",
+        "alt": "A simulated tabletop with flowers, plants, and books, seen from a moving camera"
+      }
+    },
+    {
+      "row": 0,
+      "column": 2,
+      "step": 1
+    },
+    {
+      "row": 0,
+      "column": 3,
+      "step": 1,
+      "label": "Infinigen rooms"
+    },
+    {
+      "row": 0,
+      "column": 4,
+      "step": 1
+    },
+    {
+      "row": 1,
+      "column": 2,
+      "step": 1
+    },
+    {
+      "row": 1,
+      "column": 3,
+      "step": 1
+    },
+    {
+      "row": 1,
+      "column": 4,
+      "step": 1
+    }
+  ]
+}

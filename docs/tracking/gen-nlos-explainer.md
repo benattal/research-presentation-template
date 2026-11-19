@@ -2,11 +2,13 @@
 
 [Plan](../plans/gen-nlos-explainer.md)
 
-Current state: the plan is rewritten with sequential gates and a
-refinement loop; everything is in this checkout (branch `guest-lecture`,
-`presentations/gen-nlos-explainer/`). The deck on screen is still the
-placeholder skeleton the user rejected. Open gate: 1, the storyboard.
-No subagents are running.
+Current state: gate 1, the first draft. Drafted and served (16 slides):
+the problem statement, the hardware photo, related work, training data,
+the captured line of sight and comparison, the simulated comparison, the
+summary, the title cards. Building, each in a temporary worktree: the
+WebGL lidar capture (bunny scene), the method on the vase scene in 3D
+(three slides), the flatland NLOS reconstruction, the rotating NLOS
+comparison. Two reviews of the first section are logged for gate 2.
 
 Resume from the newest entry below.
 
@@ -18,6 +20,26 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- "Still having lots of issues with content that loads after the slide
+  changes" and "It's not just slide transitions -- it's within specific
+  slides too (an arrow press should reveal content. but it gets loaded in
+  slowly/visibly)". Measured: reveals faded in over 0.39 s (now within
+  one frame); a video created on arrival had no frame for up to 3.3 s on
+  a first visit (now a poster of its first frame, and every slide's media
+  preloaded by the audience view).
+- "Still a slight shift in content from the first captured slide to the
+  second." The comparison slide reserved a note band under its grid and
+  the first did not (16 px); both now place every element identically.
+- "Please also be sure to debug transitions. On the related work slide,
+  there's flashing in the highlight as we move from NLOS imaging to
+  generative view synthesis". Not reproduced headless (one clean frame
+  change); suspected cause removed: media keeps full opacity and a veil
+  dims it. To confirm with the user.
+- "Also as the subtitle on the first slide do "Anonymous CVPR 2027
+  Submission"". Done, on the title and closing cards.
+- "Make sure there is an instructions markdown file in the presentation
+  discussing how to grab the data required for it if we move to a new
+  machine". `presentations/gen-nlos-explainer/README.md`.
 - On the results slides: "The simulated scenes are also a comparison. If
   you use captured scenes: comparison, use consistent naming for the
   simulated slide title too"; "For the comparisons, I would also try to
@@ -220,6 +242,40 @@ slide rules are in [slide style](../style/slides.md) and
 
 None open. Resolved: "my presentations bucket" is the R2 bucket
 `presentations` (the user, 2026-11-18).
+
+## 2026-11-19 12:50 — first draft: 16 slides served; four visualizations building
+
+User directions (2026-11-19): see "Standing directions".
+
+- Built here: title and closing cards; section cards (text only, as the
+  reference decks'); single-image, light-video (time axis from the
+  website's mapping, frame k = bin 320 + k at 16 ps, checked against the
+  paper's three labeled stills), novel-views; hardware (the masked photo
+  a stopped builder had prepared); related-work; training-data;
+  line-of-sight (direct and indirect light rendered separately from
+  `aligned_transients.h5` with the website's processing);
+  captured-comparison; room-scale; summary.
+- Framework (on `framework-sync`, merged here): `progressBar: false`;
+  media preloading in the audience view; a `poster` on video media.
+- Fixed: 0.8 s slide changes (now instant for this deck); 0.39 s reveal
+  fades (instant); empty video frames on arrival (posters, preloading);
+  video edges around unrevealed cells (covers 2 px larger); a 16 px
+  shift between the two captured slides.
+- A mistake to avoid: two chained shell commands deleted media after an
+  earlier step in the chain had failed, breaking the served deck for a
+  few minutes each time. Deletions now run only after the replacement
+  is built and the check passes, as separate commands.
+- Logged for gate 2 (refinement), from the two reviews of section 1:
+  tie the light video's playback to the narration per step (the loop
+  runs free: about 4 s of it shows almost nothing); longer holds on the
+  final view; a label that says what the red box marks; the playhead in
+  white, larger axis type; the first step of single-image shows one
+  still while the narration says view synthesis; card and title sizes;
+  red boxes 3 px; capture frames that show a mid-loop time.
+- Pushed: git `guest-lecture` and `framework-sync`; media to the bucket
+  `presentations`, folder `gen-nlos-explainer/` (rclone check: 0
+  differences).
+- Next: merge the four visualization slides as they land; then gate 2.
 
 ## 2026-11-19 11:10 — stopped, moved here, plan rewritten
 

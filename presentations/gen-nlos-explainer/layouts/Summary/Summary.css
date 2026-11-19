@@ -1,0 +1,58 @@
+/* The closing summary: a result at the left, the takeaway lines at the right. */
+.slide--summary {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.summary-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 72px;
+}
+
+.summary-figure {
+  margin: 0;
+  flex: none;
+  width: 380px;
+}
+
+.summary-media {
+  display: block;
+  width: 380px;
+  height: 380px;
+  object-fit: cover;
+}
+
+.summary-label {
+  margin-top: 8px;
+  font-size: 21px;
+  line-height: 26px;
+  text-align: center;
+  color: var(--accent);
+}
+
+.summary-points {
+  list-style: none;
+  width: 620px;
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+}
+
+.summary-point {
+  font-size: 27px;
+  line-height: 36px;
+  color: var(--text-primary);
+}
+
+.summary-heading {
+  display: block;
+  font-size: 19px;
+  line-height: 26px;
+  color: var(--text-muted);
+}

@@ -35,9 +35,18 @@
       "title": "Results",
       "slides": [
         "card-results",
+        "training-data",
         "line-of-sight",
         "captured-comparison",
         "room-scale"
+      ]
+    },
+    {
+      "id": "conclusion",
+      "title": "Conclusion",
+      "slides": [
+        "summary",
+        "end"
       ]
     }
   ]

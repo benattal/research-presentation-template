@@ -8,6 +8,7 @@ import LightVideo from './LightVideo/LightVideo.jsx';
 import Panels from './Panels/Panels.jsx';
 import RelatedWork from './RelatedWork/RelatedWork.jsx';
 import SectionCard from './SectionCard/SectionCard.jsx';
+import Summary from './Summary/Summary.jsx';
 
 export default {
   annotatedPhoto: AnnotatedPhoto,
@@ -15,4 +16,5 @@ export default {
   panels: Panels,
   relatedWork: RelatedWork,
   sectionCard: SectionCard,
+  summary: Summary,
 };
