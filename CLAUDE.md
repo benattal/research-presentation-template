@@ -278,6 +278,10 @@ Use evidence proportional to risk:
   `rm -f -- "${DIR:?}/file"`; never `rm -rf $DIR/*`.
 - Run the selection of any delete loop as a dry run first and read its
   counts.
+- Before removing a worktree or any directory tree, list the links inside
+  it (junctions and symlinks: `public/` and `assets/` are often linked to
+  another checkout's) and unlink them first. On Windows a recursive
+  delete follows a junction and deletes what it points to.
 - Use `rclone copy`, never `rclone sync` (DATA.md).
 - Do multi-file refactors on a branch or in a `git worktree`, and merge them
   in one step.
