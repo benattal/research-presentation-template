@@ -17,6 +17,20 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- Of removing the explainer from `guest-lecture`: "You can leave it that's
+  fine. I do think cleaning up and merging relevant material from the
+  branches would be good". Cleaned up (2026-11-19): twelve lecture
+  worktrees and their branches, all ancestors of `guest-lecture` and
+  clean; `../rpt-numbers` and local `lecture-numbers` (merged);
+  `gen-nlos-work` (the stopped builders' partial layouts, rebuilt since);
+  the empty `../rpt-gen-nlos`. Kept: `lecture-primer-draft-wip` (a
+  thirteenth lecture worktree held an uncommitted earlier draft of the
+  primer slides, saved as 7f5d636 before its folder was removed);
+  `recorder-wip` (the unfinished recorder, for the recording gate);
+  `framework-sync` (14 framework commits ahead of `main`, all already in
+  this branch; `main` moves after `npm run test:ui` on an idle machine);
+  `../rpt-main` (the framework worktree) and `../rpt-tts` (the local
+  speech environment). Remote branches are untouched.
 - "Also use the "video (6).mp4" file in my downloads directory (flipped
   horizontally) as ours for the real lamp scene": copied to
   `assets/sources/captured-comparison/ours-lamp-20261119.mp4` and used,
