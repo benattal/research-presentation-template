@@ -6,6 +6,7 @@
  */
 import ColabLinkSlide from './ColabLinkSlide/ColabLinkSlide.jsx';
 import ContentSlide from './ContentSlide/ContentSlide.jsx';
+import CreditsSlide from './CreditsSlide/CreditsSlide.jsx';
 import DiagramSlide from './DiagramSlide/DiagramSlide.jsx';
 import DiscussionSlide from './DiscussionSlide/DiscussionSlide.jsx';
 import IllustratedPointsSlide from './IllustratedPointsSlide/IllustratedPointsSlide.jsx';
@@ -22,6 +23,7 @@ export default {
   title: TitleSlide,
   outline: OutlineSlide,
   content: ContentSlide,
+  credits: CreditsSlide,
   progressiveBuild: ProgressiveBuildSlide,
   diagram: DiagramSlide,
   media: MediaSlide,

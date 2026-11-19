@@ -20,6 +20,10 @@ results, the resume point) belongs in the matching tracker under
 - Update the plan only when the intended work, dependencies, or acceptance
   gates change. Evidence and chronology go in the tracker.
 - Link the plan and its tracker to each other in their first lines.
+- A plan for a presentation contains its storyboard
+  ([slide style](../style/slides.md#storyboard)): one row per slide with
+  its title, steps, source, and status, written before slides are built
+  and kept current with them.
 - When a plan is complete, promote its durable decisions into the
   implementation or style documents, then move the plan and tracker into
   `docs/archive/<date>/` (see [the archive](../archive/README.md)).
@@ -66,3 +70,5 @@ The measurable gates that close the plan.
   [its tracker](../tracking/vision-workshop.md).
 - [Template restructure](template-restructure.md), tracked in
   [its tracker](../tracking/template-restructure.md).
+- [Framework consolidation](framework-consolidation.md), tracked in
+  [its tracker](../tracking/framework-consolidation.md).

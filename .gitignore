@@ -4,6 +4,7 @@ node_modules/
 # Builds and generated data
 /dist/
 /data/captures/
+/data/recordings/
 
 # Live server state (poll votes)
 /.live-state/
@@ -16,6 +17,10 @@ node_modules/
 # Presentation assets: their durable copy is the R2 bucket (DATA.md).
 /presentations/*/public/
 /presentations/*/assets/
+
+# Python caches (media scripts, narration tools)
+__pycache__/
+*.pyc
 
 # Editors and OS
 .vscode/
@@ -32,3 +37,5 @@ Thumbs.db
 .claude/*
 !.claude/skills/
 .gradio/
+
+# Python bytecode (narration/)

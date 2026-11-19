@@ -1,11 +1,13 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import Media from '../../stage/Media.jsx';
 import './ProgressiveBuildSlide.css';
+import Text from '../../stage/Text.jsx';
 
 /**
  * Click-to-reveal steps: `buildSteps` is a list of `{ label, description?,
- * media? }`, and step k shows the first k + 1 of them. An optional
- * `className` is added to the root for per-slide styling.
+ * media? }`, and step k shows the first k + 1 of them. A step fades in when
+ * it is revealed; the steps shown when the slide appears come with it. An
+ * optional `className` is added to the root for per-slide styling.
  */
 export default function ProgressiveBuildSlide({ slide, buildStep }) {
   const steps = slide.buildSteps || [];
@@ -15,10 +17,10 @@ export default function ProgressiveBuildSlide({ slide, buildStep }) {
 
   return (
     <div className={`slide--progressive ${extraClass}`}>
-      <h2>{slide.title}</h2>
+      <h2><Text>{slide.title}</Text></h2>
 
       <div className="build-steps">
-        <AnimatePresence>
+        <AnimatePresence initial={false}>
           {steps.map((step, i) => {
             if (i >= visibleCount) return null;
             return (
@@ -30,9 +32,9 @@ export default function ProgressiveBuildSlide({ slide, buildStep }) {
                 transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
               >
                 <div className="build-step-header">
-                  <span className="build-step-label">{step.label}</span>
+                  <span className="build-step-label"><Text>{step.label}</Text></span>
                   {step.description && (
-                    <span className="build-step-description">{step.description}</span>
+                    <span className="build-step-description"><Text>{step.description}</Text></span>
                   )}
                 </div>
                 {step.media && step.media.length > 0 && (

@@ -98,6 +98,14 @@ describe('presentations', () => {
     }
   });
 
+  it('each say in a README.md how to pull their assets', () => {
+    for (const id of ids) {
+      const readme = join(presentationsDir, id, 'README.md');
+      assert.ok(existsSync(readme), `presentations/${id}/README.md is missing`);
+      assert.ok(readFileSync(readme, 'utf-8').includes(`npm run assets -- pull ${id}`), `presentations/${id}/README.md does not say how to pull its assets`);
+    }
+  });
+
   it('lay out slides for the fixed stage, without viewport media queries', () => {
     const offenders = [...filesUnder('core/client/layouts', /\.css$/), ...filesUnder('presentations', /layouts.*\.css$/)]
       .filter((path) => /@media\s*\([^)]*width/.test(readFileSync(path, 'utf-8')));

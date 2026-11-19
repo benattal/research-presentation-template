@@ -33,6 +33,7 @@
       "title": "Custom layouts",
       "slides": [
         "step-counter",
+        "credits",
         "closing"
       ]
     }

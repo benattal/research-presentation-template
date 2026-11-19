@@ -50,11 +50,6 @@ function clips(style) {
   return style.overflowX !== 'visible' || style.overflowY !== 'visible';
 }
 
-/** True when the element itself holds text (not only its descendants). */
-function hasOwnText(element) {
-  return [...element.childNodes].some((node) => node.nodeType === Node.TEXT_NODE && node.textContent.trim());
-}
-
 /**
  * The part of an element's box left visible by its clipping ancestors
  * inside the slide. The slide and stage themselves are not counted: content
@@ -75,21 +70,105 @@ function visibleBox(element, slide) {
 }
 
 /**
- * Content that does not fit: the slide itself scrolling, an element whose
- * own text is cut off by its box, or visible content reaching outside the
- * 1280×720 stage (reported once, for the outermost such element). Content
- * a layout clips on purpose, inside its own `overflow: hidden` box, is not
- * reported; a subtree marked `data-overflow-ok` (a full-bleed background)
- * is skipped.
+ * The box that lays out the line a text node sits on, within `slide`: the
+ * parent of the text's outermost inline-level ancestor (or its own parent).
+ * Inline boxes and inline-blocks take the width of their content, so text
+ * runs out of this box, not of them; and the blocks inside an inline-block
+ * (KaTeX stacks superscripts and accents in such blocks, offset by negative
+ * margins) belong to that inline-block's own layout.
  */
+function lineContainer(textNode, slide) {
+  let container = textNode.parentElement;
+  for (let element = textNode.parentElement; element !== slide; element = element.parentElement) {
+    const { display } = getComputedStyle(element);
+    if (display.startsWith('inline') || display === 'contents') container = element.parentElement;
+  }
+  return container;
+}
+
+/**
+ * The slide's visible text nodes, grouped by the box that lays out their
+ * lines (`lineContainer`). Text in SVG is positioned by its drawing and
+ * left out, as is text clipped to nothing on purpose (KaTeX's MathML copy
+ * for screen readers).
+ */
+function textByLineContainer(slide) {
+  const containers = new Map();
+  const walker = document.createTreeWalker(slide, NodeFilter.SHOW_TEXT);
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    const parent = node.parentElement;
+    if (!node.textContent.trim() || parent.closest('svg, [data-overflow-ok]')) continue;
+    if (!parent.checkVisibility({ opacityProperty: true, visibilityProperty: true })) continue;
+    const visible = visibleBox(parent, slide);
+    if (visible.right - visible.left <= 1 || visible.bottom - visible.top <= 1) continue;
+    const container = lineContainer(node, slide);
+    containers.set(container, [...(containers.get(container) ?? []), node]);
+  }
+  return containers;
+}
+
+/**
+ * Text wider than the box that lays it out, in a box that does not clip: a
+ * line that does not wrap (a formula, a long word, `nowrap`) in a column
+ * too narrow for it. The box keeps its width, so no element box shows the
+ * line; it spills over its neighbors, or past the stage edge, which cuts it
+ * off. Horizontal only: glyphs may reach above and below a tight line
+ * height without overlapping anything.
+ */
+function textPastItsBox(textByContainer) {
+  const findings = [];
+  for (const [container, nodes] of textByContainer) {
+    const style = getComputedStyle(container);
+    if (clips(style)) continue;
+    const box = container.getBoundingClientRect();
+    const left = box.left + parseFloat(style.borderLeftWidth);
+    const right = box.right - parseFloat(style.borderRightWidth);
+    const lines = nodes.flatMap((node) => {
+      const range = document.createRange();
+      range.selectNodeContents(node);
+      return [...range.getClientRects()];
+    });
+    const past = Math.max(0, ...lines.map((line) => Math.max(left - line.left, line.right - right)));
+    if (past > OVERFLOW_TOLERANCE_PX) {
+      findings.push({ kind: 'text-past-box', element: describe(container), detail: `text runs ${Math.round(past)}px past its box` });
+    }
+  }
+  return findings;
+}
+
+/**
+ * Content that does not fit: the slide itself scrolling, text cut off by
+ * the box that lays it out or running out of it, or visible content
+ * reaching outside the 1280×720 stage (reported once, for the outermost
+ * such element). Content a layout clips on purpose, inside its own
+ * `overflow: hidden` box, is not reported; a subtree marked
+ * `data-overflow-ok` (a full-bleed background) is skipped.
+ */
+/**
+ * A title that runs onto a second line: the rule is one line per title
+ * (docs/style/slides.md). Titles are the SlideTitle heading and any `h1`
+ * (title and divider slides); a title is wrapped when its box is taller
+ * than one and a half of its lines.
+ */
+function wrappedTitles(slide) {
+  return [...slide.querySelectorAll('.slide-title, h1')].filter((title) => {
+    const lineHeight = parseFloat(getComputedStyle(title).lineHeight);
+    return Number.isFinite(lineHeight) && title.getBoundingClientRect().height > 1.5 * lineHeight;
+  });
+}
+
 function findOverflow(stageElement) {
   const findings = [];
   const slide = stageElement.querySelector('.slide');
   const stage = stageElement.getBoundingClientRect();
+  const textByContainer = textByLineContainer(slide);
 
   const extraHeight = slide.scrollHeight - slide.clientHeight;
   if (extraHeight > OVERFLOW_TOLERANCE_PX) {
     findings.push({ kind: 'slide-scrolls', element: '.slide', detail: `content is ${extraHeight}px taller than the slide` });
+  }
+  for (const title of wrappedTitles(slide)) {
+    findings.push({ kind: 'title-wraps', element: describe(title), detail: 'the title runs onto a second line' });
   }
 
   const reported = new Set();
@@ -102,7 +181,7 @@ function findOverflow(stageElement) {
 
     const hiddenWidth = element.scrollWidth - element.clientWidth;
     const hiddenHeight = element.scrollHeight - element.clientHeight;
-    if (clips(style) && hasOwnText(element) && (hiddenWidth > OVERFLOW_TOLERANCE_PX || hiddenHeight > OVERFLOW_TOLERANCE_PX)) {
+    if (clips(style) && textByContainer.has(element) && (hiddenWidth > OVERFLOW_TOLERANCE_PX || hiddenHeight > OVERFLOW_TOLERANCE_PX)) {
       findings.push({ kind: 'clipped', element: describe(element), detail: `${hiddenWidth}px × ${hiddenHeight}px of text hidden` });
     }
 
@@ -122,6 +201,7 @@ function findOverflow(stageElement) {
       });
     }
   }
+  findings.push(...textPastItsBox(textByContainer));
   return findings;
 }
 

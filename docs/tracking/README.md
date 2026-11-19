@@ -41,3 +41,5 @@ User direction (YYYY-MM-DD): "<quoted direction>".
   [its plan](../plans/vision-workshop.md).
 - [Template restructure](template-restructure.md), for
   [its plan](../plans/template-restructure.md).
+- [Framework consolidation](framework-consolidation.md), for
+  [its plan](../plans/framework-consolidation.md).

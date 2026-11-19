@@ -20,6 +20,11 @@ The first run needs a browser: `npx playwright install chromium` once, or
 `--channel msedge` / `--channel chrome` to use one already installed. Assets
 must be present (`npm run assets -- pull <id>`).
 
+The first page load has Vite transform every module, so it gets five
+minutes; every later frame gets 30 seconds. On a busy or power-throttled
+machine a frame can still time out: it is reported as an error for that
+frame, and capturing it again with `--slides` settles whether it is real.
+
 Each run writes a fresh directory, ignored by git:
 
 ```text
@@ -42,8 +47,10 @@ a changed frame can be toggled between now, before, and the difference.
 | console error, uncaught exception | error | a layout threw or logged an error |
 | failed request | error | a missing asset (HTTP 404) or a request that failed |
 | image or video did not load | error | a media element never produced a frame |
+| capture timed out, screenshot failed | error | the frame did not load or could not be screenshot in time; the run goes on |
 | `slide-scrolls` | warning | the slide's content is taller than 720 pixels |
-| `clipped` | warning | an element cuts off its own text (`overflow: hidden`, ellipsis) |
+| `clipped` | warning | the box that lays out a text cuts it off (`overflow: hidden`, ellipsis) |
+| `text-past-box` | warning | a line of text (a formula, a long word, `nowrap`) is wider than the box that lays it out and spills over its neighbors or the stage edge; the box itself still fits, so only the text shows it |
 | `outside-stage` | warning | visible content extends past the stage edge |
 | changed | information | more than 0.1% of pixels differ from the previous run |
 

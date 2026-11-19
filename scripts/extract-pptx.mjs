@@ -126,9 +126,13 @@ async function main() {
       ? (await fileIndex[relsPath].buffer()).toString('utf-8')
       : '';
 
-    // Read notes
-    const notesPath = `ppt/notesSlides/notesSlide${slideNum}.xml`;
-    const notesXml = fileIndex[notesPath]
+    // Read the notes the slide's relationships name: notesSlideN.xml is
+    // numbered in the order notes were created, not in slide order.
+    const notesTarget = [...relsXml.matchAll(/<Relationship\s+([^>]+)\/?>/g)]
+      .map((match) => match[1])
+      .find((attrs) => getAttr(attrs, 'Type')?.endsWith('/notesSlide'));
+    const notesPath = notesTarget ? path.posix.join('ppt/slides', getAttr(notesTarget, 'Target')) : null;
+    const notesXml = notesPath && fileIndex[notesPath]
       ? (await fileIndex[notesPath].buffer()).toString('utf-8')
       : '';
 
@@ -143,8 +147,6 @@ async function main() {
     // --- Extract media references from rels ---
     const mediaRefs = [];
     const externalLinks = [];
-    const relRegex = /<Relationship[^>]*?(Id="([^"]+)")[^>]*?(Target="([^"]+)")[^>]*?(Type="([^"]+)")?[^>]*?\/?>/g;
-    // Need a more robust regex that captures all attributes
     const relRegex2 = /<Relationship\s+([^>]+)\/?>/g;
     let rm;
     while ((rm = relRegex2.exec(relsXml)) !== null) {

@@ -1,0 +1,14 @@
+{
+  "kokoro-heart":   {"backend": "kokoro", "speaker": "af_heart",   "speed": 1.0,  "lang_code": "a"},
+  "kokoro-michael": {"backend": "kokoro", "speaker": "am_michael", "speed": 0.95, "lang_code": "a"},
+  "kokoro-emma":    {"backend": "kokoro", "speaker": "bf_emma",    "speed": 0.95, "lang_code": "b"},
+
+  "qwen-ryan":  {"backend": "qwen", "model": "Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice", "speaker": "Ryan",
+                 "instruct": "Calm, clear, professional narration of a research video, at a moderate, even pace."},
+  "qwen-aiden": {"backend": "qwen", "model": "Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice", "speaker": "Aiden",
+                 "instruct": "Calm, clear, professional narration of a research video, at a moderate, even pace."},
+
+  "chatterbox-default": {"backend": "chatterbox", "variant": "original",
+                         "exaggeration": 0.4, "cfg_weight": 0.5, "temperature": 0.7},
+  "chatterbox-turbo":   {"backend": "chatterbox", "variant": "turbo", "temperature": 0.7}
+}

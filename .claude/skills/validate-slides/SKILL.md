@@ -35,9 +35,9 @@ The run prints one line per frame and the path of
 
 - Fix every ERROR (console error, exception, failed request, media that did
   not load) at its cause.
-- Fix every warning (`slide-scrolls`, `clipped`, `outside-stage`) by making
-  the content fit; mark an element `data-overflow-ok` only when it is a
-  deliberate full-bleed decoration.
+- Fix every warning (`slide-scrolls`, `clipped`, `text-past-box`,
+  `outside-stage`) by making the content fit; mark an element
+  `data-overflow-ok` only when it is a deliberate full-bleed decoration.
 - Open the PNGs of every frame you changed and of every frame the run flags
   as changed, with the Read tool, and check them against what the slide
   should show. Counts alone do not show a slide that is legible but wrong.

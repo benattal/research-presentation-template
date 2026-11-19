@@ -1,5 +1,8 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+// Fonts are bundled, so a presentation needs no network (local mode in a lecture hall).
+import '@fontsource-variable/inter';
+import '@fontsource-variable/jetbrains-mono';
 import './index.css';
 import App from './App.jsx';
 import { loadPresentation } from './presentation/load.js';

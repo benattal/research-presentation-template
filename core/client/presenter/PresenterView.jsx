@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import Markdown from 'react-markdown';
+import NotesMarkdown from './NotesMarkdown.jsx';
 import { NOTES_WRITABLE, notesFor, saveNotes } from '../presentation/notes.js';
 import { stepCount } from '../presentation/model.js';
 import useKeyboardNavigation from '../navigation/useKeyboardNavigation.js';
@@ -39,14 +39,21 @@ function PresenterLogin() {
   );
 }
 
-function useElapsedSeconds() {
+/**
+ * Minutes and seconds since the presenter window opened. The timer keeps
+ * its own state, so its tick every second re-renders only itself, not the
+ * notes and the rest of the window.
+ */
+function PresenterTimer() {
   const [start] = useState(() => Date.now());
   const [elapsed, setElapsed] = useState(0);
   useEffect(() => {
     const interval = setInterval(() => setElapsed(Math.floor((Date.now() - start) / 1000)), 1000);
     return () => clearInterval(interval);
   }, [start]);
-  return elapsed;
+  const minutes = String(Math.floor(elapsed / 60)).padStart(2, '0');
+  const seconds = String(elapsed % 60).padStart(2, '0');
+  return <div className="presenter-timer">{minutes}:{seconds}</div>;
 }
 
 /**
@@ -99,7 +106,7 @@ function NotesPanel({ slide, step }) {
             autoFocus
           />
         ) : (
-          <Markdown>{notes || '*(No notes)*'}</Markdown>
+          <NotesMarkdown>{notes || '*(No notes)*'}</NotesMarkdown>
         )}
       </div>
     </div>
@@ -110,7 +117,6 @@ function PresenterConsole({ presentation }) {
   const { slides } = presentation;
   const { token, requiresLogin, logout } = usePresenterAccess();
   const [position, setPosition] = useState({ index: 0, step: 0 });
-  const elapsed = useElapsedSeconds();
   const send = usePresenterChannel(setPosition);
 
   const slide = slides[position.index];
@@ -124,13 +130,10 @@ function PresenterConsole({ presentation }) {
   }, [send, slide, token]);
   useKeyboardNavigation(keyActions);
 
-  const minutes = String(Math.floor(elapsed / 60)).padStart(2, '0');
-  const seconds = String(elapsed % 60).padStart(2, '0');
-
   return (
     <div className="presenter-view">
       <div className="presenter-header">
-        <div className="presenter-timer">{minutes}:{seconds}</div>
+        <PresenterTimer />
         <div className="presenter-slide-info">
           Slide {position.index + 1} / {slides.length}
           {steps > 1 && <span className="presenter-build-info"> (step {position.step + 1}/{steps})</span>}

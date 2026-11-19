@@ -11,7 +11,7 @@ import { after, before, describe, it } from 'node:test';
 import express from 'express';
 import { build } from 'vite';
 import { createViteConfig } from '../../core/tooling/viteConfig.js';
-import { fixture, launchBrowser, newContext, newPage, startLocal } from './harness.mjs';
+import { SHOWCASE_SLIDES, fixture, launchBrowser, newContext, newPage, startLocal } from './harness.mjs';
 
 describe('errors and hosting', { timeout: 240000 }, () => {
   let browser;
@@ -64,7 +64,7 @@ describe('errors and hosting', { timeout: 240000 }, () => {
     const page = await newPage(await newContext(browser));
     await page.goto(url);
     await page.waitForSelector('.slide[data-slide-id="title"]');
-    assert.equal(await page.locator('.nav-slide-counter').innerText(), '1 / 16');
+    assert.equal(await page.locator('.nav-slide-counter').innerText(), `1 / ${SHOWCASE_SLIDES.length}`);
 
     await page.goto(`${url}?mode=capture&slide=5&step=0`);
     await page.waitForSelector('body[data-capture-ready="true"]');

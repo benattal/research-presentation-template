@@ -3,6 +3,7 @@ import { describe, it } from 'node:test';
 import {
   PresentationError,
   buildPresentation,
+  formatCredit,
   indexNotes,
   mergeLayouts,
   notesFileName,
@@ -10,6 +11,7 @@ import {
   slideIdFromPath,
   stepCount,
 } from '../core/client/presentation/model.js';
+import { notesFormulas, notesMathProblems } from '../core/client/presentation/notesMath.js';
 
 const Layout = () => null;
 const layouts = { title: Layout, content: Layout };
@@ -72,6 +74,24 @@ describe('buildPresentation', () => {
     });
   });
 
+  it('reports a LaTeX command whose backslash JSON read as an escape', () => {
+    const problems = (slideContents) => {
+      try {
+        build({ slideContents: { intro: { layout: 'title' }, body: { layout: 'content' }, end: { layout: 'title' }, ...slideContents } });
+        return [];
+      } catch (error) {
+        return error.problems;
+      }
+    };
+    assert.deepEqual(problems({ end: { layout: 'title', label: '$\\theta$', lines: [{ tex: 'F_\\theta' }] } }), []);
+    const tab = problems({ end: { layout: 'title', lines: [{ tex: 'F_\theta' }] } });
+    assert.equal(tab.length, 1);
+    assert.match(tab[0], /slide "end".*U\+0009/);
+    const newline = problems({ end: { layout: 'title', title: 'Gradient $\nabla f$' } });
+    assert.equal(newline.length, 1);
+    assert.match(newline[0], /inline formula .* contains a newline/);
+  });
+
   it('does not share content objects between builds', () => {
     const slideContents = { intro: { layout: 'title', nested: { a: 1 } } };
     const manifest = { title: 'T', sections: [{ id: 's', slides: ['intro'] }] };
@@ -120,4 +140,53 @@ describe('notes', () => {
     assert.equal(notesFileName(['notes.md', 'notes-1.md'], 2), 'notes.md');
     assert.equal(notesFileName([], 0), 'notes.md');
   });
+
+  it('finds formulas as the Markdown parser does, with Markdown kept out of them', () => {
+    const notes = 'Step 1: $w_i = T_i\\,\\alpha_i$ and *emphasis*, then `$code$`:\n\n$$\nx = e + A_k x\n$$\n';
+    assert.deepEqual(notesFormulas(notes), [
+      { math: 'w_i = T_i\\,\\alpha_i', display: false },
+      { math: 'x = e + A_k x', display: true },
+    ]);
+  });
+
+  it('reports a notes formula that does not render', () => {
+    assert.deepEqual(notesMathProblems('fine $x^2$', 'n.md'), []);
+    const [problem, ...rest] = notesMathProblems('broken $\\frac{1}{$', 'slides/a/notes.md');
+    assert.equal(rest.length, 0);
+    assert.match(problem, /^slides\/a\/notes\.md: the formula "\\frac\{1\}\{" does not render/);
+  });
 });
+
+describe('credits', () => {
+  const sources = {
+    doe2020: { authors: 'Doe et al.', title: 'A paper', venue: 'CVPR', year: 2020 },
+    roe2021: { authors: 'Roe', title: 'A thesis', year: 2021 },
+  };
+  const withCredits = (credits) => build({
+    sources,
+    slideContents: {
+      intro: { layout: 'title', credits },
+      body: { layout: 'content', credits: ['roe2021', { source: 'doe2020' }] },
+      end: { layout: 'title' },
+    },
+  });
+
+  it('formats a credit as authors, venue and year, then what was taken', () => {
+    assert.equal(formatCredit(sources.doe2020, 'Fig. 3'), 'Doe et al., CVPR 2020, Fig. 3');
+    assert.equal(formatCredit(sources.roe2021), 'Roe, 2021');
+  });
+
+  it('gives each credited slide its credit line and lists citations in order of first use', () => {
+    const presentation = withCredits([{ source: 'doe2020', what: 'Fig. 1' }]);
+    assert.equal(presentation.slides[0].creditLine, 'Doe et al., CVPR 2020, Fig. 1');
+    assert.equal(presentation.slides[1].creditLine, 'Roe, 2021 · Doe et al., CVPR 2020');
+    assert.equal(presentation.slides[2].creditLine, undefined);
+    assert.deepEqual(presentation.citations.map((c) => [c.key, c.slideIds]), [['doe2020', ['intro', 'body']], ['roe2021', ['body']]]);
+  });
+
+  it('reports a credit to a source that sources.json does not have', () => {
+    assert.throws(() => withCredits(['nobody1999']), (error) => error instanceof PresentationError
+      && error.problems.some((problem) => problem.includes('"nobody1999"')));
+  });
+});
+

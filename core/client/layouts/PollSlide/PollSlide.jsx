@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useChoicePoll } from '../../live/polls.js';
 import LiveStatus from '../../live/LiveStatus.jsx';
 import './PollSlide.css';
+import Text from '../../stage/Text.jsx';
 
 /**
  * A multiple-choice question the audience votes on from their own devices
@@ -15,18 +16,9 @@ export default function PollSlide({ slide }) {
 
   return (
     <div className="slide--poll">
-      <motion.h2 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
-        {slide.title}
-      </motion.h2>
+      <h2><Text>{slide.title}</Text></h2>
 
-      <motion.p
-        className="poll-question"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.4 }}
-      >
-        {question}
-      </motion.p>
+      <p className="poll-question">{question}</p>
 
       <div className="poll-options">
         {options.map((option, i) => (
@@ -35,9 +27,6 @@ export default function PollSlide({ slide }) {
             className={`poll-option${myVote === i ? ' poll-option--selected' : ''}`}
             onClick={() => vote(i)}
             disabled={!votingOpen}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }}
             whileHover={votingOpen ? { scale: 1.03 } : undefined}
             whileTap={votingOpen ? { scale: 0.97 } : undefined}
           >

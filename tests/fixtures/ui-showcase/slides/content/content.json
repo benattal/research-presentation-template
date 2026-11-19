@@ -1,7 +1,8 @@
 {
   "layout": "content",
   "sectionLabel": "Structure",
-  "title": "Bullets and media",
+  "title": "Bullets and media for $x_k$",
+  "subtitle": "A header with math in its title",
   "bullets": [
     "First point",
     "Second point",

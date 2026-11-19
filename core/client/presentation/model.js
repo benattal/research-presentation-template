@@ -7,6 +7,8 @@
  * files through Vite's `import.meta.glob`.
  */
 
+import { mathProblems } from '../stage/math.js';
+
 /** Thrown when a presentation's files do not form a valid presentation. */
 export class PresentationError extends Error {
   constructor(problems) {
@@ -66,14 +68,17 @@ export function stepCount(slide) {
  * @param {Object<string, object>} args.slideContents  slide id → parsed `content.json`
  * @param {Object<string, Function>} args.layouts      layout name → React component
  * @param {string} args.baseUrl       Vite's `BASE_URL`
- * @returns {{ id, title, defaultTransition, backLink, sections, slides, layouts, unlistedSlideIds }}
+ * @param {Object<string, object>} [args.sources]  parsed `sources.json`: source key → citation
+ * @returns {{ id, title, defaultTransition, backLink, progressBar, sections, slides, layouts, citations, unlistedSlideIds }}
  *   `sections` keep the manifest order and list their slide ids; `slides`
  *   is the flat, ordered list every view navigates, each slide carrying its
  *   `content.json` fields plus `id`, `index`, `sectionId`, `sectionTitle`,
- *   `sectionIndex`, and `indexInSection`.
+ *   `sectionIndex`, and `indexInSection`, and `creditLine` when it has
+ *   `credits`. `citations` lists every cited source once, in the order
+ *   slides first cite it, with the ids of the slides that cite it.
  * @throws {PresentationError} listing every problem found, not only the first.
  */
-export function buildPresentation({ id, manifest, slideContents, layouts, baseUrl }) {
+export function buildPresentation({ id, manifest, slideContents, layouts, baseUrl, sources = {} }) {
   const problems = [];
   if (typeof manifest.title !== 'string' || manifest.title === '') {
     problems.push('presentation.json needs a non-empty "title".');
@@ -104,8 +109,16 @@ export function buildPresentation({ id, manifest, slideContents, layouts, baseUr
         problems.push(`slide "${slideId}" uses layout "${content.layout}", which is not registered.`);
         return;
       }
+      problems.push(...mathProblems(content, `slide "${slideId}"`));
+      const credits = (content.credits ?? []).map(normalizeCredit);
+      const unknown = credits.filter((credit) => !sources[credit.source]);
+      if (unknown.length > 0) {
+        problems.push(...unknown.map((credit) => `slide "${slideId}" credits "${credit.source}", which is not in sources.json.`));
+        return;
+      }
       slides.push({
         ...prefixAssetPaths(structuredClone(content), baseUrl),
+        ...(credits.length > 0 ? { creditLine: credits.map((credit) => formatCredit(sources[credit.source], credit.what)).join(' · ') } : {}),
         id: slideId,
         index: slides.length,
         sectionId: section.id,
@@ -114,6 +127,7 @@ export function buildPresentation({ id, manifest, slideContents, layouts, baseUr
         indexInSection,
       });
     });
+    problems.push(...mathProblems(section.title ?? '', `section "${section.id}"`));
     return { id: section.id, title: section.title, slideIds: [...section.slides] };
   });
 
@@ -124,11 +138,40 @@ export function buildPresentation({ id, manifest, slideContents, layouts, baseUr
     title: manifest.title,
     defaultTransition: manifest.defaultTransition ?? 'fade',
     backLink: manifest.backLink ?? null,
+    progressBar: manifest.progressBar ?? true,
     sections,
     slides,
     layouts,
+    citations: collectCitations(slides, sources),
     unlistedSlideIds: Object.keys(slideContents).filter((slideId) => !listed.has(slideId)).sort(),
   };
+}
+
+/** A slide's credit entry, written as a source key or as `{ source, what }`. */
+function normalizeCredit(credit) {
+  return typeof credit === 'string' ? { source: credit, what: null } : { source: credit.source, what: credit.what ?? null };
+}
+
+/**
+ * The credit line for one source, as slides show it: "Authors, Venue
+ * Year", then what was taken ("Fig. 3"), if given. `sources.json` is the
+ * only place citation text lives; slides name sources by key.
+ */
+export function formatCredit(source, what = null) {
+  const venue = [source.venue, source.year].filter(Boolean).join(' ');
+  return [source.authors, venue, what].filter(Boolean).join(', ');
+}
+
+function collectCitations(slides, sources) {
+  const byKey = new Map();
+  for (const slide of slides) {
+    for (const credit of (slide.credits ?? []).map(normalizeCredit)) {
+      if (!byKey.has(credit.source)) byKey.set(credit.source, { key: credit.source, ...sources[credit.source], slideIds: [] });
+      const citation = byKey.get(credit.source);
+      if (!citation.slideIds.includes(slide.id)) citation.slideIds.push(slide.id);
+    }
+  }
+  return [...byKey.values()];
 }
 
 /**

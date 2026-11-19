@@ -1,0 +1,21 @@
+.credits-list {
+  columns: 3;
+  column-gap: 32px;
+  list-style: none;
+  font-size: 0.92rem;
+  line-height: 1.35;
+  color: var(--text-secondary);
+}
+
+.credits-item {
+  break-inside: avoid;
+  margin-bottom: 8px;
+}
+
+.credits-authors {
+  color: var(--text-primary);
+}
+
+.credits-title {
+  font-style: italic;
+}

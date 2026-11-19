@@ -5,16 +5,13 @@ import {
   isFirstPosition,
   isLastPosition,
   nextPosition,
+  positionStorageKey,
   previousPosition,
 } from './position.js';
 
-function storageKey(presentationId) {
-  return `${presentationId}:slide-position`;
-}
-
 function readStoredPosition(presentationId) {
   try {
-    return JSON.parse(sessionStorage.getItem(storageKey(presentationId))) ?? { index: 0, step: 0 };
+    return JSON.parse(sessionStorage.getItem(positionStorageKey(presentationId))) ?? { index: 0, step: 0 };
   } catch {
     return { index: 0, step: 0 };
   }
@@ -58,7 +55,7 @@ export default function useSlidePosition(presentation, { persist = true } = {}) 
   useEffect(() => {
     if (!persist) return;
     try {
-      sessionStorage.setItem(storageKey(presentation.id), JSON.stringify(state.position));
+      sessionStorage.setItem(positionStorageKey(presentation.id), JSON.stringify(state.position));
     } catch {
       // Storage can be unavailable (private windows, sandboxed iframes); the position then lasts until reload.
     }

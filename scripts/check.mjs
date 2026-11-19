@@ -8,10 +8,17 @@
  *   - load it the way the browser does, through Vite, and report every
  *     problem `buildPresentation` finds (unknown layouts, missing slides,
  *     malformed presentation.json);
+ *   - render every formula of the presenter notes, as the presenter window
+ *     does (a formula of a draft slide's notes that does not render is a
+ *     warning);
+ *   - check that `pronunciation.json`, if the presentation has one, maps
+ *     terms to spoken spellings (docs/implementation/narration.md);
  *   - check that every `/slides/...` path in slide content or layout source
  *     exists in the presentation's `public/` directory (pull assets first:
  *     npm run assets -- pull <id>); a missing asset of a draft slide (one
  *     presentation.json does not list) is a warning, not an error;
+ *   - validate its recording.json, if it has one (the holds of
+ *     npm run record);
  *   - list the draft slides.
  *
  * Exits with status 1 when any presentation has an error. Rendering
@@ -21,11 +28,17 @@ import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { createServer } from 'vite';
 import { slideIdFromPath } from '../core/client/presentation/model.js';
+import { notesMathProblems } from '../core/client/presentation/notesMath.js';
+import { readPronunciationMap } from '../core/tooling/narration.js';
 import { REPO_ROOT, selectPresentations } from '../core/tooling/presentations.js';
+import { recordingFileProblems } from '../core/tooling/recording.js';
 import { createViteConfig } from '../core/tooling/viteConfig.js';
 
 const ASSET_PATH_PATTERN = /\/slides\/[A-Za-z0-9_\-./ ]+\.[A-Za-z0-9]+/g;
 const SOURCE_EXTENSIONS = /\.(js|jsx|json)$/;
+
+/** A slide's notes file: `notes.md` or `notes-<step>.md`. */
+const NOTES_FILE = /[\\/]notes(-\d+)?\.md$/;
 
 function filesUnder(dir) {
   if (!existsSync(dir)) return [];
@@ -79,6 +92,14 @@ for (const presentation of selectPresentations(process.argv.slice(2))) {
   errors.push(...problems);
   const drafts = new Set(loaded?.unlistedSlideIds ?? []);
   if (drafts.size > 0) warnings.push(`${drafts.size} draft slides (not in presentation.json): ${[...drafts].join(', ')}`);
+
+  for (const path of filesUnder(join(presentation.dir, 'slides')).filter((file) => NOTES_FILE.test(file))) {
+    const where = relative(presentation.dir, path).replaceAll('\\', '/');
+    (drafts.has(slideIdFromPath(path)) ? warnings : errors).push(...notesMathProblems(readFileSync(path, 'utf-8'), where));
+  }
+
+  errors.push(...readPronunciationMap(presentation).problems);
+  if (loaded) errors.push(...recordingFileProblems(presentation.dir, loaded.slides));
 
   const assets = referencedAssets(presentation);
   const publicDir = join(presentation.dir, 'public');

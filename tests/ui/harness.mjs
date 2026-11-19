@@ -5,7 +5,7 @@
  * The browser is Playwright's Chromium unless UI_TEST_BROWSER names an
  * installed channel (`msedge`, `chrome`).
  */
-import { mkdtempSync, readFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { chromium } from 'playwright';
@@ -22,12 +22,37 @@ export function fixture(name) {
   return { id: name, dir, manifest: JSON.parse(readFileSync(join(dir, 'presentation.json'), 'utf-8')) };
 }
 
+/**
+ * A presentation of `count` content slides, in sections of ten, written to a
+ * temporary directory: for what only a long deck shows, such as a row of
+ * navigation dots wider than the window.
+ */
+export function longDeck(count) {
+  const dir = mkdtempSync(join(tmpdir(), 'ui-long-deck-'));
+  const ids = Array.from({ length: count }, (_, index) => `slide-${index + 1}`);
+  for (const id of ids) {
+    mkdirSync(join(dir, 'slides', id), { recursive: true });
+    writeFileSync(join(dir, 'slides', id, 'content.json'), JSON.stringify({ layout: 'content', title: id, bullets: ['A point'] }));
+  }
+  mkdirSync(join(dir, 'layouts'));
+  writeFileSync(join(dir, 'layouts', 'index.js'), 'export default {};\n');
+  const sections = [];
+  for (let start = 0; start < count; start += 10) {
+    const number = start / 10 + 1;
+    sections.push({ id: `part-${number}`, title: `Part ${number}`, slides: ids.slice(start, start + 10) });
+  }
+  const manifest = { title: 'Long deck', sections };
+  writeFileSync(join(dir, 'presentation.json'), JSON.stringify(manifest));
+  return { id: 'long-deck', dir, manifest };
+}
+
 /** Local mode: a Vite development server for one presentation, on a free port. */
 export async function startLocal(presentation) {
-  const server = await createServer({
-    ...createViteConfig({ presentation, base: '/', live: false, server: { port: 0, host: '127.0.0.1' } }),
-    logLevel: 'error',
-  });
+  const config = createViteConfig({ presentation, base: '/', live: false, server: { port: 0, host: '127.0.0.1' } });
+  // The configuration serves files from the repository only; a generated
+  // presentation (`longDeck`) lives in a temporary directory outside it.
+  config.server.fs.allow.push(presentation.dir);
+  const server = await createServer({ ...config, logLevel: 'error' });
   await server.listen();
   return { url: server.resolvedUrls.local[0], close: () => server.close() };
 }

@@ -1,6 +1,6 @@
-import { motion } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
 import './ColabLinkSlide.css';
+import Text from '../../stage/Text.jsx';
 
 /**
  * A notebook the audience opens on their own devices: `title`,
@@ -15,30 +15,12 @@ export default function ColabLinkSlide({ slide }) {
 
   return (
     <div className="slide--colab">
-      <motion.h2
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4 }}
-      >
-        {slide.title}
-      </motion.h2>
+      <h2><Text>{slide.title}</Text></h2>
 
-      <motion.p
-        className="colab-description"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.4 }}
-      >
-        {slide.description}
-      </motion.p>
+      <p className="colab-description"><Text>{slide.description}</Text></p>
 
       {slide.steps && (
-        <motion.ol
-          className="colab-steps"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.25, duration: 0.4 }}
-        >
+        <ol className="colab-steps">
           {slide.steps.map((step, i) => (
             <li key={i} className="colab-step">
               {step.url
@@ -46,15 +28,10 @@ export default function ColabLinkSlide({ slide }) {
                 : step.text}
             </li>
           ))}
-        </motion.ol>
+        </ol>
       )}
 
-      <motion.div
-        className="colab-link-container"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3, duration: 0.5 }}
-      >
+      <div className="colab-link-container">
         {slide.imageSrc && (
           <img className="colab-hero-image" src={slide.imageSrc} alt="" />
         )}
@@ -76,7 +53,7 @@ export default function ColabLinkSlide({ slide }) {
         )}
 
         {slide.note && <div className="colab-note">{slide.note}</div>}
-      </motion.div>
+      </div>
     </div>
   );
 }

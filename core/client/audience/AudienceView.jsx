@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import useSlidePosition from '../navigation/useSlidePosition.js';
 import useKeyboardNavigation from '../navigation/useKeyboardNavigation.js';
@@ -8,6 +8,7 @@ import { LIVE_SERVER, PRESENTATION_ID } from '../live/liveApi.js';
 import { resetPoll } from '../live/polls.js';
 import { useAudienceChannel } from '../presenter/presenterChannel.js';
 import { usePresenterAccess } from '../presenter/presenterAccess.jsx';
+import { preloadSlides } from '../presentation/preload.js';
 import Stage from '../stage/Stage.jsx';
 import SlideFrame from '../stage/SlideFrame.jsx';
 import Navigation from './Navigation.jsx';
@@ -20,8 +21,18 @@ function openPresenterWindow() {
 }
 
 /**
- * The audience view: the current slide on the scaled stage, the progress
- * bar, the navigation bar, the toolbar, and the slide overview.
+ * The audience view: the progress bar (unless the presentation turns it
+ * off with `progressBar: false`), the current slide on the scaled
+ * stage, the navigation bar (with the toolbar), and the slide overview. The
+ * two bars and the stage are stacked, so the stage fits the space the bars
+ * leave and never sits under them.
+ *
+ * Every slide is got ready ahead of time (`preloadSlides`: its media, and
+ * what its layout prepares), so slides show at once on arrival. Once all
+ * of them are ready, `<body>` carries `data-slides-ready`.
+ *
+ * `?bars=hidden` in the URL leaves out both bars, so the stage fills the
+ * window; every input below still works. `npm run record` films this.
  *
  * Input comes from the keyboard (see `useKeyboardNavigation` for the keys),
  * swipes, the navigation bar, and the presenter window. While the live
@@ -39,6 +50,20 @@ export default function AudienceView({ presentation }) {
   });
   const { isFullscreen, toggleFullscreen } = useFullscreen();
   const [showOverview, setShowOverview] = useState(false);
+  const barsHidden = new URLSearchParams(window.location.search).get('bars') === 'hidden';
+
+  // The slides after the one the view opened on first, then the ones before it.
+  const openedAt = useState(navigation.position.index)[0];
+  useEffect(() => {
+    const { slides, layouts } = presentation;
+    const stop = preloadSlides([...slides.slice(openedAt), ...slides.slice(0, openedAt)], layouts, () => {
+      document.body.dataset.slidesReady = 'true';
+    });
+    return () => {
+      stop();
+      delete document.body.dataset.slidesReady;
+    };
+  }, [presentation, openedAt]);
 
   const onPresenterCommand = useCallback((command) => {
     if (command === 'next') navigation.next();
@@ -66,8 +91,10 @@ export default function AudienceView({ presentation }) {
   useSwipeNavigation({ next: navigation.next, previous: navigation.previous, enabled: !following });
 
   return (
-    <div className="presentation">
-      <ProgressBar current={navigation.position.index} total={presentation.slides.length} />
+    <div className={barsHidden ? 'presentation presentation--stage-only' : 'presentation'}>
+      {presentation.progressBar && !barsHidden && (
+        <ProgressBar current={navigation.position.index} total={presentation.slides.length} />
+      )}
 
       <Stage>
         <AnimatePresence mode="wait">
@@ -81,34 +108,35 @@ export default function AudienceView({ presentation }) {
         </AnimatePresence>
       </Stage>
 
-      {presentation.slides.length > 1 && (
-      <Navigation
-        slides={presentation.slides}
-        position={navigation.position}
-        isFirst={navigation.isFirst}
-        isLast={navigation.isLast}
-        next={navigation.next}
-        previous={navigation.previous}
-        goTo={navigation.goTo}
-        disabled={following}
-      />
+      {!barsHidden && (
+        <Navigation
+          slides={presentation.slides}
+          position={navigation.position}
+          isFirst={navigation.isFirst}
+          isLast={navigation.isLast}
+          next={navigation.next}
+          previous={navigation.previous}
+          goTo={navigation.goTo}
+          disabled={following}
+          toolbar={(
+            <div className="toolbar-buttons">
+              {presentation.backLink && (
+                <a className="toolbar-btn" href={presentation.backLink} title="Back">&#8592;</a>
+              )}
+              <button
+                className="toolbar-btn"
+                onClick={toggleFullscreen}
+                title={isFullscreen ? 'Exit fullscreen (F)' : 'Fullscreen (F)'}
+              >
+                &#x26F6;
+              </button>
+              <button className="toolbar-btn" onClick={openPresenterWindow} title="Open presenter notes (P)">
+                &#x1F4CB;
+              </button>
+            </div>
+          )}
+        />
       )}
-
-      <div className="toolbar-buttons">
-        {presentation.backLink && (
-          <a className="toolbar-btn" href={presentation.backLink} title="Back">&#8592;</a>
-        )}
-        <button
-          className="toolbar-btn"
-          onClick={toggleFullscreen}
-          title={isFullscreen ? 'Exit fullscreen (F)' : 'Fullscreen (F)'}
-        >
-          &#x26F6;
-        </button>
-        <button className="toolbar-btn" onClick={openPresenterWindow} title="Open presenter notes (P)">
-          &#x1F4CB;
-        </button>
-      </div>
 
       {showOverview && (
         <SlideOverview

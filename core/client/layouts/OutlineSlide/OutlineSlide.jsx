@@ -1,4 +1,5 @@
 import './OutlineSlide.css';
+import Text from '../../stage/Text.jsx';
 
 export default function OutlineSlide({ slide, sections }) {
   const activeId = slide.activeSection;
@@ -18,7 +19,7 @@ export default function OutlineSlide({ slide, sections }) {
           return (
             <li key={section.id} className={cls}>
               <span className="outline-number">{i + 1}</span>
-              {section.title}
+              <Text>{section.title}</Text>
             </li>
           );
         })}
