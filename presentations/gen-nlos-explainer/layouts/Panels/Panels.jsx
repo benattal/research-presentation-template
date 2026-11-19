@@ -46,9 +46,10 @@
  * (stitched or a panel's own) is an error.
  *
  * A build step shows its panels at once (the recording cross-fades
- * between steps). A video starts over when it is revealed, so a clip that appears on a
- * later step plays from its beginning; a stitched video starts over only
- * when its first panel appears. Timed boxes read the video's own clock, on
+ * between steps). A video starts over when it is revealed, so a clip that
+ * appears on a later step plays from its beginning; a stitched video starts
+ * over each time another of its panels appears, with the panels already
+ * showing. Timed boxes read the video's own clock, on
  * every animation frame and on every seek (how the record view moves a
  * video), so they stay on the frames they mark however the video is driven.
  */
@@ -135,14 +136,17 @@ function useBoxWindows(videoHolder, boxes, boxElements) {
   }, [videoHolder, boxes, boxElements]);
 }
 
-/** Sends the video inside `videoHolder`, if any, back to its start when `visible` turns on. */
-function useRestartOnReveal(videoHolder, visible) {
-  const wasVisible = useRef(visible);
+/**
+ * Sends the video inside `videoHolder`, if any, back to its start when more of it is revealed: `shown` is how
+ * many of its panels show (or whether its one panel does).
+ */
+function useRestartOnReveal(videoHolder, shown) {
+  const wasShown = useRef(Number(shown));
   useEffect(() => {
     const video = videoHolder.current?.querySelector('video');
-    if (video && visible && !wasVisible.current) video.currentTime = 0;
-    wasVisible.current = visible;
-  }, [videoHolder, visible]);
+    if (video && Number(shown) > wasShown.current) video.currentTime = 0;
+    wasShown.current = Number(shown);
+  }, [videoHolder, shown]);
 }
 
 function Boxes({ boxes, videoHolder }) {
@@ -164,9 +168,9 @@ function Boxes({ boxes, videoHolder }) {
   ));
 }
 
-/** One stitched video over the block of cells it covers; `visible` while any of its panels shows. */
-function StitchedVideo({ video, geometry, holder, visible }) {
-  useRestartOnReveal(holder, visible);
+/** One stitched video over the block of cells it covers; `shown` is how many of its panels show. */
+function StitchedVideo({ video, geometry, holder, shown }) {
+  useRestartOnReveal(holder, shown);
   return (
     <div ref={holder} className="panels-stitched" style={geometry.box(video)}>
       <Media item={{ type: 'video', src: video.src, poster: video.poster }} className="panels-media panels-media--stitched" />
@@ -267,7 +271,7 @@ export default function Panels({ slide, buildStep }) {
                 video={video}
                 geometry={geometry}
                 holder={holders[v]}
-                visible={states.some((state, i) => videoOf[i] === v && state !== 'hidden')}
+                shown={states.filter((state, i) => videoOf[i] === v && state !== 'hidden').length}
               />
             ))}
             {panels.map((panel, i) => (
