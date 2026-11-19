@@ -1,1 +1,1 @@
-The video of propagating light changes with the hidden object.
+so the direct light is the same.

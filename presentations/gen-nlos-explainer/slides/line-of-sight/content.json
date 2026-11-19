@@ -2,11 +2,11 @@
   "layout": "panels",
   "title": "Captured scenes: same line of sight",
   "grid": {
-    "columns": 3,
+    "columns": 4,
     "rows": 2,
-    "panelWidth": 240,
-    "panelHeight": 240,
-    "columnGap": 44,
+    "panelWidth": 224,
+    "panelHeight": 224,
+    "columnGap": 36,
     "rowGap": 40
   },
   "rowLabels": [
@@ -14,44 +14,33 @@
     "Hidden globe"
   ],
   "buildSteps": [
+    "the two scenes",
     "the shared input view",
-    "the hidden objects",
-    "the light videos"
+    "direct light",
+    "indirect light"
   ],
   "videos": [
     {
-      "src": "/slides/line-of-sight/light-videos.mp4",
+      "src": "/slides/line-of-sight/direct-light.mp4",
+      "poster": "/slides/line-of-sight/direct-light.poster.jpg",
       "row": 0,
       "column": 2,
       "rows": 2,
-      "columns": 1,
-      "poster": "/slides/line-of-sight/light-videos.poster.jpg"
+      "columns": 1
+    },
+    {
+      "src": "/slides/line-of-sight/indirect-light.mp4",
+      "poster": "/slides/line-of-sight/indirect-light.poster.jpg",
+      "row": 0,
+      "column": 3,
+      "rows": 2,
+      "columns": 1
     }
   ],
   "panels": [
     {
       "row": 0,
       "column": 0,
-      "label": "Input view",
-      "media": {
-        "type": "image",
-        "src": "/slides/line-of-sight/input-view.png",
-        "alt": "A red textbook standing on a second book, in front of white walls"
-      }
-    },
-    {
-      "row": 1,
-      "column": 0,
-      "media": {
-        "type": "image",
-        "src": "/slides/line-of-sight/input-view.png",
-        "alt": "The same view"
-      }
-    },
-    {
-      "row": 0,
-      "column": 1,
-      "step": 1,
       "label": "Reference photo",
       "media": {
         "type": "image",
@@ -69,8 +58,7 @@
     },
     {
       "row": 1,
-      "column": 1,
-      "step": 1,
+      "column": 0,
       "media": {
         "type": "image",
         "src": "/slides/line-of-sight/globe-reference.png",
@@ -87,14 +75,46 @@
     },
     {
       "row": 0,
+      "column": 1,
+      "step": 1,
+      "label": "Input view",
+      "media": {
+        "type": "image",
+        "src": "/slides/line-of-sight/input-view.png",
+        "alt": "A red textbook standing on a second book, in front of white walls"
+      }
+    },
+    {
+      "row": 1,
+      "column": 1,
+      "step": 1,
+      "media": {
+        "type": "image",
+        "src": "/slides/line-of-sight/input-view.png",
+        "alt": "The same view"
+      }
+    },
+    {
+      "row": 0,
       "column": 2,
       "step": 2,
-      "label": "Propagating light"
+      "label": "Direct light"
     },
     {
       "row": 1,
       "column": 2,
       "step": 2
+    },
+    {
+      "row": 0,
+      "column": 3,
+      "step": 3,
+      "label": "Indirect light"
+    },
+    {
+      "row": 1,
+      "column": 3,
+      "step": 3
     }
   ]
 }
