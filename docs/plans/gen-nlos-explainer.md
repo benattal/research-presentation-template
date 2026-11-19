@@ -152,11 +152,11 @@ classifier-free guidance result and the ablations are left out.
 | 10 | Video generation | diagram: three streams and noisy target tokens into the video diffusion transformer; the output video plays | drawn | building |
 | 11 | NLOS reconstruction | flatland: (1) planar relay wall versus the visible surfaces of a scene as relays; (2) forward and adjoint operators, CGLS iterations sharpening | canvas, labeled illustration | building |
 | 12 | Reconstruction with nonplanar relays | rotating renders of the reconstructed volumes: ours, CC-SOCR, 3D-GTR, on the simulated room and captured scenes | rendered from the bucket's volumes (`nonplanar_nlos_results/*.npy`) | planned |
-|  | **results** (card) |  |  |  |
+|  | **results** (card) |  |  | drafted |
 | 13 | Training data (simulated) | tabletop digital twins; Infinigen rooms | bucket real2sim, website room GT | planned |
-| 14 | Captured scenes: same line of sight | (1) the shared input view; (2) reference photos: lamp or globe behind the occluder; (3) the two videos of propagating light side by side: the indirect light differs | website `lamp.png`, `*-ref-square.webp`, `{lamp,globe}-light-clean.mp4` | planned |
-| 15 | Captured scenes: comparison | per method, one step each: GEN3C\* (0/20 seeds), HOLI-1-to-3\* (fails), ours (20/20 seeds); then all play | `rgb_only`, Dropbox HOLI folder, `prediction` | planned |
-| 16 | Simulated room-scale scenes | ground truth and ours, then GEN3C\*, HOLI-1-to-3\*, Lyra 2; red boxes on hidden regions; second room | `test100_paper_8020_cfg3`, Dropbox HOLI folder | planned |
+| 14 | Captured scenes: same line of sight | rows: hidden lamp, hidden globe; (1) the shared input view; (2) reference photos, the hidden object boxed; (3) the two videos of propagating light, in step | website `lamp.png`, `*-ref-square.webp`, `{lamp,globe}-light-clean.mp4` | drafted |
+| 15 | Captured scenes: comparison | rows: hidden lamp, hidden globe; reference photo, then one method per step, all in step: GEN3C\* (0/20 seeds), HOLI-1-to-3\* (method fails), ours (20/20 seeds); red boxes on the hidden region at the held final view | `6_QualExperimental` `rgb_only`, `prediction`; Dropbox HOLI folder | drafted |
+| 16 | Simulated room-scale scenes | two rooms, all methods in step: (1) ground truth and ours; (2) GEN3C\*; (3) HOLI-1-to-3\* and Lyra 2 (no boxes yet) | `test100_paper_8020_cfg3`, Dropbox HOLI folder | drafted |
 | 17 | Summary | takeaway lines one per step over a result video; limitation and outlook | — | planned |
 | 18 | Title card | as slide 1 | — | planned |
 

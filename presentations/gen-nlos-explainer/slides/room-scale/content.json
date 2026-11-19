@@ -1,0 +1,80 @@
+{
+  "layout": "panels",
+  "title": "Simulated room-scale scenes",
+  "grid": {
+    "columns": 5,
+    "rows": 2,
+    "panelWidth": 208,
+    "panelHeight": 208,
+    "columnGap": 28,
+    "rowGap": 40
+  },
+  "buildSteps": [
+    "ground truth and ours",
+    "GEN3C*",
+    "HOLI-1-to-3* and Lyra 2"
+  ],
+  "videos": [
+    {
+      "src": "/slides/room-scale/gt-ours-gen3c-holi-lyra2.mp4",
+      "row": 0,
+      "column": 0,
+      "rows": 2,
+      "columns": 5
+    }
+  ],
+  "panels": [
+    {
+      "row": 0,
+      "column": 0,
+      "label": "Ground truth"
+    },
+    {
+      "row": 1,
+      "column": 0
+    },
+    {
+      "row": 0,
+      "column": 1,
+      "label": "Ours",
+      "ours": true
+    },
+    {
+      "row": 1,
+      "column": 1
+    },
+    {
+      "row": 0,
+      "column": 2,
+      "step": 1,
+      "label": "GEN3C*"
+    },
+    {
+      "row": 1,
+      "column": 2,
+      "step": 1
+    },
+    {
+      "row": 0,
+      "column": 3,
+      "step": 2,
+      "label": "HOLI-1-to-3*"
+    },
+    {
+      "row": 1,
+      "column": 3,
+      "step": 2
+    },
+    {
+      "row": 0,
+      "column": 4,
+      "step": 2,
+      "label": "Lyra 2"
+    },
+    {
+      "row": 1,
+      "column": 4,
+      "step": 2
+    }
+  ]
+}

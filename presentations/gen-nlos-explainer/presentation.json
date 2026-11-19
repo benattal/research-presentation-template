@@ -13,6 +13,16 @@
         "light-video",
         "novel-views"
       ]
+    },
+    {
+      "id": "results",
+      "title": "Results",
+      "slides": [
+        "card-results",
+        "line-of-sight",
+        "captured-comparison",
+        "room-scale"
+      ]
     }
   ]
 }
