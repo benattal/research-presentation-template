@@ -426,6 +426,41 @@ slide rules are in [slide style](../style/slides.md) and
 None open. Resolved: "my presentations bucket" is the R2 bucket
 `presentations` (the user, 2026-11-18).
 
+## 2026-11-19 14:50 — two machines on this branch; cycle 1 vetting
+
+User directions (2026-11-19): see "Standing directions", including the
+collaborator's on the Mac (Optima, no orange or yellow text, three sizes).
+
+- Two sessions commit to `gen-nlos-explainer`: this one (Windows) and the
+  collaborator's (a Mac). A push from here was rejected; their restyle
+  (43362c9) was merged, with one conflict in the capture slide's stylesheet
+  resolved by keeping the redesigned slide's classes and applying their
+  styling to them. Rule from now on: fetch and merge before every push.
+- Their theme stands: white Optima, green for "ours", 40 / 22 / 16 px.
+  It replaces this session's orange titles and 44 / 26 / 22 / 17 scale.
+  On Windows the face falls back to Candara; lining figures are now set
+  for every slide (1cb310a), since Candara's old-style numerals made
+  "2027" and "20/20" uneven.
+- Pass (a) of cycle 1 is complete: the capture slide's redesign is merged
+  (four steps: the scene's own light video, computed from the geometry;
+  one measurement with the time of flight marked; three other visible
+  points; the scan filling in the video).
+- Vetting (b): the content review is in (findings and their handling
+  below, when consolidated); the layout review and the animation review
+  are running, both told of the new theme.
+- Content review, handled so far (8e5e156): shorter summary notes; the
+  input view and direct light in one step on the line-of-sight slide; no
+  "X gives Y"; the reconstruction slide says it returns to the first part;
+  seed notes say what is counted; one name for the steady-state RGB image;
+  Image only / Image and propagating light; Stanford f-k dataset. Declined:
+  dropping a section card (the user asked for clear delineation of
+  sections). Open: red boxes and row labels on the simulated comparison;
+  related work's first step split in two and an "Ours" tile in place of the
+  green line; the footnote for the asterisks on the comparison slides; a
+  box on the indirect difference; the comparison's colormap against the
+  method slides'; scan points and the adjoint arrow sharing colors with
+  other meanings (the user has approved those slides' look: ask).
+
 ## 2026-11-19 14:25 — cycle 1, pass (a): merged so far
 
 User directions (2026-11-19): see "Standing directions" (the refinement
