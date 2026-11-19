@@ -38,6 +38,8 @@
      whole deck, without a border, and its corner radius. */
   --bg-panel: #141414;
   --radius-panel: 10px;
+  --panel-padding: 14px; /* between a panel's edge and its content */
+  --panel-gap: 14px;     /* between two panels */
 
   --direct: #ffffff;
   --indirect: #e69f00;
