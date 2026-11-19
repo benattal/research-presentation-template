@@ -149,7 +149,7 @@
 .lidar-capture-plot-tick {
   color: var(--text-secondary);
   font-size: var(--type-small);
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: lining-nums tabular-nums;
   transform: translateX(-50%);
 }
 
