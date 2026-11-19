@@ -1,0 +1,46 @@
+{
+  "layout": "annotatedPhoto",
+  "title": "Hardware prototype",
+  "buildSteps": [
+    "pulsed laser",
+    "scanning mirrors",
+    "single-photon avalanche diode",
+    "steady-state image"
+  ],
+  "photo": {
+    "src": "/slides/hardware/lidar-prototype.jpg",
+    "alt": "The lidar prototype on an optical table",
+    "width": 624,
+    "height": 500
+  },
+  "labels": [
+    {
+      "text": "pulsed laser",
+      "x": 0.735,
+      "y": 0.3,
+      "side": "right",
+      "step": 0
+    },
+    {
+      "text": "scanning mirrors",
+      "x": 0.4,
+      "y": 0.6,
+      "side": "left",
+      "step": 1
+    },
+    {
+      "text": "single-photon\navalanche diode",
+      "x": 0.2,
+      "y": 0.22,
+      "side": "left",
+      "step": 2
+    }
+  ],
+  "inset": {
+    "src": "/slides/hardware/steady-state-image.png",
+    "alt": "The steady-state image of the vase scene",
+    "label": "Steady-state image",
+    "step": 3,
+    "size": 210
+  }
+}

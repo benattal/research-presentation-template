@@ -15,6 +15,14 @@
       ]
     },
     {
+      "id": "propagating-light",
+      "title": "Propagating light",
+      "slides": [
+        "card-propagating-light",
+        "hardware"
+      ]
+    },
+    {
       "id": "results",
       "title": "Results",
       "slides": [

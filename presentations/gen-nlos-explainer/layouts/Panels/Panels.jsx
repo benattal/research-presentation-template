@@ -58,6 +58,12 @@ const LABEL_BAND = 36;
 const NOTE_BAND = 32;
 /** Opacity of a panel outside the step's spotlight. */
 const DIMMED = 0.25;
+/**
+ * Stage pixels a cover reaches past its cell, into the gaps: the stage is
+ * scaled, so a stitched video's edge can fall a fraction of a pixel outside
+ * the cell it is drawn in.
+ */
+const MASK_BLEED = 2;
 /** Seconds a timed box takes to fade in after `from` and out before `to`. */
 const BOX_FADE_S = 0.15;
 
@@ -172,7 +178,18 @@ function Panel({ panel, geometry, state, stitchedHolder }) {
   const box = geometry.box(panel);
   return (
     <>
-      {!panel.media && <motion.div className="panels-mask" style={box} {...fade(1 - opacity)} />}
+      {!panel.media && (
+        <motion.div
+          className="panels-mask"
+          style={{
+            left: box.left - MASK_BLEED,
+            top: box.top - MASK_BLEED,
+            width: box.width + 2 * MASK_BLEED,
+            height: box.height + 2 * MASK_BLEED,
+          }}
+          {...fade(1 - opacity)}
+        />
+      )}
       <motion.div className="panels-panel" style={box} {...fade(opacity)}>
         {panel.media && (
           <div ref={ownHolder} className="panels-own-media">

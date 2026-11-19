@@ -1,6 +1,6 @@
 {
   "layout": "panels",
-  "title": "Simulated room-scale scenes",
+  "title": "Simulated scenes: comparison",
   "grid": {
     "columns": 5,
     "rows": 2,
