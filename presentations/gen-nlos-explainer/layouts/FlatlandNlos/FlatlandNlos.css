@@ -36,7 +36,7 @@
   position: absolute;
   left: 0;
   width: 100%;
-  font-size: var(--type-label);
+  font-size: var(--type-text);
   line-height: 26px;
   color: var(--text-primary);
   text-align: center;
@@ -64,7 +64,7 @@
 }
 
 .flatland-nlos-label--adjoint {
-  color: var(--indirect);
+  color: var(--text-primary);
 }
 
 .flatland-nlos-label--count {

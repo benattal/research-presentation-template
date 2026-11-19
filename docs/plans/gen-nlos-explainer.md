@@ -139,10 +139,15 @@ declined and why). Gate 1 runs its build and look steps per section:
   scenes: comparison").
 - **Composed slides, not pasted figures.** Slides are built from result
   media and our own visuals in designed layouts.
-- **Look.** Colors from the reference decks: black, white text, orange
-  `#FFCC66` titles and accents, a Futura-like face (Jost). Formatting
-  from the light-transport lecture: title at top left, the visual filling
-  the slide, short labels, credits at bottom right. No subtitle lines.
+- **Look.** Styled after the SIGGRAPH Asia holography deck
+  (`priorart/SIGASIApresentation_FINAL.pptx`, local): black slides, all
+  text white in Optima, one weight, no orange or yellow text; "ours" in
+  that deck's green `#54FF6B`; amber stays only on marks of indirect
+  light. Three text sizes and no others: 40 px titles and cards, 22 px
+  text and labels, 16 px ticks, notes, and credits (`theme.css`).
+  Formatting from the light-transport lecture: title at top left, the
+  visual filling the slide, short labels, credits at bottom right. No
+  subtitle lines.
 - **Words.** The paper's terms and phrasing, changed only for clarity;
   plain statements; no metaphors, no anthropomorphism, no possessives
   that give an inanimate thing something; "feed-forward" for the method.

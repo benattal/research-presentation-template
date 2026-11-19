@@ -1,7 +1,6 @@
 /* Related work: columns of square pictures (one video behind them all), a
    limitation line under each, the contribution line under all. */
 .slide--related-work {
-  --related-work-contribution: #6fd08c;
   --related-work-picture: 280px;
   --related-work-column: 440px;
   --related-work-gap: 40px;
@@ -51,8 +50,8 @@
 .related-work-name {
   height: 30px;
   margin-bottom: 12px;
-  font-size: var(--type-label);
-  font-weight: 500;
+  font-size: var(--type-text);
+  font-weight: 400;
   line-height: 30px;
   color: var(--text-primary);
   white-space: nowrap;
@@ -89,7 +88,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  font-size: var(--type-label);
+  font-size: var(--type-text);
   line-height: 28px;
 }
 
@@ -108,9 +107,9 @@
 }
 
 .related-work-contribution {
-  font-size: var(--type-statement);
-  font-weight: 500;
+  font-size: var(--type-text);
+  font-weight: 400;
   line-height: 32px;
   text-align: center;
-  color: var(--related-work-contribution);
+  color: var(--accent);
 }

@@ -30,7 +30,7 @@
 
 .summary-label {
   margin-top: 8px;
-  font-size: var(--type-label);
+  font-size: var(--type-text);
   line-height: 26px;
   text-align: center;
   color: var(--accent);
@@ -45,7 +45,7 @@
 }
 
 .summary-point {
-  font-size: var(--type-statement);
+  font-size: var(--type-text);
   line-height: 36px;
   color: var(--text-primary);
 }

@@ -25,7 +25,7 @@ import { LineSegments2 } from 'three/addons/lines/LineSegments2.js';
 import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js';
 
 /** Colors of the drawing, in the theme's roles (`--direct`, `--accent`). */
-const COLORS = { inputCamera: 0xffffff, target: 0xffcc66 };
+const COLORS = { inputCamera: 0xffffff, target: 0x54ff6b };
 
 /** Depth of the image plane each camera is drawn with, m. */
 const INPUT_PLANE_DEPTH = 0.42;

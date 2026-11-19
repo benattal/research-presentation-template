@@ -94,7 +94,7 @@
   position: absolute;
   left: 0;
   bottom: calc(100% + 6px);
-  font-size: var(--type-label);
+  font-size: var(--type-text);
   line-height: 24px;
   white-space: nowrap;
   color: var(--text-primary);
@@ -122,7 +122,7 @@
 }
 
 .method-scene-note--direct { color: var(--direct); }
-.method-scene-note--indirect { color: var(--indirect); }
+.method-scene-note--indirect { color: var(--text-primary); }
 .method-scene-note--accent { color: var(--accent); }
 
 .method-scene-diagram {

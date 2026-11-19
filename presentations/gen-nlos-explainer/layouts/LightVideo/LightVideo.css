@@ -34,7 +34,7 @@
   bottom: 8px;
   min-width: 5.2em;
   text-align: right;
-  font-size: var(--type-label);
+  font-size: var(--type-text);
   line-height: 28px;
   font-variant-numeric: tabular-nums;
   color: var(--text-primary);
@@ -64,7 +64,7 @@
 
 .light-video-caption {
   margin-top: 6px;
-  font-size: var(--type-label);
+  font-size: var(--type-text);
   line-height: 26px;
   text-align: center;
   white-space: nowrap;
@@ -72,7 +72,7 @@
 }
 
 .light-video-caption--direct { color: var(--direct); }
-.light-video-caption--indirect { color: var(--indirect); }
+.light-video-caption--indirect { color: var(--text-primary); }
 
 .light-video-leader line {
   stroke: var(--text-muted);
@@ -126,6 +126,5 @@
   left: 0;
   width: 2px;
   margin-left: -1px;
-  /* White: the accent is close to the amber of the indirect band it crosses. */
   background: var(--text-primary);
 }
