@@ -1,0 +1,23 @@
+{
+  "title": "Generative View Synthesis from Propagating Light",
+  "defaultTransition": "fade",
+  "sections": [
+    {
+      "id": "introduction",
+      "title": "Introduction",
+      "slides": [
+        "title",
+        "outline-introduction",
+        "motivation"
+      ]
+    },
+    {
+      "id": "conclusion",
+      "title": "Conclusion",
+      "slides": [
+        "outline-conclusion",
+        "closing"
+      ]
+    }
+  ]
+}

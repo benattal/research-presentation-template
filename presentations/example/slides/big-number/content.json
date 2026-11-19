@@ -1,8 +1,0 @@
-{
-  "layout": "bigNumber",
-  "sectionLabel": "A layout of your own",
-  "value": "13",
-  "caption": "core layouts ship with the template",
-  "explanation": "A presentation adds its own layouts in layouts/index.js. This one is presentations/example/layouts/BigNumberSlide.",
-  "buildSteps": [{}, {}]
-}

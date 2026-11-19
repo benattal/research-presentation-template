@@ -82,8 +82,20 @@ example with the project's presentations.
 
 ## This branch
 
-`main`: the template. `presentations/example/` demonstrates the format and is
-the target of the template's own checks and captures.
+`gen-nlos-explainer`: one presentation, `presentations/gen-nlos-explainer/`,
+a narrated explainer video of 4 to 5 minutes for the supplemental material
+of the anonymous CVPR submission "Generative View Synthesis from
+Propagating Light" (paper source in `../gen-nlos`); its
+[plan](docs/plans/gen-nlos-explainer.md) orders the work.
+
+- The deck and the video stay anonymous: no author, institution, or lab
+  names, no logos except a vendor's on equipment, no people, no links.
+- Its assets are in the R2 bucket `presentations`, not `tcig-projects`:
+  run the asset commands with `ASSETS_REMOTE=tcig:`
+  (`ASSETS_REMOTE=tcig: npm run assets -- pull gen-nlos-explainer`).
+- The narration is synthesized and transcribed locally; the script does
+  not go to cloud services before publication.
+- Local hosting only: no live gateway and no poll layouts.
 
 ## Project model
 

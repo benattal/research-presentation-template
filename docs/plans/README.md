@@ -64,3 +64,5 @@ The measurable gates that close the plan.
 
 - [Template restructure](template-restructure.md), tracked in
   [its tracker](../tracking/template-restructure.md).
+- [Generative view synthesis explainer](gen-nlos-explainer.md), tracked in
+  [its tracker](../tracking/gen-nlos-explainer.md).

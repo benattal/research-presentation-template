@@ -1,8 +1,0 @@
-{
-  "layout": "poll",
-  "sectionLabel": "Talking with the audience",
-  "title": "Quick poll",
-  "pollId": "favorite-layout",
-  "question": "Which layout would you use first?",
-  "options": ["title", "content", "progressiveBuild", "A custom one"]
-}
