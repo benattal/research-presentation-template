@@ -54,6 +54,9 @@
 }
 
 .slide {
+  /* Lining figures: Candara, the fallback where Optima is not installed
+     (Windows), defaults to old-style ones. No effect on Optima. */
+  font-variant-numeric: lining-nums;
   padding: 40px 56px 44px;
 }
 
