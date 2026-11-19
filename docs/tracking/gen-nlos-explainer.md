@@ -20,6 +20,14 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- "The warped RGB animation also resets between pipeline slides. I might
+  just make the others beside the first that animates the warped RGB
+  originally just show the last frame?" The streams animate on
+  `conditioning` only; later slides show stills of their last frame.
+- "Can you also start working on and refining the script (for the
+  voiceover)? It should read well." Voiceover v3 (715 words) is in the
+  notes and in `data/gen-nlos/script/voiceover-v3.md`; an editor is
+  reviewing it by ear.
 - "Remember to vet animations. This should be added to the plan." The
   plan's refinement loop has a step for it and the completion criteria
   require it.
