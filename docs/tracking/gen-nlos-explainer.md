@@ -18,6 +18,14 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- "The arrow key controls are still a bit unresponsive. Could you also add
+  an option to hide the top progress bar?" Measured: a slide change took
+  0.8 s (fade out 0.4 s, then fade in 0.4 s); with `defaultTransition:
+  none` it takes about 20 ms, and this deck uses it. New framework option
+  `progressBar: false` in presentation.json (62761e5), used here.
+- "Could you also update the storyboard as the slides evolve so that I can
+  provide comments?" The plan's storyboard has a status column and is
+  updated in the same commit as the slides it describes.
 - "The gates do not have to be sequential on slides. It is more
   sequential on (a) getting slides, (b) capturing/recording a video".
   Sections are built in parallel; recording waits for the slides.

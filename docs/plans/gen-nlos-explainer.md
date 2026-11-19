@@ -129,34 +129,36 @@ Each section opens with a silent card. Every key press changes what is on
 screen: one narration beat is one build step with its own visual change.
 Titles name what is on screen. Scenes: the vase capture carries the
 opening and the method; lamp and globe and the two paper rooms
-carry the results. The deck does not follow the paper's structure: the
+carry the results. This table is kept current as slides change (status:
+planned, building, drafted, refined), so comments can be made against it.
+The deck does not follow the paper's structure: the
 classifier-free guidance result and the ablations are left out.
 
-| # | Slide (title) | Steps: what appears | Source |
-|---|---|---|---|
-| 1 | Title card | title, "CVPR 2027 Submission" | — |
-| | **problem statement** (card) | | |
-| 2 | Novel views from a single image | (1) the input view of the vase scene; (2) the image-only generation along the trajectory, red box on the region hidden in the input view; (3) the reference photo beside it: a different object | website `vase.png`, teaser `rgb_only`, reference photo |
-| 3 | Video of propagating light | (1) the captured light video of the same scene, with a time readout; (2) direct light marked (white), then indirect (orange) | website `teaser-light-clean.mp4` |
-| 4 | Novel views from propagating light | image-only and ours side by side, reference photo; red boxes | teaser `rgb_only`, `prediction` |
-| | **propagating light** (card) | | |
-| 5 | Lidar capture | WebGL render of the lidar hardware and the website's corner scene (relay walls, teapot occluder, hidden bunny), in the manner of the reference decks' hardware renders, parts labeled; (1) a pulse travels to a visible point; (2) direct return, the measurement inset shows the first peak: depth; (3) wavefront to the hidden object and back, the weak later peak; (4) the scan over all visible surfaces | three.js |
-| 6 | Hardware prototype | the photo with the parts named one by one (laser, scanning mirrors, beamsplitter, SPAD) | `hardware_figure/IMG_4018`, stickers blurred |
-| | **related work** (card) | | |
-| 7 | Related work | two columns, one lit per step: NLOS imaging and generative view synthesis, each with one red limitation line; last step: our contribution lines in green (HOLI-1-to-3 is not given a column) | our own results as thumbnails |
-| | **method** (card) | | |
-| 8 | Processing the capture | WebGL, the vase scene: (1) RGB image and direct light give the colored point cloud; (2) indirect light gives the NLOS volume behind the occluder | three.js: `rgbd_aligned.npz`, `nlos.npy` |
-| 9 | Conditioning videos | same 3D view, the camera moves along the target trajectory; warped RGB, MIP, MIP depth appear as synchronized panels | three.js, teaser `presentation/*.mp4` |
-| 10 | Video generation | diagram: three streams and noisy target tokens into the video diffusion transformer; the output video plays | drawn |
-| 11 | NLOS reconstruction | flatland: (1) planar relay wall versus the visible surfaces of a scene as relays; (2) forward and adjoint operators, CGLS iterations sharpening | canvas, labeled illustration |
-| 12 | Reconstruction with nonplanar relays | rotating renders of the reconstructed volumes: ours, CC-SOCR, 3D-GTR, on the simulated room and captured scenes | rendered from the bucket's volumes (`nonplanar_nlos_results/*.npy`) |
-| | **results** (card) | | |
-| 13 | Training data (simulated) | tabletop digital twins; Infinigen rooms | bucket real2sim, website room GT |
-| 14 | Captured scenes: same line of sight | (1) the shared input view; (2) reference photos: lamp or globe behind the occluder; (3) the two videos of propagating light side by side: the indirect light differs | website `lamp.png`, `*-ref-square.webp`, `{lamp,globe}-light-clean.mp4` |
-| 15 | Captured scenes: comparison | per method, one step each: GEN3C\* (0/20 seeds), HOLI-1-to-3\* (fails), ours (20/20 seeds); then all play | `rgb_only`, Dropbox HOLI folder, `prediction` |
-| 16 | Simulated room-scale scenes | ground truth and ours, then GEN3C\*, HOLI-1-to-3\*, Lyra 2; red boxes on hidden regions; second room | `test100_paper_8020_cfg3`, Dropbox HOLI folder |
-| 17 | Summary | takeaway lines one per step over a result video; limitation and outlook | — |
-| 18 | Title card | as slide 1 | — |
+| # | Slide (title) | Steps: what appears | Source | Status |
+| --- | --- | --- | --- | --- |
+| 1 | Title card | title, "CVPR 2027 Submission" | — | drafted |
+|  | **problem statement** (card) |  |  | drafted |
+| 2 | Novel views from a single image | (1) the input view of the vase scene; (2) the views generated from the image alone, the camera moving right, a red box on the hidden region when it comes into view; (3) the reference photo, the real vase boxed | website `vase.png`, teaser `rgb_only`, reference photo | drafted |
+| 3 | Video of propagating light | (1) the captured light video with a time readout, a time axis with a playhead; (2) direct light: its intervals on the axis and a still at 5.98 ns; (3) indirect light: its interval and a still at 11.06 ns | website `teaser-light-clean.mp4` (16 ps per frame from 5.12 ns) | drafted |
+| 4 | Novel views from propagating light | (1) generation without and with propagating light, side by side and in step, red boxes on the hidden region; (2) the reference photo | teaser `rgb_only`, `prediction` | drafted |
+|  | **propagating light** (card) |  |  |  |
+| 5 | Lidar capture | WebGL render of the lidar hardware and the website's corner scene (relay walls, teapot occluder, hidden bunny), in the manner of the reference decks' hardware renders, parts labeled; (1) a pulse travels to a visible point; (2) direct return, the measurement inset shows the first peak: depth; (3) wavefront to the hidden object and back, the weak later peak; (4) the scan over all visible surfaces | three.js | building |
+| 6 | Hardware prototype | the photo with the parts named one by one (laser, scanning mirrors, beamsplitter, SPAD) | `hardware_figure/IMG_4018`, stickers blurred | planned |
+|  | **related work** (card) |  |  |  |
+| 7 | Related work | two columns, one lit per step: NLOS imaging and generative view synthesis, each with one red limitation line; last step: our contribution lines in green (HOLI-1-to-3 is not given a column) | our own results as thumbnails | planned |
+|  | **method** (card) |  |  |  |
+| 8 | Processing the capture | WebGL, the vase scene: (1) RGB image and direct light give the colored point cloud; (2) indirect light gives the NLOS volume behind the occluder | three.js: `rgbd_aligned.npz`, `nlos.npy` | building |
+| 9 | Conditioning videos | same 3D view, the camera moves along the target trajectory; warped RGB, MIP, MIP depth appear as synchronized panels | three.js, teaser `presentation/*.mp4` | building |
+| 10 | Video generation | diagram: three streams and noisy target tokens into the video diffusion transformer; the output video plays | drawn | building |
+| 11 | NLOS reconstruction | flatland: (1) planar relay wall versus the visible surfaces of a scene as relays; (2) forward and adjoint operators, CGLS iterations sharpening | canvas, labeled illustration | building |
+| 12 | Reconstruction with nonplanar relays | rotating renders of the reconstructed volumes: ours, CC-SOCR, 3D-GTR, on the simulated room and captured scenes | rendered from the bucket's volumes (`nonplanar_nlos_results/*.npy`) | planned |
+|  | **results** (card) |  |  |  |
+| 13 | Training data (simulated) | tabletop digital twins; Infinigen rooms | bucket real2sim, website room GT | planned |
+| 14 | Captured scenes: same line of sight | (1) the shared input view; (2) reference photos: lamp or globe behind the occluder; (3) the two videos of propagating light side by side: the indirect light differs | website `lamp.png`, `*-ref-square.webp`, `{lamp,globe}-light-clean.mp4` | planned |
+| 15 | Captured scenes: comparison | per method, one step each: GEN3C\* (0/20 seeds), HOLI-1-to-3\* (fails), ours (20/20 seeds); then all play | `rgb_only`, Dropbox HOLI folder, `prediction` | planned |
+| 16 | Simulated room-scale scenes | ground truth and ours, then GEN3C\*, HOLI-1-to-3\*, Lyra 2; red boxes on hidden regions; second room | `test100_paper_8020_cfg3`, Dropbox HOLI folder | planned |
+| 17 | Summary | takeaway lines one per step over a result video; limitation and outlook | — | planned |
+| 18 | Title card | as slide 1 | — | planned |
 
 ## Visualizations
 

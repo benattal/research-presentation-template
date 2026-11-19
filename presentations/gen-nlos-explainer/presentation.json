@@ -1,6 +1,7 @@
 {
   "title": "Generative View Synthesis from Propagating Light",
-  "defaultTransition": "fade",
+  "defaultTransition": "none",
+  "progressBar": false,
   "sections": [
     {
       "id": "problem-statement",
