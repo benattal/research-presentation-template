@@ -10,8 +10,8 @@
     "rowGap": 0
   },
   "buildSteps": [
-    "the input view",
-    "views generated from it",
+    "the input view and the views generated from it",
+    "the hidden region",
     "the actual scene"
   ],
   "panels": [
@@ -28,7 +28,6 @@
     {
       "row": 0,
       "column": 1,
-      "step": 1,
       "label": "Generated novel views",
       "media": {
         "type": "video",
@@ -43,7 +42,8 @@
           "width": 0.42,
           "height": 0.62,
           "from": 1.9,
-          "to": 4.95
+          "to": 4.95,
+          "step": 1
         }
       ]
     },
@@ -64,7 +64,9 @@
           "width": 0.28,
           "height": 0.43
         }
-      ]
+      ],
+      "note": "Red: hidden in the input view",
+      "noteKind": "hidden"
     }
   ]
 }

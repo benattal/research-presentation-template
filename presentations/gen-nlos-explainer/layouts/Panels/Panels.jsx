@@ -28,13 +28,18 @@
  *                 ours           true for our method: the label in the
  *                                accent color;
  *                 note           a short line centered under the panel;
+ *                 noteKind       'hidden' draws the note in the color of the
+ *                                hidden-region boxes, for a note that says
+ *                                what the box marks;
  *                 step           the 0-based build step it appears at
  *                                (default 0); before it, its part of a
  *                                stitched video is masked;
  *                 id             its name in `spotlights`;
  *                 boxes          hidden-region rectangles, each { x, y,
  *                                width, height } as fractions of the panel,
- *                                with optional { from, to }: the seconds of
+ *                                with optional `step` (the build step it
+ *                                appears at; the panel's video starts over
+ *                                then) and { from, to }: the seconds of
  *                                the panel's video (its own or the stitched
  *                                one) during which the box shows, for a box
  *                                that marks one view of a moving camera.
@@ -149,7 +154,7 @@ function useRestartOnReveal(videoHolder, shown) {
   }, [videoHolder, shown]);
 }
 
-function Boxes({ boxes, videoHolder }) {
+function Boxes({ boxes, videoHolder, buildStep }) {
   const boxElements = useRef([]);
   useBoxWindows(videoHolder, boxes, boxElements);
   return boxes.map((box, i) => (
@@ -163,6 +168,7 @@ function Boxes({ boxes, videoHolder }) {
         width: `${100 * box.width}%`,
         height: `${100 * box.height}%`,
         opacity: box.from === undefined ? 1 : 0,
+        visibility: buildStep >= (box.step ?? 0) ? 'visible' : 'hidden',
       }}
     />
   ));
@@ -186,9 +192,11 @@ function StitchedVideo({ video, geometry, holder, shown }) {
  * playing video makes some browsers rebuild the video's layer, which shows
  * as a flash.
  */
-function Panel({ panel, geometry, state, stitchedHolder }) {
+function Panel({ panel, geometry, state, stitchedHolder, buildStep }) {
   const ownHolder = useRef(null);
-  useRestartOnReveal(ownHolder, state !== 'hidden');
+  // The panel's video starts over when the panel appears and when one of its boxes does.
+  const boxesShown = (panel.boxes ?? []).filter((box) => box.step !== undefined && buildStep >= box.step).length;
+  useRestartOnReveal(ownHolder, state === 'hidden' ? 0 : 1 + boxesShown);
   const opacity = { hidden: 0, dimmed: DIMMED, shown: 1 }[state];
   const box = geometry.box(panel);
   return (
@@ -209,11 +217,13 @@ function Panel({ panel, geometry, state, stitchedHolder }) {
         }}
       />
       <div className="panels-panel" style={{ ...box, opacity }}>
-        {panel.boxes && <Boxes boxes={panel.boxes} videoHolder={panel.media ? ownHolder : stitchedHolder} />}
+        {panel.boxes && <Boxes boxes={panel.boxes} videoHolder={panel.media ? ownHolder : stitchedHolder} buildStep={buildStep} />}
         {panel.label && (
           <div className={`panels-label${panel.ours ? ' panels-label--ours' : ''}`}><Text>{panel.label}</Text></div>
         )}
-        {panel.note && <div className="panels-note"><Text>{panel.note}</Text></div>}
+        {panel.note && (
+          <div className={`panels-note${panel.noteKind === 'hidden' ? ' panels-note--hidden' : ''}`}><Text>{panel.note}</Text></div>
+        )}
       </div>
     </>
   );
@@ -280,6 +290,7 @@ export default function Panels({ slide, buildStep }) {
                 panel={panel}
                 geometry={geometry}
                 state={states[i]}
+                buildStep={buildStep}
                 stitchedHolder={videoOf[i] === -1 ? null : holders[videoOf[i]]}
               />
             ))}

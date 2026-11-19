@@ -89,6 +89,10 @@
   color: var(--text-secondary);
 }
 
+.panels-note--hidden {
+  color: var(--hidden);
+}
+
 .panels-box {
   position: absolute;
   border: 3px solid var(--hidden);

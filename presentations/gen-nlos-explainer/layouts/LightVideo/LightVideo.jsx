@@ -7,9 +7,13 @@
  *
  * Fields:
  *   title    the slide's title.
- *   video    { src, poster?, startNs, nsPerSecond }: the video, the time (ns)
- *            its first frame shows, and the nanoseconds of light travel per
+ *   video    { src, poster?, startNs, nsPerSecond, play? }: the video, the
+ *            time (ns) its first frame shows, and the nanoseconds of light travel per
  *            second of video.
+ *            `play` gives each build step the part of the video it loops
+ *            over, [{ from, to, rate? }] in ns (rate 1 unless given): a step
+ *            that introduces one kind of light shows that light, and not
+ *            the seconds of the video in which nothing happens.
  *   axis     [fromNs, toNs]: the range of the time axis.
  *   lights   each { kind: 'direct' | 'indirect', label, step, intervals:
  *            [[fromNs, toNs], ...], still: { src, ns } }: the label, the
@@ -53,7 +57,14 @@ export default function LightVideo({ slide, buildStep }) {
   // A layout effect: its cleanup runs in the commit that detaches the refs, so no frame runs after them.
   useLayoutEffect(() => {
     const element = videoHolder.current.querySelector('video');
+    const seconds = (ns) => (ns - video.startNs) / video.nsPerSecond;
+    const part = video.play?.[buildStep];
+    if (part) {
+      element.playbackRate = part.rate ?? 1;
+      element.currentTime = seconds(part.from);
+    }
     const show = () => {
+      if (part && element.currentTime >= seconds(part.to)) element.currentTime = seconds(part.from);
       const ns = video.startNs + video.nsPerSecond * element.currentTime;
       readout.current.textContent = formatNs(ns);
       playhead.current.style.transform = `translateX(${x(ns)}px)`;
@@ -67,7 +78,7 @@ export default function LightVideo({ slide, buildStep }) {
       cancelAnimationFrame(frame);
       element.removeEventListener('seeked', show);
     };
-  });
+  }, [buildStep, video]);
 
   const ticks = [];
   for (let ns = Math.ceil(fromNs); ns <= toNs; ns += 1) ticks.push(ns);
