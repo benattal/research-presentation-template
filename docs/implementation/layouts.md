@@ -4,7 +4,8 @@ Layouts every presentation can use, registered in
 `core/client/layouts/index.js`. Each takes the common slide fields
 (`sectionLabel`, `footnote`, `transition`, `buildSteps`) from
 [the presentation format](presentations.md) as well as the fields below. A
-media item is `{ type: "image" | "gif" | "video", src, alt? }`. Text fields
+media item is `{ type: "image" | "gif" | "video", src, alt?, poster? }`; a
+video's `poster` image shows until the video has a frame. Text fields
 render math written as `$…$` and `$$…$$`, and color terms with
 `\htmlClass` ([math in text](presentations.md#math-in-text)).
 
