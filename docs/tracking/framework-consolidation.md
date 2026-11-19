@@ -3,8 +3,10 @@
 [Plan](../plans/framework-consolidation.md)
 
 Current state: `main` holds the rules, workflows, the glossary, the
-`media/` convention, the narration tools, the recorder, and two skills.
-Resume from the newest entry below.
+`media/` convention, the narration tools, the recorder, and two skills;
+`gen-nlos-explainer` and `guest-lecture` have merged it; the merge into
+`vision-workshop` is local, waiting for the user's word. Resume from the
+newest entry below.
 
 ## Standing directions
 
@@ -28,6 +30,32 @@ Every direction the user gives about this work, quoted and dated.
   main, gen-nlos-explainer, guest-lecture, vision-workshop should all
   stay".
 - "Yeah don't use simlinks like that" (of junctions between checkouts).
+
+## 2026-11-19 20:30 — `main` merged into the presentation branches
+
+- `gen-nlos-explainer`: merged and pushed, with the deck's
+  `recording.json` and its documents updated. `npm test` 79 pass,
+  `npm run check` passes for both decks.
+- `guest-lecture`: merged and pushed. Conflicts: the two index files
+  (both entries kept) and `presentations/example/` (kept deleted,
+  including `recording.json`, which `main` added). `npm test` 79 pass;
+  `npm run check` passes for both decks with their media copied in; the
+  lecture builds.
+- `vision-workshop`: merged locally (commit 7f71950 on the local branch),
+  `presentations/example/` kept deleted; `npm test` 79 pass, `home`
+  builds; `npm run check` reports only media that the temporary checkout
+  does not have. Not pushed: the branch is deployed (Railway), a push may
+  redeploy the live service, and a redeploy loses poll state unless it is
+  kept on a volume. Not run on any project branch: `npm run test:ui`
+  (36 of 36 on `main`).
+- Remote branches now: `main`, `gen-nlos-explainer`, `guest-lecture`,
+  `vision-workshop`, and the two with unmerged, unfinished work
+  (`recorder-wip`, `nlos-comparison-polish-wip`). Deleted:
+  `framework-sync`, `lecture-numbers`.
+- The framework worktree `../rpt-main` is removed after this entry;
+  framework work is done on a short-lived branch from `main`.
+- Next: the user's word on pushing `vision-workshop` and on the two
+  remaining branches; then the open items of the plan.
 
 ## 2026-11-19 19:50 — the recorder on a real deck: two fixes
 
