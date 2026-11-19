@@ -20,6 +20,13 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- "I do actually have to pause for a bit, so could I ask you to: Save
+  state, record the ground truth rotation as a later todo; Record a
+  runthrough of the presentation (with voiceover if possible)". The
+  ground-truth builder is stopped and its todo is in the plan (gate 1,
+  "Later todo"); the run-through is recorded from the deck as it stands.
+- "Make sure "stanford f-k dataset" and "simulated room" are aligned":
+  row labels share a left edge.
 - "In "processing the capture" there's a hanging arrow from RGB image in
   the first slide which doesn't lead to anything until the later slides."
   Passed to the builder smoothing the method slides: no element may point

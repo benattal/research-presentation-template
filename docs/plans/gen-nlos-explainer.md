@@ -36,6 +36,15 @@ its check passes.
    logged in the tracker for gate 2, not acted on yet.
    When the draft is complete: commit, push to git and the bucket, and
    stop. The user looks at everything before the second pass starts.
+   Later todo, not part of the first draft: a rotating ground-truth
+   "Scene" column on the nonplanar-relay comparison (slide 12), first in
+   the grid, with the same rocking camera as the reconstructions and the
+   lidar's position and field of view drawn in. The room's geometry
+   (meshes, scene XML, textures; 286 MB) is in
+   `data/gen-nlos/nlos-comparison-room-scene/` (local; from the bucket,
+   `tcig-projects/fk-torch/evaluation_and_comparisons_20261108/data/data/benchmark/B1_scale/living_room_infinigen_le162_midroom_full/`);
+   the camera and framing are in `assets/build/nlos-comparison.py`. For
+   the Stanford-FK row, find out what ground truth exists first.
 2. **Gate 2: whole deck, refinement cycles 1 and 2.** Opens only on the
    user's word. A pass on all
    slides and notes, vetting by reviewers who see the deck fresh,
