@@ -2,13 +2,10 @@
 
 [Plan](../plans/gen-nlos-explainer.md)
 
-Current state: gate 1, the first draft. Drafted and served (16 slides):
-the problem statement, the hardware photo, related work, training data,
-the captured line of sight and comparison, the simulated comparison, the
-summary, the title cards. Building, each in a temporary worktree: the
-WebGL lidar capture (bunny scene), the method on the vase scene in 3D
-(three slides), the flatland NLOS reconstruction, the rotating NLOS
-comparison. Two reviews of the first section are logged for gate 2.
+Current state: paused at the user's request with the first draft on
+screen (23 slides) and a run-through recorded. The second pass opens only
+on the user's word. One builder is still finishing: the performance pass
+(framework and deck).
 
 Resume from the newest entry below.
 
@@ -341,6 +338,39 @@ slide rules are in [slide style](../style/slides.md) and
 
 None open. Resolved: "my presentations bucket" is the R2 bucket
 `presentations` (the user, 2026-11-18).
+
+## 2026-11-19 13:40 — paused by the user; run-through recorded
+
+User directions (2026-11-19): see "Standing directions" (pause, save state,
+record a run-through; the ground-truth rotation is a later todo).
+
+- Deck: 23 slides, 45 build steps, all drafted (storyboard in the plan).
+  Since 12:50: the WebGL lidar capture on the bunny scene (one measurement
+  animation, then the scan); the method on the vase scene in 3D, three
+  slides run as one animation; the flatland reconstruction; the rotating
+  NLOS comparison (in the method section); voiceover v4 in the notes.
+- Recordings, local only, in
+  `data/gen-nlos/recordings/2026-11-19-first-draft/` (README there):
+  `deck-transitions-silent.mp4` (4:57) and `run-through-narrated.mp4`
+  (5:37, Kokoro `af_heart`, local; -16.6 LUFS). Made with
+  `assets/build/record-run-through.mjs`: real-time capture from headless
+  Edge on the GPU (about 40 frames per second received, laid on a 30 fps
+  grid), not the frame-exact recorder on `recorder-wip`.
+- Checked: the last frame of every step (contact sheet); frames across the
+  method slides' transitions; a local transcription of the narrated mix
+  matches the script except "pretrained" heard as "protrained" and
+  "one to three" heard as "1-3"; NLOS is spoken "en-loss".
+- Narration: `assets/narration/v4-kokoro-heart/` (script, pronunciation
+  map, 39 segments, manifest). The larger voice model (Qwen) took hours
+  per clip on this machine and was not used.
+- Open for the second pass (waits for the user): narration over still
+  visuals, the capture slide first (plan, "For the second pass"); length
+  (5:37 against 5:00); the ground-truth scene column (plan, "Later
+  todo"); the logged review findings of section 1 (entry 12:50); whether
+  the reconstruction slides should follow the processing slide; the flash
+  on related work and the navigation bar's size, neither reproduced
+  headless; arrow-key responsiveness (performance pass still running at
+  this entry).
 
 ## 2026-11-19 12:50 — first draft: 16 slides served; four visualizations building
 
