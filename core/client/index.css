@@ -70,6 +70,11 @@ html, body, #root {
   border-radius: 4px;
 }
 
+/* With `?bars=hidden` the stage fills the window, so its corners are square. */
+.presentation--stage-only .slide-stage {
+  border-radius: 0;
+}
+
 /* ─── Slide Base ──────────────────────────────────────────────── */
 .slide {
   position: absolute;

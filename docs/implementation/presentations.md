@@ -18,12 +18,39 @@ presentations/<id>/
   assets/...                          assets (DATA.md)
   theme.css                           optional
   sources.json                        optional: citations of borrowed material
+  pronunciation.json                  optional: how a narration voice says a term
+  recording.json                      optional: how long npm run record holds each step
   layouts/<LayoutName>/...            optional, registered in layouts/index.js
+  media/...                           optional: the scripts that build the media
 ```
 
 Every presentation has a `README.md` saying what it is and how to fetch
 its assets on a fresh checkout (`npm run assets -- pull <id>`) and push new
 ones; `npm run new` writes one, and `npm test` fails when one is missing.
+
+## `media/`: the scripts that build the media
+
+The files in `public/` are not in git, but the way they were made is
+code, and belongs in git. A presentation keeps the scripts that produce
+its media (trimming and stitching clips with ffmpeg, rendering a volume,
+decimating a mesh) in `media/`, one per slide or section, named for what
+it builds. Each script:
+
+- is run by hand from the presentation's directory
+  (`bash media/results.sh`, `python media/light-videos.py`), and says so
+  in its first lines, with what it needs installed;
+- names its sources at the top (a results folder, a bucket path, files
+  under `assets/sources/`), reads them without changing them, and writes
+  only under `public/slides/<slide-id>/`;
+- states the geometry it encodes for (cell sizes and gaps of the slide's
+  grid, at 1.5× the stage) next to the slide's `content.json` values it
+  must agree with;
+- writes a poster (the first frame) beside every video.
+
+Sources that exist nowhere else (a downloaded mesh, a collaborator's
+clip) go in `assets/sources/<slide-id>/`, which is synced to the bucket.
+The framework never runs these scripts: they are provenance, and
+`npm run build` does not depend on them.
 
 ## `presentation.json`
 
@@ -151,6 +178,21 @@ other step shows `notes.md`. Under the development server the presenter
 window can edit notes and saves them to the file that was on screen; saving
 does not reload the audience view.
 
+## Pronunciation map
+
+The notes are also the script of a narrated video
+([narration](narration.md)). An optional `pronunciation.json` maps a term
+as the notes write it to the spelling a text-to-speech voice should read:
+
+```json
+{ "NLOS": "en-loss", "Lyra 2": "Lyra two" }
+```
+
+It is a flat object of non-empty strings; `npm run check` reports anything
+else. `npm run narration -- <id>` copies it into the narration directory,
+where the synthesis applies it; the notes and the slides keep the real
+spelling.
+
 ## Custom layouts
 
 A layout is a React component that receives `{ slide, buildStep, sections }`
@@ -199,6 +241,23 @@ Conventions for layouts:
   count in the slide's data.
 - Clean up timers, animation frames, and listeners, and ignore media loads
   that finish after a newer request or after unmount.
+- Stop drawing when nothing changes. An animation that ends gives
+  `useStepClock` the time it ends at (`until`), so a slide left on screen
+  after its animation costs no frames.
+- Do slow work before the slide is reached, not on the key press that
+  arrives at it. A layout that builds something slow before its first
+  frame (a WebGL scene and its compiled shaders, a decoded mesh, a solved
+  model) gives its component a `prepare(slide)` function, which may be
+  async, and keeps what it builds for the page's lifetime, in its module;
+  the component uses what was kept, or builds it when `prepare` has not run
+  (the capture view, a slide opened directly). The audience view and the
+  presenter's preview call `prepare` for every slide once the media are in
+  memory, one slide at a time while the page is idle (`preloadSlides` in
+  `@core/presentation/preload.js`). Between parts that each take more than
+  a few tens of milliseconds, `await whenIdle()` (same module), so no part
+  holds up a key press for longer than itself. Keep a WebGL context for the
+  page instead of creating one per visit: compiling its shaders again is
+  what makes arriving slow.
 - Mark a deliberately full-bleed or overflowing decoration with
   `data-overflow-ok`, and a draggable region with `data-no-swipe` so touch
   drags do not change slides.
@@ -217,6 +276,47 @@ directory overrides them for that presentation only:
   --accent: #b5121b;
 }
 ```
+
+## `recording.json`
+
+`npm run record -- <id>` films the presentation step by step
+([recording](recording.md)), and has to know how long to stay on each
+step. Without this file it stays 5 seconds on each. A slide whose build
+steps animate needs longer, or shorter, and only the presentation knows
+how long its animations take:
+
+```json
+{
+  "defaultHold": 6.5,
+  "silentHold": 2.5,
+  "holds": {
+    "lidar-capture": [
+      { "seconds": 3.5, "oneShot": true },
+      { "seconds": 11, "oneShot": true }
+    ],
+    "comparison": [{ "seconds": 6.3 }]
+  }
+}
+```
+
+| Field | Meaning |
+|---|---|
+| `defaultHold` | seconds a step without an entry in `holds` is held in a silent recording (default 5) |
+| `silentHold` | seconds a step without narration is held in a narrated recording (default 2.5) |
+| `holds` | slide id → one entry per build step of that slide, in order |
+| `seconds` | in an entry, required: how long that step's own motion takes |
+| `oneShot` | in an entry, optional: `true` for an animation that plays once and must be shown in full even when its narration is shorter; a loop leaves it out |
+
+Every field is optional, and `holds` lists only the slides that need an
+entry. A slide it lists gets an entry for each of its build steps: one for
+a slide without `buildSteps`. The [recording](recording.md#how-long-each-step-is-held)
+document says how these become the time each step is held.
+
+`npm run check` reports, with every other problem: a slide id that
+`presentation.json` does not list, a slide whose number of entries differs
+from its number of build steps, a `seconds` or a hold that is not a
+positive number, an `oneShot` that is not `true` or `false`, and any field
+not named above.
 
 ## Checks
 

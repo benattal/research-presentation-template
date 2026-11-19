@@ -145,13 +145,18 @@ core/
   server/          live gateway: Express app, live API, presenter auth, polls
   tooling/         presentation discovery, Vite configuration, notes writer
 presentations/
-  <id>/            presentation.json, slides/, layouts/, public/ and assets/
-                   (both from the bucket, ignored by git)
+  <id>/            presentation.json, slides/, layouts/, media/ (the scripts
+                   that build its media), public/ and assets/ (both from
+                   the bucket, ignored by git)
 scripts/           command-line entry points (dev, build, serve, check, ...)
+narration/         Python tools: local text-to-speech of the notes and its check
+                   by transcription (their environments live outside the tree)
 tests/             node:test suites; tests/ui/ drives the browser
 docs/
   implementation/  how the framework works
-  style/           code, writing, and slide conventions
+  style/           code, writing, and slide conventions; presentation types
+  workflows/       procedures: making a deck, a narrated video, working
+                   together
   environments/    setup
   plans/           intended multi-phase work
   tracking/        live status of active plans
@@ -177,6 +182,8 @@ npm run check                         # static checks of every presentation
 npm test                              # unit and repository tests
 npm run test:ui                       # browser tests of every view and core layout
 npm run capture -- <id>               # screenshot and check every slide
+npm run narration -- <id>             # notes as a script for narration/narrate.py
+npm run record -- <id>                # record a run-through video (needs ffmpeg)
 ```
 
 ## Architecture and code aesthetics
@@ -243,9 +250,11 @@ content to silence a warning.
   bucket described in [DATA.md](DATA.md), and in ignored `public/` and
   `assets/` directories locally. Never commit them; never force-add an
   ignored file. A clean checkout without assets is expected.
-- Every presentation's directory has a `README.md` saying how to pull its
-  assets (`npm run assets -- pull <id>`) and push new ones. `npm run new`
-  writes it; `npm test` fails without it.
+- Every presentation's directory has a `README.md` that says how to pull
+  its assets (`npm run assets -- pull <id>`) and push new ones. The user
+  (2026-11-17): "Also make sure instructions for installing the assets for
+  each lecture are available in that lecture folder". `npm run new` writes
+  it; `npm test` fails without it.
 - Never print, commit, or upload credentials.
 - `data/captures/`, `dist/`, `.live-state/`, and `.env` are ignored.
 - Plans describe intended work. Trackers record changing state, newest entry
@@ -274,6 +283,14 @@ Use evidence proportional to risk:
   `rm -f -- "${DIR:?}/file"`; never `rm -rf $DIR/*`.
 - Run the selection of any delete loop as a dry run first and read its
   counts.
+- Do not link directories with junctions or symlinks. A worktree gets its
+  own copy of `public/` and `assets/` (copy them, or `npm run assets --
+  pull <id>`). On Windows a recursive delete follows a junction and
+  deletes what it points to.
+- Before removing a worktree or any directory tree, list the links inside
+  it (`Get-ChildItem -Recurse -Force -Attributes ReparsePoint`) and
+  unlink any that an earlier session left; afterwards run `npm run
+  check` for every presentation.
 - Use `rclone copy`, never `rclone sync` (DATA.md).
 - Do multi-file refactors on a branch or in a `git worktree`, and merge them
   in one step.
@@ -281,8 +298,12 @@ Use evidence proportional to risk:
 ## Documentation
 
 Framework behavior belongs in `docs/implementation/`; conventions belong in
-`docs/style/`; setup belongs in `docs/environments/`; changing state belongs
-only in `docs/tracking/`. Every document is reachable from
+`docs/style/`; procedures belong in `docs/workflows/`; setup belongs in
+`docs/environments/`; changing state belongs only in `docs/tracking/`.
+Before starting a presentation, read
+[presentation types](docs/style/presentation-types.md) and
+[making a presentation](docs/workflows/making-a-presentation.md); when
+others work on the branch, [working together](docs/workflows/working-together.md). Every document is reachable from
 [docs/index.md](docs/index.md). Prose follows
 [writing style](docs/style/writing.md). Public functions and non-obvious
 components get a docstring stating what the signature does not: units,
