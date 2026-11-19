@@ -6,24 +6,23 @@
  * run the measurement from the pulse leaving the laser, so the light is seen
  * going out before it comes back. Each step ends in a settled frame.
  */
-import { BUNNY, LIGHT_SPEED, MIRRORS_TO_RELAY, RELAY_POINT, TIMES, distance } from './cornerScene.js';
+import { BUNNY, LIGHT_SPEED, RELAY_POINT, TIMES, distance } from './cornerScene.js';
 
-/** The four build steps, in order. */
-export const STEPS = ['pulse', 'direct', 'indirect', 'scan'];
+/** The three build steps, in order. */
+export const STEPS = ['direct', 'indirect', 'scan'];
 
 /** Playback speed of the light: ms of the slide per ns of scene time. */
 const MS_PER_NS = 340;
 /** Per step, the pause before its light moves, in ms: the narration's first words name what is about to move. */
-const LEAD_MS = { pulse: 2000, direct: 700, indirect: 500 };
-/** When the plot's axes appear in the first step, in ms: as the narration turns to the measurement. */
-const AXES_IN_MS = [6200, 6900];
+const LEAD_MS = { direct: 3800, indirect: 500 };
+/** When the plot's axes appear in the first step, in ms: before the pulse leaves. */
+const AXES_IN_MS = [2600, 3300];
 /** When the scan starts and how long it takes, in ms. */
 const SCAN_START_MS = 600;
 const SCAN_MS = 5200;
 
 /** Scene times (ns): where each step's light starts and ends. */
 const PULSE_START = -0.4;
-const PULSE_END = TIMES.hit + 0.8;
 const DIRECT_END = TIMES.direct + 1.5;
 const INDIRECT_END = TIMES.direct + 9;
 
@@ -51,12 +50,11 @@ function msAt(time, lead, start) {
 
 /**
  * The moment of each step a still frame shows (ms into the step): the
- * pulse on its way to x_p; the direct return measured; the wavefront from
+ * direct return measured; the wavefront from
  * x_p crossing the hidden object; the scan complete.
  */
 const HIDDEN_CENTER = [BUNNY.position[0], BUNNY.height / 2, BUNNY.position[2]];
 const STILL_MS = {
-  pulse: msAt(TIMES.hit - (0.42 * MIRRORS_TO_RELAY) / LIGHT_SPEED, LEAD_MS.pulse, PULSE_START),
   direct: msAt(DIRECT_END, LEAD_MS.direct, PULSE_START),
   indirect: msAt(TIMES.hit + distance(RELAY_POINT, HIDDEN_CENTER) / LIGHT_SPEED, LEAD_MS.indirect, PULSE_START),
   scan: SCAN_START_MS + SCAN_MS + 1000,
@@ -98,21 +96,13 @@ export function frameAt(step, ms) {
     plot: { opacity: 1, sweep: DIRECT_END, cursor: 0, direct: 1, indirect: 0 },
   };
 
-  if (phase === 'pulse') {
-    frame.time = sceneTime(ms, LEAD_MS.pulse, PULSE_START, PULSE_END);
-    frame.outgoing = true;
-    frame.spot = smoothstep(TIMES.hit - 0.1, TIMES.hit + 0.25, frame.time);
-    // The empty plot, waiting at the moment the pulse reached x_p.
-    frame.plot = { opacity: smoothstep(...AXES_IN_MS, ms), sweep: Math.min(frame.time, TIMES.hit), cursor: 1, direct: 0, indirect: 0 };
-    return frame;
-  }
-
   if (phase === 'direct') {
-    // The measurement again from the start: the pulse leaves the laser, then its direct return comes back.
+    // The measurement: the pulse leaves the laser, then its direct return comes back.
     frame.time = sceneTime(ms, LEAD_MS.direct, PULSE_START, DIRECT_END);
     frame.outgoing = frame.time < TIMES.hit;
     frame.directReturn = !frame.outgoing;
     frame.spot = smoothstep(TIMES.hit - 0.1, TIMES.hit + 0.25, frame.time);
+    frame.plot.opacity = smoothstep(...AXES_IN_MS, ms);
     frame.plot.sweep = frame.time;
     frame.plot.cursor = 1 - smoothstep(DIRECT_END - 0.4, DIRECT_END, frame.time);
     frame.plot.direct = smoothstep(TIMES.direct + 0.2, TIMES.direct + 0.7, frame.time);

@@ -20,6 +20,11 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- "To me, the first pulse animation (before showing direct) is
+  unnecessary. Also "a different smaller vase" is not really the right
+  thing to say. Just say that it hallucinates the wrong object". The
+  capture slide has three steps (direct, indirect, scan); the narration
+  says "the video model hallucinates the wrong object".
 - "I will ask you to pause before doing the second pass (once this first
   draft is complete, soon) just so that I have a chance to take a look at
   everything. Commit and push when this happens too." The first draft

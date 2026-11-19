@@ -2,8 +2,7 @@
   "layout": "lidarCapture",
   "title": "Lidar capture",
   "buildSteps": [
-    "a pulse travels to a visible point",
-    "the direct return and the first peak",
+    "the pulse to a visible point, its direct return, and the first peak",
     "indirect light from the hidden object and the later peak",
     "the scan over the visible surfaces"
   ],
