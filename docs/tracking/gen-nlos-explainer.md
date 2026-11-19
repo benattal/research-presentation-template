@@ -16,6 +16,11 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-18, while planning:
 
+- "The "reviewers" need to focus less on correcting content already in
+  the paper, and focus more on editing the presentation itself and making
+  it good/clear". Review briefs ask for presentation edits (structure,
+  flow, visuals, pacing, clarity for a viewer) and for misstatements of the
+  paper by the script, not for critiques or rewordings of the paper.
 - "I'm also not asking you to change the language from what's in the
   paper, unless it helps with clarity (which sometimes it does, but you
   don't need to "correct" things in the paper)". The narration takes the

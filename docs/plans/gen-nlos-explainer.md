@@ -191,8 +191,12 @@ from the notes and the timeline.
 | 2 | slides v1 and video v1: content, layout and text, video timing and audio | slides, narration, video v2 |
 | 3 | v2 fresh review, paper sync, anonymity audit | final |
 
-Reviewers get the paper and the artifact, not the previous reviewers'
-conclusions. Each finding is fixed or answered in the tracker.
+Reviewers edit the presentation: structure, flow, visuals, pacing, and
+clarity for a viewer. They check that the script states the paper
+correctly, but they do not critique or reword the paper's own content and
+language, which the narration follows. Reviewers get the paper and the
+artifact, not the previous reviewers' conclusions. Each finding is fixed
+or answered in the tracker.
 
 ### Deliverables
 
