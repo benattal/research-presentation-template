@@ -11,8 +11,13 @@ that keep their work from colliding.
   do not keep long-lived side checkouts in sibling folders: the user looks
   in the main folder.
 - Framework changes (`core/`, `scripts/`, `tests/`, shared docs) are made
-  on the framework branch, reach `main` after the browser tests pass, and
-  are then merged into project branches.
+  on a short-lived branch from `main`, reach `main` after the browser
+  tests pass, and are then merged into project branches.
+- The remote holds `main` and one branch per presentation. A helper
+  branch (framework work, a builder's task, work in progress) is pushed
+  only while its work is in flight and deleted from the remote when it is
+  merged; before deleting one, confirm that a kept branch has every commit
+  on it.
 - A git worktree is for one task: made when the task starts, removed when
   its work is merged. Before removing any directory tree, list the links
   inside it; never create links between checkouts in the first place (a

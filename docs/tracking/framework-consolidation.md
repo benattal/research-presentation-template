@@ -2,10 +2,9 @@
 
 [Plan](../plans/framework-consolidation.md)
 
-Current state: rules, workflows, the glossary, the `media/` convention,
-the narration tools, the recorder, and two skills are on `framework-sync`;
-`main` moves when `npm run test:ui` passes. Resume from the newest entry
-below.
+Current state: `main` holds the rules, workflows, the glossary, the
+`media/` convention, the narration tools, the recorder, and two skills.
+Resume from the newest entry below.
 
 ## Standing directions
 
@@ -29,6 +28,19 @@ Every direction the user gives about this work, quoted and dated.
   main, gen-nlos-explainer, guest-lecture, vision-workshop should all
   stay".
 - "Yeah don't use simlinks like that" (of junctions between checkouts).
+
+## 2026-11-19 19:20 — `main` moved
+
+- `npm run test:ui` on the framework branch: 36 of 36 pass (199 s),
+  including the new `?bars=hidden` test. `npm test`: 79 pass. `npm run
+  build -- example` builds.
+- `main` fast-forwarded to the framework branch (29 commits); the remote's
+  `framework-sync` is deleted after that, and `lecture-numbers` was
+  deleted earlier (every commit on it is in `guest-lecture`).
+- Kept on the remote, each with one commit that no other branch has:
+  `recorder-wip` (the frame-exact recorder, plan item) and
+  `nlos-comparison-polish-wip` (paused slide work of the explainer).
+- Next: merge `main` into the three presentation branches.
 
 ## 2026-11-19 18:30 — the recorder, per-segment loudness, skills
 

@@ -31,9 +31,9 @@ next presentation starts with them.
 
 ### Open
 
-1. **`main`.** The framework branch reaches `main` after
-   `npm run test:ui` passes on an idle machine; `main` is then merged into
-   the project branches.
+1. **Project branches.** `main` has everything under "Done". It is merged
+   into each presentation's branch (`gen-nlos-explainer`, `guest-lecture`,
+   `vision-workshop`), keeping `presentations/example/` deleted there.
 2. **The comparison grid in core.** The explainer's `panels` layout (a
    grid of labeled media over one stitched video, panels revealed and
    dimmed per step, timed boxes on a region, groups on a panel) is the
@@ -71,8 +71,9 @@ next presentation starts with them.
 
 ## Rules
 
-- Framework changes are made on `framework-sync`, reach `main` after the
-  browser tests, and are then merged into project branches
+- Framework changes are made on a short-lived branch from `main`, reach
+  `main` after the browser tests, and are then merged into project
+  branches; the remote keeps `main` and one branch per presentation
   ([working together](../workflows/working-together.md)).
 - Code moves to `core/` when every presentation gets it, when two
   presentations use it, or when it is a pattern layouts share; a layout
