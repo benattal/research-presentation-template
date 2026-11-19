@@ -63,11 +63,8 @@ it is mounted elsewhere. Run the scripts from this directory:
 | `bash media/summary.sh` | summary | ffmpeg |
 | `python media/related-work.py` | related-work | ffmpeg; numpy, numba |
 | `python media/nlos-comparison.py` | nlos-comparison | ffmpeg; numpy, numba, h5py, Pillow |
-
-The method slides' media (`public/slides/processing/`) are built by
-`assets/sources/processing/prepare_media.py`, and the capture slide's mesh
-by `assets/sources/lidar-capture/make-bunny-mesh.mjs`; both are still in
-the bucket only and should move to `media/` when next edited.
+| `python media/method-scene.py` | processing, conditioning, generation | ffmpeg; numpy, scipy, Pillow |
+| `node media/lidar-capture-mesh.mjs` | lidar-capture (the bunny mesh) | the repository's node modules |
 
 After adding or changing media, push them (this copies only; it never
 deletes anything in the bucket):
