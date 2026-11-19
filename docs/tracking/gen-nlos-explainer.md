@@ -18,6 +18,11 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- Of the rebuilt first section: "I like the first few slides much better
+  now. Could still use some refinement, but good start", then "I think I
+  would save the refinement, for now, for the next iteration stage, and
+  prioritize a good first draft of the rest of the presentation". Gate
+  1 is now the first draft of the whole deck; refinement follows.
 - "honestly, it is most useful to show results in a video that can't be
   demonstrated easily in a paper/pdf supplement. try not to just repeat
   results. we can use videos that are used/highlighted in the

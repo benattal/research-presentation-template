@@ -21,41 +21,41 @@ its check passes.
   figures, the bucket's results, and the paper are inventoried (tracker).
 - **Script v2.** The paper's wording, cut to spoken length; it is re-cut
   to the storyboard's beats as each section is built.
+- **Storyboard.** Below; the user set the plan as the goal.
 
 ### Open
 
-1. **Gate 1: storyboard.** The storyboard below is the contract for the
-   deck: every slide's title, what each key press shows, and its source.
-   Check: the user has read it, or a reviewer given the user's
-   instructions and the reference-deck analysis finds no slide whose
-   purpose, title, or visual is unclear.
-2. **Gate 2: problem statement** (slides 1–4). Check: the loop below.
-3. **Gate 3: propagating light** (slides 5–6, with the WebGL render).
-4. **Gate 4: related work** (slide 7).
-5. **Gate 5: method** (slides 8–12, with the WebGL scene and flatland).
-6. **Gate 6: results and summary** (slides 13–18).
-7. **Gate 7: whole deck, refinement cycles 1 and 2.** A pass on all
+1. **Gate 1: first draft of the whole deck.** Each section built to a
+   good draft, in order, and shown on the served deck: problem statement
+   (slides 1–4, drafted), propagating light (5–6, with the WebGL capture
+   render), related work (7), method (8–12, with the WebGL scene and
+   flatland), results and summary (13–18). Check per section: `npm run
+   check`, a capture with no errors or warnings, and every frame read
+   against its storyboard row. Reviewer findings on drafted sections are
+   logged in the tracker for gate 2, not acted on yet.
+2. **Gate 2: whole deck, refinement cycles 1 and 2.** A pass on all
    slides and notes, vetting by reviewers who see the deck fresh,
-   consolidation and fixes; twice. Check: a full capture with no errors
-   or warnings, and a cycle whose reviewers report nothing above
-   cosmetic.
-8. **Gate 8: narration.** A local text-to-speech model reads each step's
+   consolidation with the logged findings and the user's comments, fixes;
+   twice. Check: a full capture with no errors or warnings, and a cycle
+   whose reviewers report nothing above cosmetic.
+3. **Gate 3: narration.** A local text-to-speech model reads each step's
    notes; a local transcription checks them. Check: word error rate at
    most 3%, every term recognized, total 3:50 to 4:40.
-9. **Gate 9: recording.** Finish the recorder parked on branch
+4. **Gate 4: recording.** Finish the recorder parked on branch
    `recorder-wip` (framework, on `framework-sync`), record video v1.
    Check: 4:00 to 5:00, 1920×1080 at 30 fps, −16 LUFS ±1, under 80 MB.
-10. **Gate 10: refinement cycles 3 and 4, with the video.** Reviewers
-    watch the recording (contact sheets, the mix's transcript, the
-    timeline) as well as the slides and notes; fixes, re-recording.
-    Check: the completion criteria.
-11. **Gate 11: delivery.** Final push to git and the bucket; the paper
-    sync and the anonymity audit recorded in the tracker.
+5. **Gate 5: refinement cycles 3 and 4, with the video.** Reviewers
+   watch the recording (contact sheets, the mix's transcript, the
+   timeline) as well as the slides and notes; fixes, re-recording.
+   Check: the completion criteria.
+6. **Gate 6: delivery.** Final push to git and the bucket; the paper
+   sync and the anonymity audit recorded in the tracker.
 
 ## Refinement loop
 
-Every gate from 2 on runs this loop, and records each round in the
-tracker (findings, what changed, what was declined and why):
+The refinement gates (2 and 5) run this loop over the whole deck, and
+record each round in the tracker (findings, what changed, what was
+declined and why). Gate 1 runs its build and look steps per section:
 
 1. **Build.** One section at a time, by the lead, in this checkout, in
    small commits. A subagent builds only a self-contained visualization
@@ -183,7 +183,7 @@ the recording show the same motion.
 The stopped builders' partial versions of these are on branch
 `gen-nlos-work` (unreviewed); each is read before deciding to reuse it.
 
-## Narration and recording (gates 8 to 10)
+## Narration and recording (gates 3 to 5)
 
 Each build step's notes are its narration. A local model reads them, one
 file per step, with a fixed voice and a pronunciation map; a local
