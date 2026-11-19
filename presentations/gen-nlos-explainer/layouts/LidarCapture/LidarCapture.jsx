@@ -21,7 +21,7 @@ const LABEL_KEYS = ['laser', 'mirrors', 'detector', 'relays', 'occluder', 'hidde
 const SCENE_LABELS = [
   { key: 'relays', point: [0, ROOM.height - 0.1, ROOM.size], side: 'left', shift: [-18, 0] },
   { key: 'hidden', point: [BUNNY.position[0], BUNNY.height, BUNNY.position[2]], side: 'above', shift: [6, -10] },
-  { key: 'occluder', point: [TEAPOT.position[0] + 0.33, 0, TEAPOT.position[2] + 0.1], side: 'below', shift: [0, 6] },
+  { key: 'occluder', point: [TEAPOT.position[0] + 0.12, 0, TEAPOT.position[2] + 0.02], side: 'below', shift: [0, 2] },
   { key: 'laser', point: lidarPoint([-0.315, 0.11, -0.15]), side: 'left', shift: [-16, -6] },
   { key: 'mirrors', point: lidarPoint([0.24, 0.11, -0.13]), side: 'right', shift: [22, 14] },
   { key: 'detector', point: lidarPoint([-0.09, 0.11, 0.16]), side: 'left', shift: [-22, 12] },

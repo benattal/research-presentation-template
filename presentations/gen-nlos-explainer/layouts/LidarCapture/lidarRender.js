@@ -374,6 +374,26 @@ function createGlow(texture, color) {
   return sprite;
 }
 
+/**
+ * A soft round glow lying on a surface with the given normal: the sprites'
+ * falloff, in the surface's plane. A sprite faces the camera, so on a wall
+ * seen at an angle it reads as a disc standing off the wall.
+ */
+function createSurfaceGlow(texture, color, normal) {
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({
+    map: texture,
+    color,
+    blending: THREE.AdditiveBlending,
+    transparent: true,
+    depthWrite: false,
+    toneMapped: false,
+  }));
+  mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), toVector(normal).normalize());
+  mesh.renderOrder = 5;
+  mesh.visible = false;
+  return mesh;
+}
+
 function placeGlow(sprite, position, size, level) {
   sprite.visible = level > 0.003;
   if (!sprite.visible) return;
@@ -651,7 +671,9 @@ export function createLidarRender(canvas, colors) {
   const glowTexture = createGlowTexture();
   const packet = createGlow(glowTexture, direct);
   const indirectPacket = createGlow(glowTexture, indirect);
-  const spotGlow = createGlow(glowTexture, direct);
+  const spotGlow = createSurfaceGlow(glowTexture, direct, RELAY_NORMAL);
+  // Just off the wall, so the glow does not fight the wall for depth.
+  const spotGlowPoint = toVector(RELAY_POINT).addScaledVector(toVector(RELAY_NORMAL), 0.004).toArray();
   const hiddenGlow = createGlow(glowTexture, indirect);
   scene.add(packet, indirectPacket, spotGlow, hiddenGlow);
 
@@ -747,7 +769,7 @@ export function createLidarRender(canvas, colors) {
     spotMaterial.color.copy(direct).lerp(indirect, 0.85 * amber);
     spotMaterial.opacity = frame.spot;
     spot.visible = frame.spot > 0.003;
-    placeGlow(spotGlow, RELAY_POINT, 0.1 + 0.1 * flash + 0.06 * amber, 0.5 * frame.spot + flash);
+    placeGlow(spotGlow, spotGlowPoint, 0.1 + 0.1 * flash + 0.06 * amber, 0.5 * frame.spot + flash);
     spotGlow.material.color.copy(spotMaterial.color);
   }
 
