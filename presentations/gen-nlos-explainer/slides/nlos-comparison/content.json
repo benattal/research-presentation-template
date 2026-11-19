@@ -14,18 +14,9 @@
     "Stanford f-k dataset"
   ],
   "credits": [
-    {
-      "source": "liu2023",
-      "what": "CC-SOCR"
-    },
-    {
-      "source": "wang2026",
-      "what": "3D-GTR"
-    },
-    {
-      "source": "lindell2019",
-      "what": "Stanford f-k dataset"
-    }
+    "liu2023",
+    "wang2026",
+    "lindell2019"
   ],
   "videos": [
     {

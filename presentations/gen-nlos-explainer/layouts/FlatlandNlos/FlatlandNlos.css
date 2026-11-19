@@ -68,7 +68,7 @@
 }
 
 .flatland-nlos-label--count {
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: lining-nums tabular-nums;
 }
 
 /* Labels the step clock shows start hidden; the clock's first frame sets them. */

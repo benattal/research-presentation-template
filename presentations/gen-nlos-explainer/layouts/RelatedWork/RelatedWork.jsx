@@ -7,7 +7,7 @@ import { Boxes } from '../Panels/Panels.jsx';
 import './RelatedWork.css';
 
 /** Opacity of a group's pictures and text out of the spotlight. */
-const DIMMED = 0.3;
+const DIMMED = 0.55;
 
 /**
  * Related work by category: one group per category on a quiet panel, each a

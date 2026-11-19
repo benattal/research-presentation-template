@@ -65,6 +65,11 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- "By the way my collaborators will be working on the repo
+  simultaneously, so do your best to work well with them". Fetch and
+  merge before every push; small commits, pushed often; their decisions
+  (the theme) are kept and builders are told to touch only their task's
+  files.
 - Of removing the explainer from `guest-lecture`: "You can leave it that's
   fine. I do think cleaning up and merging relevant material from the
   branches would be good". Cleaned up (2026-11-19): twelve lecture
@@ -457,6 +462,31 @@ slide rules are in [slide style](../style/slides.md) and
 
 None open. Resolved: "my presentations bucket" is the R2 bucket
 `presentations` (the user, 2026-11-18).
+
+## 2026-11-19 15:05 — cycle 1 (b): the layout review, handled so far
+
+User directions (2026-11-19): see "Standing directions" (collaborators
+work on the branch at the same time).
+
+- Fixed (7c413c2; simulated comparison boxes in 9f4e9e0): one top line
+  and the title's left edge for every comparison grid; lining figures on
+  ticks and readouts; light-video block at the title's width; hardware
+  caption on one line; sentence case on three slides' labels; dimmed
+  related-work panels legible; larger summary result; comparison credits
+  on one line. The recorder passes `--disable-lcd-text` (ClearType colored
+  53 to 69% of lit text pixels in 1080p frames).
+- Being built: the nonplanar comparison's polish (cells filled, white
+  capture marks, the method slides' colormap, visible relay curvature).
+- Open, to consolidate with the animation review: panel padding and gap
+  tokens and panels on nlos-reconstruction and light-video; callouts at
+  16 px on the method slides against 22 px elsewhere; axis-title and
+  row-label grays; related work's first step in two and an "Ours" tile;
+  the f-k tile's black band; the asterisk footnote on the comparison
+  slides; a box on the indirect difference.
+- For the user and collaborators to decide, not changed: green is both
+  "ours" and the target trajectory and a token row (the collaborator's
+  choice); red is the hidden region, the limitation lines, and the scan
+  points; the face is not bundled, so a Windows recording is in Candara.
 
 ## 2026-11-19 14:50 — two machines on this branch; cycle 1 vetting
 

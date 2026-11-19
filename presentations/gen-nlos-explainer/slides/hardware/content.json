@@ -15,21 +15,21 @@
   },
   "labels": [
     {
-      "text": "pulsed laser",
+      "text": "Pulsed laser",
       "x": 0.735,
       "y": 0.3,
       "side": "right",
       "step": 0
     },
     {
-      "text": "scanning mirrors",
+      "text": "Scanning mirrors",
       "x": 0.4,
       "y": 0.6,
       "side": "left",
       "step": 1
     },
     {
-      "text": "single-photon\navalanche diode",
+      "text": "Single-photon\navalanche diode",
       "x": 0.2,
       "y": 0.22,
       "side": "left",
@@ -41,6 +41,6 @@
     "alt": "The steady-state RGB image of the vase scene",
     "label": "Steady-state RGB image",
     "step": 3,
-    "size": 210
+    "size": 250
   }
 }

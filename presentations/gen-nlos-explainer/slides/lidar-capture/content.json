@@ -11,18 +11,18 @@
     "mesh": "/slides/lidar-capture/stanford-bunny-mesh.png"
   },
   "labels": {
-    "laser": "pulsed laser",
-    "mirrors": "scanning mirrors",
-    "detector": "single-photon\ndetector",
-    "relays": "relay walls",
-    "occluder": "occluder",
-    "hidden": "hidden object",
-    "video": "video of propagating light",
-    "direct": "direct",
-    "indirect": "indirect",
-    "flight": "time of flight",
-    "time": "time (ns)",
-    "counts": "photon counts"
+    "laser": "Pulsed laser",
+    "mirrors": "Scanning mirrors",
+    "detector": "Single-photon\ndetector",
+    "relays": "Relay walls",
+    "occluder": "Occluder",
+    "hidden": "Hidden object",
+    "video": "Video of propagating light",
+    "direct": "Direct",
+    "indirect": "Indirect",
+    "flight": "Time of flight",
+    "time": "Time (ns)",
+    "counts": "Photon counts"
   },
   "credits": [
     "stanford-bunny"

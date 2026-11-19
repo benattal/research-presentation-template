@@ -12,7 +12,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 72px;
+  gap: 88px;
 }
 
 .light-video-frame {
@@ -36,7 +36,7 @@
   text-align: right;
   font-size: var(--type-text);
   line-height: 28px;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: lining-nums tabular-nums;
   color: var(--text-primary);
   text-shadow: 0 0 6px #000, 0 0 2px #000;
 }
@@ -68,7 +68,7 @@
   line-height: 26px;
   text-align: center;
   white-space: nowrap;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: lining-nums tabular-nums;
 }
 
 .light-video-caption--direct { color: var(--direct); }
@@ -108,7 +108,7 @@
   font-size: var(--type-small);
   line-height: 20px;
   color: var(--text-secondary);
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: lining-nums tabular-nums;
 }
 
 .light-video-axis-label {
