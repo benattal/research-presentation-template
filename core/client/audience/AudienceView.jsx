@@ -20,7 +20,8 @@ function openPresenterWindow() {
 }
 
 /**
- * The audience view: the progress bar, the current slide on the scaled
+ * The audience view: the progress bar (unless the presentation turns it
+ * off with `progressBar: false`), the current slide on the scaled
  * stage, the navigation bar (with the toolbar), and the slide overview. The
  * two bars and the stage are stacked, so the stage fits the space the bars
  * leave and never sits under them.
@@ -69,7 +70,9 @@ export default function AudienceView({ presentation }) {
 
   return (
     <div className="presentation">
-      <ProgressBar current={navigation.position.index} total={presentation.slides.length} />
+      {presentation.progressBar && (
+        <ProgressBar current={navigation.position.index} total={presentation.slides.length} />
+      )}
 
       <Stage>
         <AnimatePresence mode="wait">

@@ -43,6 +43,7 @@ ones; `npm run new` writes one, and `npm test` fails when one is missing.
 | `title` | required; the page title and the presentation's name in listings |
 | `sections` | required; ordered sections, each with an `id`, a `title`, and its slide ids in order |
 | `defaultTransition` | `fade` (default), `slide`, `zoom`, or `none`; a slide's own `transition` wins |
+| `progressBar` | optional; `false` hides the progress bar at the top of the audience view (default `true`) |
 | `backLink` | optional URL for a "back" button in the toolbar, relative to the presentation (`"../"` returns to the gateway's root) |
 | `servedAtRoot` | optional; `true` makes the live gateway redirect `/` to this presentation (at most one per branch) |
 

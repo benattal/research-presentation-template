@@ -69,7 +69,7 @@ export function stepCount(slide) {
  * @param {Object<string, Function>} args.layouts      layout name → React component
  * @param {string} args.baseUrl       Vite's `BASE_URL`
  * @param {Object<string, object>} [args.sources]  parsed `sources.json`: source key → citation
- * @returns {{ id, title, defaultTransition, backLink, sections, slides, layouts, citations, unlistedSlideIds }}
+ * @returns {{ id, title, defaultTransition, backLink, progressBar, sections, slides, layouts, citations, unlistedSlideIds }}
  *   `sections` keep the manifest order and list their slide ids; `slides`
  *   is the flat, ordered list every view navigates, each slide carrying its
  *   `content.json` fields plus `id`, `index`, `sectionId`, `sectionTitle`,
@@ -138,6 +138,7 @@ export function buildPresentation({ id, manifest, slideContents, layouts, baseUr
     title: manifest.title,
     defaultTransition: manifest.defaultTransition ?? 'fade',
     backLink: manifest.backLink ?? null,
+    progressBar: manifest.progressBar ?? true,
     sections,
     slides,
     layouts,
