@@ -17,6 +17,10 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, evening (on a new machine, a Mac):
 
+- "for slide 19 only hold the red box for a second or two. before
+  continuing the video to the end". Done: the indirect light pauses on
+  9.82 ns from 1.42 s to 2.92 s with the red boxes, then plays to its
+  end; the clip loops at 8.8 s.
 - Of the method diagram (slide 14): "arrows in slide 14 are kinda
   scuffed. shaft overlaps the tip making it not look clean". Cause: each
   shaft ran to the tip under its arrowhead, and the curved ones bent out
@@ -26,9 +30,8 @@ slide rules are in [slide style](../style/slides.md) and
   that we like and add a red box around the nice two arcs in the first
   row and the singular arc in the second row". Done: both columns start
   together; the indirect light plays from its first lit frame and
-  freezes at 9.82 ns 1.44 s in; both hold 3 s after the direct light
-  ends (9.9 s loop). Red boxes from 1.44 s: the lamp's two arcs, the
-  globe's thin arc.
+  freezes at 9.82 ns 1.44 s in. Red boxes on the lamp's two arcs and
+  the globe's thin arc. The freeze became a pause (above).
 - Of slide 19 (captured scenes, same line of sight), with a screenshot of
   the indirect column: "i want to freeze frame the indirect light when it
   is on the attached frame. delay the start of the indirect light video
