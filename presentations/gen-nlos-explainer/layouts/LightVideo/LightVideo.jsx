@@ -21,6 +21,7 @@
  * they show the frame on screen however the video is driven.
  */
 import { useLayoutEffect, useRef } from 'react';
+import { mediaUrl } from '@core/presentation/preload.js';
 import Media from '@core/stage/Media.jsx';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import './LightVideo.css';
@@ -86,7 +87,7 @@ export default function LightVideo({ slide, buildStep }) {
           {lights.map((light, index) => (
             <div key={light.kind} className="light-video-light" style={{ opacity: buildStep >= light.step ? 1 : 0 }}>
               <figure className="light-video-still" style={{ left: stillLeft(index), width: STILL_SIZE }}>
-                <img src={light.still.src} alt="" style={{ width: STILL_SIZE, height: STILL_SIZE }} />
+                <img src={mediaUrl(light.still.src)} alt="" style={{ width: STILL_SIZE, height: STILL_SIZE }} />
                 <figcaption className={`light-video-caption light-video-caption--${light.kind}`}>
                   {light.label}, {formatNs(light.still.ns)}
                 </figcaption>

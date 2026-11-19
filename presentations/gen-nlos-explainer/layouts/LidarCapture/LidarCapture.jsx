@@ -1,3 +1,4 @@
+import { mediaUrl } from '@core/presentation/preload.js';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
@@ -234,7 +235,7 @@ export default function LidarCapture({ slide, buildStep }) {
       <SlideTitle title={slide.title} />
       <div className="lidar-capture-figure" data-hidden-object={view && renderWithHidden === view.render ? 'shown' : 'loading'}>
         <div className="lidar-capture-render" ref={hostRef} />
-        <img className="lidar-capture-mesh" ref={meshRef} src={slide.hiddenObject.mesh} alt="" onLoad={() => setMeshLoaded(true)} />
+        <img className="lidar-capture-mesh" ref={meshRef} src={mediaUrl(slide.hiddenObject.mesh)} alt="" onLoad={() => setMeshLoaded(true)} />
         {SCENE_LABELS.map(({ key, side }) => (
           <div key={key} className={`lidar-capture-label lidar-capture-label--${side}`} ref={(element) => { labelRefs.current[key] = element; }}>
             <span><Text>{slide.labels[key]}</Text></span>

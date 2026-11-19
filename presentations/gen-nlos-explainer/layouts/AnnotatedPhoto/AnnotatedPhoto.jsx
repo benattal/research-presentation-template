@@ -14,6 +14,7 @@
  *   inset   optional { src, alt, label, step, size }: a square image at
  *           the bottom of the right margin, with its label under it.
  */
+import { mediaUrl } from '@core/presentation/preload.js';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import './AnnotatedPhoto.css';
 
@@ -31,7 +32,7 @@ export default function AnnotatedPhoto({ slide, buildStep }) {
         <div className="annotated-photo-figure" style={{ width, height: photo.height }}>
           <img
             className="annotated-photo-image"
-            src={photo.src}
+            src={mediaUrl(photo.src)}
             alt={photo.alt}
             style={{ left: MARGIN, width: photo.width, height: photo.height }}
           />
@@ -62,7 +63,7 @@ export default function AnnotatedPhoto({ slide, buildStep }) {
               className="annotated-photo-inset"
               style={{ left: MARGIN + photo.width + 40, width: inset.size, opacity: buildStep >= inset.step ? 1 : 0 }}
             >
-              <img src={inset.src} alt={inset.alt} style={{ width: inset.size, height: inset.size }} />
+              <img src={mediaUrl(inset.src)} alt={inset.alt} style={{ width: inset.size, height: inset.size }} />
               <figcaption>{inset.label}</figcaption>
             </figure>
           )}
