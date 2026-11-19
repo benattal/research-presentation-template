@@ -17,6 +17,10 @@ node_modules/
 /presentations/*/public/
 /presentations/*/assets/
 
+# Python caches (media scripts, narration tools)
+__pycache__/
+*.pyc
+
 # Editors and OS
 .vscode/
 .idea/
