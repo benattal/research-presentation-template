@@ -11,6 +11,8 @@
  *   - render every formula of the presenter notes, as the presenter window
  *     does (a formula of a draft slide's notes that does not render is a
  *     warning);
+ *   - check that `pronunciation.json`, if the presentation has one, maps
+ *     terms to spoken spellings (docs/implementation/narration.md);
  *   - check that every `/slides/...` path in slide content or layout source
  *     exists in the presentation's `public/` directory (pull assets first:
  *     npm run assets -- pull <id>); a missing asset of a draft slide (one
@@ -25,6 +27,7 @@ import { join, relative } from 'node:path';
 import { createServer } from 'vite';
 import { slideIdFromPath } from '../core/client/presentation/model.js';
 import { notesMathProblems } from '../core/client/presentation/notesMath.js';
+import { readPronunciationMap } from '../core/tooling/narration.js';
 import { REPO_ROOT, selectPresentations } from '../core/tooling/presentations.js';
 import { createViteConfig } from '../core/tooling/viteConfig.js';
 
@@ -91,6 +94,8 @@ for (const presentation of selectPresentations(process.argv.slice(2))) {
     const where = relative(presentation.dir, path).replaceAll('\\', '/');
     (drafts.has(slideIdFromPath(path)) ? warnings : errors).push(...notesMathProblems(readFileSync(path, 'utf-8'), where));
   }
+
+  errors.push(...readPronunciationMap(presentation).problems);
 
   const assets = referencedAssets(presentation);
   const publicDir = join(presentation.dir, 'public');

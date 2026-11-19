@@ -32,3 +32,6 @@ Thumbs.db
 .claude/*
 !.claude/skills/
 .gradio/
+
+# Python bytecode (narration/)
+__pycache__/
