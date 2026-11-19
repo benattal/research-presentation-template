@@ -13,10 +13,6 @@
     "Simulated room",
     "Stanford-FK dataset"
   ],
-  "buildSteps": [
-    "ours and CC-SOCR",
-    "3D-GTR"
-  ],
   "credits": [
     {
       "source": "liu2023",
@@ -64,13 +60,11 @@
     {
       "row": 0,
       "column": 2,
-      "step": 1,
       "label": "3D-GTR"
     },
     {
       "row": 1,
-      "column": 2,
-      "step": 1
+      "column": 2
     }
   ]
 }
