@@ -1,0 +1,88 @@
+/* NLOS reconstruction in 2D: a canvas with short labels placed over it. */
+.flatland-nlos {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.flatland-nlos-stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flatland-nlos-figure {
+  position: relative;
+  flex: none;
+}
+
+.flatland-nlos-figure canvas {
+  position: absolute;
+  inset: 0;
+}
+
+/* A panel's labels, moved and faded together by the step clock. */
+.flatland-nlos-group {
+  position: absolute;
+  height: 0;
+}
+
+/* Labels sit over the canvas at positions the layout computes; the canvas draws everything else. */
+.flatland-nlos-label {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  font-size: 21px;
+  line-height: 26px;
+  color: var(--text-primary);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.flatland-nlos-label--under {
+  font-size: 19px;
+  color: var(--text-secondary);
+}
+
+.flatland-nlos-label--axis {
+  font-size: 17px;
+  line-height: 22px;
+  color: var(--text-muted);
+}
+
+.flatland-nlos-label--scan-axis {
+  transform: rotate(-90deg);
+  transform-origin: center;
+}
+
+.flatland-nlos-label--forward {
+  color: var(--direct);
+}
+
+.flatland-nlos-label--adjoint {
+  color: var(--indirect);
+}
+
+.flatland-nlos-label--count {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Labels the step clock shows start hidden; the clock's first frame sets them. */
+.flatland-nlos-timed {
+  opacity: 0;
+}
+
+/* What kind of picture this is, once, at the lower right under the figure. */
+.flatland-nlos-note {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  font-size: 17px;
+  line-height: 22px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}

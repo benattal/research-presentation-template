@@ -1,0 +1,23 @@
+{
+  "layout": "flatlandNlos",
+  "title": "NLOS reconstruction",
+  "labels": {
+    "planar": "Planar relay wall",
+    "nonplanar": "Visible surfaces as relays",
+    "grid": "NLOS volume",
+    "measurements": "Measurements",
+    "planarSampling": "scan points on a uniform grid",
+    "nonplanarSampling": "one scan point per lidar pixel",
+    "backprojection": "backprojection",
+    "iteration": "iteration",
+    "time": "time",
+    "scanPoint": "scan point",
+    "forward": "forward",
+    "adjoint": "adjoint",
+    "note": "2D illustration"
+  },
+  "buildSteps": [
+    "relays and confocal measurements",
+    "adjoint, then CGLS iterations"
+  ]
+}

@@ -4,6 +4,7 @@
  * listed here; a name may not repeat a core one.
  */
 import AnnotatedPhoto from './AnnotatedPhoto/AnnotatedPhoto.jsx';
+import FlatlandNlos from './FlatlandNlos/FlatlandNlos.jsx';
 import LightVideo from './LightVideo/LightVideo.jsx';
 import Panels from './Panels/Panels.jsx';
 import RelatedWork from './RelatedWork/RelatedWork.jsx';
@@ -12,6 +13,7 @@ import Summary from './Summary/Summary.jsx';
 
 export default {
   annotatedPhoto: AnnotatedPhoto,
+  flatlandNlos: FlatlandNlos,
   lightVideo: LightVideo,
   panels: Panels,
   relatedWork: RelatedWork,
