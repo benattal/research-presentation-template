@@ -68,3 +68,5 @@ The measurable gates that close the plan.
 
 - [Template restructure](template-restructure.md), tracked in
   [its tracker](../tracking/template-restructure.md).
+- [Framework consolidation](framework-consolidation.md), tracked in
+  [its tracker](../tracking/framework-consolidation.md).
