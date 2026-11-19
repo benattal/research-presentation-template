@@ -124,6 +124,20 @@ as the fix.
   3 before volume rendering) is awkwardly placed."
 - **Consistent from slide to slide.** The same kind of element has the same
   size and position on consecutive slides (room renders, titles, dividers).
+  "Still a slight shift in content from the first captured slide to the
+  second": measure positions on slides that share a grid; a few pixels
+  show.
+- **One order and one name.** "be consistent about which method is shown
+  first", "Internal consistency in storytelling is very important". List
+  the order of methods on every comparison, the titles of parallel
+  slides, and every name given to the same thing; each list has one
+  entry. Check that each color means one thing.
+- **Pictures of methods are those methods' outputs.** "The visuals should
+  also ideally be tied to a concrete technique". For every labeled
+  result, find the file's provenance.
+- **Nothing points at nothing.** "there's a hanging arrow ... which
+  doesn't lead to anything". Every arrow, leader line, and label has its
+  target on screen at that step, and nearer than anything else.
 - **One type scale.** "Font sizes ... all over the place, id probably pick
   2/3 font sizes and use those and only those consistently". List every
   `font-size` in the deck's layouts and theme: besides the titles there
@@ -137,6 +151,22 @@ as the fix.
 
 ## Animation and interaction
 
+- **Every key press changes the screen, at once.** "The navigation doesn't
+  work (arrow keys are broken)", "an arrow press should reveal content.
+  but it gets loaded in slowly/visibly". Step through the deck: no press
+  without a visible change, no fade that reads as loading, no press that
+  waits for an animation. Measure key press to painted frame on every
+  slide; a slide that takes longer than a frame or two is building
+  something on arrival that it should have prepared ahead.
+- **Media is there when the slide is.** "sometimes the content is not
+  fully loaded when I change slides", "Some strange thin outlines where
+  videos *will* appear". After a reload, walk the deck and watch the
+  first frame of every slide and reveal: no empty tile, no poster that
+  differs from the video's first frame, no edge of a video around a cell
+  that is not revealed yet.
+- **Clips shown together stay together.** "The videos also get unsynched
+  ... Make sure this doesn't happen here or elsewhere". Count the video
+  elements on every slide: more than one means clips that will drift.
 - **Nothing jumps or shifts.** "Between slide changes, sometimes an element
   shifts location", "Transient light transport visualization are still
   broken (they jump)". Elements keep their place between build steps and
@@ -164,6 +194,21 @@ as the fix.
 - **Vetting agents each cycle.** "Please make sure there are some subagents
   handling vetting tasks like this". Reviewers who did not build the slides
   check content and flow, layout and text, and the UI.
+- **Vet the animations.** "Remember to vet animations. This should be
+  added to the plan." A capture shows one still per step, so motion is
+  checked on its own: for every animated step, every looping video, and
+  every pair of consecutive slides, look at a series of frames from the
+  key press to the settled state, in a browser with the GPU, forward,
+  backward, and with rapid presses.
+- **Vet the narration against the screen.** "narration is too long
+  without supporting visuals/animations at times". For a narrated deck,
+  list each step's seconds of narration beside its seconds of visual
+  change; where the voice outlasts the picture, add a beat, split the
+  step, or shorten the sentence.
+- **A draft is a deck, not a skeleton.** "The slide titles don't really
+  make sense", "the goal is not necessarily to do this fast". Show the
+  storyboard first and built slides after; placeholder slides are not
+  shown.
 - **Keep this record and extrapolate.** "It might be useful to keep a record
   of some of this feedback, so that you can extrapolate from it/make better
   edits in the next few iteration cycles". Apply each item deck-wide, not
