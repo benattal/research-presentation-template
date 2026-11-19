@@ -29,6 +29,24 @@ Every direction the user gives about this work, quoted and dated.
   stay".
 - "Yeah don't use simlinks like that" (of junctions between checkouts).
 
+## 2026-11-19 19:50 — the recorder on a real deck: two fixes
+
+- `npm run record -- gen-nlos-explainer --only 6-10` failed twice, on
+  cases the example deck does not have. (1) "Screencast is already
+  active": two requests for a fresh frame overlapped, so two stops were
+  followed by two starts; restarts are now one at a time. (2) "write
+  after end": a frame still on its way when the recording stopped was
+  written to the closed encoder; frames after the end are now left out.
+- After the fixes, steps 6 to 10 (video, WebGL, a section card): 26.6 s,
+  1758 frames received, key presses shown within 153 ms, 4 changes
+  recovered, contact sheet correct for all five steps.
+- With narration (`--only 6-8 --narration <dir>`, the explainer's earlier
+  narration with its one stale step removed): 17.0 s, key presses shown
+  within 11 ms, audio at −16.4 LUFS, speech beginning 0.2 s after each
+  step (the segments' own lead silence), no metadata beyond the encoder
+  tag.
+- Both fixes are on `main`. Not tried: `--url`.
+
 ## 2026-11-19 19:20 — `main` moved
 
 - `npm run test:ui` on the framework branch: 36 of 36 pass (199 s),
