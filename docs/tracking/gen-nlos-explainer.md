@@ -17,6 +17,11 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- "Okay, you can also continue with the remaining tasks incl. visualizing
+  the ground truth volumes/capture setups for the NLOS reconstruction
+  comparison". The pause is lifted for the open items: the ground-truth
+  scene and capture-setup column (a builder is on it), the capture
+  slide's visuals, and the narration-over-still-visuals audit.
 - "There is also a bit of disconnect between the narration and the slides
   on the hardware visualization slide. When say that we capture a video, I
   might show the video. I would also show the indirect light propagating
