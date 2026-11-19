@@ -46,6 +46,16 @@ export function clampPosition(slides, { index, step }) {
   return { index: safeIndex, step: safeStep };
 }
 
+/**
+ * The `sessionStorage` key a window keeps its position under, as JSON. It
+ * includes the presentation id: every presentation of the live gateway
+ * shares one origin. `npm run record` writes it to open a presentation at
+ * the step a recording starts from.
+ */
+export function positionStorageKey(presentationId) {
+  return `${presentationId}:slide-position`;
+}
+
 export function isFirstPosition(position) {
   return position.index === 0 && position.step === 0;
 }

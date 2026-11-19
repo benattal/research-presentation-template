@@ -28,7 +28,11 @@ function openPresenterWindow() {
  * leave and never sits under them.
  *
  * Every slide is got ready ahead of time (`preloadSlides`: its media, and
- * what its layout prepares), so slides show at once on arrival.
+ * what its layout prepares), so slides show at once on arrival. Once all
+ * of them are ready, `<body>` carries `data-slides-ready`.
+ *
+ * `?bars=hidden` in the URL leaves out both bars, so the stage fills the
+ * window; every input below still works. `npm run record` films this.
  *
  * Input comes from the keyboard (see `useKeyboardNavigation` for the keys),
  * swipes, the navigation bar, and the presenter window. While the live
@@ -46,12 +50,19 @@ export default function AudienceView({ presentation }) {
   });
   const { isFullscreen, toggleFullscreen } = useFullscreen();
   const [showOverview, setShowOverview] = useState(false);
+  const barsHidden = new URLSearchParams(window.location.search).get('bars') === 'hidden';
 
   // The slides after the one the view opened on first, then the ones before it.
   const openedAt = useState(navigation.position.index)[0];
   useEffect(() => {
     const { slides, layouts } = presentation;
-    return preloadSlides([...slides.slice(openedAt), ...slides.slice(0, openedAt)], layouts);
+    const stop = preloadSlides([...slides.slice(openedAt), ...slides.slice(0, openedAt)], layouts, () => {
+      document.body.dataset.slidesReady = 'true';
+    });
+    return () => {
+      stop();
+      delete document.body.dataset.slidesReady;
+    };
   }, [presentation, openedAt]);
 
   const onPresenterCommand = useCallback((command) => {
@@ -80,8 +91,8 @@ export default function AudienceView({ presentation }) {
   useSwipeNavigation({ next: navigation.next, previous: navigation.previous, enabled: !following });
 
   return (
-    <div className="presentation">
-      {presentation.progressBar && (
+    <div className={barsHidden ? 'presentation presentation--stage-only' : 'presentation'}>
+      {presentation.progressBar && !barsHidden && (
         <ProgressBar current={navigation.position.index} total={presentation.slides.length} />
       )}
 
@@ -97,33 +108,35 @@ export default function AudienceView({ presentation }) {
         </AnimatePresence>
       </Stage>
 
-      <Navigation
-        slides={presentation.slides}
-        position={navigation.position}
-        isFirst={navigation.isFirst}
-        isLast={navigation.isLast}
-        next={navigation.next}
-        previous={navigation.previous}
-        goTo={navigation.goTo}
-        disabled={following}
-        toolbar={(
-          <div className="toolbar-buttons">
-            {presentation.backLink && (
-              <a className="toolbar-btn" href={presentation.backLink} title="Back">&#8592;</a>
-            )}
-            <button
-              className="toolbar-btn"
-              onClick={toggleFullscreen}
-              title={isFullscreen ? 'Exit fullscreen (F)' : 'Fullscreen (F)'}
-            >
-              &#x26F6;
-            </button>
-            <button className="toolbar-btn" onClick={openPresenterWindow} title="Open presenter notes (P)">
-              &#x1F4CB;
-            </button>
-          </div>
-        )}
-      />
+      {!barsHidden && (
+        <Navigation
+          slides={presentation.slides}
+          position={navigation.position}
+          isFirst={navigation.isFirst}
+          isLast={navigation.isLast}
+          next={navigation.next}
+          previous={navigation.previous}
+          goTo={navigation.goTo}
+          disabled={following}
+          toolbar={(
+            <div className="toolbar-buttons">
+              {presentation.backLink && (
+                <a className="toolbar-btn" href={presentation.backLink} title="Back">&#8592;</a>
+              )}
+              <button
+                className="toolbar-btn"
+                onClick={toggleFullscreen}
+                title={isFullscreen ? 'Exit fullscreen (F)' : 'Fullscreen (F)'}
+              >
+                &#x26F6;
+              </button>
+              <button className="toolbar-btn" onClick={openPresenterWindow} title="Open presenter notes (P)">
+                &#x1F4CB;
+              </button>
+            </div>
+          )}
+        />
+      )}
 
       {showOverview && (
         <SlideOverview

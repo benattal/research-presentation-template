@@ -241,6 +241,21 @@ describe('audience view', { timeout: 180000 }, () => {
     await goToSlide(page, LAST);
     await page.waitForFunction(() => document.querySelector('.progress-bar').getBoundingClientRect().width > 1270);
   });
+
+  it('shows the stage alone with ?bars=hidden, still moving with the keys, and says when its slides are ready', async () => {
+    await page.goto(`${server.url}?bars=hidden`);
+    await page.waitForSelector('.slide');
+    assert.equal(await page.locator('.navigation, .progress-track').count(), 0);
+    const stage = await page.$eval('.slide-stage', (element) => {
+      const { left, top, right, bottom } = element.getBoundingClientRect();
+      return { left, top, right, bottom };
+    });
+    assert.deepEqual(stage, { left: 0, top: 0, right: 1280, bottom: 720 });
+    await page.waitForSelector('body[data-slides-ready="true"]');
+    await page.keyboard.press('ArrowRight');
+    await page.waitForSelector(`.slide[data-slide-id="${SECOND}"]`);
+    assert.deepEqual(page.errors, []);
+  });
 });
 
 /** Monitors, projectors, a laptop, a portrait tablet, and a phone held both ways. */

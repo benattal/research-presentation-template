@@ -88,14 +88,15 @@ export function whenIdle() {
  * Get `slides` ready, in the order given: load their media into memory,
  * one file at a time, and decode the images; then call `prepare(slide)` of
  * each slide whose layout (in `layouts`, by name) has one, one slide at a
- * time, each when the page is idle. Returns a function that stops it; what
- * is already loaded and prepared stays.
+ * time, each when the page is idle. Calls `onReady`, if given, once all of
+ * it is done. Returns a function that stops it (`onReady` is then never
+ * called); what is already loaded and prepared stays.
  *
  * A file that fails to load is skipped here: the slide that shows it
  * reports it. A `prepare` that fails is reported on the console, and the
  * slide does that work itself when it is shown.
  */
-export function preloadSlides(slides, layouts) {
+export function preloadSlides(slides, layouts, onReady) {
   const controller = new AbortController();
   const { signal } = controller;
   (async () => {
@@ -119,6 +120,7 @@ export function preloadSlides(slides, layouts) {
         console.error(`Slide "${slide.id}": its layout's prepare failed`, error);
       }
     }
+    if (!signal.aborted) onReady?.();
   })();
   return () => controller.abort();
 }
