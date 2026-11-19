@@ -1,11 +1,13 @@
-/* Related work: columns of square pictures (one video behind them all), a
-   limitation line under each, the contribution line under all. */
+/* Related work: one panel per category, each a row of method tiles (square
+   windows onto one video under them all), a caption under each tile, the
+   contribution line under the panels. The tile, gap, and padding sizes are
+   the video's geometry (assets/build/related-work.py) in stage pixels. */
 .slide--related-work {
   --related-work-contribution: #6fd08c;
-  --related-work-picture: 280px;
-  --related-work-column: 440px;
-  --related-work-gap: 40px;
-  --related-work-name-height: 42px;
+  --related-work-tile: 200px;
+  --related-work-gap: 20px;        /* between the tiles of a group, and a panel's padding */
+  --related-work-between: 28px;    /* between the panels */
+  --related-work-name-band: 62px;  /* a panel's top padding, the category's name, and the space under it */
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -19,92 +21,141 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 26px;
+  gap: 44px;
 }
 
-.related-work-columns {
+.related-work-figure {
   position: relative;
   display: flex;
-  gap: var(--related-work-gap);
 }
 
-/* The one video, under the row of pictures: each picture is a window onto its part. */
+/* The one video, under the panels: from the first picture's left edge to the
+   last one's right edge. The name above the pictures and the captions under
+   them each lie 1px over the row of pictures (below), which starts 1px higher. */
 .related-work-video {
   position: absolute;
-  left: calc((var(--related-work-column) - var(--related-work-picture)) / 2);
-  top: var(--related-work-name-height);
-  width: calc(100% - var(--related-work-column) + var(--related-work-picture));
-  height: var(--related-work-picture);
+  left: var(--related-work-gap);
+  right: var(--related-work-gap);
+  top: calc(var(--related-work-name-band) - 1px);
+  height: var(--related-work-tile);
+}
+
+.related-work-video-media {
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: fill;
 }
 
-.related-work-column {
+/* Covers the video's black gap between two panels. */
+.related-work-between {
   position: relative;
-  margin: 0;
-  width: var(--related-work-column);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.related-work-name {
-  height: 30px;
-  margin-bottom: 12px;
-  font-size: var(--type-label);
-  font-weight: 500;
-  line-height: 30px;
-  color: var(--text-primary);
-  white-space: nowrap;
-}
-
-.related-work-picture {
-  position: relative;
-  width: var(--related-work-picture);
-  height: var(--related-work-picture);
-}
-
-.related-work-hidden {
-  position: absolute;
-  border: 3px solid var(--hidden);
-}
-
-/* Dims the picture out of the spotlight. */
-.related-work-veil {
-  position: absolute;
-  inset: -1px;
+  width: var(--related-work-between);
   background: var(--bg-slide);
 }
 
-.related-work-caption {
-  margin-top: 6px;
-  font-size: var(--type-small);
-  line-height: 20px;
-  color: var(--text-muted);
-}
-
-.related-work-methods {
-  list-style: none;
-  margin-top: 10px;
+/* A panel is drawn in pieces around its pictures: the name, the pictures'
+   borders, and the captions carry the panel's shade. The name and the
+   captions overlap the row of pictures by 1px: where two pieces only met,
+   on a stage scaled to a fraction of a pixel, the black under them showed
+   as a hairline. */
+.related-work-group {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  font-size: var(--type-label);
-  line-height: 28px;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
-.related-work-method,
-.related-work-limitation {
-  display: block;
-  white-space: pre;
+.related-work-name {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  height: var(--related-work-name-band);
+  margin-bottom: -1px;
+  padding-top: var(--related-work-gap);
+  font-size: var(--type-label);
+  font-weight: 500;
+  line-height: 30px;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--text-primary);
+  background: var(--bg-panel);
+}
+
+.related-work-pictures {
+  display: flex;
+}
+
+/* A window onto the video; the borders are the panel between and beside the pictures. */
+.related-work-picture {
+  position: relative;
+  box-sizing: content-box;
+  width: var(--related-work-tile);
+  height: var(--related-work-tile);
+  border-left: var(--related-work-gap) solid var(--bg-panel);
+}
+
+.related-work-picture:last-child {
+  border-right: var(--related-work-gap) solid var(--bg-panel);
+}
+
+.related-work-captions {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  margin-top: -1px;
+  display: flex;
+  gap: var(--related-work-gap);
+  padding: 10px var(--related-work-gap) var(--related-work-gap);
+  background: var(--bg-panel);
+}
+
+.related-work-caption {
+  width: var(--related-work-tile);
+  text-align: center;
 }
 
 .related-work-method {
+  font-size: var(--type-label);
+  line-height: 28px;
+  white-space: nowrap;
   color: var(--text-primary);
 }
 
+.related-work-citation {
+  font-size: var(--type-small);
+  line-height: 22px;
+  white-space: nowrap;
+  color: var(--text-muted);
+}
+
 .related-work-limitation {
+  margin-top: 8px;
+  font-size: var(--type-small);
+  line-height: 22px;
+  white-space: pre;
   color: var(--hidden);
+}
+
+/* Dims a panel's pictures and text out of the spotlight; the panel keeps its shade. */
+.related-work-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: var(--bg-panel);
+  pointer-events: none;
+}
+
+/* Under the panels, at their left edge; out of the flow, so the panels and the contribution line stay centered. */
+.related-work-note {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 8px);
+  font-size: var(--type-small);
+  line-height: 22px;
+  white-space: nowrap;
+  color: var(--text-muted);
 }
 
 .related-work-contribution {

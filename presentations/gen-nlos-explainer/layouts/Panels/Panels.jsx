@@ -154,7 +154,14 @@ function useRestartOnReveal(videoHolder, shown) {
   }, [videoHolder, shown]);
 }
 
-function Boxes({ boxes, videoHolder, buildStep }) {
+/**
+ * Hidden-region rectangles over a picture (the element they are placed in),
+ * each shown from its build step on and during its window of the video
+ * inside `videoHolder`. The holder's ref must be attached before this
+ * mounts: an earlier sibling in the tree, not an ancestor. The relatedWork
+ * layout uses it too, without build steps.
+ */
+export function Boxes({ boxes, videoHolder, buildStep = Infinity }) {
   const boxElements = useRef([]);
   useBoxWindows(videoHolder, boxes, boxElements);
   return boxes.map((box, i) => (
