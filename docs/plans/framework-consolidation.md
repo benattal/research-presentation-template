@@ -31,9 +31,12 @@ next presentation starts with them.
 
 ### Open
 
-1. **Project branches.** `main` has everything under "Done". It is merged
-   into each presentation's branch (`gen-nlos-explainer`, `guest-lecture`,
-   `vision-workshop`), keeping `presentations/example/` deleted there.
+1. **`vision-workshop`.** `main` is merged into `gen-nlos-explainer` and
+   `guest-lecture`. The merge into `vision-workshop` is made and tested
+   locally and not pushed: that branch is deployed as a live service, and
+   a push may redeploy it, so it waits for the user's word. A project
+   branch that deleted `presentations/example/` deletes the files `main`
+   adds there, on every merge.
 2. **The comparison grid in core.** The explainer's `panels` layout (a
    grid of labeled media over one stitched video, panels revealed and
    dimmed per step, timed boxes on a region, groups on a panel) is the
