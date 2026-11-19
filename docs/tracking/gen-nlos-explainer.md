@@ -16,6 +16,29 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-18, while planning:
 
+- "Yes that is the bucket I was referring to. Use it for large assets in
+  this presentation." (the R2 bucket `presentations`), and "Remember to
+  upload the holi 1-to-3 comparisons from the tcig r2 bucket to dropbox if
+  you haven't already. and tell me what folder you put it in. try not to
+  put too much extra stuff in the dropbox folder": the Dropbox folder gets
+  only the videos and one short README.
+- "Try to use the same orange text black background as the other
+  presentations", then "Please take a look at the
+  light-transport-and-neural rendering lecture here, which is also well
+  formatted", "Not for the colorscheme, but for formatting in general", and
+  "But don't use subtitles for the slides like they are used in
+  light-transport-and-neural-rendering". Colors from the reference decks
+  (black background, white text, orange #FFCC66 titles and accents, Futura
+  PT Book, here the open Jost); layout from the lecture (title at top left,
+  the visual filling the slide, short labels, credits at bottom right);
+  titles without a subtitle line.
+- "Make sure to host the presentation site on localhost so that I can look
+  at it": `npm run dev -- gen-nlos-explainer --port 5174` from
+  `../rpt-gen-nlos` (the branch `gen-nlos-explainer`), at
+  http://localhost:5174/. Edits happen in `../rpt-gen-nlos-work` (branch
+  `gen-nlos-work`) and reach the served branch by fast-forward once checked;
+  the served deck's `public/` and `assets/` are junctions to the working
+  copy's.
 - "Please launch a subagent whose goal is to handle the uploading of
   Holi-1-to-3 results so that this doesn't get forgotten/saved for last"
 - "Please prefer using the pptx files over the video file as primary
@@ -65,11 +88,8 @@ slide rules are in [slide style](../style/slides.md) and
 
 ## Open questions for the user
 
-- "My presentations bucket": read as the R2 bucket named `presentations`
-  (empty, created 2026-11-17), folder `presentations/gen-nlos-explainer/`.
-  The other decks' assets are in `tcig-projects/research-presentation-template/`
-  (the "projects" bucket of 2026-11-17). If that was meant, copy the folder
-  across and drop `ASSETS_REMOTE=tcig:` from the README.
+None open. Resolved: "my presentations bucket" is the R2 bucket
+`presentations` (the user, 2026-11-18).
 
 ## 2026-11-18 21:45 — plan written; research running
 

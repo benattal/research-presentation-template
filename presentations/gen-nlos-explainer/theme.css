@@ -1,0 +1,60 @@
+/*
+ * Generative view synthesis from propagating light: the reference decks'
+ * colors (black slides, white text, orange titles and accents, a
+ * Futura-like face) on the light-transport lecture's layout (title at top
+ * left, the visual filling the slide, short labels, credits at bottom
+ * right). Slides have a title and no subtitle line.
+ *
+ * Roles shared by text, plots, and renders:
+ *   --accent        titles; "ours" in comparisons
+ *   --direct        direct light: the first return, depth
+ *   --indirect      indirect light: returns from hidden surfaces
+ *   --hidden        the hidden region (boxes around it)
+ *   --baseline      baselines in comparisons
+ */
+:root {
+  --bg-primary: #000000;
+  --bg-slide: #000000;
+  --bg-elevated: #121212;
+  --bg-card: #161616;
+  --text-primary: #f4f4f4;
+  --text-secondary: #cfcfcf;
+  --text-muted: #8c8c8c;
+  --accent: #ffcc66;
+  --accent-glow: rgba(255, 204, 102, 0.25);
+  --accent-secondary: #6ec6ff;
+  --accent-secondary-glow: rgba(110, 198, 255, 0.25);
+  --border: rgba(255, 255, 255, 0.1);
+  --border-light: rgba(255, 255, 255, 0.2);
+
+  --direct: #7ee08a;
+  --indirect: #c58cff;
+  --hidden: #ff5a5a;
+  --baseline: #9aa4b2;
+
+  --font: 'Jost Variable', 'Jost', 'Futura PT', Futura, 'Century Gothic', sans-serif;
+  --font-display: var(--font);
+}
+
+.slide {
+  padding: 40px 56px 44px;
+}
+
+.slide .section-label {
+  display: none;
+}
+
+.slide-header {
+  margin-bottom: 18px;
+}
+
+.slide-title {
+  color: var(--accent);
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.term-direct { color: var(--direct); }
+.term-indirect { color: var(--indirect); }
+.term-hidden { color: var(--hidden); }
+.term-accent { color: var(--accent); }

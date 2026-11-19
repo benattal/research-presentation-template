@@ -103,6 +103,11 @@ start.
 - **Dropbox.** Write only inside `figures/holi_1_to_3_trajectories/`;
   never change another file there.
 - **Local hosting.** No `poll`, `pollResults`, or `numericPoll` layouts.
+- **Look.** Colors from the reference decks: black background, white
+  text, orange `#FFCC66` titles and accents, a Futura-like face (Jost).
+  Formatting from the light-transport lecture: title at top left, the
+  visual filling the slide, short labels, credits at bottom right. Slides
+  have a title and no subtitle line (the narration states the point).
 
 ## Design
 
