@@ -12,7 +12,7 @@ import { BUNNY, LIGHT_SPEED, MIRRORS_TO_RELAY, RELAY_POINT, TIMES, distance } fr
 export const STEPS = ['pulse', 'direct', 'indirect', 'scan'];
 
 /** Playback speed of the light: ms of the slide per ns of scene time. */
-const MS_PER_NS = 420;
+const MS_PER_NS = 340;
 /** Per step, the pause before its light moves, in ms: the narration's first words name what is about to move. */
 const LEAD_MS = { pulse: 2000, direct: 700, indirect: 500 };
 /** When the plot's axes appear in the first step, in ms: as the narration turns to the measurement. */
