@@ -147,13 +147,16 @@ core/
   server/          live gateway: Express app, live API, presenter auth, polls
   tooling/         presentation discovery, Vite configuration, notes writer
 presentations/
-  <id>/            presentation.json, slides/, layouts/, public/ and assets/
-                   (both from the bucket, ignored by git)
+  <id>/            presentation.json, slides/, layouts/, media/ (the scripts
+                   that build its media), public/ and assets/ (both from
+                   the bucket, ignored by git)
 scripts/           command-line entry points (dev, build, serve, check, ...)
 tests/             node:test suites; tests/ui/ drives the browser
 docs/
   implementation/  how the framework works
-  style/           code, writing, and slide conventions
+  style/           code, writing, and slide conventions; presentation types
+  workflows/       procedures: making a deck, a narrated video, working
+                   together
   environments/    setup
   plans/           intended multi-phase work
   tracking/        live status of active plans
@@ -293,8 +296,12 @@ Use evidence proportional to risk:
 ## Documentation
 
 Framework behavior belongs in `docs/implementation/`; conventions belong in
-`docs/style/`; setup belongs in `docs/environments/`; changing state belongs
-only in `docs/tracking/`. Every document is reachable from
+`docs/style/`; procedures belong in `docs/workflows/`; setup belongs in
+`docs/environments/`; changing state belongs only in `docs/tracking/`.
+Before starting a presentation, read
+[presentation types](docs/style/presentation-types.md) and
+[making a presentation](docs/workflows/making-a-presentation.md); when
+others work on the branch, [working together](docs/workflows/working-together.md). Every document is reachable from
 [docs/index.md](docs/index.md). Prose follows
 [writing style](docs/style/writing.md). Public functions and non-obvious
 components get a docstring stating what the signature does not: units,

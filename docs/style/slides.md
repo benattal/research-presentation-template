@@ -120,6 +120,21 @@ space is not used effectively in these slides".
   off the slide's background, one shade for the whole deck, no border).
   This is grouping, not decoration: the rule above still bars colored
   boxes and shapes around a line of text.
+- **Slides that follow one another share a grid.** The user (2026-11-19):
+  "That way, it looks better when we transition to the next slide which
+  also has 4 columns", "the same layout can be used (the images don't jump
+  from one place to another)", and, of a 16 px difference, "Still a
+  slight shift in content from the first captured slide to the second."
+  Consecutive slides that show the same kind of content use the same
+  columns, tile sizes, and top line, and an element that stays between
+  them stays at the same pixel.
+- **Nothing points at nothing, and a label sits on its thing.** The user
+  (2026-11-19): "there's a hanging arrow from RGB image in the first
+  slide which doesn't lead to anything until the later slides" and
+  "Bring the "occluder" label closer to the teapot. It's not clear if
+  it's labeling the teapot or the floor." An arrow is drawn when both of
+  its ends are on screen; a label is nearer to what it names than to
+  anything else.
 - **Short labels, not explanations.** Label a figure or a state of an
   interactive visual with a symbol or a few words ("bounce 2", $Ge$); the
   speaker explains, and the explanation goes in the notes. No line of text
@@ -245,10 +260,64 @@ space is not used effectively in these slides".
   segment and crop away headers. Videos that must play in step are one
   file: stitch a side-by-side comparison into one video, with a caption
   under each panel, because separate video elements drift apart.
+- **A video starts with what it shows, and holds where the point is.** The
+  user (2026-11-19): "The video may also just start a little bit too
+  late" and "maybe pause the indirect video to highlight the indirect
+  difference". Trim a clip to the frames in which something happens;
+  hold the frame that makes the point (the final view of a trajectory,
+  the frame in which two captures differ most) for a few seconds; mark a
+  region only while the view is held.
+- **A video shows a frame from the moment its slide appears.** The user
+  (2026-11-19): "Some strange thin outlines where videos *will* appear,
+  before they do appear. Also sometimes the content is not fully loaded
+  when I change slides". Every video names a `poster` (its first frame),
+  and a cell of a stitched video that is not revealed yet is covered a
+  little past its edges.
+- **A picture of a method is that method's output.** The user
+  (2026-11-19): "more visual examples of methods should be shown. The
+  visuals should also ideally be tied to a concrete technique". When a
+  slide names methods (related work, baselines), each picture or clip is
+  the result of the method named under it, with its citation. Find out
+  which method produced a file before labeling it; do not label a result
+  with a method that did not produce it.
+- **A render obeys the scene it draws.** The user (2026-11-19): "the
+  reflected light highlight looks strange (like it's not aligned with the
+  normal or something?)". A glow on a surface lies in the surface; light
+  travels at one speed; times and distances agree with the geometry on
+  screen.
 - Size media for the 1280×720 stage. Re-encode large videos before pushing
   them to the bucket; a slide rarely needs more than 1280 pixels of width.
 - Name files for what they show, and keep them under the slide that uses
   them (`public/slides/<slide-id>/`).
+
+## Comparisons
+
+The user (2026-11-19): "Internal consistency in storytelling is very
+important", "For the comparisons, I would also try to be consistent
+about which method is shown first/in particular when our method appears.
+In one slide it appears last in another first", and "If you use captured
+scenes: comparison, use consistent naming for the simulated slide title
+too".
+
+- **One order, everywhere.** A deck fixes the order of the things it
+  compares (for example: reference, ours, then each baseline in a fixed
+  order) and keeps it in every grid, in the order steps reveal them, and
+  in the notes.
+- **Parallel slides have parallel titles** and the same row and column
+  names. One thing has one name in the whole deck (a figure called the
+  input view on one slide is not the RGB image on the next without the
+  slide saying so).
+- **One meaning per color.** The color that marks our method marks
+  nothing else; the color of a hidden region is not also the color of a
+  limitation or of scan points. A deck's `theme.css` lists each color's
+  one meaning.
+- **Say what a mark means, and what a number counts.** A box that marks a
+  region is explained once where it first appears ("Red: hidden in the
+  input view"); a count says what it counts ("Correct object: 20/20
+  seeds"); an asterisk has its footnote on every slide that shows it.
+- **The reference comes first.** A comparison shows the ground truth or
+  the scene itself where one exists, so the viewer can judge the claim on
+  screen.
 
 ## Citations
 
@@ -264,6 +333,15 @@ space is not used effectively in these slides".
 Use build steps to pace an argument: each click adds one idea the speaker is
 about to talk about. A slide's last step is what the audience sees when the
 speaker moves on, so it must stand on its own.
+
+**Every key press changes the screen, at once.** The user (2026-11-19), of
+steps that changed nothing and of steps that faded in: "The navigation
+doesn't work (arrow keys are broken)", "I cannot use the arrow keys to
+navigate until an animation is finished", and "an arrow press should
+reveal content. but it gets loaded in slowly/visibly". A build step
+exists only when it shows something new; the new state is on screen in the
+frame after the press; a key pressed during an animation moves on without
+waiting for it; arriving on a slide backward shows its settled state.
 
 An equation can be a question: its left side first, with a question mark
 over the equals sign, and its right side one step later, so the speaker can
@@ -285,6 +363,20 @@ says, not what the slide shows: the transition into the slide, the one
 sentence the audience must remember, and the answer to the question the
 slide invites. Per-step notes (`notes-<step>.md`) are for steps that change
 what the speaker says.
+
+In a narrated deck (a video with a voiceover: see
+[presentation types](presentation-types.md)) the notes are the narration,
+one file per build step, and two more rules hold. The user (2026-11-19):
+"narration is too long without supporting visuals/animations at times"
+and "When say that we capture a video, I might show the video."
+
+- **The screen shows what the voice says, while it says it.** Each
+  sentence has its own visual beat (something appears or moves); a step's
+  motion lasts about as long as its sentences; a sentence that names a
+  thing shows that thing. Measure both: seconds of narration against
+  seconds of change, per step.
+- **Each step's note is one or more complete sentences.** A voice reads
+  each step on its own, so a sentence is never split across two steps.
 
 ## Checking a slide
 

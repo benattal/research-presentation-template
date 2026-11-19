@@ -19,11 +19,36 @@ presentations/<id>/
   theme.css                           optional
   sources.json                        optional: citations of borrowed material
   layouts/<LayoutName>/...            optional, registered in layouts/index.js
+  media/...                           optional: the scripts that build the media
 ```
 
 Every presentation has a `README.md` saying what it is and how to fetch
 its assets on a fresh checkout (`npm run assets -- pull <id>`) and push new
 ones; `npm run new` writes one, and `npm test` fails when one is missing.
+
+## `media/`: the scripts that build the media
+
+The files in `public/` are not in git, but the way they were made is
+code, and belongs in git. A presentation keeps the scripts that produce
+its media (trimming and stitching clips with ffmpeg, rendering a volume,
+decimating a mesh) in `media/`, one per slide or section, named for what
+it builds. Each script:
+
+- is run by hand from the presentation's directory
+  (`bash media/results.sh`, `python media/light-videos.py`), and says so
+  in its first lines, with what it needs installed;
+- names its sources at the top (a results folder, a bucket path, files
+  under `assets/sources/`), reads them without changing them, and writes
+  only under `public/slides/<slide-id>/`;
+- states the geometry it encodes for (cell sizes and gaps of the slide's
+  grid, at 1.5× the stage) next to the slide's `content.json` values it
+  must agree with;
+- writes a poster (the first frame) beside every video.
+
+Sources that exist nowhere else (a downloaded mesh, a collaborator's
+clip) go in `assets/sources/<slide-id>/`, which is synced to the bucket.
+The framework never runs these scripts: they are provenance, and
+`npm run build` does not depend on them.
 
 ## `presentation.json`
 
