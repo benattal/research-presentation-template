@@ -157,6 +157,7 @@ npm run check                         # static checks of every presentation
 npm test                              # unit and repository tests
 npm run test:ui                       # browser tests of every view and core layout
 npm run capture -- <id>               # screenshot and check every slide
+npm run record -- <id>                # record a run-through video (needs ffmpeg)
 ```
 
 ## Architecture and code aesthetics

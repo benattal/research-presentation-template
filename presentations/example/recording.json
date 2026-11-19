@@ -1,0 +1,8 @@
+{
+  "defaultHold": 3,
+  "silentHold": 2,
+  "holds": {
+    "building-up": [{ "seconds": 1.5 }, { "seconds": 1.5 }, { "seconds": 1.5 }],
+    "big-number": [{ "seconds": 2 }, { "seconds": 1.5, "oneShot": true }]
+  }
+}

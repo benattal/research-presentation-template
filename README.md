@@ -77,6 +77,7 @@ and [docs/implementation/layouts.md](docs/implementation/layouts.md).
 | `npm run new -- <id>` | start a presentation |
 | `npm run check` | load every presentation and check its assets, without a browser |
 | `npm run capture -- <id>` | screenshot every slide and build step and report overflow, console errors, missing media, and changes since the last run |
+| `npm run record -- <id>` | record a run-through video of every slide and build step, with narration when given one (needs ffmpeg and Edge or Chrome) |
 | `npm run assets -- pull\|push\|check\|size <id>` | move assets between the checkout and the bucket |
 | `npm run extract-pptx -- <deck.pptx>` | pull text, media, and notes out of a PowerPoint deck |
 | `npm test` | unit and repository tests |
