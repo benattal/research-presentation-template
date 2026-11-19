@@ -259,7 +259,6 @@ html, body, #root {
   border: none;
   background: none;
   cursor: pointer;
-  transition: width 0.3s ease;
 }
 
 .nav-dot::before {

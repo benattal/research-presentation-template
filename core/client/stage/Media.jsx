@@ -1,3 +1,6 @@
+import { useMemo } from 'react';
+import { mediaUrl } from '../presentation/preload.js';
+
 /**
  * One media item from slide content: `{ type: "image" | "gif" | "video", src, alt?, poster? }`.
  *
@@ -7,14 +10,19 @@
  * never empty while the video starts. Images load eagerly: a slide is on
  * screen when it mounts, and lazy loading only delays the first paint (and
  * the capture).
+ *
+ * The element is given the preloaded copy of each file when there is one
+ * (`mediaUrl`), resolved when the item mounts and kept while it stays.
  */
 export default function Media({ item, controls = false, className }) {
+  const src = useMemo(() => mediaUrl(item.src), [item.src]);
+  const poster = useMemo(() => (item.poster ? mediaUrl(item.poster) : undefined), [item.poster]);
   if (item.type === 'video') {
     return (
       <video
         className={className}
-        src={item.src}
-        poster={item.poster}
+        src={src}
+        poster={poster}
         autoPlay
         muted
         loop
@@ -23,5 +31,5 @@ export default function Media({ item, controls = false, className }) {
       />
     );
   }
-  return <img className={className} src={item.src} alt={item.alt ?? ''} />;
+  return <img className={className} src={src} alt={item.alt ?? ''} />;
 }
