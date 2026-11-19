@@ -16,6 +16,11 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-18, while planning:
 
+- "Goal set: Repeat 3-4 times: (a) do a pass on the slides, notes,
+  recorded video with subagents, (b) have subagents vet the slides, notes,
+  recorded video and report feedback, (c) consolidate feedback, check for
+  bugs, and repeat" and "Merge work often. Commit and push (to both git
+  and R2) often."
 - "The "reviewers" need to focus less on correcting content already in
   the paper, and focus more on editing the presentation itself and making
   it good/clear". Review briefs ask for presentation edits (structure,
