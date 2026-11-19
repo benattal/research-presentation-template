@@ -8,6 +8,43 @@ words on a slide.
 Reviews check these rules with the [slide review checklist](slide-review.md),
 which keeps the user's feedback in general form.
 
+## Storyboard
+
+A presentation is planned as a storyboard before any slide is built. The
+user (2026-11-19), of a deck started as a skeleton of placeholder slides:
+"The slide titles don't really make sense", "The content on the slides
+don't really make sense either", and "take a step back, and plan out an
+effective presentation"; then "Could you also update the storyboard as
+the slides evolve so that I can provide comments?" and "add docs and
+instructions making storyboarding a requirement for future
+presentations".
+
+The storyboard is a table in the presentation's plan
+(`docs/plans/<stem>.md`), one row per slide in order, with a row for
+each section between them:
+
+| # | Slide (title) | Steps: what appears | Source | Status |
+|---|---|---|---|---|
+| 3 | Video of propagating light | (1) the captured video with a time readout; (2) direct light marked; (3) indirect light marked | the capture's light video | drafted |
+
+- **Title**: what the slide will be titled, by the rules below.
+- **Steps**: what each key press puts on screen. One beat of the talk is
+  one build step, and every step changes the screen: a step that changes
+  nothing reads as a dead key.
+- **Source**: where each visual comes from (a result file, a dataset, a
+  visualization to write), specific enough to find. A row without a source
+  is not ready to build.
+- **Status**: planned, building, drafted, or refined.
+
+Write it from the material the user gave (reference decks, results,
+instructions), following their structure where the user asked for it, and
+state the deck's order in a sentence above the table. The user reads the
+storyboard before slides are built and comments against it afterwards, so
+it is kept current: a change to a slide's title, steps, or source changes
+its row in the same commit. Build to the storyboard one section at a time,
+each to a good draft before it is shown; a deck of placeholder slides is
+not a draft.
+
 ## Titles and subtitles
 
 The user (2026-11-17): "The slide titles are not great. Weird phrases

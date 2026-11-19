@@ -31,6 +31,15 @@ conclusions belong in `docs/tracking/`; intended work belongs in
   code and layout freely; propose content changes (a wrong label, a
   confusing question, a slide that does not match its notes) and let the
   user decide, unless the user asked for that kind of change.
+- Storyboard before slides. A new presentation, and a new section of an
+  existing one, starts with a storyboard in its plan
+  ([slide style](docs/style/slides.md#storyboard)): one row per slide with
+  its title, what each key press shows, the source of each visual, and
+  its status. The user reads it before slides are built. Slides are built
+  to it, to a good draft, and shown; the storyboard is updated in the same
+  commit as the slides it describes. Do not serve a skeleton of
+  placeholder slides, and do not start narration, recording, or other
+  later stages before the slides exist.
 
 ## Instruction currency
 
