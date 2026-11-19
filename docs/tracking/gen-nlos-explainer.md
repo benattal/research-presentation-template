@@ -483,6 +483,28 @@ slide rules are in [slide style](../style/slides.md) and
 None open. Resolved: "my presentations bucket" is the R2 bucket
 `presentations` (the user, 2026-11-18).
 
+## 2026-11-19 15:25 — a cleanup emptied the lecture's media; restored
+
+User directions (2026-11-19): see "Standing directions".
+
+- Found by `npm run check` after merging the collaborator's commits: the
+  lecture deck's `public/` and `assets/` in this checkout were empty,
+  modified at 13:55, when this session removed thirteen old lecture
+  worktrees. Most likely cause (the worktrees are gone, so not verified):
+  their `public/` and `assets/` were junctions to this checkout's folders
+  and the recursive delete followed them.
+- Restored with `npm run assets -- pull light-transport-and-neural-rendering`:
+  84 media files and 94 source files; the check passes for both decks
+  (38 lecture assets referenced, all present). Not verifiable: whether
+  those folders held files never pushed to the bucket.
+- Rule added to both agent files (4b2c22a, "Shell safety"): list and
+  unlink junctions before removing a directory tree; after a cleanup, run
+  the check for every deck.
+- Also: a stale dev server of a finished builder (port 5392) was stopped
+  by PID; the collaborator's nine commits (the indirect light freezing on
+  the boxed arcs, five twins and five rooms on training data, arrowheads
+  in the method diagram) are merged and their media pulled.
+
 ## 2026-11-19 15:05 — cycle 1 (b): the layout review, handled so far
 
 User directions (2026-11-19): see "Standing directions" (collaborators
