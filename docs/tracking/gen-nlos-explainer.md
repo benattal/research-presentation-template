@@ -17,6 +17,14 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- "Hmm, is there a reason you're pushing to the guest-lecture branch?
+  Could push to the gen-nlos-explainer branch?" No good reason: the work
+  was moved into this folder while it was on `guest-lecture` and committed
+  there. This checkout is now on `gen-nlos-explainer` (which has
+  everything; the old skeleton's history is merged in without its
+  content) and pushes go there. `guest-lecture` stays at f39f8df, which
+  still contains the explainer up to that commit (asked whether to remove
+  it there).
 - Goal (2026-11-19, afternoon): "Continue with docs\plans\gen-nlos-explainer.md
   plan. Repeat 3-4 times: (a) do a pass on the slides, notes, recorded
   video with subagents, (b) have subagents vet the slides, notes, recorded

@@ -153,7 +153,8 @@ declined and why). Gate 1 runs its build and look steps per section:
   file carries no metadata.
 - **Confidential until publication.** Narration and transcription run
   locally; no paper text goes to a cloud service.
-- **One folder.** All work is in this checkout, on its current branch; a
+- **One folder, one branch.** All work is in this checkout, on branch
+  `gen-nlos-explainer`, and is pushed there; a
   worktree exists only while a subagent's task runs and is removed after
   the merge. Framework changes still land on `framework-sync` first and
   are merged here.
