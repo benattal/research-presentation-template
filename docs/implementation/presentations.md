@@ -199,6 +199,23 @@ Conventions for layouts:
   count in the slide's data.
 - Clean up timers, animation frames, and listeners, and ignore media loads
   that finish after a newer request or after unmount.
+- Stop drawing when nothing changes. An animation that ends gives
+  `useStepClock` the time it ends at (`until`), so a slide left on screen
+  after its animation costs no frames.
+- Do slow work before the slide is reached, not on the key press that
+  arrives at it. A layout that builds something slow before its first
+  frame (a WebGL scene and its compiled shaders, a decoded mesh, a solved
+  model) gives its component a `prepare(slide)` function, which may be
+  async, and keeps what it builds for the page's lifetime, in its module;
+  the component uses what was kept, or builds it when `prepare` has not run
+  (the capture view, a slide opened directly). The audience view calls
+  `prepare` for every slide once the media are in memory, one slide at a
+  time while the page is idle (`preloadSlides` in
+  `@core/presentation/preload.js`). Between parts that each take more than
+  a few tens of milliseconds, `await whenIdle()` (same module), so no part
+  holds up a key press for longer than itself. Keep a WebGL context for the
+  page instead of creating one per visit: compiling its shaders again is
+  what makes arriving slow.
 - Mark a deliberately full-bleed or overflowing decoration with
   `data-overflow-ok`, and a draggable region with `data-no-swipe` so touch
   drags do not change slides.
