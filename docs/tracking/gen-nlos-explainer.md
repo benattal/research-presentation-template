@@ -18,6 +18,9 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- "The gates do not have to be sequential on slides. It is more
+  sequential on (a) getting slides, (b) capturing/recording a video".
+  Sections are built in parallel; recording waits for the slides.
 - Of the rebuilt first section: "I like the first few slides much better
   now. Could still use some refinement, but good start", then "I think I
   would save the refinement, for now, for the next iteration stage, and

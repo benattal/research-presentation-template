@@ -26,7 +26,8 @@ its check passes.
 ### Open
 
 1. **Gate 1: first draft of the whole deck.** Each section built to a
-   good draft, in order, and shown on the served deck: problem statement
+   good draft and shown on the served deck; sections may be built in
+   parallel (the order that binds is slides, then recording): problem statement
    (slides 1–4, drafted), propagating light (5–6, with the WebGL capture
    render), related work (7), method (8–12, with the WebGL scene and
    flatland), results and summary (13–18). Check per section: `npm run
