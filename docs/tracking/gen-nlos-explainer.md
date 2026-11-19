@@ -2,9 +2,10 @@
 
 [Plan](../plans/gen-nlos-explainer.md)
 
-Current state: research running (four agents) and the HOLI-1-to-3 upload
-agent running; plan written; branch `gen-nlos-explainer` created from
-`framework-sync`. Next: plan todo 3, the script and storyboard v1.
+Current state: research done, HOLI-1-to-3 upload done, script v2 in the
+deck skeleton (served at http://localhost:5174/). Running: the recorder
+(framework), the TTS evaluation, the website and Dropbox inventory.
+Next: media, layouts, narration v1, video v1.
 
 Resume from the newest entry below.
 
@@ -121,6 +122,51 @@ slide rules are in [slide style](../style/slides.md) and
 
 None open. Resolved: "my presentations bucket" is the R2 bucket
 `presentations` (the user, 2026-11-18).
+
+## 2026-11-18 23:10 — research in; script v2; skeleton served
+
+- HOLI-1-to-3 upload done: Dropbox `figures/holi_1_to_3_trajectories/`
+  holds four videos (captured lamp and globe, cw45, encoded from the
+  bucket's `frames_flipped/` PNGs because the bucket's `video.mp4` is
+  mirrored; rooms `normal_3000037` and `zone_full_3000023`, copied
+  unchanged) and a README. Source: `tcig-projects/fk-torch/outputs/
+  holi_video_v2_frames_20261117/`. The figure panels are frame 19 of the
+  captured trajectories (PSNR match; the bucket README's "frame 21" is
+  wrong, corrected in the Dropbox README).
+- Reference decks (primary: the two pptx; secondary: the contrastive path
+  marginalization video): payoff within a minute; a CG hardware render
+  with a pulse shell, then a histogram inset, then the measured video;
+  related work by category with a red limitation line and spotlight
+  dimming, then a green contribution line; silent section cards; about 8
+  words a slide; narration in "we", present tense, about 600–700 words.
+  Black, white, #FFCC66, Futura PT. Finding to fix on `framework-sync`:
+  `scripts/extract-pptx.mjs` matches notes to slides by file number
+  instead of each slide's relationships, so notes come out shifted.
+- Bucket (`tcig-projects`): our, GEN3C*, and Lyra 2 videos for the paper
+  scenes are only in Dropbox (`6_QualExperimental/scenes/*/prediction`,
+  `5_QualSimulation/assets`); captured transients for the lamp and globe
+  exist only as raw `.mat` (no video in the bucket; Dropbox has
+  `6_QualExperimental/scenes/paperscene{5,6}/transient/preview.mp4` and
+  `1_teaser/lidar_wave_frames/combined/combined_overlay.mp4`); NLOS
+  comparison stills and volumes in `nlos_results_pages_20261114/
+  nonplanar_nlos_results/`; conditioning MIP videos in
+  `scene_exports/paperscene5_6_v2_original_20261114_v2/…/conditioning/`;
+  room meshes and cameras in `scene_exports/test100_*`. Paper scene ids:
+  lamp `paperscene5_v2`, globe `paperscene6_v2` (trajectory cw45); rooms
+  `normal_3000037`, `zone_full_3000023`.
+- Script cycle 1: a correctness review and a clarity review of v1, both
+  applied in v2 except where they conflict with the user's directions
+  (no paraphrase of "maximum-intensity projection"; "feed-forward" kept;
+  no rewording of the paper's language). v2 follows the paper's
+  sentences, 735 words.
+- For the paper, not the video (to tell the user): the compiled
+  supplement prints "[TODO: Victor …]" notes and a TODO naming "the
+  Stanford setup" (`\TODO` is active in preamble.tex), which would break
+  anonymity; the tabletop training set is 52 scenes / 416 trajectories in
+  Sec. 4 but 44 / 352 in the supplement.
+- Done: the deck skeleton (19 slides, six sections, notes from script
+  v2), commit 6dcdfff, pushed as `gen-nlos-explainer`.
+- Next: the recorder merge, the media, the custom layouts, the narration.
 
 ## 2026-11-18 21:45 — plan written; research running
 
