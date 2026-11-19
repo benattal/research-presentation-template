@@ -121,7 +121,7 @@ export default function LightVideo({ slide, buildStep }) {
               <span>{ns}</span>
             </div>
           ))}
-          <div className="light-video-axis-label" style={{ top: AXIS_TOP + 30 }}>time (ns)</div>
+          <div className="light-video-axis-label" style={{ top: AXIS_TOP + 30 }}>Time (ns)</div>
           <div className="light-video-playhead" ref={playhead} style={{ top: BAND_TOP - 8, height: AXIS_TOP - BAND_TOP + 8 }} />
         </div>
       </div>
