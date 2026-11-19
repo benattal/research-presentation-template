@@ -153,9 +153,9 @@ classifier-free guidance result and the ablations are left out.
 |  | **related work** (card) |  |  | drafted |
 | 7 | Related work | two columns, one lit per step, each with a red limitation line: NLOS imaging (an NLOS volume of the bike scene along a trajectory; "Geometry, not photorealistic appearance"), generative view synthesis (GEN3C\* on the hidden-lamp scene; "Hidden content is hallucinated"); last step: "Ours: generative view synthesis from propagating light" in green | bucket conventional results (data of Lindell et al., credited); `6_QualExperimental` `rgb_only` | drafted |
 |  | **method** (card) |  |  | drafted |
-| 8 | Processing the capture | WebGL, the vase scene: (1) RGB image and direct light give the colored point cloud; (2) indirect light gives the NLOS volume behind the occluder | three.js: `rgbd_aligned.npz`, `nlos.npy` | building |
-| 9 | Conditioning videos | same 3D view, the camera moves along the target trajectory; warped RGB, MIP, MIP depth appear as synchronized panels | three.js, teaser `presentation/*.mp4` | building |
-| 10 | Video generation | diagram: three streams and noisy target tokens into the video diffusion transformer; the output video plays | drawn | building |
+| 8 | Processing the capture | WebGL, the vase scene: (1) RGB image and direct light give the colored point cloud; (2) indirect light gives the NLOS volume behind the occluder | three.js: `rgbd_aligned.npz`, `nlos.npy` | drafted |
+| 9 | Conditioning videos | same 3D view, the camera moves along the target trajectory; warped RGB, MIP, MIP depth appear as synchronized panels | three.js, teaser `presentation/*.mp4` | drafted |
+| 10 | Video generation | diagram: three streams and noisy target tokens into the video diffusion transformer; the output video plays | drawn | drafted |
 | 11 | NLOS reconstruction | flatland: (1) planar relay wall versus the visible surfaces of a scene as relays; (2) forward and adjoint operators, CGLS iterations sharpening | canvas, labeled illustration | drafted |
 | 12 | Reconstruction with nonplanar relays | rotating renders of the reconstructed volumes, in step: (1) ours and CC-SOCR; (2) 3D-GTR; simulated room and captured scenes | rendered from the bucket's volumes (`nonplanar_nlos_results/*.npy`), the paper figure's variants | building |
 |  | **results** (card) |  |  | drafted |

@@ -1,0 +1,82 @@
+{
+  "layout": "methodScene",
+  "title": "Processing the capture",
+  "phase": "processing",
+  "buildSteps": [
+    "the point cloud",
+    "the NLOS volume"
+  ],
+  "cues": [
+    {
+      "depth": 2.6,
+      "unproject": 5.8
+    },
+    {
+      "volume": 0.4
+    }
+  ],
+  "scene": {
+    "image": "/slides/processing/input-image.png",
+    "camera": {
+      "width": 256,
+      "height": 256,
+      "fx": 585.7291,
+      "fy": 599.3741,
+      "cx": 129.3622,
+      "cy": 133.3569,
+      "depth": "/slides/processing/input-depth.png",
+      "depthRange": [
+        0.818,
+        1.571
+      ]
+    },
+    "volume": {
+      "src": "/slides/processing/nlos-volume.png",
+      "size": [
+        121,
+        69,
+        75
+      ],
+      "columns": 10,
+      "box": [
+        [
+          -0.4,
+          -0.28,
+          -1.56
+        ],
+        [
+          0.44,
+          0.196,
+          -1.042
+        ]
+      ]
+    },
+    "trajectory": {
+      "center": [
+        0,
+        0,
+        -1.2
+      ],
+      "radius": 1.2,
+      "arcDegrees": 60,
+      "frames": 29
+    }
+  },
+  "labels": {
+    "pointCloud": "Point cloud",
+    "volume": "NLOS volume"
+  },
+  "inputs": {
+    "image": {
+      "label": "RGB image"
+    },
+    "lightVideo": {
+      "src": "/slides/processing/propagating-light.mp4",
+      "poster": "/slides/processing/propagating-light.poster.jpg",
+      "label": "Video of propagating light",
+      "stillSeconds": 1.15
+    },
+    "direct": "Direct light",
+    "indirect": "Indirect light"
+  }
+}

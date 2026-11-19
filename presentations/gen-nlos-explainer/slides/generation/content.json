@@ -1,0 +1,27 @@
+{
+  "layout": "methodScene",
+  "title": "Video generation",
+  "phase": "generation",
+  "streams": {
+    "src": "/slides/processing/conditioning-and-generated.mp4",
+    "poster": "/slides/processing/conditioning-and-generated.poster.jpg",
+    "labels": [
+      "Warped RGB",
+      "MIP",
+      "MIP depth"
+    ],
+    "fps": 15,
+    "frames": 29,
+    "holdLast": 15,
+    "stillSeconds": 1.3
+  },
+  "generation": {
+    "encoder": "Encoder",
+    "noisyTokens": "Noisy target tokens",
+    "transformer": "Video diffusion transformer",
+    "lora": "LoRA",
+    "denoised": "Target tokens",
+    "decoder": "Decoder",
+    "output": "Novel-view video"
+  }
+}

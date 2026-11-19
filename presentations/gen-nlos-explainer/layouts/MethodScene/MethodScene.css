@@ -1,0 +1,135 @@
+/* The method slides: positions are stage pixels inside the 1168 × 572 area under the title. */
+.slide--method-scene {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.method-scene {
+  position: relative;
+  flex: none;
+  color: var(--text-primary);
+}
+
+/* The step clock shows and hides every named part; until its first frame none shows. */
+.method-scene [data-part] {
+  opacity: 0;
+}
+
+/* The 3D view's data, loaded as images and never shown. */
+.method-scene-data {
+  display: none;
+}
+
+.method-scene-view,
+.method-scene-video,
+.method-scene-tile,
+.method-scene-diagram,
+.method-scene-note {
+  position: absolute;
+}
+
+/* A label of the 3D view may follow its point past the view's edge during a camera move. */
+.method-scene-view {
+  overflow: hidden;
+}
+
+.method-scene-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* An input or a result: a square of media with its caption above it. */
+.method-scene-tile {
+  margin: 0;
+}
+
+/* A stream panel is mostly black: a hairline shows the frame the three videos share. */
+.method-scene-tile--outlined {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22);
+}
+
+.method-scene-media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The stitched file has the block's shape; fill maps its clips onto the page's exactly. */
+.method-scene-media--stitched {
+  object-fit: fill;
+}
+
+.method-scene-caption {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 6px);
+  font-size: 21px;
+  line-height: 24px;
+  white-space: nowrap;
+  color: var(--text-primary);
+}
+
+.method-scene-caption--ours {
+  color: var(--accent);
+}
+
+.method-scene-note {
+  font-size: 19px;
+  line-height: 24px;
+  white-space: nowrap;
+  color: var(--text-primary);
+}
+
+.method-scene-note--centered {
+  transform: translateX(-50%);
+}
+
+/* A label of the 3D view: the step clock moves it to the point it names. */
+.method-scene-note--anchored {
+  left: 0;
+  top: 0;
+}
+
+.method-scene-note--direct { color: var(--direct); }
+.method-scene-note--indirect { color: var(--indirect); }
+.method-scene-note--accent { color: var(--accent); }
+
+.method-scene-diagram {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.method-scene-flow {
+  fill: none;
+  stroke: var(--text-secondary);
+  stroke-width: 1.5;
+}
+
+.method-scene-flow--direct { stroke: var(--direct); }
+.method-scene-flow--indirect { stroke: var(--indirect); }
+
+.method-scene-leader {
+  stroke: var(--text-secondary);
+  stroke-width: 1;
+}
+
+.method-scene-shape {
+  fill: none;
+  stroke: var(--text-primary);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.method-scene-layer {
+  fill: rgba(255, 255, 255, 0.12);
+}
+
+.method-scene-lora {
+  fill: var(--accent);
+}

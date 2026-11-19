@@ -1,0 +1,75 @@
+{
+  "layout": "methodScene",
+  "title": "Conditioning videos",
+  "phase": "conditioning",
+  "cues": [
+    {
+      "trajectory": 0
+    }
+  ],
+  "scene": {
+    "image": "/slides/processing/input-image.png",
+    "camera": {
+      "width": 256,
+      "height": 256,
+      "fx": 585.7291,
+      "fy": 599.3741,
+      "cx": 129.3622,
+      "cy": 133.3569,
+      "depth": "/slides/processing/input-depth.png",
+      "depthRange": [
+        0.818,
+        1.571
+      ]
+    },
+    "volume": {
+      "src": "/slides/processing/nlos-volume.png",
+      "size": [
+        121,
+        69,
+        75
+      ],
+      "columns": 10,
+      "box": [
+        [
+          -0.4,
+          -0.28,
+          -1.56
+        ],
+        [
+          0.44,
+          0.196,
+          -1.042
+        ]
+      ]
+    },
+    "trajectory": {
+      "center": [
+        0,
+        0,
+        -1.2
+      ],
+      "radius": 1.2,
+      "arcDegrees": 60,
+      "frames": 29
+    }
+  },
+  "labels": {
+    "pointCloud": "Point cloud",
+    "volume": "NLOS volume",
+    "trajectory": "Target trajectory"
+  },
+  "streams": {
+    "src": "/slides/processing/conditioning-streams.mp4",
+    "poster": "/slides/processing/conditioning-streams.poster.jpg",
+    "labels": [
+      "Warped RGB",
+      "MIP",
+      "MIP depth"
+    ],
+    "fps": 15,
+    "frames": 29,
+    "holdLast": 15,
+    "stillSeconds": 1.3
+  }
+}

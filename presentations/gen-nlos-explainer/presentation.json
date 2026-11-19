@@ -36,6 +36,9 @@
       "title": "Method",
       "slides": [
         "card-method",
+        "processing",
+        "conditioning",
+        "generation",
         "nlos-reconstruction"
       ]
     },
