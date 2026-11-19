@@ -45,6 +45,19 @@ its check passes.
    `tcig-projects/fk-torch/evaluation_and_comparisons_20261108/data/data/benchmark/B1_scale/living_room_infinigen_le162_midroom_full/`);
    the camera and framing are in `assets/build/nlos-comparison.py`. For
    the Stanford-FK row, find out what ground truth exists first.
+   For the second pass, from the user (2026-11-19): narration runs too
+   long over visuals that have stopped changing. (a) Lidar capture
+   (slide 5): show the captured video when the narration says a video is
+   captured; show indirect light propagating from several visible
+   points, not one; proposal: step 1, the hardware and scene with the
+   captured light video beside them; step 2, one measurement (pulse,
+   direct return, indirect light, the plot swept once); step 3, the same
+   for two or three other scan points in quick succession, the
+   wavefronts reaching the hidden object from different relays; step 4,
+   the scan, with the measurements assembling into the video. (b) Every
+   step: compare the narration's length with how long its visual keeps
+   changing (the recording's timeline gives both), and either add a
+   visual beat, split the step, or shorten the sentence.
 2. **Gate 2: whole deck, refinement cycles 1 and 2.** Opens only on the
    user's word. A pass on all
    slides and notes, vetting by reviewers who see the deck fresh,

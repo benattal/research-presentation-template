@@ -20,6 +20,18 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- "There is also a bit of disconnect between the narration and the slides
+  on the hardware visualization slide. When say that we capture a video, I
+  might show the video. I would also show the indirect light propagating
+  for different points potentially. Basically, narration is too long
+  without supporting visuals/animations at times". First item of gate 2
+  (plan, "For the second pass"); not built during the pause.
+- "The "hanging arrow" from the processing the capture slide is still
+  there." It was still in the builder's worktree; merged in 3e97a38 (the
+  input arrows are removed).
+- "Before you record the narration, could you record a video of moving
+  through the deck with all of the transitions? Put it in a subdirectory
+  of the data folder": `data/gen-nlos/recordings/2026-11-19-first-draft/`.
 - "I do actually have to pause for a bit, so could I ask you to: Save
   state, record the ground truth rotation as a later todo; Record a
   runthrough of the presentation (with voiceover if possible)". The
