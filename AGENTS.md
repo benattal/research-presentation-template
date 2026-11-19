@@ -245,9 +245,11 @@ content to silence a warning.
   bucket described in [DATA.md](DATA.md), and in ignored `public/` and
   `assets/` directories locally. Never commit them; never force-add an
   ignored file. A clean checkout without assets is expected.
-- Every presentation's directory has a `README.md` saying how to pull its
-  assets (`npm run assets -- pull <id>`) and push new ones. `npm run new`
-  writes it; `npm test` fails without it.
+- Every presentation's directory has a `README.md` that says how to pull
+  its assets (`npm run assets -- pull <id>`) and push new ones. The user
+  (2026-11-17): "Also make sure instructions for installing the assets for
+  each lecture are available in that lecture folder". `npm run new` writes
+  it; `npm test` fails without it.
 - Never print, commit, or upload credentials.
 - `data/captures/`, `dist/`, `.live-state/`, and `.env` are ignored.
 - Plans describe intended work. Trackers record changing state, newest entry
