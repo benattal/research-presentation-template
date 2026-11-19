@@ -1,2 +1,3 @@
-Relay surfaces that do not face the hidden scene convey less information,
-making hidden objects of similar size and position harder to distinguish.
+Indirect light conveys limited information about the hidden scene, so
+hidden objects of similar size and position are hard to distinguish, and
+our models rely on priors from their training data.

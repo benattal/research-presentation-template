@@ -22,20 +22,12 @@
   ],
   "videos": [
     {
-      "src": "/slides/line-of-sight/direct-light.mp4",
-      "poster": "/slides/line-of-sight/direct-light.poster.jpg",
+      "src": "/slides/line-of-sight/direct-and-indirect-light.mp4",
+      "poster": "/slides/line-of-sight/direct-and-indirect-light.poster.jpg",
       "row": 0,
       "column": 2,
       "rows": 2,
-      "columns": 1
-    },
-    {
-      "src": "/slides/line-of-sight/indirect-light.mp4",
-      "poster": "/slides/line-of-sight/indirect-light.poster.jpg",
-      "row": 0,
-      "column": 3,
-      "rows": 2,
-      "columns": 1
+      "columns": 2
     }
   ],
   "panels": [

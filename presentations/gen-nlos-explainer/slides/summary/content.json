@@ -19,7 +19,7 @@
     },
     {
       "heading": "Limitation",
-      "text": "Relay surfaces that do not face the hidden scene convey less information"
+      "text": "Indirect light conveys limited information about the hidden scene"
     },
     {
       "heading": "Outlook",

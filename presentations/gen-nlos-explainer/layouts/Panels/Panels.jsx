@@ -41,6 +41,10 @@
  *   spotlights  optional: [{ step, panels: [id, ...] }]: at that step, the
  *               panels not listed are dimmed.
  *
+ * A slide plays one video: separate video elements drift apart, so clips
+ * that are on screen together are stitched into one file. A second video
+ * (stitched or a panel's own) is an error.
+ *
  * A build step shows its panels at once (the recording cross-fades
  * between steps). A video starts over when it is revealed, so a clip that appears on a
  * later step plays from its beginning; a stitched video starts over only
@@ -221,6 +225,10 @@ export default function Panels({ slide, buildStep }) {
     throw new Error(`Slide "${slide.id}": the panels layout needs a non-empty "panels" list`);
   }
   const videos = useMemo(() => slide.videos ?? [], [slide.videos]);
+  const videoCount = videos.length + panels.filter((panel) => panel.media?.type === 'video').length;
+  if (videoCount > 1) {
+    throw new Error(`Slide "${slide.id}": ${videoCount} videos on one slide drift apart; stitch them into one file`);
+  }
   const holders = useMemo(() => videos.map(() => createRef()), [videos]);
   const geometry = gridGeometry(grid, panels);
   const spotlight = (slide.spotlights ?? []).find((each) => each.step === buildStep);

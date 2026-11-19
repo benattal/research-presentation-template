@@ -9,16 +9,20 @@ const DIMMED = 0.3;
 
 /**
  * Related work by category: one column per category (its name, a square
- * picture or looping video, a caption, and one limitation line in red),
- * spotlighted one per build step; on the last step every column is dimmed
- * and the contribution line shows, in green, under them.
+ * picture, a caption, and one limitation line in red), spotlighted one per
+ * build step; on the last step every column is dimmed and the contribution
+ * line shows, in green, under them.
  *
  * Fields:
  *   title          the slide's title.
- *   columns        each { name, media, caption, limitation, hidden? }:
- *                  `hidden` { x, y, width, height } marks the region hidden
- *                  in the input view with a thin red rectangle, as
- *                  fractions of the picture.
+ *   video          { src, poster?, alt? }: one video holding every column's
+ *                  picture side by side, 340 stage pixels square each with
+ *                  150 between them (encoded at 1.5x), so the clips stay in
+ *                  step.
+ *   columns        each { name, caption, limitation, hidden? }: `hidden`
+ *                  { x, y, width, height } marks the region hidden in the
+ *                  input view with a thin red rectangle, as fractions of
+ *                  the picture.
  *   contribution   the line shown at the last step.
  *   buildSteps     one step per column, then the contribution step.
  *
@@ -28,7 +32,7 @@ const DIMMED = 0.3;
  * rebuild the video's layer, which shows as a flash.
  */
 export default function RelatedWork({ slide, buildStep }) {
-  const { columns, contribution } = slide;
+  const { columns, contribution, video } = slide;
   if (stepCount(slide) !== columns.length + 1) {
     throw new Error(`Slide "${slide.id}": the relatedWork layout needs ${columns.length + 1} build steps, one per column and one for the contribution`);
   }
@@ -37,13 +41,13 @@ export default function RelatedWork({ slide, buildStep }) {
       <SlideTitle title={slide.title} />
       <div className="related-work-body">
         <div className="related-work-columns">
+          <Media item={{ type: 'video', ...video }} className="related-work-video" />
           {columns.map((column, index) => {
             const textOpacity = buildStep === index ? 1 : DIMMED;
             return (
               <figure key={column.name} className="related-work-column">
                 <h3 className="related-work-name" style={{ opacity: textOpacity }}><Text>{column.name}</Text></h3>
                 <div className="related-work-picture">
-                  <Media item={column.media} className="related-work-media" />
                   {column.hidden && (
                     <div
                       className="related-work-hidden"

@@ -15,12 +15,12 @@
   ],
   "videos": [
     {
-      "src": "/slides/training-data/infinigen-rooms.mp4",
-      "poster": "/slides/training-data/infinigen-rooms.poster.jpg",
+      "src": "/slides/training-data/twin-and-rooms.mp4",
+      "poster": "/slides/training-data/twin-and-rooms.poster.jpg",
       "row": 0,
-      "column": 2,
+      "column": 0,
       "rows": 2,
-      "columns": 3
+      "columns": 5
     }
   ],
   "panels": [
@@ -29,13 +29,7 @@
       "column": 0,
       "rows": 2,
       "columns": 2,
-      "label": "Tabletop digital twin",
-      "media": {
-        "type": "video",
-        "src": "/slides/training-data/tabletop-twin.mp4",
-        "poster": "/slides/training-data/tabletop-twin.poster.jpg",
-        "alt": "A simulated tabletop with flowers, plants, and books, seen from a moving camera"
-      }
+      "label": "Tabletop digital twin"
     },
     {
       "row": 0,

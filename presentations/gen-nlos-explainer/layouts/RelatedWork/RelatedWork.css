@@ -1,7 +1,10 @@
-/* Related work: columns of square pictures, a limitation line under each,
-   the contribution line under all. */
+/* Related work: columns of square pictures (one video behind them all), a
+   limitation line under each, the contribution line under all. */
 .slide--related-work {
   --related-work-contribution: #6fd08c;
+  --related-work-picture: 340px;
+  --related-work-gap: 150px;
+  --related-work-name-height: 42px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -14,18 +17,30 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   gap: 26px;
 }
 
 .related-work-columns {
+  position: relative;
   display: flex;
-  justify-content: center;
-  gap: 150px;
+  gap: var(--related-work-gap);
+}
+
+/* The one video, under the row of pictures: each picture is a window onto its part. */
+.related-work-video {
+  position: absolute;
+  left: 0;
+  top: var(--related-work-name-height);
+  width: 100%;
+  height: var(--related-work-picture);
+  object-fit: fill;
 }
 
 .related-work-column {
+  position: relative;
   margin: 0;
-  width: 340px;
+  width: var(--related-work-picture);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -33,6 +48,7 @@
 }
 
 .related-work-name {
+  height: 30px;
   margin-bottom: 12px;
   font-size: 24px;
   font-weight: 500;
@@ -43,15 +59,8 @@
 
 .related-work-picture {
   position: relative;
-  width: 340px;
-  height: 340px;
-}
-
-.related-work-media {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: var(--related-work-picture);
+  height: var(--related-work-picture);
 }
 
 .related-work-hidden {
