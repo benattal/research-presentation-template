@@ -208,9 +208,9 @@ Conventions for layouts:
   model) gives its component a `prepare(slide)` function, which may be
   async, and keeps what it builds for the page's lifetime, in its module;
   the component uses what was kept, or builds it when `prepare` has not run
-  (the capture view, a slide opened directly). The audience view calls
-  `prepare` for every slide once the media are in memory, one slide at a
-  time while the page is idle (`preloadSlides` in
+  (the capture view, a slide opened directly). The audience view and the
+  presenter's preview call `prepare` for every slide once the media are in
+  memory, one slide at a time while the page is idle (`preloadSlides` in
   `@core/presentation/preload.js`). Between parts that each take more than
   a few tens of milliseconds, `await whenIdle()` (same module), so no part
   holds up a key press for longer than itself. Keep a WebGL context for the
