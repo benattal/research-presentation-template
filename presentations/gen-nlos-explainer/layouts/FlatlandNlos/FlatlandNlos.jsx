@@ -40,13 +40,13 @@ const TIMELINE = {
   /** Step 0: the other scan points' measurements appear. */
   fill: [9600, 10300],
   /** Step 1: the planar setting leaves, the scene moves left, the grid and the operators appear. */
-  focus: [0, 1100],
+  focus: [0, 1600],
   /** Step 1: the adjoint of the marked scan points' measurements, one after another. */
-  spread: [1200, 3450],
+  spread: [1700, 3950],
   /** Step 1: the adjoint of every other scan point's measurements. */
-  accumulate: [3550, 4750],
+  accumulate: [4050, 5250],
   /** Step 1: CGLS iterations 1 to ITERATIONS. */
-  iterations: [5100, 9900],
+  iterations: [5600, 10400],
 };
 
 /** The scan points whose measurements step 0 shows as wavefronts: on the slanted wall (two) and the back wall. */
