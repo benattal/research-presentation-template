@@ -150,8 +150,8 @@ classifier-free guidance result and the ablations are left out.
 |  | **propagating light** (card) |  |  | drafted |
 | 5 | Lidar capture | WebGL render of the lidar hardware and the website's corner scene (relay walls, teapot occluder, hidden bunny), in the manner of the reference decks' hardware renders, parts labeled; (1) a pulse travels to a visible point; (2) direct return, the measurement inset shows the first peak: depth; (3) wavefront to the hidden object and back, the weak later peak; (4) the scan over all visible surfaces | three.js | building |
 | 6 | Hardware prototype | the photo of the prototype; parts named one per step by a line: pulsed laser, scanning mirrors, single-photon avalanche diode; then the steady-state image beside it | `hardware_figure` photo, masked, sticker blurred | drafted |
-|  | **related work** (card) |  |  |  |
-| 7 | Related work | two columns, one lit per step: NLOS imaging and generative view synthesis, each with one red limitation line; last step: our contribution lines in green (HOLI-1-to-3 is not given a column) | our own results as thumbnails | planned |
+|  | **related work** (card) |  |  | drafted |
+| 7 | Related work | two columns, one lit per step: NLOS imaging and generative view synthesis, each with one red limitation line; last step: our contribution lines in green (HOLI-1-to-3 is not given a column) | our own results as thumbnails | drafted |
 |  | **method** (card) |  |  |  |
 | 8 | Processing the capture | WebGL, the vase scene: (1) RGB image and direct light give the colored point cloud; (2) indirect light gives the NLOS volume behind the occluder | three.js: `rgbd_aligned.npz`, `nlos.npy` | building |
 | 9 | Conditioning videos | same 3D view, the camera moves along the target trajectory; warped RGB, MIP, MIP depth appear as synchronized panels | three.js, teaser `presentation/*.mp4` | building |

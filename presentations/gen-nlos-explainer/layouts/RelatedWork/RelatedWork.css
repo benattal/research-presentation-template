@@ -1,0 +1,83 @@
+/* Related work: columns of square pictures, a limitation line under each,
+   the contribution line under all. */
+.slide--related-work {
+  --related-work-contribution: #6fd08c;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.related-work-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 26px;
+}
+
+.related-work-columns {
+  display: flex;
+  justify-content: center;
+  gap: 150px;
+}
+
+.related-work-column {
+  margin: 0;
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.related-work-name {
+  margin-bottom: 12px;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 30px;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.related-work-picture {
+  position: relative;
+  width: 340px;
+  height: 340px;
+}
+
+.related-work-media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.related-work-hidden {
+  position: absolute;
+  border: 2px solid var(--hidden);
+}
+
+.related-work-caption {
+  margin-top: 6px;
+  font-size: 16px;
+  line-height: 20px;
+  color: var(--text-muted);
+}
+
+.related-work-limitation {
+  margin-top: 8px;
+  font-size: 22px;
+  line-height: 28px;
+  color: var(--hidden);
+  white-space: nowrap;
+}
+
+.related-work-contribution {
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 32px;
+  text-align: center;
+  color: var(--related-work-contribution);
+}

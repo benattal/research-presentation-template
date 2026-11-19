@@ -5,11 +5,13 @@
  * The geometry is explicit, in stage pixels, so that a video stitched from
  * several clips lines up with the cells it spans:
  *
- *   grid        { columns, rows, panelWidth, panelHeight, columnGap, rowGap }:
- *               every cell's size and the gaps between cells. Labels and
+ *   grid        { columns, rows, panelWidth, panelHeight, columnGap, rowGap,
+ *               noteBand? }: every cell's size and the gaps between cells. Labels and
  *               notes of inner rows sit in `rowGap`; the first row's labels
  *               take a band above the grid and the last row's notes a band
- *               below it. The grid is centered in the space under the title.
+ *               below it. The grid is centered in the space under the title;
+ *               `noteBand: true` keeps the band below it on a slide without
+ *               notes, so its grid sits where the next slide's does.
  *   rowLabels   optional: one short label per row, left of the grid.
  *   videos      optional: stitched videos, each { src, poster?, row, column,
  *               rows, columns }. One file covers that block of cells, gaps
@@ -74,7 +76,8 @@ function gridGeometry(grid, panels) {
   }
   const lastRow = grid.rows - 1;
   const top = panels.some((panel) => panel.row === 0 && panel.label) ? LABEL_BAND : 0;
-  const bottom = panels.some((panel) => panel.row + (panel.rows ?? 1) - 1 === lastRow && panel.note) ? NOTE_BAND : 0;
+  const hasNotes = panels.some((panel) => panel.row + (panel.rows ?? 1) - 1 === lastRow && panel.note);
+  const bottom = grid.noteBand ?? hasNotes ? NOTE_BAND : 0;
   const spanWidth = (columns) => columns * grid.panelWidth + (columns - 1) * grid.columnGap;
   const spanHeight = (rows) => rows * grid.panelHeight + (rows - 1) * grid.rowGap;
   return {

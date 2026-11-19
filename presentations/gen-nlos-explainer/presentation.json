@@ -23,6 +23,14 @@
       ]
     },
     {
+      "id": "related-work",
+      "title": "Related work",
+      "slides": [
+        "card-related-work",
+        "related-work"
+      ]
+    },
+    {
       "id": "results",
       "title": "Results",
       "slides": [
