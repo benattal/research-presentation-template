@@ -1,1 +1,1 @@
-The direct light is also the same.
+Only the indirect light changes with the hidden object.
