@@ -4,6 +4,7 @@ node_modules/
 # Builds and generated data
 /dist/
 /data/captures/
+/data/recordings/
 
 # Live server state (poll votes)
 /.live-state/
@@ -36,3 +37,5 @@ Thumbs.db
 .claude/*
 !.claude/skills/
 .gradio/
+
+# Python bytecode (narration/)

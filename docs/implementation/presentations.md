@@ -18,6 +18,8 @@ presentations/<id>/
   assets/...                          assets (DATA.md)
   theme.css                           optional
   sources.json                        optional: citations of borrowed material
+  pronunciation.json                  optional: how a narration voice says a term
+  recording.json                      optional: how long npm run record holds each step
   layouts/<LayoutName>/...            optional, registered in layouts/index.js
   media/...                           optional: the scripts that build the media
 ```
@@ -176,6 +178,21 @@ other step shows `notes.md`. Under the development server the presenter
 window can edit notes and saves them to the file that was on screen; saving
 does not reload the audience view.
 
+## Pronunciation map
+
+The notes are also the script of a narrated video
+([narration](narration.md)). An optional `pronunciation.json` maps a term
+as the notes write it to the spelling a text-to-speech voice should read:
+
+```json
+{ "NLOS": "en-loss", "Lyra 2": "Lyra two" }
+```
+
+It is a flat object of non-empty strings; `npm run check` reports anything
+else. `npm run narration -- <id>` copies it into the narration directory,
+where the synthesis applies it; the notes and the slides keep the real
+spelling.
+
 ## Custom layouts
 
 A layout is a React component that receives `{ slide, buildStep, sections }`
@@ -259,6 +276,47 @@ directory overrides them for that presentation only:
   --accent: #b5121b;
 }
 ```
+
+## `recording.json`
+
+`npm run record -- <id>` films the presentation step by step
+([recording](recording.md)), and has to know how long to stay on each
+step. Without this file it stays 5 seconds on each. A slide whose build
+steps animate needs longer, or shorter, and only the presentation knows
+how long its animations take:
+
+```json
+{
+  "defaultHold": 6.5,
+  "silentHold": 2.5,
+  "holds": {
+    "lidar-capture": [
+      { "seconds": 3.5, "oneShot": true },
+      { "seconds": 11, "oneShot": true }
+    ],
+    "comparison": [{ "seconds": 6.3 }]
+  }
+}
+```
+
+| Field | Meaning |
+|---|---|
+| `defaultHold` | seconds a step without an entry in `holds` is held in a silent recording (default 5) |
+| `silentHold` | seconds a step without narration is held in a narrated recording (default 2.5) |
+| `holds` | slide id → one entry per build step of that slide, in order |
+| `seconds` | in an entry, required: how long that step's own motion takes |
+| `oneShot` | in an entry, optional: `true` for an animation that plays once and must be shown in full even when its narration is shorter; a loop leaves it out |
+
+Every field is optional, and `holds` lists only the slides that need an
+entry. A slide it lists gets an entry for each of its build steps: one for
+a slide without `buildSteps`. The [recording](recording.md#how-long-each-step-is-held)
+document says how these become the time each step is held.
+
+`npm run check` reports, with every other problem: a slide id that
+`presentation.json` does not list, a slide whose number of entries differs
+from its number of build steps, a `seconds` or a hold that is not a
+positive number, an `oneShot` that is not `true` or `false`, and any field
+not named above.
 
 ## Checks
 

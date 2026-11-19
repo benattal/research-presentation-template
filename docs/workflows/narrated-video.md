@@ -7,6 +7,10 @@ one before it has passed, because each consumes the last one's output and
 because the tools of the later stages are worthless while the slides are
 still changing.
 
+The tools are described in [narration](../implementation/narration.md)
+(set up once per machine: [narration setup](../environments/narration.md))
+and [recording](../implementation/recording.md).
+
 ## Gate 1: the slides
 
 The deck is made by the [general procedure](making-a-presentation.md), with
@@ -28,8 +32,9 @@ The script is the deck's notes: `notes.md` for a slide's first step and
 1. Write each step's note as one or more complete sentences, in the
    source's wording, plain and literal ([writing style](../style/writing.md)).
 2. Export and measure it: `npm run narration -- <id>` writes the script and
-   prints each step's words and estimated seconds. Compare the total with
-   the target; cut sentences, not words.
+   prints each step's words and estimated seconds, and warns about notes a
+   voice reads badly (Markdown, math). Compare the total with the target;
+   cut sentences, not words.
 3. Read it by ear, one step at a time. A list with an aside, three nouns in
    a row, or a sentence whose point comes last is hard to follow when
    heard. An independent reviewer who reads only the script finds more than
@@ -42,11 +47,19 @@ what its slide shows by more than a second or two.
 
 ## Gate 3: the narration
 
-Synthesize the script with a local text-to-speech model
+`npm run narration -- <id>` ends by printing two commands. The first
+synthesizes the script with a local text-to-speech model
 (`narration/narrate.py`): one audio file per step, a fixed voice, a fixed
-seed, loudness normalized. Then transcribe the audio back
-(`narration/transcribe.py`) and compare it with the script: this finds
-mispronounced terms and dropped words without anyone listening.
+seed. The second transcribes the audio back (`narration/transcribe.py`)
+and reports each step's word error rate against the script: this finds
+mispronounced terms and dropped words without anyone listening. Both run
+on this machine; a confidential script is never sent to a service.
+
+After a correction, synthesize only the changed steps
+(`narrate.py --only <segment ids>`; the others keep their files). Fix a
+misread term in
+`pronunciation.json`, not by respelling the notes, which the presenter
+view and captions also show.
 
 Check: the transcript matches the script except for spelling variants, and
 every technical term is recognized.
@@ -60,7 +73,11 @@ every technical term is recognized.
    holds each step for its narration and places each audio file at the
    moment its step appears.
 3. A step whose animation must be seen in full, or whose motion is longer
-   than a default hold, says so in the presentation's `recording.json`.
+   than a default hold, says so in the presentation's `recording.json`
+   ([presentation format](../implementation/presentations.md#recordingjson)).
+4. Read the two lines the command prints about the capture: a late or
+   recovered frame means the machine was busy, and the run is repeated
+   when nothing else is running.
 
 Check: the length; every sentence heard while its visual is on screen; the
 loudness (about −16 LUFS integrated, true peak below −1.5 dBTP); no

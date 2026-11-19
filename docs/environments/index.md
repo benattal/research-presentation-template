@@ -8,6 +8,8 @@
 - For visual validation, a Chromium browser for Playwright:
   `npx playwright install chromium` once, or an installed Edge or Chrome
   used with `npm run capture -- <id> --channel msedge`.
+- For recording a run-through (`npm run record`), ffmpeg on `PATH` and an
+  installed Edge or Chrome ([recording](../implementation/recording.md)).
 
 ## Install
 

@@ -72,3 +72,5 @@ The measurable gates that close the plan.
   tracked in [its tracker](../tracking/light-transport-and-neural-rendering.md).
 - [Generative view synthesis explainer](gen-nlos-explainer.md), tracked in
   [its tracker](../tracking/gen-nlos-explainer.md).
+- [Framework consolidation](framework-consolidation.md), tracked in
+  [its tracker](../tracking/framework-consolidation.md).

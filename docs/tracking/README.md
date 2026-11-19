@@ -43,3 +43,5 @@ User direction (YYYY-MM-DD): "<quoted direction>".
   for [its plan](../plans/light-transport-and-neural-rendering.md).
 - [Generative view synthesis explainer](gen-nlos-explainer.md), for
   [its plan](../plans/gen-nlos-explainer.md).
+- [Framework consolidation](framework-consolidation.md), for
+  [its plan](../plans/framework-consolidation.md).

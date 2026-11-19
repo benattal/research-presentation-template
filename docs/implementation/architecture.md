@@ -50,12 +50,14 @@ core/client/layouts/index.js ─────────┘                     
 | Audience ⇄ presenter window messages | `core/client/presenter/presenterChannel.js` |
 | Who counts as the presenter | `core/client/presenter/presenterAccess.jsx` |
 | Saving edited notes (development only) | `core/tooling/notesWriter.js` (a Vite plugin) |
+| Notes as a narration script: which step speaks which notes, segment ids | `core/tooling/narration.js`; synthesis and transcription in `narration/` ([narration](narration.md)) |
 | Live API, votes, presenter position | `core/server/liveApi.js`, `pollState.js` |
 | Presenter password and token | `core/server/presenterAuth.js` |
 | Voting open, follow-the-presenter on | the server's environment, served at `api/settings` |
 | Serving presentations in live mode | `core/server/gateway.js` |
 | In-browser capture checks | `core/client/capture/CaptureView.jsx` |
 | Capture runs and their contact sheet | `scripts/capture.mjs`, `core/tooling/contactSheet.js` |
+| Run-through recordings: holds, the frame grid, narration placement | `scripts/record.mjs`, `core/tooling/recording.js` |
 
 ## Views
 
@@ -65,6 +67,11 @@ core/client/layouts/index.js ─────────┘                     
 | `presenter` | `presenter/PresenterView.jsx` | timer, notes (editable in development), current slide preview, next slide |
 | `preview` | `presenter/PreviewView.jsx` | the presenter window's iframe of the current slide |
 | `capture` | `capture/CaptureView.jsx` | one slide and step at design size, for `scripts/capture.mjs` |
+
+The audience view also reads `?bars=hidden`, which leaves out its progress
+bar and navigation bar so the stage fills the window, with keys and
+preloading unchanged. `scripts/record.mjs` films that page
+([recording](recording.md)).
 
 The audience and presenter windows talk over a `BroadcastChannel` named after
 the presentation id. The audience window owns the position; the presenter
