@@ -59,7 +59,7 @@ next presentation starts with them.
    branch.
 6. **The recorder's open points**
    ([recording](../implementation/recording.md)): a real run with
-   `--narration` and with `--url`; the first step is filmed as loaded,
+   `--url`; the first step is filmed as loaded,
    without its entrance; this machine stalls for about a second in most
    full runs, which the command reports and cannot correct.
 7. **The narration tools' open points**
