@@ -24,7 +24,8 @@
       "row": 0,
       "column": 1,
       "rows": 2,
-      "columns": 3
+      "columns": 3,
+      "poster": "/slides/captured-comparison/ours-gen3c-holi.poster.jpg"
     }
   ],
   "panels": [
@@ -74,8 +75,8 @@
           "y": 0.27,
           "width": 0.4,
           "height": 0.7,
-          "from": 1.5,
-          "to": 4.2
+          "from": 1.9,
+          "to": 3.95
         }
       ]
     },
@@ -89,8 +90,8 @@
           "y": 0.27,
           "width": 0.4,
           "height": 0.7,
-          "from": 1.5,
-          "to": 4.2
+          "from": 1.9,
+          "to": 3.95
         }
       ]
     },
@@ -105,8 +106,8 @@
           "y": 0.27,
           "width": 0.4,
           "height": 0.7,
-          "from": 1.5,
-          "to": 4.2
+          "from": 1.9,
+          "to": 3.95
         }
       ]
     },
@@ -121,8 +122,8 @@
           "y": 0.27,
           "width": 0.4,
           "height": 0.7,
-          "from": 1.5,
-          "to": 4.2
+          "from": 1.9,
+          "to": 3.95
         }
       ]
     },
@@ -137,8 +138,8 @@
           "y": 0.27,
           "width": 0.4,
           "height": 0.7,
-          "from": 1.5,
-          "to": 4.2
+          "from": 1.9,
+          "to": 3.95
         }
       ]
     },
@@ -153,8 +154,8 @@
           "y": 0.27,
           "width": 0.4,
           "height": 0.7,
-          "from": 1.5,
-          "to": 4.2
+          "from": 1.9,
+          "to": 3.95
         }
       ]
     }

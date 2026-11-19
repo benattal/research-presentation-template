@@ -20,7 +20,8 @@
       "row": 0,
       "column": 0,
       "rows": 2,
-      "columns": 5
+      "columns": 5,
+      "poster": "/slides/room-scale/gt-ours-gen3c-holi-lyra2.poster.jpg"
     }
   ],
   "panels": [

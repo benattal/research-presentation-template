@@ -7,8 +7,8 @@
  *
  * Fields:
  *   title    the slide's title.
- *   video    { src, startNs, nsPerSecond }: the video, the time (ns) its
- *            first frame shows, and the nanoseconds of light travel per
+ *   video    { src, poster?, startNs, nsPerSecond }: the video, the time (ns)
+ *            its first frame shows, and the nanoseconds of light travel per
  *            second of video.
  *   axis     [fromNs, toNs]: the range of the time axis.
  *   lights   each { kind: 'direct' | 'indirect', label, step, intervals:
@@ -21,7 +21,6 @@
  * they show the frame on screen however the video is driven.
  */
 import { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
 import Media from '@core/stage/Media.jsx';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import './LightVideo.css';
@@ -35,8 +34,6 @@ const BAND_HEIGHT = 10;
 const BAND_GAP = 14;
 const AXIS_TOP = BAND_TOP + 2 * BAND_HEIGHT + BAND_GAP + 16;
 const AXIS_INSET = 16;
-
-const fade = (visible) => ({ initial: false, animate: { opacity: visible ? 1 : 0 }, transition: { duration: 0.4 } });
 
 function formatNs(ns) {
   return `${ns.toFixed(2)} ns`;
@@ -80,15 +77,13 @@ export default function LightVideo({ slide, buildStep }) {
       <SlideTitle title={slide.title} />
       <div className="light-video-stage">
         <div className="light-video-frame" ref={videoHolder} style={{ width: VIDEO_SIZE, height: VIDEO_SIZE }}>
-          <Media item={{ type: 'video', src: video.src }} className="light-video-media" />
-          <div className="light-video-readout">
-            <span className="light-video-tau">τ</span> = <span ref={readout}>{formatNs(video.startNs)}</span>
-          </div>
+          <Media item={{ type: 'video', src: video.src, poster: video.poster }} className="light-video-media" />
+          <div className="light-video-readout" ref={readout}>{formatNs(video.startNs)}</div>
         </div>
 
         <div className="light-video-panel" style={{ width: PANEL_WIDTH, height: AXIS_TOP + 56 }}>
           {lights.map((light, index) => (
-            <motion.div key={light.kind} className="light-video-light" {...fade(buildStep >= light.step)}>
+            <div key={light.kind} className="light-video-light" style={{ opacity: buildStep >= light.step ? 1 : 0 }}>
               <figure className="light-video-still" style={{ left: stillLeft(index), width: STILL_SIZE }}>
                 <img src={light.still.src} alt="" style={{ width: STILL_SIZE, height: STILL_SIZE }} />
                 <figcaption className={`light-video-caption light-video-caption--${light.kind}`}>
@@ -115,7 +110,7 @@ export default function LightVideo({ slide, buildStep }) {
                   }}
                 />
               ))}
-            </motion.div>
+            </div>
           ))}
 
           <div className="light-video-axis" style={{ top: AXIS_TOP, left: AXIS_INSET, width: axisWidth }} />

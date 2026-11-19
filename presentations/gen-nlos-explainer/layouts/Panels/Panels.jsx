@@ -11,8 +11,8 @@
  *               take a band above the grid and the last row's notes a band
  *               below it. The grid is centered in the space under the title.
  *   rowLabels   optional: one short label per row, left of the grid.
- *   videos      optional: stitched videos, each { src, row, column, rows,
- *               columns }. One file covers that block of cells, gaps
+ *   videos      optional: stitched videos, each { src, poster?, row, column,
+ *               rows, columns }. One file covers that block of cells, gaps
  *               included (black), at a uniform scale of the stage geometry,
  *               so clips that must play in step stay in step. A panel
  *               without `media` shows the part of the stitched video under
@@ -39,14 +39,14 @@
  *   spotlights  optional: [{ step, panels: [id, ...] }]: at that step, the
  *               panels not listed are dimmed.
  *
- * A video starts over when it is revealed, so a clip that appears on a
+ * A build step shows its panels at once (the recording cross-fades
+ * between steps). A video starts over when it is revealed, so a clip that appears on a
  * later step plays from its beginning; a stitched video starts over only
  * when its first panel appears. Timed boxes read the video's own clock, on
  * every animation frame and on every seek (how the record view moves a
  * video), so they stay on the frames they mark however the video is driven.
  */
 import { createRef, useEffect, useMemo, useRef } from 'react';
-import { motion } from 'framer-motion';
 import Media from '@core/stage/Media.jsx';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
@@ -66,8 +66,6 @@ const DIMMED = 0.25;
 const MASK_BLEED = 2;
 /** Seconds a timed box takes to fade in after `from` and out before `to`. */
 const BOX_FADE_S = 0.15;
-
-const fade = (opacity) => ({ initial: false, animate: { opacity }, transition: { duration: 0.4 } });
 
 /** Where each block of cells sits, from the slide's `grid` and whether labels and notes need bands. */
 function gridGeometry(grid, panels) {
@@ -162,7 +160,7 @@ function StitchedVideo({ video, geometry, holder, visible }) {
   useRestartOnReveal(holder, visible);
   return (
     <div ref={holder} className="panels-stitched" style={geometry.box(video)}>
-      <Media item={{ type: 'video', src: video.src }} className="panels-media panels-media--stitched" />
+      <Media item={{ type: 'video', src: video.src, poster: video.poster }} className="panels-media panels-media--stitched" />
     </div>
   );
 }
@@ -179,18 +177,18 @@ function Panel({ panel, geometry, state, stitchedHolder }) {
   return (
     <>
       {!panel.media && (
-        <motion.div
+        <div
           className="panels-mask"
           style={{
             left: box.left - MASK_BLEED,
             top: box.top - MASK_BLEED,
             width: box.width + 2 * MASK_BLEED,
             height: box.height + 2 * MASK_BLEED,
+            opacity: 1 - opacity,
           }}
-          {...fade(1 - opacity)}
         />
       )}
-      <motion.div className="panels-panel" style={box} {...fade(opacity)}>
+      <div className="panels-panel" style={{ ...box, opacity }}>
         {panel.media && (
           <div ref={ownHolder} className="panels-own-media">
             <Media item={panel.media} className="panels-media" />
@@ -201,7 +199,7 @@ function Panel({ panel, geometry, state, stitchedHolder }) {
           <div className={`panels-label${panel.ours ? ' panels-label--ours' : ''}`}><Text>{panel.label}</Text></div>
         )}
         {panel.note && <div className="panels-note"><Text>{panel.note}</Text></div>}
-      </motion.div>
+      </div>
     </>
   );
 }

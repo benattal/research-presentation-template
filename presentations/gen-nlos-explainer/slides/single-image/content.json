@@ -33,7 +33,8 @@
       "media": {
         "type": "video",
         "src": "/slides/single-image/image-only.mp4",
-        "alt": "The camera moves to the right; a small patterned vase appears behind the flowers"
+        "alt": "The camera moves to the right; a small patterned vase appears behind the flowers",
+        "poster": "/slides/single-image/image-only.poster.jpg"
       },
       "boxes": [
         {
@@ -41,8 +42,8 @@
           "y": 0.34,
           "width": 0.42,
           "height": 0.62,
-          "from": 1.5,
-          "to": 3.2
+          "from": 1.9,
+          "to": 2.95
         }
       ]
     },

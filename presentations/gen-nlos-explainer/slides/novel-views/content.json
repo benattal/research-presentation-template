@@ -15,7 +15,8 @@
       "row": 0,
       "column": 1,
       "rows": 1,
-      "columns": 2
+      "columns": 2,
+      "poster": "/slides/novel-views/with-and-without-propagating-light.poster.jpg"
     }
   ],
   "panels": [
@@ -48,8 +49,8 @@
           "y": 0.34,
           "width": 0.42,
           "height": 0.62,
-          "from": 1.5,
-          "to": 3.2
+          "from": 1.9,
+          "to": 2.95
         }
       ]
     },
@@ -63,8 +64,8 @@
           "y": 0.34,
           "width": 0.42,
           "height": 0.62,
-          "from": 1.5,
-          "to": 3.2
+          "from": 1.9,
+          "to": 2.95
         }
       ]
     }

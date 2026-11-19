@@ -9,7 +9,8 @@
   "video": {
     "src": "/slides/light-video/propagating-light.mp4",
     "startNs": 5.12,
-    "nsPerSecond": 0.768
+    "nsPerSecond": 0.768,
+    "poster": "/slides/light-video/propagating-light.poster.jpg"
   },
   "axis": [
     5,

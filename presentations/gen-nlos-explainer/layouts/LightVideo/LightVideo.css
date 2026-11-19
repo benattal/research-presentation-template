@@ -32,15 +32,13 @@
   position: absolute;
   right: 12px;
   bottom: 8px;
+  min-width: 5.2em;
+  text-align: right;
   font-size: 22px;
   line-height: 28px;
   font-variant-numeric: tabular-nums;
   color: var(--text-primary);
   text-shadow: 0 0 6px #000, 0 0 2px #000;
-}
-
-.light-video-tau {
-  font-style: italic;
 }
 
 .light-video-panel {

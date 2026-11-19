@@ -14,15 +14,12 @@
  *   inset   optional { src, alt, label, step, size }: a square image at
  *           the bottom of the right margin, with its label under it.
  */
-import { motion } from 'framer-motion';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import './AnnotatedPhoto.css';
 
 /** Stage pixels: the width of each margin, and the gap between a label and the end of its line. */
 const MARGIN = 250;
 const LABEL_GAP = 10;
-
-const fade = (visible) => ({ initial: false, animate: { opacity: visible ? 1 : 0 }, transition: { duration: 0.4 } });
 
 export default function AnnotatedPhoto({ slide, buildStep }) {
   const { photo, labels, inset } = slide;
@@ -44,7 +41,7 @@ export default function AnnotatedPhoto({ slide, buildStep }) {
             const left = label.side === 'left';
             const lineEnd = left ? MARGIN - 30 : MARGIN + photo.width + 30;
             return (
-              <motion.div key={label.text} className="annotated-photo-label-layer" {...fade(buildStep >= label.step)}>
+              <div key={label.text} className="annotated-photo-label-layer" style={{ opacity: buildStep >= label.step ? 1 : 0 }}>
                 <svg className="annotated-photo-lines" width={width} height={photo.height}>
                   <line x1={lineEnd} y1={partY} x2={partX} y2={partY} />
                   <circle cx={partX} cy={partY} r="3.5" />
@@ -57,18 +54,17 @@ export default function AnnotatedPhoto({ slide, buildStep }) {
                 >
                   {label.text}
                 </div>
-              </motion.div>
+              </div>
             );
           })}
           {inset && (
-            <motion.figure
+            <figure
               className="annotated-photo-inset"
-              style={{ left: MARGIN + photo.width + 40, width: inset.size }}
-              {...fade(buildStep >= inset.step)}
+              style={{ left: MARGIN + photo.width + 40, width: inset.size, opacity: buildStep >= inset.step ? 1 : 0 }}
             >
               <img src={inset.src} alt={inset.alt} style={{ width: inset.size, height: inset.size }} />
               <figcaption>{inset.label}</figcaption>
-            </motion.figure>
+            </figure>
           )}
         </div>
       </div>
