@@ -18,6 +18,17 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- "A hardware photo can be included, but we should also be rendering the
+  hardware setup/capture procedure as in the invprop video, the flying
+  with photons video (thought the hardware setup isn't exactly the same).
+  Relying on the same bunny scene, for visual consistency with the
+  website, would be useful". Slide 5 renders the hardware and the
+  capture in WebGL on the website's teapot-and-bunny corner scene.
+- Goal: "Implement the docs\plans\gen-nlos-explainer.md plan. Repeat 3-4
+  times: (a) do a pass on the slides, notes, recorded video with
+  subagents, (b) have subagents vet the slides, notes, recorded video
+  and report feedback, (c) consolidate feedback, check for bugs, and
+  repeat. Merge work often. Commit and push (to both git and R2) often."
 - "A few immediate comments: -> The navigation doesn't work (arrow keys
   are broken) -> The slide titles don't really make sense -> The content
   on the slides don't really make sense either. I'm confused about the

@@ -1,0 +1,100 @@
+/* Comparison grids: panels of media with short labels above and notes under them. */
+.slide--panels {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.panels-stage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.panels-figure {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.panels-row-labels {
+  display: grid;
+  align-items: center;
+  justify-items: end;
+}
+
+.panels-row-label {
+  font-size: 22px;
+  line-height: 1.2;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.panels-grid {
+  position: relative;
+  flex: none;
+}
+
+.panels-stitched,
+.panels-mask,
+.panels-panel {
+  position: absolute;
+}
+
+/* Covers a stitched video's cell until its panel appears, or dims it. */
+.panels-mask {
+  background: var(--bg-slide);
+}
+
+.panels-own-media {
+  position: absolute;
+  inset: 0;
+}
+
+.panels-media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* A stitched file has the block's shape; fill maps its cells onto the grid's exactly. */
+.panels-media--stitched {
+  object-fit: fill;
+}
+
+.panels-label,
+.panels-note {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.panels-label {
+  bottom: calc(100% + 9px);
+  font-size: 21px;
+  line-height: 26px;
+  color: var(--text-primary);
+}
+
+.panels-label--ours {
+  color: var(--accent);
+}
+
+.panels-note {
+  top: calc(100% + 8px);
+  font-size: 18px;
+  line-height: 22px;
+  color: var(--text-secondary);
+}
+
+.panels-box {
+  position: absolute;
+  border: 2px solid var(--hidden);
+  pointer-events: none;
+}

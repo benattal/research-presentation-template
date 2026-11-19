@@ -133,7 +133,7 @@ carry the results.
 | 3 | Video of propagating light | (1) the captured light video of the same scene, with a time readout; (2) direct light marked (white), then indirect (orange) | website `teaser-light-clean.mp4` |
 | 4 | Novel views from propagating light | image-only and ours side by side, reference photo; red boxes | teaser `rgb_only`, `prediction` |
 | | **propagating light** (card) | | |
-| 5 | Lidar capture | WebGL render of the lidar and a tabletop (relay walls, occluder, hidden lamp), parts labeled; (1) a pulse travels to a visible point; (2) direct return, the measurement inset shows the first peak: depth; (3) wavefront to the hidden object and back, the weak later peak; (4) the scan over all visible surfaces | three.js |
+| 5 | Lidar capture | WebGL render of the lidar hardware and the website's corner scene (relay walls, teapot occluder, hidden bunny), in the manner of the reference decks' hardware renders, parts labeled; (1) a pulse travels to a visible point; (2) direct return, the measurement inset shows the first peak: depth; (3) wavefront to the hidden object and back, the weak later peak; (4) the scan over all visible surfaces | three.js |
 | 6 | Hardware prototype | the photo with the parts named one by one (laser, scanning mirrors, beamsplitter, SPAD) | `hardware_figure/IMG_4018`, stickers blurred |
 | | **related work** (card) | | |
 | 7 | Related work | three columns, one lit per step: NLOS imaging / generative view synthesis / HOLI-1-to-3, each with one red limitation line; last step: our contribution lines in green | our own results as thumbnails |
@@ -160,9 +160,11 @@ the recording show the same motion.
 
 - **Lidar capture** (slide 5, three.js). In the manner of the reference
   decks' hardware renders: clean CG on black, a fixed three-quarter view,
-  parts labeled in short white text. The lidar (laser, scanning mirrors,
-  detector) aimed at a tabletop with two relay walls, an occluder, and a
-  hidden lamp, as in the captured scenes. A pulse to a visible point; the
+  parts labeled in short white text, rendering the hardware setup and
+  the capture procedure as those decks do. The lidar (laser, scanning
+  mirrors, detector) aimed at the scene of the website's light section
+  and the paper's Fig. 2: two relay walls, the teapot occluder, the hidden
+  bunny. A pulse to a visible point; the
   direct return and the first peak of the measurement; the wavefront to
   the hidden object and back, and the weak later peak; the scan.
 - **The vase scene in 3D** (slides 8–9, three.js). The captured point
