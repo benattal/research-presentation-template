@@ -129,6 +129,18 @@ space is not used effectively in these slides".
   "run backwards". State the relation itself, in words or as an equation:
   "the gradient is $y^\top (\partial_\theta A)\, x$", "importance satisfies
   $y = q + A^\top y$", "the pixel measures light from these surfaces".
+- **Keep established terms.** The user (2026-11-18), of "the brightest
+  value along each ray, and its depth" proposed for "maximum-intensity
+  projection": "what you have is too verbose and reads clearly as AI.
+  again, sort of anthropomorphising the ray by giving it something
+  (through "its depth")." A field's term (maximum-intensity projection,
+  time of flight, relay) is used as is, not replaced by a longer
+  plain-language paraphrase, and a possessive that gives an inanimate
+  thing something ("the ray ... its depth") counts as anthropomorphism.
+- **Follow the source's wording.** The user (2026-11-18): "I'm also not
+  asking you to change the language from what's in the paper, unless it
+  helps with clarity". A talk about a paper takes the paper's terms and
+  phrasing of its claims, and departs from them only to be clearer.
 - **State a method in its general form,** then name the special case the
   figure uses.
 - **Keep claims within what each method supports,** and match names,
