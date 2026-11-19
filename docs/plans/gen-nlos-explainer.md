@@ -66,18 +66,30 @@ declined and why). Gate 1 runs its build and look steps per section:
 2. **Look.** `npm run check`, `npm run capture`, then every frame is
    read against the storyboard row: does each key press change the
    screen, does the step show what its narration says, does the title
-   name what is on screen. For motion, frames at several times.
-3. **Vet.** Two reviewers who did not build it, given the user's
+   name what is on screen.
+3. **Vet the animations.** A capture shows one still per step, so motion
+   is checked on its own: for every animated step and every looping
+   video, frames at a series of times from the key press to the settled
+   state, tiled and looked at; and for every pair of consecutive
+   slides, the frames across the change. Checked: the motion shows what
+   the narration says while it says it; nothing jumps, flashes, or
+   restarts; light travels and arrives where the geometry says; clips
+   shown together stay in step; elements shared by two slides do not
+   move; a key press during an animation moves on at once; the pace is
+   neither rushed nor slow. Run in a browser with the GPU, forward,
+   backward, and with rapid presses.
+4. **Vet.** Two reviewers who did not build it, given the user's
    instructions, the storyboard, the reference-deck analysis, and the
    frames: one for content and clarity (would a CVPR viewer outside NLOS
    follow it, is anything missing or beside the point), one for layout,
    text, and motion ([slide review](../style/slide-review.md), the
-   reference decks' look). They edit the presentation; they do not
-   reword the paper.
-4. **Consolidate and fix.** Findings are merged, checked against the
+   reference decks' look), who repeats the animation check above
+   independently. They edit the presentation; they do not reword the
+   paper.
+5. **Consolidate and fix.** Findings are merged, checked against the
    user's directions, fixed at their cause, and the frames looked at
    again. The loop repeats until a round has no finding above cosmetic.
-5. **Publish.** Commit, push to GitHub, push media to the bucket; the
+6. **Publish.** Commit, push to GitHub, push media to the bucket; the
    deck stays served on localhost for the user.
 
 ## Rules
@@ -210,6 +222,9 @@ slides, places the narration by the same timeline, and writes captions.
   final sync; every visual uses a scene from the paper or the website.
 - The capture of the deck has no errors or warnings; every frame and
   every video contact sheet has been looked at.
+- Every animation and every slide-to-slide change has been vetted in
+  motion (frame series from press to settled, forward and backward), by
+  the lead and by a reviewer, with the result recorded in the tracker.
 - The anonymity audit passes: frames, narration, captions, file metadata.
 - Four refinement cycles are recorded in the tracker, each with its
   findings and their resolution.

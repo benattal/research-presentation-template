@@ -20,6 +20,40 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- "Remember to vet animations. This should be added to the plan." The
+  plan's refinement loop has a step for it and the completion criteria
+  require it.
+- "This all looks quite good. Some smoother animations for the processing
+  pipeline (esp. jumps between slides) would be nice". A builder is
+  making processing, conditioning, and generation one continuous
+  animation.
+- On the capture slide: "at the intersection of the first pulse you show
+  with the wall, the reflected light highlight looks strange" (a
+  camera-facing sprite; now a glow in the wall's plane); "Bring the
+  "occluder" label closer to the teapot"; "you should also show the
+  light leaving the laser, in addition to coming back (for both direct and
+  indirect)"; "offset the scanning pattern slightly? One dot lands under
+  the teapot nub." All done.
+- "Could you commit and push soon, and spend sometime optimizing the
+  performance of the framework/the deck? I just want to make sure visually
+  there are no glitches and that it runs well"; "Still having some issues
+  with responsive arrow key navigation"; "And content not preloading";
+  "Most of these changes should likely help for the whole framework (not
+  just this deck)". Preloading: the dev server answers no-cache, so the
+  fetched files were requested again by every slide; the framework now
+  keeps them in memory (0 media requests while navigating). A performance
+  pass is running.
+- "Could you make it so that the extents of the navigation bar don't
+  change size every time we change slides": the dots no longer animate
+  their width (not reproduced headless; to confirm).
+- "Is the limitation you listed a limitation in the paper? I might focus
+  on something a bit more impactful" and "the main limitation is likely
+  that NLOS conveys a limited amount of information": the summary's
+  limitation. "The videos also get unsynched for the training data. Make
+  sure this doesn't happen here or elsewhere": one video element per
+  slide, enforced by the panels layout.
+- Of the flatland slide: "Wow the flatland example is really nice"; its
+  move to the second part "is just slightly too fast": about 1 s now.
 - "Still having lots of issues with content that loads after the slide
   changes" and "It's not just slide transitions -- it's within specific
   slides too (an arrow press should reveal content. but it gets loaded in
