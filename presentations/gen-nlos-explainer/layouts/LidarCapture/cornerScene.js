@@ -265,8 +265,8 @@ export function createCaster(geometries) {
 
 /** The scan's grid of directions about the lidar's forward axis, in degrees: azimuth to the right, elevation up. */
 const SCAN = {
-  azimuths: [-40, -32, -24, -16, -8, 0, 8, 16, 24, 32, 40],
-  elevations: [30, 22, 14, 6, -2, -10],
+  azimuths: [-37, -29, -21, -13, -5, 3, 11, 19, 27, 35, 43],
+  elevations: [28, 20, 12, 4, -4, -12],
 };
 export const SCAN_COLUMNS = SCAN.azimuths.length;
 export const SCAN_ROWS = SCAN.elevations.length;

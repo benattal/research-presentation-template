@@ -2,8 +2,9 @@
  * What the lidar slide shows at each moment of each build step, as a pure
  * function of the step and the time since it began: the scene time of the
  * light (ns, 0 when the pulse leaves the laser), which light is drawn, and
- * how far the measurement plot is swept. Each step starts from the
- * previous step's end and ends in a settled frame.
+ * how far the measurement plot is swept. The direct and indirect steps each
+ * run the measurement from the pulse leaving the laser, so the light is seen
+ * going out before it comes back. Each step ends in a settled frame.
  */
 import { BUNNY, LIGHT_SPEED, MIRRORS_TO_RELAY, RELAY_POINT, TIMES, distance } from './cornerScene.js';
 
@@ -56,8 +57,8 @@ function msAt(time, lead, start) {
 const HIDDEN_CENTER = [BUNNY.position[0], BUNNY.height / 2, BUNNY.position[2]];
 const STILL_MS = {
   pulse: msAt(TIMES.hit - (0.42 * MIRRORS_TO_RELAY) / LIGHT_SPEED, LEAD_MS.pulse, PULSE_START),
-  direct: msAt(DIRECT_END, LEAD_MS.direct, TIMES.hit),
-  indirect: msAt(TIMES.hit + distance(RELAY_POINT, HIDDEN_CENTER) / LIGHT_SPEED, LEAD_MS.indirect, TIMES.hit),
+  direct: msAt(DIRECT_END, LEAD_MS.direct, PULSE_START),
+  indirect: msAt(TIMES.hit + distance(RELAY_POINT, HIDDEN_CENTER) / LIGHT_SPEED, LEAD_MS.indirect, PULSE_START),
   scan: SCAN_START_MS + SCAN_MS + 1000,
 };
 
@@ -107,8 +108,11 @@ export function frameAt(step, ms) {
   }
 
   if (phase === 'direct') {
-    frame.time = sceneTime(ms, LEAD_MS.direct, TIMES.hit, DIRECT_END);
-    frame.directReturn = true;
+    // The measurement again from the start: the pulse leaves the laser, then its direct return comes back.
+    frame.time = sceneTime(ms, LEAD_MS.direct, PULSE_START, DIRECT_END);
+    frame.outgoing = frame.time < TIMES.hit;
+    frame.directReturn = !frame.outgoing;
+    frame.spot = smoothstep(TIMES.hit - 0.1, TIMES.hit + 0.25, frame.time);
     frame.plot.sweep = frame.time;
     frame.plot.cursor = 1 - smoothstep(DIRECT_END - 0.4, DIRECT_END, frame.time);
     frame.plot.direct = smoothstep(TIMES.direct + 0.2, TIMES.direct + 0.7, frame.time);
@@ -121,8 +125,12 @@ export function frameAt(step, ms) {
   frame.plot.indirect = 1;
 
   if (phase === 'indirect') {
-    frame.time = sceneTime(ms, LEAD_MS.indirect, TIMES.hit, INDIRECT_END);
-    frame.indirect = true;
+    // The measurement once more: the pulse leaves the laser, then the light from x_p reaches the hidden object and returns.
+    frame.time = sceneTime(ms, LEAD_MS.indirect, PULSE_START, INDIRECT_END);
+    frame.outgoing = frame.time < TIMES.hit;
+    frame.indirect = !frame.outgoing;
+    frame.spot = smoothstep(TIMES.hit - 0.1, TIMES.hit + 0.25, frame.time);
+    frame.path = frame.indirect ? 1 : 0;
     // The plot waits where the direct return left it until the light's time passes that point.
     frame.plot.sweep = Math.max(DIRECT_END, frame.time);
     frame.plot.cursor = frame.time > DIRECT_END ? 1 - smoothstep(INDIRECT_END - 0.4, INDIRECT_END, frame.time) : 0;
