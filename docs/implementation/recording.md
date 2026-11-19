@@ -90,7 +90,8 @@ name:
 ```
 
 `manifest.json` lists the audio segments: an `id`, a `file` relative to
-the directory, and its length in seconds. `steps.json` says which segment
+the directory, its length in seconds, and optionally its measured
+loudness (`lufs_i`, in LUFS), which the mix uses. `steps.json` says which segment
 belongs to which step: `slide` is a slide id, `step` its 0-based build
 step, and `segment` a segment id, or `null` for a step without narration.
 Other fields in either file are ignored, and a step that `steps.json` does
@@ -102,8 +103,13 @@ the manifest lacks, or gives one step two segments, and when an audio file
 is missing.
 
 Each segment starts at the time the page handled its step's key press
-(`at` in `timeline.json`). The segments are summed and the sum is
-normalized to −16 LUFS with a true peak of −1.5 dBTP
+(`at` in `timeline.json`). When the manifest gives every segment's
+measured loudness (`lufs_i`, which `narration/narrate.py` writes), each
+segment gets the gain that brings it to −16 LUFS, with a limiter that
+keeps its true peak under −1.5 dBTP, so every step sounds as loud as the
+next; on the explainer's narration that brought segments from a spread
+of 4.8 dB to 0.3 dB. Without the measurements the summed narration is
+normalized as a whole, which sets the average and keeps the differences
 (`narrationMixFilter`). The video is encoded once, without sound, as
 `video-only.mp4`; `run-through.mp4` adds the sound without encoding the
 picture again.

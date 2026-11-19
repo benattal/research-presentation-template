@@ -391,7 +391,7 @@ try {
     const voiced = timeline.filter((each) => each.segment);
     runFfmpeg([
       '-i', videoFile, ...voiced.flatMap((each) => ['-i', each.segment.file]),
-      '-filter_complex', narrationMixFilter(voiced),
+      '-filter_complex', narrationMixFilter(voiced.map((each) => ({ at: each.at, loudness: each.segment.loudness }))),
       '-map', '0:v', '-map', '[mix]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k',
       '-t', seconds.toFixed(3), '-movflags', '+faststart', '-map_metadata', '-1', join(outDir, 'run-through.mp4'),
     ]);

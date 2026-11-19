@@ -221,10 +221,12 @@ export function plannedSeconds(plan) {
 
 /**
  * The narration segment of each step, from a narration directory's two
- * files: `manifest` (`{ segments: [{ id, file, duration_s }] }`) and
- * `stepSegments` (`[{ slide, step, segment }]`, `segment` a segment id or
- * null). Returns a map from step (`"<slide-id>/<step>"`) to
- * `{ id, file, duration }`, with `file` as the manifest writes it.
+ * files: `manifest` (`{ segments: [{ id, file, duration_s, lufs_i? }] }`)
+ * and `stepSegments` (`[{ slide, step, segment }]`, `segment` a segment id
+ * or null). Returns a map from step (`"<slide-id>/<step>"`) to
+ * `{ id, file, duration, loudness }`, with `file` as the manifest writes
+ * it and `loudness` the segment's measured integrated loudness in LUFS
+ * (`lufs_i`), or null when the manifest does not give it.
  *
  * Throws listing every problem: a step the presentation does not have (the
  * narration was made for other slides), a step listed twice, a segment the
@@ -254,7 +256,10 @@ export function narrationSegments(manifest, stepSegments, steps) {
     const segment = segmentsById.get(id);
     if (!segment) problems.push(`step ${step} of slide "${slide}" names segment "${id}", which the manifest lacks.`);
     else if (narration.has(key)) problems.push(`step ${step} of slide "${slide}" is listed twice.`);
-    else narration.set(key, { id, file: segment.file, duration: segment.duration_s });
+    else {
+      const loudness = Number.isFinite(segment.lufs_i) ? segment.lufs_i : null;
+      narration.set(key, { id, file: segment.file, duration: segment.duration_s, loudness });
+    }
   }
   if (problems.length > 0) throw new Error(`The narration does not match the presentation:\n- ${problems.join('\n- ')}`);
   return narration;
@@ -277,18 +282,37 @@ export function readNarration(dir, steps) {
   return narration;
 }
 
+/** The narration's loudness in the recording (LUFS, integrated) and its true-peak ceiling (dBTP). */
+export const MIX_LOUDNESS = -16;
+export const MIX_PEAK = -1.5;
+
 /**
  * The ffmpeg filter graph that places narration under a recorded video:
  * audio input `i + 1` (input 0 is the video) starts `placements[i].at`
- * seconds in, the inputs are summed without rescaling, and the sum is
- * normalized to −16 LUFS with a true peak of −1.5 dBTP, at 48 kHz. Its
+ * seconds in, and the inputs are summed without rescaling, at 48 kHz. Its
  * output pad is `[mix]`. `placements` must not be empty.
+ *
+ * Loudness: when every placement gives its segment's measured `loudness`
+ * (LUFS), each segment gets the gain that brings it to `MIX_LOUDNESS`,
+ * with a limiter at `MIX_PEAK` for the few peaks the gain lifts past it,
+ * so every step sounds as loud as the next. (The narration tool levels
+ * segments with gain alone and stops at the peak, which leaves a segment
+ * with one loud consonant several decibels quieter than its neighbors.)
+ * Without the measurements, the sum is normalized as a whole instead,
+ * which sets the average and keeps the differences between segments.
  */
 export function narrationMixFilter(placements) {
   if (placements.length === 0) throw new Error('narrationMixFilter needs at least one segment to place.');
-  const delayed = placements.map(({ at }, i) => `[${i + 1}:a]adelay=${Math.round(at * 1000)}:all=1[a${i}]`);
+  const measured = placements.every(({ loudness }) => Number.isFinite(loudness));
+  // The limiter works on samples; half a decibel of margin keeps the true peak, between samples, under MIX_PEAK.
+  const ceiling = (10 ** ((MIX_PEAK - 0.5) / 20)).toFixed(3);
+  const placed = placements.map(({ at, loudness }, i) => {
+    const level = measured ? `volume=${(MIX_LOUDNESS - loudness).toFixed(2)}dB,alimiter=limit=${ceiling}:level=0,` : '';
+    return `[${i + 1}:a]${level}adelay=${Math.round(at * 1000)}:all=1[a${i}]`;
+  });
   const inputs = placements.map((_, i) => `[a${i}]`).join('');
-  return `${delayed.join(';')};${inputs}amix=inputs=${placements.length}:normalize=0,loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000[mix]`;
+  const whole = measured ? '' : `loudnorm=I=${MIX_LOUDNESS}:TP=${MIX_PEAK}:LRA=11,`;
+  return `${placed.join(';')};${inputs}amix=inputs=${placements.length}:normalize=0,${whole}aresample=48000[mix]`;
 }
 
 // ─── Frames on a constant-rate grid ───────────────────────────────────

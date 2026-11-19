@@ -20,21 +20,21 @@ next presentation starts with them.
   its media in `media/`, in git ([presentation format](../implementation/presentations.md)).
 - **Narration.** `narration/` (local text-to-speech, transcription for
   checking) and `npm run narration` (a deck's notes as a script).
+- **Recording.** `npm run record`: a run-through video of any deck, holds
+  from the deck's `recording.json`, narration placed by the timeline and
+  leveled per segment; `?bars=hidden` shows the stage alone.
+- **Skills.** `start-presentation` and `narrated-video`, pointing at the
+  workflows.
 - **Player features** that the explainer needed and every deck gets:
   the step clock, media preloading kept in memory, video posters,
   `prepare` for slow layouts, `progressBar: false`.
 
 ### Open
 
-1. **Recorder.** `npm run record`: a run-through video of any deck, with
-   narration placed by the timeline, holds from the deck's
-   `recording.json`. Check: unit tests, a recording of the example deck.
-2. **`main`.** The framework branch reaches `main` after
+1. **`main`.** The framework branch reaches `main` after
    `npm run test:ui` passes on an idle machine; `main` is then merged into
    the project branches.
-3. **Skills.** Short skills for the narrated-video workflow, pointing at
-   the documents.
-4. **The comparison grid in core.** The explainer's `panels` layout (a
+2. **The comparison grid in core.** The explainer's `panels` layout (a
    grid of labeled media over one stitched video, panels revealed and
    dimmed per step, timed boxes on a region, groups on a panel) is the
    layout other decks will want first. It moves to `core/client/layouts/`
@@ -42,24 +42,32 @@ next presentation starts with them.
    name that says what it is. It waits until the explainer's collaborators
    have stopped editing it: moving a file that someone is changing costs
    them a conflict.
-5. **Smaller layouts in core**, by the same procedure and the same wait:
+3. **Smaller layouts in core**, by the same procedure and the same wait:
    the annotated photo (callouts in the margins, one per step) and the
    section card.
-6. **A type scale and panel tokens in core.** Core defines the tokens a
+4. **A type scale and panel tokens in core.** Core defines the tokens a
    theme overrides (`--type-title`, `--type-text`, `--type-small`;
    `--bg-panel`, `--radius-panel`, `--panel-padding`, `--panel-gap`), core
    layouts take their sizes from them, and a repository test fails on a
    literal font size in a layout. Today the rule ("one type scale per
    deck") is kept by hand, and only the explainer's theme defines the
    tokens.
-7. **A frame-exact recorder.** `npm run record` captures in real time, so
+5. **A frame-exact recorder.** `npm run record` captures in real time, so
    a busy machine drops frames. A record view that advances a virtual
    clock and screenshots every frame is unfinished on branch
    `recorder-wip`; finish it behind the same command, or delete the
    branch.
-8. **Narration loudness.** Segments are normalized with gain only, so a
-   segment with high peaks stays below the target. Level them with a
-   limiter, or in the recorder's mix.
+6. **The recorder's open points**
+   ([recording](../implementation/recording.md)): a real run with
+   `--narration` and with `--url`; the first step is filmed as loaded,
+   without its entrance; this machine stalls for about a second in most
+   full runs, which the command reports and cannot correct.
+7. **The narration tools' open points**
+   ([narration](../implementation/narration.md)): the duration estimate
+   (160 words a minute; the Kokoro voice measured 150, and the silence
+   around segments is not counted); sentence splitting after a
+   single-letter word; the `qwen` and `chatterbox` environments and macOS
+   untried from `setup.sh`.
 
 ## Rules
 

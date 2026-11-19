@@ -199,9 +199,14 @@ describe('narration', () => {
   it('gives each narrated step its segment', () => {
     const narration = narrationSegments(manifest, stepSegments, steps);
     assert.deepEqual([...narration], [
-      ['title/0', { id: 'intro', file: 'audio/intro.wav', duration: 4.2 }],
-      ['method/1', { id: 'method-b', file: 'audio/method-b.wav', duration: 9 }],
+      ['title/0', { id: 'intro', file: 'audio/intro.wav', duration: 4.2, loudness: null }],
+      ['method/1', { id: 'method-b', file: 'audio/method-b.wav', duration: 9, loudness: null }],
     ]);
+  });
+
+  it('keeps the measured loudness of a segment when the manifest gives it', () => {
+    const measured = { segments: manifest.segments.map((segment) => ({ ...segment, lufs_i: -19.4 })) };
+    assert.equal(narrationSegments(measured, stepSegments, steps).get('title/0').loudness, -19.4);
   });
 
   it('refuses narration made for other slides, listing every mismatch', () => {
@@ -242,6 +247,15 @@ describe('narration', () => {
       '[1:a]adelay=1500:all=1[a0];[2:a]adelay=12346:all=1[a1];'
       + '[a0][a1]amix=inputs=2:normalize=0,loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000[mix]',
     );
+    // With every segment's measured loudness, each gets its own gain to −16 LUFS and a limiter; no pass over the sum.
+    assert.equal(
+      narrationMixFilter([{ at: 1.5, loudness: -19.4 }, { at: 12.3456, loudness: -25.2 }]),
+      '[1:a]volume=3.40dB,alimiter=limit=0.794:level=0,adelay=1500:all=1[a0];'
+      + '[2:a]volume=9.20dB,alimiter=limit=0.794:level=0,adelay=12346:all=1[a1];'
+      + '[a0][a1]amix=inputs=2:normalize=0,aresample=48000[mix]',
+    );
+    // One segment without a measurement: the whole sum is normalized instead.
+    assert.match(narrationMixFilter([{ at: 0, loudness: -19 }, { at: 5, loudness: null }]), /^\[1:a\]adelay=0.*loudnorm=I=-16/);
     assert.throws(() => narrationMixFilter([]), /at least one segment/);
   });
 });

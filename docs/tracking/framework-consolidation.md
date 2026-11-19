@@ -2,9 +2,10 @@
 
 [Plan](../plans/framework-consolidation.md)
 
-Current state: rules, workflows, the glossary, the `media/` convention, and
-the narration tools are on `framework-sync`; the recorder is being ported;
-`main` has not moved. Resume from the newest entry below.
+Current state: rules, workflows, the glossary, the `media/` convention,
+the narration tools, the recorder, and two skills are on `framework-sync`;
+`main` moves when `npm run test:ui` passes. Resume from the newest entry
+below.
 
 ## Standing directions
 
@@ -23,7 +24,40 @@ Every direction the user gives about this work, quoted and dated.
   durable instructions for workflows here would be great".
 - "By the way my collaborators will be working on the repo simultaneously,
   so do your best to work well with them".
+- "Please clean up the extraneous branches on the remote not representing
+  a presentation when you get the chance to (once their work is complete).
+  main, gen-nlos-explainer, guest-lecture, vision-workshop should all
+  stay".
 - "Yeah don't use simlinks like that" (of junctions between checkouts).
+
+## 2026-11-19 18:30 — the recorder, per-segment loudness, skills
+
+User direction (2026-11-19): the remote keeps `main`, `gen-nlos-explainer`,
+`guest-lecture`, `vision-workshop`; other branches go once their work is
+complete (quoted above).
+
+- Merged the recorder port: `npm run record`, `core/tooling/recording.js`,
+  `recording.json` (validated by `npm run check`), `?bars=hidden` in the
+  audience view, `docs/implementation/recording.md`. Five conflicts with
+  the narration port, each one line added by both in the same place; both
+  kept. `npm test`: 79 pass.
+- The builder's finding on late frames: the browser keeps at most three
+  unacknowledged screencast frames and drops the rest, so a change could
+  be missing until the next one. The recorder drops out-of-order frames,
+  restarts the screencast 150 ms after the last change, and reports late
+  and recovered frames. On the example deck (13 steps, 1920×1080): presses
+  shown within 26 ms, one frame 964 ms late, one change recovered.
+- Loudness: the recorder now gives each narration segment the gain to
+  −16 LUFS from the manifest's `lufs_i`, with a limiter. Measured on twelve
+  segments of the explainer's narration (sources −23.3 to −17.7 LUFS): per
+  segment −16.5 to −16.2 LUFS, peak −1.8 dBFS; normalizing the sum as
+  before left −19.8 to −15.0.
+- Skills: `start-presentation`, `narrated-video`.
+- Not run: `npm run test:ui` (next; `main` moves when it passes). Not
+  tried: a real `npm run record --narration` run with the merged code.
+- Remote branches besides the four kept: `framework-sync` (goes when
+  `main` has it), `recorder-wip`, `nlos-comparison-polish-wip`,
+  `lecture-numbers`; each is examined before it is deleted.
 
 ## 2026-11-19 16:45 — documents, media scripts, narration
 

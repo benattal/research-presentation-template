@@ -188,7 +188,9 @@ narration` prints the line for this machine.) For each segment
 The gain in step 5 has no limiter behind it, so a segment with a high peak
 stays below the loudness target. In the example's render the five segments
 measured between -25.2 and -18.0 LUFS, each with its true peak at
--1.5 dBTP. Level the segments when mixing if that spread is audible.
+-1.5 dBTP. `npm run record` levels each segment from the manifest's
+`lufs_i` when it mixes ([recording](recording.md)); a mix made any other
+way has to do the same.
 
 ## Voices
 
