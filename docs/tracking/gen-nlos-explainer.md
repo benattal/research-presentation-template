@@ -17,6 +17,18 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- "For related work, more methods should be listed/more visual examples of
+  methods should be shown. The visuals should also ideally be tied to a
+  concrete technique". A builder is redoing the slide: each visual is the
+  output of a named method.
+- "For the slides that show the "same LOS but different indirect" maybe
+  pause the indirect video to highlight the indirect difference" and "The
+  video may also just start a little bit too late".
+- Arrow keys (the user's repeated report): the capture slide rebuilt its
+  WebGL scene on every visit, 1.1 to 1.5 s from key press to paint; it is
+  now prepared once while idle and kept (about 20 ms). Framework: layouts
+  can declare `prepare`, a step clock stops once settled (76c6c96,
+  5bb000e).
 - "Hmm, is there a reason you're pushing to the guest-lecture branch?
   Could push to the gen-nlos-explainer branch?" No good reason: the work
   was moved into this folder while it was on `guest-lecture` and committed
