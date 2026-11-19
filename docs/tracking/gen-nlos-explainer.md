@@ -17,6 +17,15 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, evening (on a new machine, a Mac):
 
+- Of slide 19 (captured scenes, same line of sight), with a screenshot of
+  the indirect column: "i want to freeze frame the indirect light when it
+  is on the attached frame. delay the start of the indirect light video
+  so that the indirect and directl light stop at roughly the same time?"
+  The screenshot is bin 294 from 5.12 ns (9.82 ns) in both rows. Done
+  (`light-split.py`): the indirect column waits on its first lit frame,
+  starts 5.44 s in, and freezes at 9.82 ns at 6.88 s, as the direct
+  column ends; both hold 6 s, then the 12.9 s video loops (the core
+  `Media` always loops).
 - "can you read in @priorart/SIGASIApresentation_FINAL.pptx . can we use
   the styling in this? use optimal and no orange yellow font. also Font
   sizes (maybe types too not sure) all over the place, id probably pick
