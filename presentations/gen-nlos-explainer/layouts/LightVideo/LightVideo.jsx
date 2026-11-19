@@ -20,7 +20,7 @@
  * animation frame and on every seek (how the record view moves a video), so
  * they show the frame on screen however the video is driven.
  */
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import Media from '@core/stage/Media.jsx';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import './LightVideo.css';
@@ -49,7 +49,8 @@ export default function LightVideo({ slide, buildStep }) {
   const axisWidth = PANEL_WIDTH - 2 * AXIS_INSET;
   const x = (ns) => AXIS_INSET + (axisWidth * (ns - fromNs)) / (toNs - fromNs);
 
-  useEffect(() => {
+  // A layout effect: its cleanup runs in the commit that detaches the refs, so no frame runs after them.
+  useLayoutEffect(() => {
     const element = videoHolder.current.querySelector('video');
     const show = () => {
       const ns = video.startNs + video.nsPerSecond * element.currentTime;

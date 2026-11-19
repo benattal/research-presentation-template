@@ -1,0 +1,140 @@
+/* Lidar capture: a render filling the slide behind its title, labels beside its parts, and a plot at the right. */
+.lidar-capture {
+  --lidar-capture-scan: #ff4a57;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+/* The figure fills the whole slide: none of its ancestors up to the slide is
+   positioned, so the slide's box is its containing block. It is drawn under
+   the title. */
+.lidar-capture-figure {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.lidar-capture-render {
+  position: absolute;
+  inset: 0;
+}
+
+.lidar-capture-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* The hidden object's mesh, loaded as an image and never shown. */
+.lidar-capture-mesh {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.lidar-capture-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.lidar-capture-label > span {
+  position: absolute;
+  color: var(--text-primary);
+  font-size: 22px;
+  line-height: 1;
+  white-space: nowrap;
+  /* Legible over the pale walls as well as on black. */
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.9), 0 0 12px rgba(0, 0, 0, 0.7);
+}
+
+.lidar-capture-label--left > span {
+  right: 0;
+  top: 0;
+  transform: translateY(-50%);
+}
+
+.lidar-capture-label--right > span {
+  left: 0;
+  top: 0;
+  transform: translateY(-50%);
+}
+
+.lidar-capture-label--above > span {
+  left: 0;
+  bottom: 0;
+  transform: translateX(-50%);
+}
+
+.lidar-capture-label--below > span {
+  left: 0;
+  top: 0;
+  transform: translateX(-50%);
+}
+
+.lidar-capture-plot {
+  position: absolute;
+  left: 56px;
+  top: 164px;
+}
+
+.lidar-capture-plot canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.lidar-capture-plot-axes {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+.lidar-capture-plot-label,
+.lidar-capture-plot-tick,
+.lidar-capture-plot-peak {
+  position: absolute;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.lidar-capture-plot-label {
+  color: var(--text-secondary);
+  font-size: 19px;
+}
+
+.lidar-capture-plot-label--time {
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.lidar-capture-plot-tick {
+  color: var(--text-secondary);
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  transform: translateX(-50%);
+}
+
+.lidar-capture-plot-peak {
+  font-size: 21px;
+  opacity: 0;
+}
+
+.lidar-capture-plot-peak--direct {
+  color: var(--direct);
+}
+
+.lidar-capture-plot-peak--indirect {
+  color: var(--indirect);
+  transform: translateX(-50%);
+}

@@ -4,5 +4,9 @@
     "title": "Wave-based non-line-of-sight imaging using fast f-k migration",
     "venue": "ACM TOG",
     "year": 2019
+  },
+  "stanford-bunny": {
+    "authors": "Stanford bunny: Stanford Computer Graphics Laboratory",
+    "title": "The Stanford 3D Scanning Repository"
   }
 }

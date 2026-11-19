@@ -5,6 +5,7 @@
  */
 import AnnotatedPhoto from './AnnotatedPhoto/AnnotatedPhoto.jsx';
 import FlatlandNlos from './FlatlandNlos/FlatlandNlos.jsx';
+import LidarCapture from './LidarCapture/LidarCapture.jsx';
 import LightVideo from './LightVideo/LightVideo.jsx';
 import Panels from './Panels/Panels.jsx';
 import RelatedWork from './RelatedWork/RelatedWork.jsx';
@@ -14,6 +15,7 @@ import Summary from './Summary/Summary.jsx';
 export default {
   annotatedPhoto: AnnotatedPhoto,
   flatlandNlos: FlatlandNlos,
+  lidarCapture: LidarCapture,
   lightVideo: LightVideo,
   panels: Panels,
   relatedWork: RelatedWork,

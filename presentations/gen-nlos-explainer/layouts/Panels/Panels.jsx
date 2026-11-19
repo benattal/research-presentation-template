@@ -52,7 +52,7 @@
  * every animation frame and on every seek (how the record view moves a
  * video), so they stay on the frames they mark however the video is driven.
  */
-import { createRef, useEffect, useMemo, useRef } from 'react';
+import { createRef, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import Media from '@core/stage/Media.jsx';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
@@ -111,10 +111,12 @@ function windowOpacity(seconds, { from, to }) {
 
 /**
  * Sets each timed box's opacity from the current time of the video inside
- * `videoHolder`, on every animation frame and on every seek.
+ * `videoHolder`, on every animation frame and on every seek. A layout
+ * effect: its cleanup runs in the commit that detaches the boxes' refs, so
+ * no frame runs after them.
  */
 function useBoxWindows(videoHolder, boxes, boxElements) {
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!boxes.some((box) => box.from !== undefined)) return undefined;
     const video = videoHolder.current?.querySelector('video');
     if (!video) throw new Error('panels layout: a box with "from" and "to" needs a video under its panel');

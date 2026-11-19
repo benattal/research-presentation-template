@@ -19,6 +19,7 @@
       "title": "Propagating light",
       "slides": [
         "card-propagating-light",
+        "lidar-capture",
         "hardware"
       ]
     },

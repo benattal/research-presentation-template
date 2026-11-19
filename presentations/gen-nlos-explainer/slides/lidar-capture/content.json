@@ -1,0 +1,28 @@
+{
+  "layout": "lidarCapture",
+  "title": "Lidar capture",
+  "buildSteps": [
+    "a pulse travels to a visible point",
+    "the direct return and the first peak",
+    "indirect light from the hidden object and the later peak",
+    "the scan over the visible surfaces"
+  ],
+  "hiddenObject": {
+    "mesh": "/slides/lidar-capture/stanford-bunny-mesh.png"
+  },
+  "labels": {
+    "laser": "pulsed laser",
+    "mirrors": "scanning mirrors",
+    "detector": "SPAD",
+    "relays": "relay walls",
+    "occluder": "occluder",
+    "hidden": "hidden object",
+    "direct": "direct",
+    "indirect": "indirect",
+    "time": "time (ns)",
+    "counts": "photon counts"
+  },
+  "credits": [
+    "stanford-bunny"
+  ]
+}
