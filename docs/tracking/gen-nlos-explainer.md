@@ -17,6 +17,12 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, while building:
 
+- Of the narrated run-through: "We can continue to iterate without the
+  voiceover for now, but this was useful for testing for the final version
+  of a draft". Iteration is on the slides; a narrated run-through is
+  recorded again when a draft is ready to be tested whole
+  (`assets/build/record-run-through.mjs`, narration in
+  `assets/narration/`).
 - "Okay, you can also continue with the remaining tasks incl. visualizing
   the ground truth volumes/capture setups for the NLOS reconstruction
   comparison". The pause is lifted for the open items: the ground-truth
