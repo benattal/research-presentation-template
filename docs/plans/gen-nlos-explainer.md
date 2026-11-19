@@ -136,7 +136,7 @@ carry the results.
 | 5 | Lidar capture | WebGL render of the lidar hardware and the website's corner scene (relay walls, teapot occluder, hidden bunny), in the manner of the reference decks' hardware renders, parts labeled; (1) a pulse travels to a visible point; (2) direct return, the measurement inset shows the first peak: depth; (3) wavefront to the hidden object and back, the weak later peak; (4) the scan over all visible surfaces | three.js |
 | 6 | Hardware prototype | the photo with the parts named one by one (laser, scanning mirrors, beamsplitter, SPAD) | `hardware_figure/IMG_4018`, stickers blurred |
 | | **related work** (card) | | |
-| 7 | Related work | three columns, one lit per step: NLOS imaging / generative view synthesis / HOLI-1-to-3, each with one red limitation line; last step: our contribution lines in green | our own results as thumbnails |
+| 7 | Related work | two columns, one lit per step: NLOS imaging and generative view synthesis, each with one red limitation line; last step: our contribution lines in green (HOLI-1-to-3 is not given a column) | our own results as thumbnails |
 | | **method** (card) | | |
 | 8 | Processing the capture | WebGL, the vase scene: (1) RGB image and direct light give the colored point cloud; (2) indirect light gives the NLOS volume behind the occluder | three.js: `rgbd_aligned.npz`, `nlos.npy` |
 | 9 | Conditioning videos | same 3D view, the camera moves along the target trajectory; warped RGB, MIP, MIP depth appear as synchronized panels | three.js, teaser `presentation/*.mp4` |
