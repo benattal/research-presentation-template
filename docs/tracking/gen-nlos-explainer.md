@@ -16,6 +16,21 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-18, while planning:
 
+- Of a reviewer's objection that "feed-forward" conflicts with the
+  iterative NLOS solver: "The generative method is also feed forward.
+  That's a fine way to classify it." The script keeps "feed-forward" for
+  the method, in contrast with HOLI-1-to-3's per-scene optimization.
+- Of a reviewer's proposal to say "the brightest value along each ray,
+  and its depth" instead of "maximum-intensity projection": "Yeah I don't
+  think replacing maximum intensity projection as "the brightest..." is a
+  good idea. what you have is too verbose and reads clearly as AI. again,
+  sort of anthropomorphising the ray by giving it something (through "its
+  depth"). I've asked you not to do this". Keep established technical
+  terms (maximum-intensity projection, MIP depth) instead of verbose
+  paraphrases; a possessive that gives an inanimate thing something ("its
+  depth") counts as anthropomorphism. Reviewer rewrites are screened for
+  both before they are applied. To add to docs/style/slides.md on
+  `framework-sync` (pending).
 - "Yes that is the bucket I was referring to. Use it for large assets in
   this presentation." (the R2 bucket `presentations`), and "Remember to
   upload the holi 1-to-3 comparisons from the tcig r2 bucket to dropbox if
