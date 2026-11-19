@@ -2,10 +2,9 @@
 
 [Plan](../plans/gen-nlos-explainer.md)
 
-Current state: paused at the user's request with the first draft on
-screen (23 slides) and a run-through recorded. The second pass opens only
-on the user's word. One builder is still finishing: the performance pass
-(framework and deck).
+Current state: gate 2, refinement cycle 1, pass (a) nearly complete (see
+the newest entry). Iteration is on the slides; narrated run-throughs test
+whole drafts.
 
 Resume from the newest entry below.
 
@@ -409,6 +408,32 @@ slide rules are in [slide style](../style/slides.md) and
 
 None open. Resolved: "my presentations bucket" is the R2 bucket
 `presentations` (the user, 2026-11-18).
+
+## 2026-11-19 14:25 — cycle 1, pass (a): merged so far
+
+User directions (2026-11-19): see "Standing directions" (the refinement
+goal; a collaborator's feedback; related work; the light videos; branch).
+
+- Merged and pushed (branch `gen-nlos-explainer`): the performance fixes
+  (the capture slide is built once and kept: 1.1 to 1.5 s became about
+  20 ms); one type scale; related work as five method tiles in two panels,
+  each the output of the method it names (the interim bicycle clip was a
+  CGLS reconstruction and was dropped); panels behind the parts of the
+  three method slides; the ground-truth scene column on the nonplanar
+  comparison (room geometry with the lidar and its field of view; for the
+  Stanford-FK row the capture setup only, the scanner position fitted to
+  the dataset's direct times of flight, 3.7 mm RMS, since the dataset has
+  no ground truth and does not give the position); the new lamp result;
+  the line-of-sight light videos (start with the light, pause on the
+  largest difference); section 1's logged findings.
+- Still building: the capture slide's redesign (narration always with a
+  moving visual).
+- Not reproduced: four page errors (`getContext` of null) seen once during
+  rapid navigation right after a merge; a second run was clean.
+- Next: merge the capture slide; `npm run test:ui` on the idle machine and
+  move `main`; then (b), vetting by fresh reviewers (content and clarity;
+  layout, type, and compartments; every animation and slide change), and
+  (c), consolidation.
 
 ## 2026-11-19 13:40 — paused by the user; run-through recorded
 
