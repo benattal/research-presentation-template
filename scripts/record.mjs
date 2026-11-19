@@ -295,11 +295,17 @@ try {
   const screencast = { format: 'jpeg', quality: JPEG_QUALITY, maxWidth: size.width, maxHeight: size.height, everyNthFrame: 1 };
   let quietTimer = null;
   let awaitingFreshFrame = false;
+  // One restart at a time: a second stop sent before the first restart's
+  // start would be followed by two starts, and the browser refuses the
+  // second ("Screencast is already active"). A request made while a
+  // restart is under way is met by it, because its start comes later.
+  let restarting = null;
   const requestFreshFrame = () => {
     awaitingFreshFrame = true;
-    client.send('Page.stopScreencast')
+    restarting ??= client.send('Page.stopScreencast')
       .then(() => client.send('Page.startScreencast', screencast))
-      .catch((error) => failures.push(error));
+      .catch((error) => failures.push(error))
+      .finally(() => { restarting = null; });
   };
 
   client.on('Page.screencastFrame', ({ data, metadata, sessionId }) => {
@@ -365,6 +371,7 @@ try {
   await waitUntil(due);
   const seconds = clock();
   clearTimeout(quietTimer);
+  await restarting;
   await client.send('Page.stopScreencast');
   writeUntil(seconds);
   ffmpeg.stdin.end();
