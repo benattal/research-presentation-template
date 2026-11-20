@@ -10,8 +10,8 @@ import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import {
-  BEAM, BUNNY, LIDAR, LIGHT_SPEED, RELAYS, ROOM, SCAN_COLUMNS, SCAN_ROWS, TEAPOT, VIEW,
-  distance, pulse, scanBeamDirection, scanPoints, sceneCaster, teapotGeometry, viewPixel,
+  BEAM, BUNNY, LIDAR, LIGHT_SPEED, RELAYS, ROOM, SCAN_COLUMNS, SCAN_ROWS, TEAPOT, VIEW, VIEW_PROJECTION,
+  directTime, distance, pulse, scanBeamDirection, scanPoints, sceneCaster, teapotGeometry, viewPixel,
 } from './cornerScene.js';
 
 /**
@@ -57,6 +57,12 @@ const MARKED_LEVEL = 0.3;
 const SCAN_LEVEL = 0.06;
 /** Radius of a scan dot (m). */
 const DOT_RADIUS = 0.015;
+/**
+ * The video's light where it is drawn on the scene's surfaces: how much
+ * of its direct light is added, how far its indirect light tints a
+ * surface (at most 1), and how bright that tint is.
+ */
+const SCENE_LIGHT = { direct: 1.4, indirect: 1, indirectBrightness: 1.5 };
 
 const toVector = (p) => new THREE.Vector3(p[0], p[1], p[2]);
 
@@ -106,6 +112,16 @@ uniform float uIsHidden;
 uniform vec3 uSeams;
 uniform vec4 uContacts[2];
 uniform float uIsFloor;
+uniform sampler2D uViewLight;
+uniform sampler2D uViewDepth;
+uniform vec3 uViewMirrors;
+uniform vec3 uViewForward;
+uniform vec3 uViewRight;
+uniform vec4 uViewAngles;
+uniform vec3 uViewSize;
+uniform float uViewAmount;
+uniform vec3 uViewLevels;
+uniform vec3 uDirectColor;
 `;
 
 const CONTACT_SHADING = /* glsl */ `
@@ -142,6 +158,32 @@ outgoingLight = mix(outgoingLight, uWaveColor * (0.85 + 0.6 * waveTint) * (1.0 +
 `;
 
 /**
+ * The video of propagating light, drawn on the surfaces it was measured
+ * on: the surface's pixel in the video (as viewPixel finds it), and that
+ * pixel's light (red: direct, green: indirect) drawn where the surface is
+ * the one the lidar sees in that direction (its distance from the mirrors
+ * matches the pixel's). uViewSize is (columns, rows, pixels per scan step);
+ * uViewLevels is SCENE_LIGHT (direct, indirect, indirectBrightness).
+ */
+const VIEW_LIGHT = /* glsl */ `
+if (uViewAmount > 0.0) {
+  vec3 toward = vWaveWorld - uViewMirrors;
+  float forward = dot(toward, uViewForward);
+  float right = dot(toward, uViewRight);
+  vec2 angles = degrees(vec2(atan(right, forward), atan(toward.y, length(vec2(forward, right)))));
+  vec2 pixel = vec2((angles.x - uViewAngles.x) / uViewAngles.y, (angles.y - uViewAngles.z) / uViewAngles.w) + 0.5;
+  vec2 uv = pixel * uViewSize.z / uViewSize.xy;
+  if (all(greaterThanEqual(uv, vec2(0.0))) && all(lessThanEqual(uv, vec2(1.0)))) {
+    float range = length(toward);
+    float seen = 1.0 - smoothstep(0.04, 0.1, abs(range - texture2D(uViewDepth, uv).r) / max(range, 1.0));
+    vec4 light = uViewAmount * seen * texture2D(uViewLight, uv);
+    // The direct light adds; the indirect light tints, as the wavefronts' rings do, so it reads on the pale walls.
+    outgoingLight = mix(outgoingLight, uWaveColor * uViewLevels.z, min(1.0, uViewLevels.y * light.g)) + uDirectColor * uViewLevels.x * light.r;
+  }
+}
+`;
+
+/**
  * Give a standard material the wave uniforms (shared, one object for the
  * whole scene) and its own flags: `seams`, how much it darkens toward the
  * planes x = 0, y = 0, z = 0; `floor`, whether it darkens around what
@@ -163,7 +205,7 @@ function addLightWaves(material, waves, { seams = [0, 0, 0], floor = false, hidd
     shader.fragmentShader = `${WAVE_DECLARATIONS}\n${shader.fragmentShader}`
       .replace('#include <color_fragment>', `#include <color_fragment>\n${CONTACT_SHADING}`)
       .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>\n${WAVE_LIGHT}`)
-      .replace('#include <opaque_fragment>', `${WAVE_TINT}\n#include <opaque_fragment>`);
+      .replace('#include <opaque_fragment>', `${WAVE_TINT}\n${VIEW_LIGHT}\n#include <opaque_fragment>`);
   };
   material.customProgramCacheKey = () => 'light-waves';
   return material;
@@ -647,7 +689,28 @@ function createLidarRender() {
     .add(toVector(CAMERA.target));
   camera.lookAt(...CAMERA.target);
 
+  // The video's light at the frame's time (red: direct, green: indirect), and each pixel's distance from the mirrors (m), for the surfaces.
+  const viewPixels = VIEW.columns * VIEW.rows;
+  const viewLight = new THREE.DataTexture(new Uint8Array(4 * viewPixels), VIEW.columns, VIEW.rows, THREE.RGBAFormat);
+  viewLight.magFilter = THREE.LinearFilter;
+  viewLight.minFilter = THREE.LinearFilter;
+  viewLight.needsUpdate = true;
+  const viewDepth = new THREE.DataTexture(new Uint16Array(viewPixels), VIEW.columns, VIEW.rows, THREE.RedFormat, THREE.HalfFloatType);
+  viewDepth.magFilter = THREE.LinearFilter;
+  viewDepth.minFilter = THREE.LinearFilter;
+  viewDepth.needsUpdate = true;
+
   const waves = {
+    uViewLight: { value: viewLight },
+    uViewDepth: { value: viewDepth },
+    uViewMirrors: { value: toVector(VIEW_PROJECTION.mirrors) },
+    uViewForward: { value: toVector(VIEW_PROJECTION.forward) },
+    uViewRight: { value: toVector(VIEW_PROJECTION.right) },
+    uViewAngles: { value: new THREE.Vector4(...VIEW_PROJECTION.angles) },
+    uViewSize: { value: new THREE.Vector3(VIEW.columns, VIEW.rows, VIEW_PROJECTION.cell) },
+    uViewAmount: { value: 0 },
+    uViewLevels: { value: new THREE.Vector3(SCENE_LIGHT.direct, SCENE_LIGHT.indirect, SCENE_LIGHT.indirectBrightness) },
+    uDirectColor: { value: direct },
     uWaveColor: { value: indirect },
     uWaveCenter0: { value: toVector(RELAYS[0].point) },
     uWaveRadius0: { value: 0 },
@@ -899,6 +962,29 @@ function createLidarRender() {
     placeGlow(packet, target, 0.09, hit ? 1 : 0);
   }
 
+  /**
+   * The video of propagating light on the scene's surfaces: each pixel's
+   * direct and indirect light at the video's time, 0 to 1 as the video
+   * shows it, into the texture the surfaces read (they scale it by
+   * SCENE_LIGHT).
+   */
+  function drawViewLight(frame) {
+    const video = hidden?.video ?? null;
+    const amount = video ? frame.sceneLight : 0;
+    waves.uViewAmount.value = amount;
+    if (amount <= 0) return;
+    const data = viewLight.image.data;
+    for (let pixel = 0; pixel < viewPixels; pixel++) {
+      const delay = frame.video.time - video.direct[pixel];
+      const lit = Number.isFinite(delay);
+      const directLight = lit ? pulse(delay) * (0.4 + 0.6 * video.shade[pixel]) : 0;
+      const indirectLight = lit ? video.indirectAt(pixel, delay) : 0;
+      data[4 * pixel] = Math.min(255, 255 * directLight);
+      data[4 * pixel + 1] = Math.min(255, 255 * indirectLight);
+    }
+    viewLight.needsUpdate = true;
+  }
+
   return {
     canvas,
     setColors(colors) {
@@ -917,6 +1003,12 @@ function createLidarRender() {
       scene.add(mesh);
       hidden = { mesh, transients, video };
       renderer.shadowMap.needsUpdate = true;
+      // Each pixel's distance from the mirrors, from when its direct return arrives; far away where the beam leaves the scene.
+      const origin = directTime(BEAM.mirrors);
+      viewDepth.image.data.set(
+        Array.from(video.direct, (t) => THREE.DataUtils.toHalfFloat(Number.isFinite(t) ? ((t - origin) * LIGHT_SPEED) / 2 : 1000)),
+      );
+      viewDepth.needsUpdate = true;
     },
     hasHiddenObject() {
       return hidden !== null;
@@ -929,6 +1021,7 @@ function createLidarRender() {
       drawMeasurement(frame);
       drawWaves(frame);
       drawScan(frame);
+      drawViewLight(frame);
       renderer.render(scene, camera);
     },
     project(point) {

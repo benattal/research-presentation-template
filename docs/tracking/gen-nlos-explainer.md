@@ -17,6 +17,28 @@ Every direction of the user for this work, quoted, newest first. General
 slide rules are in [slide style](../style/slides.md) and
 [slide review](../style/slide-review.md).
 
+2026-11-19, night (collaborator, second Mac):
+
+- Of slide 7 (lidar capture), step 3: the relay wall keeps the three
+  points and the plot keeps the three curves, so "上面那个video那边也应该把三个点都保留一下",
+  then "只是说可能过去的会灰度一些 就像左下角的曲线一样". Done: the
+  video's ring is one per measured point (`video.markers` in
+  `timeline.js`); the point being measured is marked in full, earlier
+  points stay marked at the earlier traces' level (`EARLIER_LEVEL`), and
+  all fade with the wall's spots when the scan starts.
+- Of slide 7, step 4: "左边的video重新播放了整个传播过程 右边只是高亮了一些扫描点
+  能不能呢个在右边也把这个光传播过程播一遍 只是不要那么亮 光弱一些
+  扫描点和扫描点的高亮也保留". Done: while the scanned video plays,
+  its light is drawn on the scene's surfaces (`VIEW_LIGHT` in
+  `lidarRender.js`, `sceneLight` in `timeline.js`): each surface finds
+  its pixel in the video from the mirrors (`VIEW_PROJECTION`) and is lit
+  only where the lidar sees it (each pixel's distance from the mirrors);
+  direct light added at 1.4, indirect light tinting fully toward an amber
+  at 1.5 times its color (`SCENE_LIGHT` in `lidarRender.js`, applied in
+  the shader so the 8-bit light texture does not clip); first 0.45 and
+  0.7, then "那个光可以再亮一些" (0.8 and 0.95), then "能再亮一些吗".
+  The scan dots and their highlights are unchanged.
+
 2026-11-19, evening (on a new machine, a Mac):
 
 - "there is way too many of that ugly pitcher in all of the scenes. make

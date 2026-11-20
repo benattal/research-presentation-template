@@ -596,6 +596,20 @@ export function viewPixel(point) {
   ];
 }
 
+/**
+ * What `viewPixel` works from, for a shader that finds a surface's pixel
+ * in the video: the scanning mirrors, the lidar's forward and right (unit
+ * vectors), `angles` = [first azimuth, azimuth step, first elevation,
+ * elevation step] in degrees, and the pixels across one step (`cell`).
+ */
+export const VIEW_PROJECTION = {
+  mirrors: BEAM.mirrors,
+  forward: FORWARD,
+  right: RIGHT,
+  angles: [SCAN.azimuths[0], SCAN_STEP[0], SCAN.elevations[0], SCAN_STEP[1]],
+  cell: VIEW_CELL,
+};
+
 /** The place in the scan's order (`scanPoints`) of the grid direction whose block holds the video pixel in `column`, `row`. */
 export function viewScanOrder(column, row) {
   const [gridColumn, gridRow] = [Math.floor(column / VIEW_CELL), Math.floor(row / VIEW_CELL)];

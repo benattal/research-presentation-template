@@ -5,7 +5,7 @@
     "the lidar and the scene, with the scene's video of propagating light playing",
     "one measurement: the pulse, its direct return, and the indirect light, with the plot swept once; then the time of flight marked",
     "the measurements at three other visible points, each with its wavefronts and its peaks",
-    "the scan over the visible surfaces, the video filling in the scan's order and playing"
+    "the scan over the visible surfaces, the video filling in the scan's order and playing, its light drawn faintly on the scene"
   ],
   "hiddenObject": {
     "mesh": "/slides/lidar-capture/stanford-bunny-mesh.png"

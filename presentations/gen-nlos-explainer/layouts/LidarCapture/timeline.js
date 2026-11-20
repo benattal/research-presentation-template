@@ -118,7 +118,8 @@ function restFrame() {
     spots: RELAYS.map(() => 0),
     scan: null,
     plot: { opacity: 0, traces: [], cursor: { at: 0, opacity: 0 }, direct: 0, indirect: 0, flight: 0 },
-    video: { time: VIDEO_SPAN.rest, light: 1, blank: 0, reveal: null, marker: { relay: 0, opacity: 0 } },
+    video: { time: VIDEO_SPAN.rest, light: 1, blank: 0, reveal: null, markers: RELAYS.map(() => 0) },
+    sceneLight: 0,
   };
 }
 
@@ -157,7 +158,7 @@ const PHASES = {
         indirect: smoothstep(INDIRECT_END - 1.6, INDIRECT_END - 0.9, time),
         flight,
       },
-      video: { time: VIDEO_SPAN.rest, light: 1 - smoothstep(0, PLOT_IN_MS, ms), blank: 0, reveal: null, marker: { relay: 0, opacity: lit } },
+      video: { time: VIDEO_SPAN.rest, light: 1 - smoothstep(0, PLOT_IN_MS, ms), blank: 0, reveal: null, markers: RELAYS.map((_, relay) => (relay === 0 ? lit : 0)) },
     };
   },
 
@@ -179,7 +180,8 @@ const PHASES = {
       frame.spots[0] = 1;
       frame.plot.traces = [sweptTrace(0, EARLIER_LEVEL + (1 - EARLIER_LEVEL) * fade)];
       frame.plot.flight = fade;
-      frame.video.marker = { relay: 0, opacity: fade };
+      // Its mark in the video stays, dimmed like its trace.
+      frame.video.markers[0] = EARLIER_LEVEL + (1 - EARLIER_LEVEL) * fade;
       return frame;
     }
 
@@ -205,7 +207,8 @@ const PHASES = {
       at: direct + delay,
       opacity: smoothstep(-RELAY_LEAD, -RELAY_LEAD + 0.15, delay) * (1 - smoothstep(indirectEnd + RELAY_TAIL - 0.4, indirectEnd + RELAY_TAIL, delay)),
     };
-    frame.video.marker = { relay: slot.relay, opacity: lit };
+    // Earlier points stay marked in the video, dimmed like their traces; the point being measured is marked in full.
+    frame.video.markers = RELAYS.map((_, relay) => (relay < slot.relay ? EARLIER_LEVEL : relay === slot.relay ? lit : 0));
     return frame;
   },
 
@@ -236,8 +239,10 @@ const PHASES = {
       light: smoothstep(SCAN_START_MS + SCAN_MS, PLAY_START_MS, ms),
       blank: 1 - fade,
       reveal: frame.scan,
-      marker: { relay: lastRelay, opacity: fade },
+      markers: RELAYS.map((_, relay) => (relay === lastRelay ? 1 : EARLIER_LEVEL) * fade),
     };
+    // The scene plays the same light, faintly, with the video.
+    frame.sceneLight = frame.video.light;
     return frame;
   },
 };
@@ -270,8 +275,11 @@ const PHASES = {
  *   that time shows over the still image; `blank`, how far the pixels the
  *   scan has not reached have faded to black; `reveal`, the scan's
  *   progress when the video fills in its order, or null when every pixel
- *   shows; and `marker`, the measured point marked in it and the mark's
- *   opacity.
+ *   shows; and `markers`, for each of `RELAYS`, the opacity of the ring
+ *   that marks that point in it (earlier points dimmed, as their traces
+ *   are);
+ * - `sceneLight`: how much of the video's light at its `time` is drawn
+ *   on the scene's surfaces, 0 to 1 (only while the scanned video plays).
  */
 export function frameAt(step, ms) {
   const phase = PHASES[STEPS[step]];

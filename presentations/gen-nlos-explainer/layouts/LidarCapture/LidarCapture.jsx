@@ -233,16 +233,17 @@ function createVideoDrawer(colors) {
       ctx.globalAlpha = 1;
       ctx.drawImage(buffer, 0, 0, VIDEO.width, VIDEO.height);
 
-      if (state.marker.opacity > 0) {
-        // The measured point: one pixel of the video.
-        const [x, y] = viewPixel(RELAYS[state.marker.relay].point);
-        ctx.globalAlpha = state.marker.opacity;
-        ctx.strokeStyle = colors.cursor;
-        ctx.lineWidth = 1.5;
+      // The measured points: one pixel of the video each, earlier ones dimmed.
+      ctx.strokeStyle = colors.cursor;
+      ctx.lineWidth = 1.5;
+      state.markers.forEach((opacity, relay) => {
+        if (opacity <= 0) return;
+        const [x, y] = viewPixel(RELAYS[relay].point);
+        ctx.globalAlpha = opacity;
         ctx.beginPath();
         ctx.arc((x / VIEW.columns) * VIDEO.width, (y / VIEW.rows) * VIDEO.height, MARKER_RADIUS, 0, 2 * Math.PI);
         ctx.stroke();
-      }
+      });
     },
   };
 }
