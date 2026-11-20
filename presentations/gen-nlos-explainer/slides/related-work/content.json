@@ -2,7 +2,7 @@
   "layout": "relatedWork",
   "title": "Related work",
   "buildSteps": [
-    "non-line-of-sight imaging",
+    "non-line-of-sight imaging: conventional and generative",
     "generative view synthesis",
     "our contribution"
   ],
@@ -15,61 +15,103 @@
   "video": {
     "src": "/slides/related-work/methods.mp4",
     "poster": "/slides/related-work/methods.poster.jpg",
-    "alt": "Five clips from a moving camera. The maximum-intensity projection of the f-k migration volume of a captured bicycle. The maximum-intensity projection of the fast RSD volume of a simulated living room. Novel views by HOLI-1-to-3* of the captured scene with a hidden lamp, incoherent behind the book. Novel views by GEN3C* of the same scene, with a vase in place of the lamp. Novel views by Lyra 2 of a simulated room, without the furniture behind the wall"
+    "alt": "Five clips from a moving camera. The maximum-intensity projection of the f-k migration volume of a captured bicycle. The maximum-intensity projection of the fast RSD volume of a simulated living room. Novel views by HOLI-1-to-3* of the captured scene with a hidden lamp, incoherent behind the book. Novel views by GEN3C* of the same scene, with a vase in place of the lamp. Novel views by Lyra 2 of a simulated room, without the furniture behind the wall",
+    "tileSize": 300,
+    "tileLefts": [
+      0,
+      330,
+      660,
+      1062,
+      1392
+    ]
   },
   "groups": [
     {
       "name": "Non-line-of-sight imaging",
-      "tiles": [
+      "columns": [
         {
-          "method": "f-k migration",
-          "citation": "Lindell et al. 2019",
-          "limitation": "Geometry, not\nphotorealistic appearance"
-        },
-        {
-          "method": "Phasor fields",
-          "citation": "Liu et al. 2020",
-          "limitation": "Developed for\nplanar relay surfaces"
-        },
-        {
-          "method": "HOLI-1-to-3*",
-          "citation": "Shen et al. 2025",
-          "limitation": "Single object,\nper-scene optimization",
-          "boxes": [
+          "name": "Conventional NLOS",
+          "tiles": [
             {
-              "x": 0.33,
-              "y": 0.27,
-              "width": 0.4,
-              "height": 0.7,
-              "from": 1.9,
-              "to": 3.95
+              "method": "f-k migration",
+              "frame": 0,
+              "citation": "Lindell et al. 2019"
+            },
+            {
+              "method": "Phasor fields",
+              "frame": 1,
+              "citation": "Liu et al. 2020"
             }
+          ],
+          "pros": [
+            "Accurate hidden geometry"
+          ],
+          "cons": [
+            "Not photorealistic",
+            "Mostly planar relays"
+          ]
+        },
+        {
+          "name": "Generative NLOS",
+          "tiles": [
+            {
+              "method": "HOLI-1-to-3*",
+              "frame": 2,
+              "boxes": [
+                {
+                  "x": 0.33,
+                  "y": 0.27,
+                  "width": 0.4,
+                  "height": 0.7,
+                  "from": 1.9,
+                  "to": 3.95
+                }
+              ],
+              "citation": "Shen et al. 2025"
+            }
+          ],
+          "pros": [
+            "Photorealistic"
+          ],
+          "cons": [
+            "Per-scene optimization",
+            "Single object"
           ]
         }
       ]
     },
     {
       "name": "Generative view synthesis",
-      "tiles": [
+      "columns": [
         {
-          "method": "GEN3C*",
-          "citation": "Ren et al. 2025",
-          "limitation": "Hidden content\nis hallucinated",
-          "boxes": [
+          "tiles": [
             {
-              "x": 0.33,
-              "y": 0.27,
-              "width": 0.4,
-              "height": 0.7,
-              "from": 1.9,
-              "to": 3.95
+              "method": "GEN3C*",
+              "frame": 3,
+              "boxes": [
+                {
+                  "x": 0.33,
+                  "y": 0.27,
+                  "width": 0.4,
+                  "height": 0.7,
+                  "from": 1.9,
+                  "to": 3.95
+                }
+              ],
+              "citation": "Ren et al. 2025"
+            },
+            {
+              "method": "Lyra 2",
+              "frame": 4,
+              "citation": "Shen et al. 2026"
             }
+          ],
+          "pros": [
+            "Photorealistic novel views"
+          ],
+          "cons": [
+            "Hidden content is hallucinated"
           ]
-        },
-        {
-          "method": "Lyra 2",
-          "citation": "Shen et al. 2026",
-          "limitation": "Conditioned on visible\nobservations only"
         }
       ]
     }

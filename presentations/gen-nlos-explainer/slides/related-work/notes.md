@@ -1,6 +1,3 @@
-Non-line-of-sight imaging, or NLOS imaging, reveals hidden structure by
-inverting indirect light transport. Classical methods such as f-k
-migration and phasor fields recover geometry rather than photorealistic
-appearance, and many are developed for planar relay surfaces.
-HOLI-1-to-3 adds a diffusion prior to synthesize novel views, but
-reconstructs only a single object and requires per-scene optimization.
+Non-line-of-sight, or NLOS, imaging reveals hidden structure by inverting indirect light transport.
+Conventional methods such as f-k migration and phasor fields recover accurate geometry, but not photorealistic appearance, and most assume planar relays.
+Generative methods such as HOLI-1-to-3 are photorealistic, but optimize each scene and handle a single object.

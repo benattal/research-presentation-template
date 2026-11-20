@@ -125,6 +125,16 @@
   color: var(--accent);
 }
 
+/* A generation stage's name, centered at its panel's top, level with the stream tiles' captions. */
+.method-scene-stage-title {
+  position: absolute;
+  transform: translateX(-50%);
+  font-size: var(--type-text);
+  line-height: 24px;
+  white-space: nowrap;
+  color: var(--text-primary);
+}
+
 .method-scene-note {
   font-size: var(--type-small);
   line-height: 24px;

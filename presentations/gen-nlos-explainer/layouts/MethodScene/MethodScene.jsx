@@ -96,15 +96,25 @@ const AREA = { width: 1168, height: 572 };
 const INSET = 12;
 const GAP = 12;
 /** The left panel holds a column: the three stream tiles (one stitched file spans them), or the two inputs. */
-const TILE = 140;
-const STREAM_TOPS = [38, 228, 418];
+/**
+ * The stream tiles: windows onto one stitched file whose tiles are 140
+ * pixels apart by 190 (times 1.5), so a tile's size sets the spacing. They
+ * start under a title row (the generation slide's "Input", level with its
+ * stages' titles) and each tile's caption.
+ */
+const TITLE_TOP = 8;
+const TILE = 134;
+const STREAM_PITCH = (TILE * 190) / 140;
+const STREAM_TOPS = [0, 1, 2].map((i) => TITLE_TOP + 24 + 8 + 24 + 6 + i * STREAM_PITCH);
 const STREAMS_HEIGHT = STREAM_TOPS[2] + TILE - STREAM_TOPS[0];
 const INPUT = 200;
 const INPUT_TOPS = [38, 302];
 /** Line height of a note (MethodScene.css), for notes stacked under a tile. */
 const NOTE_LINE = 24;
 /** The left panel's width around the inputs (their longer caption sets it) and around the stream tiles. */
-const LEFT_PANEL = { inputs: 272, streams: INSET + TILE + INSET };
+const LEFT_PANEL = { inputs: 272, streams: 200 };
+/** The stream tiles' left edge: centered in their panel. */
+const TILE_LEFT = (LEFT_PANEL.streams - TILE) / 2;
 /**
  * The 3D view: a panel that begins GAP after the left panel. Its canvas has
  * this size on every slide; while the left panel is the wider one, the
@@ -172,32 +182,41 @@ const LEADER_GAP = { text: 6, point: 5 };
  * The generation diagram, in stage pixels of the area; rows are the stream
  * tiles' centers. STAGES are the panels of its three stages, after the
  * stream tiles' panel and where the 3D view was: the encoding into tokens,
- * with the noisy target tokens; the transformer; the decoding into the
- * generated video. A panel shows at its `cue`, the cue of the first part
+ * with the noisy target tokens; the transformer, with the target tokens it
+ * denoises; the decoder and the generated video. A panel shows at its `cue`, the cue of the first part
  * it holds.
  */
 const ROWS = STREAM_TOPS.map((top) => top + TILE / 2);
 const MIDDLE = ROWS[1];
-const TOKEN = { size: 14, gap: 4, count: 6, pitch: 20 };
+const TOKEN = { size: 16, gap: 4, count: 6, pitch: 24 };
 const TOKEN_ROW_WIDTH = TOKEN.count * TOKEN.size + (TOKEN.count - 1) * TOKEN.gap;
+/** Each stage's panel; its title (the slide's `generation.stages[name]`) sits centered at its top, level with the stream tiles' captions. */
 const STAGES = {
-  encoding: { cue: 'encoder', left: 176, width: 285 },
-  transformer: { cue: 'transformer', left: 473, width: 156 },
-  decoding: { cue: 'denoised', left: 641, width: 527 },
+  encoding: { cue: 'encoder', left: 212, width: 250 },
+  transformer: { cue: 'transformer', left: 474, width: 294 },
+  decoding: { cue: 'decoder', left: 780, width: 388 },
 };
+const STAGE_TITLE_TOP = TITLE_TOP;
+/**
+ * The middle stream's token row is level with its encoder, so its arrow is
+ * straight; the other two arrows turn at `stack.bend` with corners of
+ * radius `stack.corner`.
+ */
 const DIAGRAM = {
-  encoder: { left: 199, right: 243, wide: 34, narrow: 18 },
+  encoder: { left: 228, right: 276, wide: 40, narrow: 22 },
   stack: {
-    left: 321,
-    tops: [-1.5, -0.5, 0.5].map((row) => MIDDLE + row * TOKEN.pitch - TOKEN.size / 2),
-    noisyTop: MIDDLE + 1.5 * TOKEN.pitch - TOKEN.size / 2 + 8,
+    left: 332,
+    bend: 298,
+    corner: 8,
+    tops: [-1, 0, 1].map((row) => MIDDLE + row * TOKEN.pitch - TOKEN.size / 2),
+    noisyTop: MIDDLE + 2 * TOKEN.pitch - TOKEN.size / 2 + 8,
   },
-  transformer: { left: 485, right: 617, top: MIDDLE - 130, bottom: MIDDLE + 130, layers: 5, layerHeight: 34, layerGap: 13 },
-  denoised: { left: 655 },
-  decoder: { left: 794, right: 838, wide: 34, narrow: 18 },
-  output: { left: 872, size: 284 },
+  transformer: { left: 488, right: 648, top: MIDDLE - 170, bottom: MIDDLE + 170, layers: 5, layerHeight: 44, layerGap: 18 },
+  denoised: { left: 700 },
+  decoder: { left: 794, right: 838, wide: 40, narrow: 22 },
+  output: { left: 862, size: 294 },
 };
-/** Fill of each conditioning stream's tokens: warped RGB, MIP, MIP depth. */
+/** Each conditioning stream's color (warped RGB, MIP, MIP depth): its tokens, and its encoder and arrows. */
 const TOKEN_COLORS = ['#e8e8e8', '#f08a24', '#8fd05a'];
 /** Seconds between the parts of the diagram that one cue reveals in a row: rows, tokens, layers. */
 const STAGGER = { row: 0.14, token: 0.06, layer: 0.08 };
@@ -379,6 +398,19 @@ function trapezoid(left, right, y, from, to) {
 }
 
 /**
+ * A path from (x0, y0) to (x1, y1) that runs level, turns at `bend` with
+ * rounded corners of `radius`, and runs level again into its end; straight
+ * when the two ends are level.
+ */
+function elbow(x0, y0, x1, y1, bend, radius) {
+  if (Math.abs(y1 - y0) < 0.5) return `M ${x0} ${y0} L ${x1} ${y1}`;
+  const down = Math.sign(y1 - y0);
+  const r = Math.min(radius, Math.abs(y1 - y0) / 2);
+  return `M ${x0} ${y0} L ${bend - r} ${y0} Q ${bend} ${y0} ${bend} ${y0 + down * r} `
+    + `L ${bend} ${y1 - down * r} Q ${bend} ${y1} ${bend + r} ${y1} L ${x1} ${y1}`;
+}
+
+/**
  * Marks an element of the generation diagram as appearing `delay` seconds
  * after the cue `cue` of its step (spread it on the element); the step
  * clock fades it in over REVEAL_SECONDS.
@@ -419,14 +451,15 @@ function arrowTo(x) {
   return x - ARROW_HEAD;
 }
 
-/** A row of tokens; with `cue`, they appear one after the other from `delay` after it. */
-function TokenRow({ left, top, fill, opacities, cue, delay = 0 }) {
+/** A row of tokens, or with `vertical` a column; with `cue`, they appear one after the other from `delay` after it. */
+function TokenRow({ left, top, fill, opacities, cue, delay = 0, vertical = false }) {
+  const step = TOKEN.size + TOKEN.gap;
   return Array.from({ length: TOKEN.count }, (_, i) => (
     <rect
       key={i}
       {...(cue ? reveal(cue, delay + i * STAGGER.token) : {})}
-      x={left + i * (TOKEN.size + TOKEN.gap)}
-      y={top}
+      x={vertical ? left : left + i * step}
+      y={vertical ? top + i * step : top}
       width={TOKEN.size}
       height={TOKEN.size}
       rx="3"
@@ -485,7 +518,7 @@ function Streams({ streams, playing, fromLast }) {
     : { type: 'image', src: streams.final };
   return (
     <>
-      <div className="method-scene-video" style={{ left: INSET, top: STREAM_TOPS[0], width: TILE, height: STREAMS_HEIGHT }}>
+      <div className="method-scene-video" style={{ left: TILE_LEFT, top: STREAM_TOPS[0], width: TILE, height: STREAMS_HEIGHT }}>
         <Media item={file} className="method-scene-media method-scene-media--stitched" />
       </div>
       {STREAM_TOPS.slice(1).map((top, i) => (
@@ -493,7 +526,7 @@ function Streams({ streams, playing, fromLast }) {
           key={top}
           className="method-scene-veil"
           style={{
-            left: INSET - VEIL_MARGIN,
+            left: TILE_LEFT - VEIL_MARGIN,
             top: STREAM_TOPS[i] + TILE,
             width: TILE + 2 * VEIL_MARGIN,
             height: top - STREAM_TOPS[i] - TILE,
@@ -506,7 +539,7 @@ function Streams({ streams, playing, fromLast }) {
             data-part={`stream-veil-${i}`}
             className="method-scene-veil"
             style={{
-              left: INSET - VEIL_MARGIN,
+              left: TILE_LEFT - VEIL_MARGIN,
               top: STREAM_TOPS[i] - VEIL_MARGIN,
               width: TILE + 2 * VEIL_MARGIN,
               height: TILE + 2 * VEIL_MARGIN,
@@ -515,7 +548,7 @@ function Streams({ streams, playing, fromLast }) {
           <div
             data-part={`stream-${i}`}
             className="method-scene-tile method-scene-tile--stream"
-            style={{ left: INSET, top: STREAM_TOPS[i], width: TILE, height: TILE }}
+            style={{ left: TILE_LEFT, top: STREAM_TOPS[i], width: TILE, height: TILE }}
           >
             <div className="method-scene-caption"><Text>{label}</Text></div>
           </div>
@@ -538,7 +571,8 @@ function GenerationDiagram({ generation, generated }) {
   const stackRight = stack.left + TOKEN_ROW_WIDTH;
   const layersHeight = transformer.layers * transformer.layerHeight + (transformer.layers - 1) * transformer.layerGap;
   const layerTop = (i) => MIDDLE - layersHeight / 2 + i * (transformer.layerHeight + transformer.layerGap);
-  const denoisedRight = denoised.left + TOKEN_ROW_WIDTH;
+  // The target tokens stand in a column beside the transformer, centered on the middle row.
+  const denoisedRight = denoised.left + TOKEN.size;
   const speckle = (TOKEN.size - 6) / 2;
   const head = 'url(#method-scene-arrowhead)';
   const outputBox = { left: output.left, top: MIDDLE - output.size / 2, width: output.size, height: output.size };
@@ -554,36 +588,46 @@ function GenerationDiagram({ generation, generated }) {
       at: reveal('transformer', 0.2),
     },
     { text: generation.lora, left: (transformer.left + transformer.right) / 2, top: transformer.bottom + 8, accent: true, at: reveal('lora', 0.1) },
-    { text: generation.denoised, left: denoised.left + TOKEN_ROW_WIDTH / 2, top: MIDDLE + TOKEN.size / 2 + 8, at: reveal('denoised', 0.3) },
+    { text: generation.denoised, left: denoised.left + TOKEN.size / 2, top: MIDDLE + TOKEN_ROW_WIDTH / 2 + 8, at: reveal('denoised', 0.3) },
     { text: generation.decoder, left: (decoder.left + decoder.right) / 2, top: MIDDLE - decoder.wide - 32, at: reveal('decoder', 0.15) },
   ];
   return (
     <>
+      <span {...reveal(STAGES.encoding.cue)} className="method-scene-stage-title" style={{ left: LEFT_PANEL.streams / 2, top: STAGE_TITLE_TOP }}>
+        <Text>{generation.input}</Text>
+      </span>
       {Object.entries(STAGES).map(([name, { cue, left, width }]) => (
-        <div key={name} {...reveal(cue)} className="method-scene-panel" style={{ left, width }} />
+        <Fragment key={name}>
+          <div {...reveal(cue)} className="method-scene-panel" style={{ left, width }} />
+          <span {...reveal(cue, 0.1)} className="method-scene-stage-title" style={{ left: left + width / 2, top: STAGE_TITLE_TOP }}>
+            <Text>{generation.stages[name]}</Text>
+          </span>
+        </Fragment>
       ))}
       <svg className="method-scene-diagram" viewBox={`0 0 ${AREA.width} ${AREA.height}`}>
         <Arrowhead id="method-scene-arrowhead" />
         {ROWS.map((y, i) => {
           const rowY = stack.tops[i] + TOKEN.size / 2;
-          const bend = (encoder.right + stack.left) / 2;
           return (
             <g key={y}>
               <path
                 {...reveal('encoder', i * STAGGER.row)}
                 className="method-scene-flow"
-                d={`M ${INSET + TILE + 8} ${y} L ${arrowTo(encoder.left - 3)} ${y}`}
+                style={{ stroke: TOKEN_COLORS[i] }}
+                d={`M ${TILE_LEFT + TILE + 8} ${y} L ${arrowTo(encoder.left - 3)} ${y}`}
                 markerEnd={head}
               />
               <path
                 {...reveal('encoder', i * STAGGER.row + 0.15)}
                 className="method-scene-shape"
+                style={{ stroke: TOKEN_COLORS[i] }}
                 d={trapezoid(encoder.left, encoder.right, y, encoder.wide, encoder.narrow)}
               />
               <path
                 {...reveal('tokens', i * STAGGER.row)}
                 className="method-scene-flow"
-                d={`M ${encoder.right + 4} ${y} C ${bend} ${y}, ${bend} ${rowY}, ${arrowTo(stack.left - 6)} ${rowY}`}
+                style={{ stroke: TOKEN_COLORS[i] }}
+                d={elbow(encoder.right + 4, y, arrowTo(stack.left - 6), rowY, stack.bend, stack.corner)}
                 markerEnd={head}
               />
               <TokenRow left={stack.left} top={stack.tops[i]} fill={TOKEN_COLORS[i]} cue="tokens" delay={i * STAGGER.row + 0.3} />
@@ -659,7 +703,7 @@ function GenerationDiagram({ generation, generated }) {
           d={`M ${transformer.right + 8} ${MIDDLE} L ${arrowTo(denoised.left - 7)} ${MIDDLE}`}
           markerEnd={head}
         />
-        <TokenRow left={denoised.left} top={MIDDLE - TOKEN.size / 2} fill="var(--accent)" cue="denoised" delay={0.2} />
+        <TokenRow left={denoised.left} top={MIDDLE - TOKEN_ROW_WIDTH / 2} fill="var(--accent)" cue="denoised" delay={0.2} vertical />
         <path
           {...reveal('decoder')}
           className="method-scene-flow"
@@ -727,6 +771,12 @@ export default function MethodScene({ slide, buildStep }) {
   }[slide.phase];
   for (const field of needed) {
     if (!slide[field]) throw new Error(`Slide "${slide.id}": the ${slide.phase} phase needs "${field}"`);
+  }
+  if (slide.phase === 'generation' && Object.keys(STAGES).some((name) => typeof generation.stages?.[name] !== 'string')) {
+    throw new Error(`Slide "${slide.id}": "generation.stages" needs a title for each of ${Object.keys(STAGES).join(', ')}`);
+  }
+  if (slide.phase === 'generation' && typeof generation.input !== 'string') {
+    throw new Error(`Slide "${slide.id}": "generation.input" needs the stream tiles' title`);
   }
   if ((slide.buildSteps?.length ?? 1) !== phase.steps || slide.cues.length !== phase.steps) {
     throw new Error(`Slide "${slide.id}": the ${slide.phase} phase has ${phase.steps} build steps, each with its cues`);

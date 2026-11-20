@@ -17,7 +17,101 @@ Every direction of the user for this work, quoted, newest first. General
 slide rules are in [slide style](../style/slides.md) and
 [slide review](../style/slide-review.md).
 
+2026-11-20 (Dongyu):
+
+- "你帮我把这个push 到github吧 commit短一点"; "commit用英文啊".
+  Commit and push the current explainer changes on `gen-nlos-explainer`
+  with the short English message `Update explainer video`. Exported media
+  remain local, following the repository asset rules.
+
 2026-11-19, night (collaborator, second Mac):
+
+- Narration (`assets/narration/v5-kokoro-heart`, Kokoro on this Mac's CPU):
+  "能把语音也做一下吗 台词在原来的基础上稍微调整就可以 关键是对应上我们现在的动画节奏".
+  Notes changed: related work (all three, to its new layout), conditioning
+  and NLOS reconstruction step 1 (shorter). Transcription: WER 3.4%, every
+  difference a spelling variant. Then, of the first narrated video:
+  "第4页的时候 左边的视频还没有播放完 右边动画就开始了 ... 要么就是把左边视频快点
+  在你讲之前正好播放完", "video generation 那个网络框架那边讲的比动画慢 这边要匹配一下速度",
+  "NLOS reconstruction 这边的动画和讲解也没有匹配好", "reconstruction with
+  nonplanar relay那边 不需要念那两个方法名字了 就说比现有方法好就可以停了",
+  "过渡 比如related work method 这些停留时间可以短一点". Done, from word
+  timestamps of the audio (faster-whisper): the light video plays each
+  step's part once over its narration (rates 2.0, 2.1, 0.57); the
+  generation cues sit at the words naming each part (encoder 2.3 s ...
+  output 12.5 s; hold 15 s); the NLOS reconstruction TIMELINE follows its
+  words (step 1 adds "each scan point records indirect light over time"
+  for the measurements; holds 15.6 and 11.6 s); the comparison note no
+  longer names CC-SOCR and 3D-GTR; section cards hold 1.2 s
+  (`silentHold`), the end card 3 s.
+
+- Of slide 21 (simulated scenes), with the paper figure's crop of the
+  second room: "下面那个也需要框一下". Done: every panel of the second row
+  has a box on the hidden tables and cabinets (x 0.22, y 0.4, 0.56 by
+  0.45, read from the held final view at 2.5 s), timed as the first
+  row's (1.9 to 3.95 s).
+
+- Of slide 14 (video generation): "这一页的排版挺丑的 有很多空的地方 一个每个block上面也都没有名字",
+  "里面的箭头还歪歪扭扭的", then "都改吧 箭头用圆角折线". Done: the three
+  stage panels are titled (`generation.stages`: Encoding, Denoising,
+  Decoding) at the stream captions' height; the encoders' arrows to the
+  token rows are rounded elbows (`elbow`), the middle one straight now
+  that the middle row is level with its encoder; tokens 16 px (was 14),
+  encoders larger, the transformer 340 px tall (was 260); panel widths
+  250 / 200 / 518 (were 285 / 156 / 527). The area's width bounds the
+  output video (276 px, was 284). Stage titles are new wording, to confirm.
+  Then: "是不是可以把transformer那个block框进去target tokens 最后一个框就是decoder和结果".
+  Done: the Denoising panel holds the transformer and the target tokens
+  (438, 332 wide); the Decoding panel, shown at the decoder's cue, holds
+  the decoder and the video (782, 386 wide); the video is 290 px.
+  Then "标题可以居中": the stage titles are centered in their panels.
+  Then: "denoising 那部分开始太空了 要不要把target tokens 变成竖着的 腾出一些空间
+  然后encoder那边是不是也可以上个对应的颜色还有箭头那些". Done: the target
+  tokens stand in a column beside the transformer (Denoising panel 294
+  wide, was 332); the Decoding panel is 424 wide and the video 330 px
+  (was 290); each stream's encoder outline and arrows take its token
+  color (white, orange, green).
+  Then: "第一列太窄了 上面应该写一个input 你可以把最后那一列窄一点 第一列宽一些".
+  Done: the stream tiles' panel is 200 wide (was 164), the tiles centered
+  in it and 134 px (was 140: the stitched file fixes their spacing, and
+  the title row takes the height); "Input" (`generation.input`) is its
+  title, level with the stages'; the diagram moved 36 px right, the
+  Decoding panel is 388 wide and the video 294 px. The conditioning slide
+  shares the column (wider, tiles lower, no title).
+
+- Of slide 10 (related work): "讲左边的时候右边尽量暗一点 讲右边的时候左边暗一点
+  现在暗度不够". Done: the group out of the spotlight is at 0.2
+  (`DIMMED`, was 0.55); on the contribution step every group is at 0.45
+  (`CONTEXT`), so the related work stays legible behind the line. Asked
+  how the slide could stand out more: proposals given, not built.
+- Then: "左边是Nlos imaging 里面分成conventional 和generative NLOS 各自下面都多放几个参考文献
+  然后把优点缺点写一下 conventional优点就是NLOS重建准确 缺点是not photorealistic
+  大部分针对planar relay 然后generative NLOS就是photorealistic 缺点是per-scene opti和single
+  obj 然后右边generative 也是写到一起 然后ours 写一下然后优缺点就用红绿色标记 试试这个".
+  Built: the relatedWork layout now takes columns per group (tiles,
+  references, pros, cons) and a contribution panel; the tiles are canvases
+  drawn from the one methods video (`tileSize`, `tileLefts`), so the video
+  is unchanged. References are the paper's citations (2_related.tex,
+  main.bib). The generative-NLOS limitations are HOLI-1-to-3's, as the
+  user worded them; Su et al. and Cui et al. are diffusion NLOS methods,
+  not view synthesis.
+- Then: "下面ours还是别写了文字太多 太难看了 然后三个里面的绿色都对齐 generative NLOS
+  和conventional NLOS 写全 然后generative NLOS block太宽了 可以窄一点 优缺点和上面可以间隔开一点
+  然后下面ours：就写那一句话就可以". Done: the contribution is its one
+  line, without strengths; the columns are "Conventional NLOS" and
+  "Generative NLOS"; the references wrap to their column without widening
+  it and take three lines' height, so the green lines start level in all
+  three columns; 22 px above the strengths (was 10).
+- Then: "ours 那个框绿色框很丑 要不去掉outline 就和上面那种block背景一样？". Done:
+  no outline; the contribution sits on the groups' panel shade. Then
+  "颜色换成白色吧 字体": its line is white (an exception to "ours" in
+  green, on this slide only).
+- Then: "那个绿色字和前面那个空间可以再缩小一点点 然后讲左边的时候右边暗的程度可以再暗一些
+  反过来左边暗的时候也一样 然后那个文献引用还是就引用对应的那一篇就行了". Done:
+  14 px above the strengths (was 22); the group out of the spotlight at
+  0.08 (was 0.2); the reference lists are gone, and each tile names its
+  own paper under the method (Lindell et al. 2019, Liu et al. 2020, Shen
+  et al. 2025, Ren et al. 2025, Shen et al. 2026).
 
 - Of slide 8 (hardware prototype): "这几个线可以稍微斜着一点吗现在有点丑
   还需要标记一个beam splitter 然后在一个动画应该是把这些标志收起来
@@ -37,9 +131,11 @@ slide rules are in [slide style](../style/slides.md) and
   insets are 340 px with the photo shrunk to 0.7 (`photoScale`); then
   "左边这个硬件图缩的有点太小了 可以再大点": photo at 0.85, insets 330 px,
   overlapping the photo's black margin by 30 px (`insets.gap`). The RGB
-  note moved to `notes-4.md`; `notes-3.md` is a draft for the beam
-  splitter ("A beam splitter separates the returning light from the
-  outgoing pulse."), to confirm.
+  note moved to `notes-4.md`; `notes-3.md` is the beam splitter's ("A
+  beam splitter separates the returning light from the outgoing
+  pulse."). Of that sentence: "就用你那句吧 但后面不需要更新旁白": kept,
+  and the later notes stay as they are (step 5's names only the RGB
+  image).
 
 - Of slide 7 (lidar capture), step 3: the relay wall keeps the three
   points and the plot keeps the three curves, so "上面那个video那边也应该把三个点都保留一下",

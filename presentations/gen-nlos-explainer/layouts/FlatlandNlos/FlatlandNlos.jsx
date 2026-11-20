@@ -30,24 +30,24 @@ const ARROWS = {
   adjoint: PANEL.top + PANEL.size / 2 + 22,
 };
 
-/** When things happen, in ms from the start of each step. */
+/** When things happen, in ms from the start of each step: each at the narration's words for it (assets/narration/v5-kokoro-heart). */
 const TIMELINE = {
   /** Step 0: the planar wall's scan points, from the top. */
-  planarGrid: [400, 1900],
+  planarGrid: [3000, 5500],
   /** Step 0: the lidar's pixels land on the scene's visible surfaces, from the top. */
-  pixels: [3000, 4600],
+  pixels: [7600, 10700],
   /** Step 0: confocal measurements at the marked scan points, one after another, each from time 0 to the image's end. */
-  sweep: [5000, 9500],
+  sweep: [11600, 14800],
   /** Step 0: the other scan points' measurements appear. */
-  fill: [9600, 10300],
+  fill: [14900, 15600],
   /** Step 1: the planar setting leaves, the scene moves left, the grid and the operators appear. */
-  focus: [0, 1600],
+  focus: [0, 1400],
   /** Step 1: the adjoint of the marked scan points' measurements, one after another. */
-  spread: [1700, 3950],
+  spread: [1500, 2900],
   /** Step 1: the adjoint of every other scan point's measurements. */
-  accumulate: [4050, 5250],
+  accumulate: [3000, 3800],
   /** Step 1: CGLS iterations 1 to ITERATIONS. */
-  iterations: [5600, 10400],
+  iterations: [3900, 11200],
 };
 
 /** The scan points whose measurements step 0 shows as wavefronts: on the slanted wall (two) and the back wall. */
