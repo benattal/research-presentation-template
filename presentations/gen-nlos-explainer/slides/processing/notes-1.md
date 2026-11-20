@@ -1,2 +1,1 @@
-From the indirect light, we reconstruct an NLOS volume of the hidden
-scene.
+From the indirect light, we reconstruct an NLOS volume of the hidden scene. Each point in this three-dimensional volume represents a location in space, and its color indicates the estimated amount of light reflected there.

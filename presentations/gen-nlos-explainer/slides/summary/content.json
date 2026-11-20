@@ -3,7 +3,6 @@
   "title": "Summary",
   "buildSteps": [
     "takeaway",
-    "limitation",
     "outlook"
   ],
   "media": {
@@ -18,12 +17,12 @@
       "text": "Videos of propagating light provide physical constraints for generative view synthesis"
     },
     {
-      "heading": "Limitation",
-      "text": "Indirect light conveys limited information about the hidden scene"
-    },
-    {
       "heading": "Outlook",
       "text": "Lidar on robots and phones, in cluttered and heavily occluded environments"
     }
-  ]
+  ],
+  "outlookImage": {
+    "src": "/slides/summary/robot-outlook-busy-room.png",
+    "alt": "Illustration of a mobile robot with lidar facing a heavily cluttered bedroom"
+  }
 }

@@ -1,2 +1,1 @@
-For the NLOS volume, most algorithms assume a planar relay wall, scanned on a uniform grid.
-Our relays are the visible surfaces, with one scan point per lidar pixel, and each scan point records indirect light over time.
+Many existing NLOS reconstruction methods require a planar relay surface sampled on a uniform grid. Our method does not require uniform sampling and supports arbitrary relay geometry: the visible surfaces of a room or tabletop can serve as relays. Each scan point records indirect light over time.

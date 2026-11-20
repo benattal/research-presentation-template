@@ -6,6 +6,26 @@
   min-height: 0;
 }
 
+.method-overview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 46px;
+}
+
+.method-overview-stage {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--text-primary);
+  opacity: 0.25;
+}
+
+.method-overview-stage[aria-current='step'] {
+  opacity: 1;
+}
+
 .method-scene {
   position: relative;
   flex: none;
@@ -121,14 +141,30 @@
   color: var(--text-primary);
 }
 
+.method-scene-group .method-scene-caption,
+.method-scene-tile--stream .method-scene-caption {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.method-scene-input-title {
+  position: absolute;
+  left: -28px;
+  top: 50%;
+  width: 100px;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  font-size: var(--type-text);
+  line-height: 24px;
+  text-align: center;
+}
+
 .method-scene-caption--ours {
   color: var(--accent);
 }
 
-/* A generation stage's name, centered at its panel's top, level with the stream tiles' captions. */
+/* The generation panel headings are aligned with the panels' inner edges. */
 .method-scene-stage-title {
   position: absolute;
-  transform: translateX(-50%);
   font-size: var(--type-text);
   line-height: 24px;
   white-space: nowrap;
@@ -159,7 +195,7 @@
 }
 
 .method-scene-note--direct { color: var(--direct); }
-.method-scene-note--indirect { color: var(--text-primary); }
+.method-scene-note--indirect { color: var(--indirect); }
 .method-scene-note--accent { color: var(--accent); }
 
 .method-scene-diagram {

@@ -117,7 +117,7 @@ function drawPlot(ctx, plot, colors, transients) {
   }
   ctx.stroke();
 
-  plot.traces.forEach(({ sweep, level }, k) => {
+  plot.traces.forEach(({ relay: k, sweep, level }) => {
     const { direct } = RELAYS[k];
     const transient = transients?.[k] ?? null;
     ctx.globalAlpha = plot.opacity * level;
@@ -317,14 +317,11 @@ const PREPARE_SLICE_MS = 6;
 /**
  * Lidar capture: a three.js render of the website's corner scene (two
  * relay walls, the teapot occluder, the bunny hidden behind it) and of a
- * confocal lidar on a breadboard in front of it; beside them, the scene's
- * video of propagating light as the lidar captures it, and a plot of the
- * measurement at one visible point. Four build steps (timeline.js): the
- * video plays; one measurement, from the pulse leaving the laser to the
+ * confocal lidar on a breadboard in front of it; beside them, a plot of the measurement at one visible point. Four build
+ * steps (timeline.js): the scene is introduced; one measurement, from the pulse leaving the laser to the
  * indirect light's return, sweeps the plot once; the measurements at three
  * other visible points follow, each with its own wavefronts and its own
- * peaks; the laser scans, a dot marks each point it visits, and the video
- * fills in the scan's order and plays. The light moves at one playback
+ * peaks; the laser scans, a dot marks each point it visits, and the measured light plays faintly on the scene. The light moves at one playback
  * speed, and every time shown follows from the scene's distances
  * (c = 0.3 m/ns).
  *
@@ -337,8 +334,7 @@ const PREPARE_SLICE_MS = 6;
  *                 capture and record views wait for images; the format is
  *                 documented in the slide's sources, make-bunny-mesh.mjs).
  *   labels        { laser, mirrors, detector, relays, occluder, hidden }
- *                 beside the parts of the render, { video } over the video,
- *                 and { direct, indirect, flight, time, counts } on the
+ *                 beside the parts of the render, and { direct, indirect, flight, time, counts } on the
  *                 plot (`flight` names the time of flight).
  *   buildSteps    four.
  */
@@ -352,8 +348,8 @@ export default function LidarCapture({ slide, buildStep }) {
 
   const [hostRef, ratio] = useStageCanvas();
   const meshRef = useRef(null);
-  const videoRef = useRef(null);
   const plotRef = useRef(null);
+  const videoRef = useRef(null);
   const labelRefs = useRef({});
   const partRefs = useRef({});
   const [view, setView] = useState(null);
@@ -421,16 +417,17 @@ export default function LidarCapture({ slide, buildStep }) {
     }
 
     const parts = partRefs.current;
-    const videoCtx = videoRef.current.getContext('2d');
-    videoCtx.setTransform(ratio, 0, 0, ratio, 0, 0);
-    if (hiddenObject) videoDrawer.draw(videoCtx, hiddenObject.video, frame.video);
-    parts.video.style.opacity = hiddenObject ? 1 : 0;
-
     const transients = hiddenObject?.transients ?? null;
     const plotCtx = plotRef.current.getContext('2d');
     plotCtx.setTransform(ratio, 0, 0, ratio, 0, 0);
     drawPlot(plotCtx, frame.plot, colors, transients);
-    parts.plot.style.opacity = frame.plot.opacity;
+    // Replace the plot in two halves, so both panels are never visible at once.
+    const switchTime = buildStep === 3 ? Math.min(1, (startMs + ms) / 500) : 0;
+    parts.plot.style.opacity = frame.plot.opacity * Math.max(0, 1 - switchTime * 2);
+    const videoCtx = videoRef.current.getContext('2d');
+    videoCtx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    if (hiddenObject && buildStep === 3) videoDrawer.draw(videoCtx, hiddenObject.video, frame.video);
+    parts.video.style.opacity = hiddenObject && buildStep === 3 ? Math.max(0, switchTime * 2 - 1) : 0;
     parts.direct.style.opacity = frame.plot.direct;
     parts.indirect.style.opacity = transients ? frame.plot.indirect : 0;
     parts.flight.style.opacity = frame.plot.flight;
@@ -458,12 +455,8 @@ export default function LidarCapture({ slide, buildStep }) {
         <div className="lidar-capture-parts">
           <div className="lidar-capture-part lidar-capture-video" ref={part('video')}>
             <span className="lidar-capture-part-label"><Text>{slide.labels.video}</Text></span>
-            <canvas
-              ref={videoRef}
-              style={{ width: VIDEO.width, height: VIDEO.height }}
-              width={Math.round(VIDEO.width * ratio)}
-              height={Math.round(VIDEO.height * ratio)}
-            />
+            <canvas ref={videoRef} style={{ width: VIDEO.width, height: VIDEO.height }}
+              width={Math.round(VIDEO.width * ratio)} height={Math.round(VIDEO.height * ratio)} />
           </div>
           <div className="lidar-capture-part lidar-capture-plot" ref={part('plot')}>
             <div className="lidar-capture-plot-box" style={{ width: PLOT.width, height: PLOT.height }}>

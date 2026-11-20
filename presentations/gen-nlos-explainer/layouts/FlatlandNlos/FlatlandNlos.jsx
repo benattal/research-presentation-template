@@ -30,7 +30,10 @@ const ARROWS = {
   adjoint: PANEL.top + PANEL.size / 2 + 22,
 };
 
-/** When things happen, in ms from the start of each step: each at the narration's words for it (assets/narration/v5-kokoro-heart). */
+/** Timing in animation milliseconds; playback stretches the timeline by PLAYBACK_SCALE. */
+const PLAYBACK_SCALE = 1.25;
+
+/** When things happen, in animation milliseconds from the start of each step. */
 const TIMELINE = {
   /** Step 0: the planar wall's scan points, from the top. */
   planarGrid: [3000, 5500],
@@ -324,6 +327,7 @@ function strokeHiddenRegion(ctx, transform, colors) {
  * point appears). `rays` is the opacity of the rays.
  */
 function drawScene(ctx, transform, setup, scans, shown, rays, colors) {
+  const opacity = ctx.globalAlpha;
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
 
@@ -347,7 +351,7 @@ function drawScene(ctx, transform, setup, scans, shown, rays, colors) {
   const lidar = transform.toCanvas(LIDAR.position);
   ctx.strokeStyle = colors.direct;
   ctx.lineWidth = 1;
-  ctx.globalAlpha = rays;
+  ctx.globalAlpha = opacity * rays;
   scans.forEach((scan, i) => {
     const progress = shown(i);
     if (progress <= 0) return;
@@ -358,7 +362,7 @@ function drawScene(ctx, transform, setup, scans, shown, rays, colors) {
     ctx.lineTo(mix(lidar[0], end[0], reach), mix(lidar[1], end[1], reach));
     ctx.stroke();
   });
-  ctx.globalAlpha = 1;
+  ctx.globalAlpha = opacity;
   ctx.fillStyle = colors.hidden;
   scans.forEach((scan, i) => {
     const appear = clamp01((shown(i) - 0.7) / 0.3);
@@ -545,10 +549,11 @@ function drawMeasurements(ctx, model, sweeps, fill, spreadRow, markStrength, col
   const left = LEFT.image;
   const top = PANEL.top;
   ctx.save();
+  const opacity = ctx.globalAlpha;
   if (fill > 0) {
-    ctx.globalAlpha = fill;
+    ctx.globalAlpha = opacity * fill;
     ctx.drawImage(image, left, top, PANEL.size, PANEL.size);
-    ctx.globalAlpha = 1;
+    ctx.globalAlpha = opacity;
   }
   ctx.lineWidth = 1;
   model.marked.forEach((each, i) => {
@@ -563,19 +568,19 @@ function drawMeasurements(ctx, model, sweeps, fill, spreadRow, markStrength, col
     if (reached > 0 && sweeps[i] < 1) {
       const x = left + reached * PANEL.size;
       ctx.strokeStyle = colors.text;
-      ctx.globalAlpha = 0.2;
+      ctx.globalAlpha = opacity * 0.2;
       ctx.beginPath();
       ctx.moveTo(x, top);
       ctx.lineTo(x, top + PANEL.size);
       ctx.stroke();
-      ctx.globalAlpha = 0.9;
+      ctx.globalAlpha = opacity * 0.9;
       ctx.beginPath();
       ctx.moveTo(x, top + y - 5);
       ctx.lineTo(x, top + y + height + 5);
       ctx.stroke();
     }
     // A mark left of the row, in the scan points' red.
-    ctx.globalAlpha = markStrength(i);
+    ctx.globalAlpha = opacity * markStrength(i);
     ctx.fillStyle = colors.hidden;
     const middle = top + y + height / 2;
     ctx.beginPath();
@@ -584,12 +589,12 @@ function drawMeasurements(ctx, model, sweeps, fill, spreadRow, markStrength, col
     ctx.lineTo(left - 11, middle + 4.5);
     ctx.closePath();
     ctx.fill();
-    ctx.globalAlpha = 1;
+    ctx.globalAlpha = opacity;
   });
   ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)';
   ctx.strokeRect(left + 0.5, top + 0.5, PANEL.size - 1, PANEL.size - 1);
   if (spreadRow) {
-    ctx.globalAlpha = spreadRow.strength;
+    ctx.globalAlpha = opacity * spreadRow.strength;
     ctx.strokeStyle = colors.indirect;
     ctx.lineWidth = 1.5;
     ctx.strokeRect(left - 1.5, top + rowTop(spreadRow.index) - 1, PANEL.size + 3, rowHeight(spreadRow.index) + 2);
@@ -722,6 +727,12 @@ function drawFigure(ctx, model, colors, ratio, step, ms) {
   const planarOut = clamp01(frame.focus / 0.35);
   const move = ease(clamp01((frame.focus - 0.15) / 0.65));
   const gridIn = clamp01((frame.focus - 0.6) / 0.4);
+  // Follow the first step's narration: planar assumptions, our relays, then measurements.
+  const relayFocus = step === 0 ? ease(phase(ms, [6500, 7200])) : 1;
+  const measurementFocus = step === 0 ? ease(phase(ms, [10800, 11500])) : 1;
+  const planarStrength = mix(1, 0.15, relayFocus) * (1 - planarOut);
+  const sceneStrength = mix(0.15, 1, relayFocus);
+  const measurementStrength = mix(0.15, 1, measurementFocus);
 
   ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
   ctx.clearRect(0, 0, FIGURE.width, FIGURE.height);
@@ -729,7 +740,7 @@ function drawFigure(ctx, model, colors, ratio, step, ms) {
   // The planar setting.
   if (planarOut < 1) {
     ctx.save();
-    ctx.globalAlpha = 1 - planarOut;
+    ctx.globalAlpha = planarStrength;
     const planar = sceneTransform(LEFT.planar);
     const rays = mix(0.42, 0.2, phase(ms, [TIMELINE.planarGrid[1], TIMELINE.planarGrid[1] + 600]));
     drawScene(
@@ -772,6 +783,8 @@ function drawFigure(ctx, model, colors, ratio, step, ms) {
   const rays = step === 0 ? mix(0.3, 0.13, phase(ms, [TIMELINE.pixels[1], TIMELINE.pixels[1] + 600])) : 0.13;
   const marking = (i) => clamp01(sweeps[i] / SWEEP_EDGES.appear) * (1 - planarOut);
   ctx.save();
+  ctx.globalAlpha = sceneStrength;
+  ctx.save();
   ctx.beginPath();
   ctx.rect(sceneLeft, PANEL.top, PANEL.size, PANEL.size);
   ctx.clip();
@@ -787,9 +800,13 @@ function drawFigure(ctx, model, colors, ratio, step, ms) {
     drawSpread(ctx, scene, model, spreadRow.index, spreadRow.strength, colors, { inGrid: true });
     strokeRing(ctx, scene, model.scans[spreadRow.index], colors, spreadRow.strength);
   }
+  ctx.restore();
 
   // The measurements.
+  ctx.save();
+  ctx.globalAlpha = measurementStrength;
   drawMeasurements(ctx, model, sweeps, frame.fill, spreadRow, marking, colors);
+  ctx.restore();
 
   // The operators; the forward operator is dim while only the adjoint is applied.
   const forwardStrength = gridIn * (frame.iterations > 0 ? 1 : 0.35);
@@ -798,7 +815,7 @@ function drawFigure(ctx, model, colors, ratio, step, ms) {
     drawArrow(ctx, ARROWS.to, ARROWS.from, ARROWS.adjoint, colors.indirect, gridIn);
   }
 
-  return { planarOut, sceneLeft, gridIn, spreading: frame.spread > 0 && iteration === null, iteration, forwardStrength };
+  return { planarOut, planarStrength, sceneStrength, measurementStrength, sceneLeft, gridIn, spreading: frame.spread > 0 && iteration === null, iteration, forwardStrength };
 }
 
 /**
@@ -818,6 +835,7 @@ function drawFigure(ctx, model, colors, ratio, step, ms) {
  * Content fields: `title`, `buildSteps` (2), and `labels`: `planar`,
  * `nonplanar`, `grid`, `measurements` (above the panels); `planarSampling`
  * and `nonplanarSampling` (under the two scenes: how each is scanned);
+ * `planarLimitations` and `nonplanarAdvantages` (lists below those labels);
  * `backprojection` (under the grid during the adjoint), `iteration` (the
  * word before the count); `time`, `scanPoint` (the measurements' axes);
  * `forward`, `adjoint` (the operators); `note` (what kind of picture this
@@ -830,6 +848,8 @@ export default function FlatlandNlos({ slide, buildStep }) {
   const colorsRef = useRef(null);
   const planarLabels = useRef(null);
   const sceneLabels = useRef(null);
+  const sceneAdvantages = useRef(null);
+  const measurementsLabels = useRef(null);
   const gridLabel = useRef(null);
   const backprojectionLabel = useRef(null);
   const iterationLabel = useRef(null);
@@ -837,14 +857,18 @@ export default function FlatlandNlos({ slide, buildStep }) {
   const forwardLabel = useRef(null);
   const adjointLabel = useRef(null);
 
-  const paint = (ms) => {
+  const paint = (elapsedMs) => {
+    const ms = elapsedMs / PLAYBACK_SCALE;
     const canvas = canvasRef.current;
     colorsRef.current ??= themeColors(canvas);
     const shown = drawFigure(canvas.getContext('2d'), model, colorsRef.current, ratio, Math.min(buildStep, 1), ms);
 
     // Labels that follow the clock.
-    planarLabels.current.style.opacity = String(1 - shown.planarOut);
+    planarLabels.current.style.opacity = String(shown.planarStrength);
     sceneLabels.current.style.transform = `translateX(${shown.sceneLeft}px)`;
+    sceneLabels.current.style.opacity = String(shown.sceneStrength);
+    measurementsLabels.current.style.opacity = String(shown.measurementStrength);
+    sceneAdvantages.current.style.opacity = String(1 - shown.planarOut);
     gridLabel.current.style.opacity = String(shown.gridIn);
     backprojectionLabel.current.style.opacity = String(shown.spreading ? 1 : 0);
     iterationLabel.current.style.opacity = String(shown.iteration === null ? 0 : 1);
@@ -852,7 +876,7 @@ export default function FlatlandNlos({ slide, buildStep }) {
     forwardLabel.current.style.opacity = String(shown.forwardStrength);
     adjointLabel.current.style.opacity = String(shown.gridIn);
   };
-  useStepClock(buildStep, paint, { until: settledAfter(Math.min(buildStep, 1)) });
+  useStepClock(buildStep, paint, { until: PLAYBACK_SCALE * settledAfter(Math.min(buildStep, 1)), still: PLAYBACK_SCALE * settledAfter(Math.min(buildStep, 1)) });
 
   const box = (left, width, top) => ({ left, width, top });
   const arrowLabel = (top) => box(ARROWS.from - 10, ARROWS.to - ARROWS.from + 20, top);
@@ -872,11 +896,17 @@ export default function FlatlandNlos({ slide, buildStep }) {
             <div className="flatland-nlos-label flatland-nlos-label--under" style={{ top: UNDER }}>
               <Text>{labels.planarSampling}</Text>
             </div>
+            <div className="flatland-nlos-traits flatland-nlos-traits--limitations" style={{ top: UNDER + 28 }}>
+              {labels.planarLimitations.map((text) => <div key={text}>− <Text>{text}</Text></div>)}
+            </div>
           </div>
           <div ref={sceneLabels} className="flatland-nlos-group" style={box(0, PANEL.size, 0)}>
             <div className="flatland-nlos-label"><Text>{labels.nonplanar}</Text></div>
             <div className="flatland-nlos-label flatland-nlos-label--under" style={{ top: UNDER }}>
               <Text>{labels.nonplanarSampling}</Text>
+            </div>
+            <div ref={sceneAdvantages} className="flatland-nlos-traits flatland-nlos-traits--advantages" style={{ top: UNDER + 28 }}>
+              {labels.nonplanarAdvantages.map((text) => <div key={text}>+ <Text>{text}</Text></div>)}
             </div>
           </div>
           <div ref={gridLabel} className="flatland-nlos-group flatland-nlos-timed" style={box(LEFT.grid, PANEL.size, 0)}>
@@ -896,6 +926,7 @@ export default function FlatlandNlos({ slide, buildStep }) {
           >
             <Text>{labels.iteration}</Text> <span ref={iterationCount}>{ITERATIONS}</span>
           </div>
+          <div ref={measurementsLabels}>
           <div className="flatland-nlos-label" style={box(LEFT.image, PANEL.size, 0)}>
             <Text>{labels.measurements}</Text>
           </div>
@@ -907,6 +938,7 @@ export default function FlatlandNlos({ slide, buildStep }) {
             style={box(LEFT.image - 28 - PANEL.size / 2, PANEL.size, PANEL.top + PANEL.size / 2 - 11)}
           >
             <Text>{labels.scanPoint}</Text>
+          </div>
           </div>
           <div
             ref={forwardLabel}

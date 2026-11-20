@@ -67,8 +67,9 @@
     "volume": "NLOS volume"
   },
   "inputs": {
+    "title": "Inputs",
     "image": {
-      "label": "RGB image"
+      "label": "Steady-state image"
     },
     "lightVideo": {
       "src": "/slides/processing/propagating-light.mp4",

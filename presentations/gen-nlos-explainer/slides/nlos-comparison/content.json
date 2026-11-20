@@ -42,29 +42,35 @@
       "row": 0,
       "column": 1,
       "label": "Ours",
-      "ours": true
+      "ours": true,
+      "note": "Runtime: 163 s"
     },
     {
       "row": 1,
-      "column": 1
+      "column": 1,
+      "note": "Runtime: 115 s"
     },
     {
       "row": 0,
       "column": 2,
-      "label": "CC-SOCR"
+      "label": "CC-SOCR",
+      "note": "Runtime: 70.7 s"
     },
     {
       "row": 1,
-      "column": 2
+      "column": 2,
+      "note": "Runtime: 373 s"
     },
     {
       "row": 0,
       "column": 3,
-      "label": "3D-GTR"
+      "label": "3D-GTR",
+      "note": "Runtime: 1,410 s"
     },
     {
       "row": 1,
-      "column": 3
+      "column": 3,
+      "note": "Runtime: 1,675 s"
     }
   ]
 }

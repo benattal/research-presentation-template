@@ -1,1 +1,1 @@
-Building on both, we introduce generative view synthesis from propagating light: a feed-forward method for scenes with multiple objects and nonplanar relay surfaces.
+Our approach combines indirect light measurements with generative view synthesis to produce photorealistic views. It is feed-forward and supports multiple objects and nonplanar relay surfaces.

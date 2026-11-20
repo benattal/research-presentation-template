@@ -14,7 +14,7 @@
  *   --accent        "ours" in comparisons, our contribution
  *   --direct        direct light (white, as in the captured light videos)
  *   --indirect      indirect light (amber, as in the captured light
- *                   videos); marks only, never text
+ *                   videos); marks and their labels
  *   --hidden        the hidden region (boxes around it)
  *   --baseline      baselines in comparisons
  */

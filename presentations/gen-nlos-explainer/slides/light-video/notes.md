@@ -1,2 +1,1 @@
-In this work, we also capture a video of light propagating through the
-scene.
+We capture a video of propagating light using an ultrafast imaging system similar to lidar. It measures when photons arrive after a short laser pulse, revealing how light moves through the scene over time.

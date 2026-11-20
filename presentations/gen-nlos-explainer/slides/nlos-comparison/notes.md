@@ -1,1 +1,1 @@
-Compared with existing methods that support nonplanar relays, our approach produces better reconstructions.
+Both baselines support nonplanar relays. Our Monte Carlo approach evaluates light transport without voxelizing the relay geometry or representing the hidden scene with sparse Gaussian primitives. In these examples, it produces sharper reconstructions than CC-SOCR and better handles the complex simulated room than 3D-GTR.

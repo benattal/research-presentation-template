@@ -98,7 +98,7 @@ export function settledAt(step) {
 
 /** A measurement's whole trace on the plot: swept to the end of its indirect light. */
 function sweptTrace(relay, level) {
-  return { sweep: RELAYS[relay].direct + RELAYS[relay].indirectEnd, level };
+  return { relay, sweep: RELAYS[relay].direct + RELAYS[relay].indirectEnd, level };
 }
 
 /** A frame with no light in the scene, the plot hidden, and the video at rest: each step changes what it shows. */
@@ -152,7 +152,7 @@ const PHASES = {
       spots: RELAYS.map((_, relay) => (relay === 0 ? lit : 0)),
       plot: {
         opacity: smoothstep(0, PLOT_IN_MS, ms),
-        traces: [{ sweep: time, level: 1 }],
+        traces: [{ relay: 0, sweep: time, level: 1 }],
         cursor: { at: time, opacity: 1 - smoothstep(INDIRECT_END - 0.4, INDIRECT_END, time) },
         direct: smoothstep(direct + 0.2, direct + 0.7, time),
         indirect: smoothstep(INDIRECT_END - 1.6, INDIRECT_END - 0.9, time),
@@ -201,8 +201,7 @@ const PHASES = {
     frame.path = leaving;
     frame.hiddenGlow = leaving;
     frame.spots = RELAYS.map((_, relay) => (relay < slot.relay ? 1 : relay === slot.relay ? lit : 0));
-    frame.plot.traces = RELAYS.slice(0, slot.relay).map((_, relay) => sweptTrace(relay, EARLIER_LEVEL));
-    frame.plot.traces.push({ sweep: direct + delay, level: 1 });
+    frame.plot.traces = [{ relay: slot.relay, sweep: direct + delay, level: 1 }];
     frame.plot.cursor = {
       at: direct + delay,
       opacity: smoothstep(-RELAY_LEAD, -RELAY_LEAD + 0.15, delay) * (1 - smoothstep(indirectEnd + RELAY_TAIL - 0.4, indirectEnd + RELAY_TAIL, delay)),
@@ -229,7 +228,7 @@ const PHASES = {
     frame.plot = {
       ...frame.plot,
       opacity: 1,
-      traces: RELAYS.map((_, relay) => sweptTrace(relay, relay === lastRelay ? EARLIER_LEVEL + (1 - EARLIER_LEVEL) * fade : EARLIER_LEVEL)),
+      traces: [sweptTrace(lastRelay, 1)],
       direct: 1,
       indirect: 1,
     };
@@ -266,8 +265,7 @@ const PHASES = {
  *   a point once it has been measured;
  * - `hiddenGlow`: how much of the hidden object's faint light shows;
  * - `scan`: progress of the raster scan, 0 to 1, or null before it;
- * - `plot`: the measurement plot's opacity; its `traces`, one per measured
- *   point in the order of `RELAYS`, each drawn as far as `sweep` (ns) at
+ * - `plot`: the measurement plot's opacity; its `traces`, each naming its relay and drawn as far as `sweep` (ns) at
  *   brightness `level`; the cursor's place (ns) and opacity; and the
  *   opacities of its labels (`direct`, `indirect`, and `flight`, the time
  *   of flight, which is also how much of that mark is drawn);

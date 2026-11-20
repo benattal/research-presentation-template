@@ -2,12 +2,35 @@
 
 [Plan](../plans/gen-nlos-explainer.md)
 
-Current state: slide work is paused at the user's request (2026-11-19,
-16:10) while collaborators work on the branch. Refinement cycle 1: pass
-and vetting done, consolidation partly done; its open list is in the
-16:10 entry. Since then the tools were organized (newest entry): media
-scripts in `media/`, recording and narration through the framework's
-commands.
+Current state: revision requested 2026-11-20; see the newest standing
+directions and status below. Done in the working tree: notes (light video,
+hardware, contribution, NLOS volume, relays, baselines), slide 3 shows the
+reference photo first, the limitation is removed from the summary, the
+processing image is labeled "Steady-state image". Open: longer pauses, pause after generation, NLOS reconstruction pacing, quantitative results, a better outlook render. Audio is not regenerated.
+
+The lidar slide centers the photon-count plot beside the 3D scene; on its
+final scanning step, the video of propagating light replaces the plot. Its first step shows the scene alone;
+the plot appears with the measurement. The four slide captures have no
+errors or warnings.
+
+The 2026-11-20 review found the paper locally and expanded the reconstruction
+explanation and comparison notes from its method section. Section cards now
+hold longer. Capture succeeded: 46 frames, no errors, five hardware warnings.
+Audio is stale; timing with regenerated narration remains unverified.
+
+Pulled through 63865de and reconciled related-work content with the local
+contribution panel. The updated related-work video and poster were found in
+the bucket and copied locally; the older pair is parked under assets/parked/.
+
+Slide 16 runtimes are from the paper figure `fig/nlos_comparison4.pdf`:
+simulated room 163, 70.7, 1,410 s; Stanford f-k 115, 373, 1,675 s
+(ours, CC-SOCR, 3D-GTR). The slide media script matches its volumes to
+those figure panels.
+
+The summary outlook now has a draft illustrative scan over a generated,
+person-free, heavily cluttered bedroom image based on the user reference. The drawing is
+schematic, not captured transport or recovered scene geometry. Its asset
+remains local in `public/`; no bucket upload has been requested.
 
 Resume from the newest entry below.
 
@@ -16,6 +39,97 @@ Resume from the newest entry below.
 Every direction of the user for this work, quoted, newest first. General
 slide rules are in [slide style](../style/slides.md) and
 [slide review](../style/slide-review.md).
+
+2026-11-20 (Victor):
+
+- "lets push"
+
+- "indirect is too weak. and direct make it oriented outwards from the lidar not 360"
+
+- "make indirect light less circular and be lower in intensity. make sure the yellow/orange be the same as the font color"
+
+- "make the house even more cluttered. instead of individual rays, lets spoof light propagating thorught scene kinda like the videos of light propagation over this scene"
+
+- "can we rotate the robot a bit more and make the room more cluttered?"
+
+- "can you dream up some cool animation similar to slide 7 section 4 that takes in an image like the following. where the lidar system is mounted in the robot and can do scans with indirect and direct light illuminating the scene?" (attached robot in a bedroom)
+
+- "for slide 16, can you add the runtimes for each reconstruction method?"
+
+- "slide 15. slow down the animations a bit."
+
+- "for slide 15. fade out sections that are not being animated. only bring it up when the script starts talking about it or the animation starts"
+
+- "slide 14 lets take out the blue font color fo rthe top labels. just use white"
+
+- "make these a little bit smaller in font size" (the NLOS relay limitations and advantages).
+
+- "slide 14. add red font limitations below planar relay wall (requires unifrom sampling grid, planar relay surface)
+
+green font + under visible surface as relays. operates without unifrom samples and permits arbitrary relay geometry"
+
+- "lets make all the heading text blue. also make al the encoder rectangles white."
+
+- "for section 14. i don't like the line. can we just change each header to a different color and make it left justified?"
+
+- "get rid of th eline. and make sure the content in the left box fills the entire box. minimize "whitespace""
+
+- "slide 12. put the inputs label with the line sideways to the left of the left box? can you make it fit?"
+
+- "add a similar line to section headers in slide 14"
+
+- "make the white line not so wide. looks kinda ugly rn"
+
+- "inputs is hard to distinguish from steady-state image. maybe add a white line to separate. also video of propagating light is kinda too tight to the above image. lets give it more space"
+
+- "i also want a label that notes these as the inputs"
+
+- "for slide 12, lets put direct and indirect light on the same height. lets fill up the rest of the left box by increasing the image"
+- "in the left box for 12-14. lets have everything centered. rather than left justfied?"
+
+- "for indirect light, lets make the font match the color of the illustrated indirect light"
+
+- "for slide 12-14, make the title a bit larger in font. so its clear its a title and section headers?"
+
+- "can you add my collaborators edits to the related works section?"
+
+- "pull again it seems my collaborator made som edits"
+- "in slides 12-14 i want to refactor the title slide into a method overview going 1. processing th ecapture, 2. condiitoning videos, 3. video generation. as kinda steps to the method and how we generate. fade to black steps that are not relevant to the current slide."
+
+- "move the central box up a little. fade * our reimplementaiton and lindell to black as well"
+
+- "ok it is a bit busy,. lets instead for this step3, fade out the rest to near black and then put a central panel for "ours: generative...." and the five. + underneath."
+
+- "slide 10 step 3,  want to say the + of our method with the green font under ours: generative view synstehsis from propagating light. say +Photorealistic Faithful hidden geometry +arbitrary relay geometry + multi object + feedforward."
+
+- "in step 3. lets not accumulate these. just show one at a time" (the photon-count traces).
+
+- "when this "Scanning the laser across the scene yields the video of propagating light. Every visible surface serves as a relay for the hidden scene." step 4 happens. replace hte photon counts back to the video of propagataing light description."
+
+- "for slide 7, want to update so it starts with the. lets get rid of the video fo propagating light window and move up photon counts window to the center. this way there is less things going on"
+
+- "some of this work was already done by claude. check it and see if you can do antyhing better"
+
+- "cant tell its hallucinated because no reference image yet. put the reference image to begin with."
+- "explain how video of propagating light. unpack it using an ultrafast imaging systems similar to lidar to capture this"
+- "pauses need to be longer between sequences"
+- "lidar capture -> only need the 1d illustration and 3d diagram (don’t need video of propagating light). can only look at one thing at once. might need to extend this sequence."
+- "hardware prototype. using this setup we capture both video of propagating llight and a steadystate rgb image"
+- "related work. have something that addresses all limitations in ... our approahes leverage light and gvs for generative view synthesis"
+- "processing the capture ... voice says three parts. have the three stages visible on the top in text or smth. emphasize the existing one. ... label left panel as inputs (should be steady-state image) ... we construct nlos volume where pixel color reflects amount of light reflected from hidden object at a give point in space (make it clear what the nlos volume is)"
+- "vidoe generation ... need a pause after"
+- "nlos reconstruction ... require uniform sampling grid + planar relay surface (limitations) ... operates without uniform samples + permits arbitrary relay geometry (we so cool). ... fade each individual section one at a time. ... moves over it way too fast. need more explanation"
+- "reconstruction with nonplanar relays ... comment on why it sbetter ... add runtimes. ... ideally some quantitative results"
+- "captured scenes: comparison ... explain the baselines."
+- "last page ... indirect light conveys limited information? ... kill it ... outlook have a more cool render"
+- "if you don't understand how to do so, then dont do it"; "i pulled for you".
+
+Status: the pulled checkout is at af95b79. Draft notes revised for light
+capture, the hardware outputs, the contribution, the NLOS volume, relay
+assumptions, and HOLI. Audio has not been regenerated or synchronized.
+The local capture command fails with EPERM when binding to 127.0.0.1;
+rendering changes, timing, and the remaining requests are open. Find
+verified runtime and quantitative sources before adding numbers.
 
 2026-11-20 (Dongyu):
 

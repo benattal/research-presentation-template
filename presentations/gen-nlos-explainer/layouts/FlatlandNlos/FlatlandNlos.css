@@ -48,6 +48,18 @@
   color: var(--text-secondary);
 }
 
+.flatland-nlos-traits {
+  position: absolute;
+  width: 100%;
+  font-size: 14px;
+  line-height: 22px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.flatland-nlos-traits--limitations { color: var(--hidden); }
+.flatland-nlos-traits--advantages { color: var(--accent); }
+
 .flatland-nlos-label--axis {
   font-size: var(--type-small);
   line-height: 22px;

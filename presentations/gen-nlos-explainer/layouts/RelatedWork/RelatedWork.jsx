@@ -7,9 +7,9 @@ import Text from '@core/stage/Text.jsx';
 import { Boxes } from '../Panels/Panels.jsx';
 import './RelatedWork.css';
 
-/** Opacity of a group out of the spotlight, and of every group on the contribution step (kept legible as context). */
+/** Opacity of groups outside the spotlight and behind the contribution. */
 const DIMMED = 0.08;
-const CONTEXT = 0.45;
+const CONTEXT = 0.05;
 
 /**
  * Related work by category, with what each line of work offers and lacks.
@@ -17,8 +17,8 @@ const CONTEXT = 0.45;
  * name, a row of method tiles (each a clip from the method, named under
  * it with its citation), and its strengths (green, "+") and limitations
  * (red, "−"). One group is spotlighted per build step; on the
- * last step every group dims to context and the contribution line shows, in
- * white, on a panel like the groups'. Every tile has one citation line, so
+ * last step every group fades nearly to black and a centered contribution
+ * panel shows its title and strengths. Every tile has one citation line, so
  * the strengths start on one line across every column.
  *
  * Fields:
@@ -39,12 +39,13 @@ const CONTEXT = 0.45;
  *                                { from, to } in seconds of the video);
  *                    pros, cons  short phrases.
  *   contribution   the line shown, in its panel, on the last step.
+ *   contributionPros  strengths listed in green beneath the contribution.
  *   note           optional: a short line under the panels, at their left
  *                  edge (what an asterisk after a method's name marks).
  *   buildSteps     one step per group, then the contribution step.
  */
 export default function RelatedWork({ slide, buildStep }) {
-  const { groups, contribution, note, video } = slide;
+  const { groups, contribution, contributionPros, note, video } = slide;
   const videoHolder = useRef(null);
   const canvases = useRef(new Map());
   if (!Array.isArray(groups) || groups.length === 0) {
@@ -60,7 +61,7 @@ export default function RelatedWork({ slide, buildStep }) {
   };
 
   return (
-    <div className="slide--related-work">
+    <div className="slide--related-work" data-contribution={buildStep >= groups.length ? 'shown' : 'hidden'}>
       <SlideTitle title={slide.title} />
       <div className="related-work-body">
         <div className="related-work-figure">
@@ -70,8 +71,8 @@ export default function RelatedWork({ slide, buildStep }) {
           </div>
           <div className="related-work-groups">
             {groups.map((group, index) => (
-              <section key={group.name} className="related-work-group">
-                <div className="related-work-group-content" style={{ opacity: spotlight(index) }}>
+              <section key={group.name} className="related-work-group" style={{ opacity: spotlight(index) }}>
+                <div className="related-work-group-content">
                   <h3 className="related-work-name"><Text>{group.name}</Text></h3>
                   <div className="related-work-columns">
                     {group.columns.map((column, c) => (
@@ -112,6 +113,9 @@ export default function RelatedWork({ slide, buildStep }) {
           </div>
           <section className="related-work-contribution" style={{ opacity: buildStep >= groups.length ? 1 : 0 }}>
             <h3 className="related-work-contribution-name"><Text>{contribution}</Text></h3>
+            <ul className="related-work-contribution-pros">
+              {contributionPros.map((pro) => <li key={pro} className="related-work-pro"><Text>{pro}</Text></li>)}
+            </ul>
           </section>
           {note && <p className="related-work-note"><Text>{note}</Text></p>}
         </div>

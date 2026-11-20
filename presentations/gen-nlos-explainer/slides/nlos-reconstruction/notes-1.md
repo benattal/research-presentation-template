@@ -1,3 +1,1 @@
-We therefore solve a least-squares problem with conjugate gradients.
-Each iteration evaluates forward and adjoint light transport with Monte
-Carlo path tracing, in an off-the-shelf renderer.
+We reconstruct the volume by finding a scene whose predicted indirect light matches the measurements. Each iteration predicts light transport and then sends the measurement error back into the volume. Conjugate gradient least squares uses these forward and adjoint operations to refine the reconstruction. We evaluate both with Monte Carlo path tracing in an off-the-shelf renderer.

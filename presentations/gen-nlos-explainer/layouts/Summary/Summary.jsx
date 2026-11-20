@@ -1,6 +1,7 @@
 import Media from '@core/stage/Media.jsx';
 import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
+import RobotScan from './RobotScan.jsx';
 import './Summary.css';
 
 /**
@@ -18,10 +19,19 @@ export default function Summary({ slide, buildStep }) {
   return (
     <div className="slide--summary">
       <SlideTitle title={slide.title} />
-      <div className="summary-body">
-        <figure className="summary-figure">
-          <Media item={slide.media} className="summary-media" />
-          <figcaption className="summary-label"><Text>{slide.label}</Text></figcaption>
+      <div className={`summary-body${buildStep > 0 ? ' summary-body--outlook' : ''}`}>
+        <figure className={`summary-figure${buildStep > 0 ? ' summary-figure--outlook' : ''}`}>
+          {buildStep === 0 ? (
+            <>
+              <Media item={slide.media} className="summary-media" />
+              <figcaption className="summary-label"><Text>{slide.label}</Text></figcaption>
+            </>
+          ) : (
+            <>
+              <RobotScan image={slide.outlookImage} active />
+              <figcaption className="summary-illustration-label">Illustration</figcaption>
+            </>
+          )}
         </figure>
         <ul className="summary-points">
           {slide.points.map((point, index) => (

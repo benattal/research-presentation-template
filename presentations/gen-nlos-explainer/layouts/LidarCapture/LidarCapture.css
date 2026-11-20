@@ -1,4 +1,4 @@
-/* Lidar capture: a render filling the slide behind its title, labels beside its parts, and at the left the video of propagating light over the measurement plot, each on a panel. */
+/* Lidar capture: a render filling the slide behind its title, labels beside its parts, and at the left a measurement plot on a panel. */
 .lidar-capture {
   --lidar-capture-scan: #ff4a57;
   display: flex;
@@ -83,14 +83,11 @@
   transform: translateX(-50%);
 }
 
-/* The video and the plot: a column at the left, under the title, each part on its own panel. */
+/* The measurement plot sits centered vertically to the left of the scene. */
 .lidar-capture-parts {
   position: absolute;
   left: 56px;
-  top: 110px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  top: 220px;
 }
 
 .lidar-capture-part {
@@ -104,16 +101,20 @@
   display: block;
 }
 
+.lidar-capture-video {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
 .lidar-capture-part-label {
   display: block;
   margin-bottom: 10px;
-  color: var(--text-primary);
   font-size: var(--type-text);
   line-height: 1;
   white-space: nowrap;
 }
 
-/* The video's frame is the slide's black, so an empty frame still shows on the panel. */
 .lidar-capture-video canvas {
   background: var(--bg-slide);
 }
@@ -166,6 +167,5 @@
 }
 
 .lidar-capture-plot-mark--indirect {
-  /* Amber is for marks, never for text (theme). */
-  color: var(--text-primary);
+  color: var(--indirect);
 }

@@ -14,7 +14,15 @@
     "scanPoint": "Scan point",
     "forward": "Forward",
     "adjoint": "Adjoint",
-    "note": "2D illustration"
+    "note": "2D illustration",
+    "planarLimitations": [
+      "Requires a uniform sampling grid",
+      "Requires a planar relay surface"
+    ],
+    "nonplanarAdvantages": [
+      "Works without uniform samples",
+      "Permits arbitrary relay geometry"
+    ]
   },
   "buildSteps": [
     "relays and confocal measurements",

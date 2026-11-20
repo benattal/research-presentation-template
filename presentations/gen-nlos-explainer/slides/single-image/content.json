@@ -10,14 +10,33 @@
     "rowGap": 0
   },
   "buildSteps": [
-    "the input view and the views generated from it",
-    "the hidden region",
-    "the actual scene"
+    "the actual scene beside the input view and the views generated from it",
+    "the hidden region in the generated views",
+    "the hidden vase in the actual scene"
   ],
   "panels": [
     {
       "row": 0,
       "column": 0,
+      "label": "Reference photo",
+      "media": {
+        "type": "image",
+        "src": "/slides/single-image/reference-photo.png",
+        "alt": "A photograph of the scene from above: a large white vase stands behind the flowers"
+      },
+      "boxes": [
+        {
+          "x": 0.55,
+          "y": 0.27,
+          "width": 0.28,
+          "height": 0.43,
+          "step": 2
+        }
+      ]
+    },
+    {
+      "row": 0,
+      "column": 1,
       "label": "Input view",
       "media": {
         "type": "image",
@@ -27,7 +46,7 @@
     },
     {
       "row": 0,
-      "column": 1,
+      "column": 2,
       "label": "Generated novel views",
       "media": {
         "type": "video",
@@ -46,27 +65,6 @@
           "step": 1
         }
       ]
-    },
-    {
-      "row": 0,
-      "column": 2,
-      "step": 2,
-      "label": "Reference photo",
-      "media": {
-        "type": "image",
-        "src": "/slides/single-image/reference-photo.png",
-        "alt": "A photograph of the scene from above: a large white vase stands behind the flowers"
-      },
-      "boxes": [
-        {
-          "x": 0.55,
-          "y": 0.27,
-          "width": 0.28,
-          "height": 0.43
-        }
-      ],
-      "note": "Red: hidden in the input view",
-      "noteKind": "hidden"
     }
   ]
 }

@@ -33,6 +33,7 @@
   top: 40px;
   width: 169px;
   height: 30px;
+  opacity: 0;
   z-index: 0;
 }
 
@@ -52,11 +53,11 @@
 .related-work-group {
   border-radius: var(--radius-panel);
   background: var(--bg-panel);
+  transition: opacity 400ms ease;
 }
 
 .related-work-group-content {
   padding: var(--panel-padding) 20px 18px;
-  transition: opacity 400ms ease;
 }
 
 .related-work-name {
@@ -158,11 +159,15 @@
   content: '\2212  ';
 }
 
-/* The contribution: one line in white, on a panel like the groups'. */
+/* The contribution sits over the faded groups without shifting them. */
 .related-work-contribution {
-  position: relative;
-  z-index: 1;
-  padding: 14px 20px 16px;
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: calc(50% - 30px);
+  width: 720px;
+  transform: translate(-50%, -50%);
+  padding: 28px 32px;
   border-radius: var(--radius-panel);
   background: var(--bg-panel);
   text-align: center;
@@ -177,6 +182,19 @@
   color: var(--text-primary);
 }
 
+.related-work-contribution-pros {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  justify-content: center;
+  gap: 12px 48px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+  font-size: var(--type-text);
+  line-height: 30px;
+}
+
 /* Under the panels, at their left edge; out of the flow, so the panels stay centered. */
 .related-work-note {
   position: absolute;
@@ -187,4 +205,15 @@
   line-height: 22px;
   white-space: nowrap;
   color: var(--text-muted);
+}
+
+/* Fade the note and slide-frame credit with the background on the contribution step. */
+.slide--related-work .related-work-note,
+.slide:has(.slide--related-work) .slide-credits {
+  transition: opacity 400ms ease;
+}
+
+.slide--related-work[data-contribution='shown'] .related-work-note,
+.slide:has(.slide--related-work[data-contribution='shown']) .slide-credits {
+  opacity: 0;
 }

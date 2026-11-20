@@ -56,3 +56,45 @@
   line-height: 26px;
   color: var(--text-muted);
 }
+
+/* The outlook gives the illustrated scan more room than the square result. */
+.summary-body--outlook { gap: 32px; }
+.summary-body--outlook .summary-points { width: 556px; }
+.summary-figure--outlook { width: 580px; }
+
+/* An illustrative scan over a person-free, generated room image. */
+.summary-robot-scan {
+  position: relative;
+  width: 580px;
+  aspect-ratio: 1672 / 941;
+  overflow: hidden;
+  background: var(--bg-panel);
+}
+
+.summary-robot-scan img,
+.summary-robot-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.summary-robot-legend {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  display: flex;
+  gap: 14px;
+  font-size: var(--type-small);
+  text-shadow: 0 1px 4px #000, 0 1px 8px #000;
+  color: var(--direct);
+}
+
+.summary-robot-legend span:last-child { color: var(--indirect); }
+
+.summary-illustration-label {
+  margin-top: 8px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--type-small);
+}

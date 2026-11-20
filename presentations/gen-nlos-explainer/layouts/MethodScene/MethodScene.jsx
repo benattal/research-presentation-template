@@ -81,7 +81,6 @@
  */
 import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Media from '@core/stage/Media.jsx';
-import SlideTitle from '@core/stage/SlideTitle.jsx';
 import Text from '@core/stage/Text.jsx';
 import { ease, stillFrames, useStageCanvas } from '@core/stage/canvas.js';
 import { SETTLED_MS, useStepClock } from '@core/stage/playback.js';
@@ -89,6 +88,13 @@ import {
   acquireVaseScene, createVaseScene, hasParkedVaseScene, pointCloudFromPixels, releaseVaseScene, volumeFromAtlas,
 } from './vaseScene.js';
 import './MethodScene.css';
+
+/** The method's three slides share this overview; phase selects the highlighted stage. */
+const METHOD_STAGES = [
+  { phase: 'processing', label: '1. Processing the capture' },
+  { phase: 'conditioning', label: '2. Conditioning videos' },
+  { phase: 'generation', label: '3. Video generation' },
+];
 
 /** Stage pixels inside the area under the title (1168 × 572). */
 const AREA = { width: 1168, height: 572 };
@@ -107,12 +113,13 @@ const TILE = 134;
 const STREAM_PITCH = (TILE * 190) / 140;
 const STREAM_TOPS = [0, 1, 2].map((i) => TITLE_TOP + 24 + 8 + 24 + 6 + i * STREAM_PITCH);
 const STREAMS_HEIGHT = STREAM_TOPS[2] + TILE - STREAM_TOPS[0];
-const INPUT = 200;
-const INPUT_TOPS = [38, 302];
+const INPUT = 230;
+const INPUT_TOPS = [40, 305];
 /** Line height of a note (MethodScene.css), for notes stacked under a tile. */
 const NOTE_LINE = 24;
 /** The left panel's width around the inputs (their longer caption sets it) and around the stream tiles. */
 const LEFT_PANEL = { inputs: 272, streams: 200 };
+const INPUT_LEFT = (LEFT_PANEL.inputs - INPUT) / 2;
 /** The stream tiles' left edge: centered in their panel. */
 const TILE_LEFT = (LEFT_PANEL.streams - TILE) / 2;
 /**
@@ -190,7 +197,7 @@ const ROWS = STREAM_TOPS.map((top) => top + TILE / 2);
 const MIDDLE = ROWS[1];
 const TOKEN = { size: 16, gap: 4, count: 6, pitch: 24 };
 const TOKEN_ROW_WIDTH = TOKEN.count * TOKEN.size + (TOKEN.count - 1) * TOKEN.gap;
-/** Each stage's panel; its title (the slide's `generation.stages[name]`) sits centered at its top, level with the stream tiles' captions. */
+/** Each stage's panel; its title sits at the upper left. */
 const STAGES = {
   encoding: { cue: 'encoder', left: 212, width: 250 },
   transformer: { cue: 'transformer', left: 474, width: 294 },
@@ -216,7 +223,7 @@ const DIAGRAM = {
   decoder: { left: 794, right: 838, wide: 40, narrow: 22 },
   output: { left: 862, size: 294 },
 };
-/** Each conditioning stream's color (warped RGB, MIP, MIP depth): its tokens, and its encoder and arrows. */
+/** Each conditioning stream's color (warped RGB, MIP, MIP depth): its tokens and arrows. */
 const TOKEN_COLORS = ['#e8e8e8', '#f08a24', '#8fd05a'];
 /** Seconds between the parts of the diagram that one cue reveals in a row: rows, tokens, layers. */
 const STAGGER = { row: 0.14, token: 0.06, layer: 0.08 };
@@ -485,18 +492,19 @@ function Inputs({ inputs, image, leaving }) {
     : { type: 'video', src: inputs.lightVideo.src, poster: inputs.lightVideo.poster };
   return (
     <div className="method-scene-group" data-part={leaving ? 'inputs' : undefined}>
-      <figure className="method-scene-tile" style={{ left: INSET, top: INPUT_TOPS[0], width: INPUT, height: INPUT }}>
+      <div className="method-scene-input-title"><Text>{inputs.title}</Text></div>
+      <figure className="method-scene-tile" style={{ left: INPUT_LEFT, top: INPUT_TOPS[0], width: INPUT, height: INPUT }}>
         <figcaption className="method-scene-caption"><Text>{inputs.image.label}</Text></figcaption>
         <img className="method-scene-media" src={image} alt="" />
       </figure>
-      <figure className="method-scene-tile" style={{ left: INSET, top: INPUT_TOPS[1], width: INPUT, height: INPUT }}>
+      <figure className="method-scene-tile" style={{ left: INPUT_LEFT, top: INPUT_TOPS[1], width: INPUT, height: INPUT }}>
         <figcaption className="method-scene-caption"><Text>{inputs.lightVideo.label}</Text></figcaption>
         <Media item={lightVideo} className="method-scene-media" />
       </figure>
-      <span data-part="direct" className="method-scene-note method-scene-note--direct" style={{ left: INSET, top: notesTop }}>
+      <span data-part="direct" className="method-scene-note method-scene-note--direct" style={{ left: INPUT_LEFT, top: notesTop, width: INPUT / 2, textAlign: 'center' }}>
         <Text>{inputs.direct}</Text>
       </span>
-      <span data-part="indirect" className="method-scene-note method-scene-note--indirect" style={{ left: INSET, top: notesTop + NOTE_LINE }}>
+      <span data-part="indirect" className="method-scene-note method-scene-note--indirect" style={{ left: INPUT_LEFT + INPUT / 2, top: notesTop, width: INPUT / 2, textAlign: 'center' }}>
         <Text>{inputs.indirect}</Text>
       </span>
     </div>
@@ -593,13 +601,13 @@ function GenerationDiagram({ generation, generated }) {
   ];
   return (
     <>
-      <span {...reveal(STAGES.encoding.cue)} className="method-scene-stage-title" style={{ left: LEFT_PANEL.streams / 2, top: STAGE_TITLE_TOP }}>
+      <span {...reveal(STAGES.encoding.cue)} className="method-scene-stage-title" style={{ left: INSET, top: STAGE_TITLE_TOP }}>
         <Text>{generation.input}</Text>
       </span>
       {Object.entries(STAGES).map(([name, { cue, left, width }]) => (
         <Fragment key={name}>
           <div {...reveal(cue)} className="method-scene-panel" style={{ left, width }} />
-          <span {...reveal(cue, 0.1)} className="method-scene-stage-title" style={{ left: left + width / 2, top: STAGE_TITLE_TOP }}>
+          <span {...reveal(cue, 0.1)} className="method-scene-stage-title" style={{ left: left + INSET, top: STAGE_TITLE_TOP }}>
             <Text>{generation.stages[name]}</Text>
           </span>
         </Fragment>
@@ -620,7 +628,6 @@ function GenerationDiagram({ generation, generated }) {
               <path
                 {...reveal('encoder', i * STAGGER.row + 0.15)}
                 className="method-scene-shape"
-                style={{ stroke: TOKEN_COLORS[i] }}
                 d={trapezoid(encoder.left, encoder.right, y, encoder.wide, encoder.narrow)}
               />
               <path
@@ -945,7 +952,13 @@ export default function MethodScene({ slide, buildStep }) {
 
   return (
     <div className="slide--method-scene">
-      <SlideTitle title={slide.title} />
+      <header className="slide-header method-overview" aria-label="Method stages">
+        {METHOD_STAGES.map(({ phase, label }) => (
+          <h2 key={phase} className="method-overview-stage" aria-current={slide.phase === phase ? 'step' : undefined}>
+            <Text>{label}</Text>
+          </h2>
+        ))}
+      </header>
       <div className="method-scene" ref={areaRef} style={{ width: AREA.width, height: AREA.height }}>
         <img ref={imageRef} className="method-scene-data" src={scene.image} alt="" onLoad={onDataLoad} />
         <img ref={depthRef} className="method-scene-data" src={scene.camera.depth} alt="" onLoad={onDataLoad} />

@@ -97,5 +97,12 @@
       ]
     }
   ],
-  "contribution": "Ours: generative view synthesis from propagating light"
+  "contribution": "Ours: generative view synthesis from propagating light",
+  "contributionPros": [
+    "Photorealistic",
+    "Faithful hidden geometry",
+    "Arbitrary relay geometry",
+    "Multi-object",
+    "Feed-forward"
+  ]
 }
