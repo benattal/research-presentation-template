@@ -2,9 +2,9 @@
    their citations, strengths and limitations), the contribution panel under
    them. Tiles are canvases drawn from one video kept under the panels. */
 .slide--related-work {
-  --related-work-tile: 160px;
-  --related-work-gap: 14px;       /* between tiles, and between list lines */
-  --related-work-column-gap: 28px;
+  --related-work-tile: 180px;
+  --related-work-gap: 16px;       /* between tiles */
+  --related-work-column-gap: 32px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -54,8 +54,16 @@
   background: var(--bg-panel);
 }
 
+/* --fade dims a group out of the spotlight; --con-fade dims its limitations, which stay lit on the contribution step. */
 .related-work-group-content {
   padding: var(--panel-padding) 20px 18px;
+}
+
+.related-work-name,
+.related-work-column-name,
+.related-work-tiles,
+.related-work-pro {
+  opacity: var(--fade);
   transition: opacity 400ms ease;
 }
 
@@ -130,7 +138,7 @@
 }
 
 .related-work-traits {
-  margin: 14px 0 0;
+  margin: 18px 0 0;
   padding: 0;
   list-style: none;
   font-size: var(--type-text);
@@ -156,6 +164,43 @@
 
 .related-work-con::before {
   content: '\2212  ';
+}
+
+/* On the contribution step every limitation gives way to what we offer instead, in green with a check. Both wordings
+   share one grid cell, so the column keeps its width, and cross-fade. */
+.related-work-con {
+  opacity: var(--con-fade);
+  transition: opacity 400ms ease, color 400ms ease;
+}
+
+.related-work-con-text {
+  display: inline-grid;
+}
+
+.related-work-con-was,
+.related-work-con-now {
+  grid-area: 1 / 1;
+  transition: opacity 400ms ease;
+}
+
+.related-work-con-now {
+  opacity: 0;
+}
+
+.related-work-con--solved .related-work-con-was {
+  opacity: 0;
+}
+
+.related-work-con--solved .related-work-con-now {
+  opacity: 1;
+}
+
+.related-work-con--solved {
+  color: var(--accent);
+}
+
+.related-work-con--solved::before {
+  content: '\2713  ';
 }
 
 /* The contribution: one line in white, on a panel like the groups'. */

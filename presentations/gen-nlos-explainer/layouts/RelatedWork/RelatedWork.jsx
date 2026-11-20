@@ -17,9 +17,12 @@ const CONTEXT = 0.45;
  * name, a row of method tiles (each a clip from the method, named under
  * it with its citation), and its strengths (green, "+") and limitations
  * (red, "−"). One group is spotlighted per build step; on the
- * last step every group dims to context and the contribution line shows, in
- * white, on a panel like the groups'. Every tile has one citation line, so
- * the strengths start on one line across every column.
+ * last step every group dims to context, except its limitations, which turn
+ * into what the contribution offers instead, in green with a check, and the
+ * contribution line shows, in white, on a panel like the groups'. Both
+ * wordings of a limitation share one cell, so the column does not change
+ * width. Every tile has one citation line, so the strengths start on one
+ * line across every column.
  *
  * Fields:
  *   title          the slide's title.
@@ -37,7 +40,9 @@ const CONTEXT = 0.45;
  *                                the panels layout's ({ x, y, width, height }
  *                                in fractions of the tile, with optional
  *                                { from, to } in seconds of the video);
- *                    pros, cons  short phrases.
+ *                    pros        short phrases;
+ *                    cons        each { text, solved }: the limitation, and
+ *                                what the contribution offers instead.
  *   contribution   the line shown, in its panel, on the last step.
  *   note           optional: a short line under the panels, at their left
  *                  edge (what an asterisk after a method's name marks).
@@ -53,9 +58,14 @@ export default function RelatedWork({ slide, buildStep }) {
   if (stepCount(slide) !== groups.length + 1) {
     throw new Error(`Slide "${slide.id}": the relatedWork layout needs ${groups.length + 1} build steps, one per group and one for the contribution`);
   }
+  const unsolved = groups.flatMap((group) => group.columns.flatMap((column) => column.cons)).filter((con) => !con?.text || !con?.solved);
+  if (unsolved.length > 0) {
+    throw new Error(`Slide "${slide.id}": the relatedWork layout needs every limitation as { text, solved }, got ${JSON.stringify(unsolved)}`);
+  }
   useTileFrames(videoHolder, canvases, video);
+  const solved = buildStep >= groups.length;
   const spotlight = (index) => {
-    if (buildStep >= groups.length) return CONTEXT;
+    if (solved) return CONTEXT;
     return buildStep === index ? 1 : DIMMED;
   };
 
@@ -71,7 +81,7 @@ export default function RelatedWork({ slide, buildStep }) {
           <div className="related-work-groups">
             {groups.map((group, index) => (
               <section key={group.name} className="related-work-group">
-                <div className="related-work-group-content" style={{ opacity: spotlight(index) }}>
+                <div className="related-work-group-content" style={{ '--fade': spotlight(index), '--con-fade': solved ? 1 : spotlight(index) }}>
                   <h3 className="related-work-name"><Text>{group.name}</Text></h3>
                   <div className="related-work-columns">
                     {group.columns.map((column, c) => (
@@ -101,7 +111,14 @@ export default function RelatedWork({ slide, buildStep }) {
                         </div>
                         <ul className="related-work-traits">
                           {column.pros.map((pro) => <li key={pro} className="related-work-pro"><Text>{pro}</Text></li>)}
-                          {column.cons.map((con) => <li key={con} className="related-work-con"><Text>{con}</Text></li>)}
+                          {column.cons.map((con) => (
+                            <li key={con.text} className={`related-work-con${solved ? ' related-work-con--solved' : ''}`}>
+                              <span className="related-work-con-text">
+                                <span className="related-work-con-was"><Text>{con.text}</Text></span>
+                                <span className="related-work-con-now"><Text>{con.solved}</Text></span>
+                              </span>
+                            </li>
+                          ))}
                         </ul>
                       </div>
                     ))}
@@ -110,7 +127,7 @@ export default function RelatedWork({ slide, buildStep }) {
               </section>
             ))}
           </div>
-          <section className="related-work-contribution" style={{ opacity: buildStep >= groups.length ? 1 : 0 }}>
+          <section className="related-work-contribution" style={{ opacity: solved ? 1 : 0 }}>
             <h3 className="related-work-contribution-name"><Text>{contribution}</Text></h3>
           </section>
           {note && <p className="related-work-note"><Text>{note}</Text></p>}

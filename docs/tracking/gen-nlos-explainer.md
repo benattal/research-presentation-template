@@ -33,6 +33,19 @@ slide rules are in [slide style](../style/slides.md) and
   clip is online-only; rebuild with `media/related-work.py` once it is
   local. The credit line now wraps only between credits (`core/`, to land
   on `main` too).
+- "我觉得上面已经引用过了是不是这边这个右下角不需要再引用了？ 这样中间部分的排版也许可以再松些啥的":
+  the related-work slide no longer carries a credit line (each tile names
+  its paper); tiles are 180 px, with more room between tiles, columns, and
+  the limitation lists. "能怎么体现一下我们address these limitation 呢";
+  "旁白不用管 你试试方案一我看看？": on the contribution step the red
+  limitations turn green with a check. The narration is left as it is.
+- "不需要家那个横线划掉那个效果"; "还是有点奇怪哈 就是现在这些文字是缺点 但是我们打了对勾 变沉了绿色 你改一下文字吧";
+  "Room-scale scenes 改成复杂场景": no strike-through; on the contribution
+  step each limitation turns into its positive counterpart, in green with a
+  check (cross-fading in one grid cell, so the columns keep their width):
+  Photorealistic; Nonplanar relays; No per-scene optimization; Complex
+  scenes; Grounded in measured light. "复杂场景" is worded "Complex scenes"
+  to match the deck's language. The narration is left as it is.
 
 - "你帮我把这个push 到github吧 commit短一点"; "commit用英文啊".
   Commit and push the current explainer changes on `gen-nlos-explainer`
