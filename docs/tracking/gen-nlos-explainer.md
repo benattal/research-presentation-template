@@ -19,6 +19,21 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-20 (Dongyu):
 
+- "我要吧 那一页里面phasor fields holi 和gen 3C lyra 的结果换成他们现在论文里面自己展示的结果 你先找素材 先找phasor field 和HoLi的";
+  "论文里面的都是图片 最好能展示视频 就先fk那个结果一样"; "holi的视频我下载好了 我觉得你就从里面截取一点代呢就是这个结果展示部分这个在旋转".
+  Related work's tiles show each paper's own results, as video. Phasor
+  fields: the paper's office scene, reconstructed from its released code
+  and data (`media/fast-rsd-office.py`), turning like the f-k tile.
+  HOLI-1-to-3: the Pikachu of its supplementary video's comparison, one
+  full turn per loop; no longer our reimplementation, so no asterisk and no
+  box. "TV wall + town": GEN3C shows its project page's wall of
+  televisions, Lyra 2 its medieval town; with no reimplementation left,
+  the slide drops its "* our reimplementation" note. The f-k tile of the
+  current `methods.mp4` was cut from the previous file while its Dropbox
+  clip is online-only; rebuild with `media/related-work.py` once it is
+  local. The credit line now wraps only between credits (`core/`, to land
+  on `main` too).
+
 - "你帮我把这个push 到github吧 commit短一点"; "commit用英文啊".
   Commit and push the current explainer changes on `gen-nlos-explainer`
   with the short English message `Update explainer video`. Exported media

@@ -2,7 +2,7 @@
   "lindell2019": {
     "authors": "Lindell et al.",
     "title": "Wave-based non-line-of-sight imaging using fast f-k migration",
-    "venue": "ACM TOG",
+    "venue": "TOG",
     "year": 2019
   },
   "stanford-bunny": {
@@ -19,6 +19,30 @@
     "authors": "Wang et al.",
     "title": "Non-line-of-sight imaging with arbitrary relay surface geometries via 3D Gaussian Transient Rendering",
     "venue": "SIGGRAPH",
+    "year": 2026
+  },
+  "liu2020": {
+    "authors": "Liu et al.",
+    "title": "Phasor field diffraction based reconstruction for fast non-line-of-sight imaging systems",
+    "venue": "Nat. Comm.",
+    "year": 2020
+  },
+  "shen2025": {
+    "authors": "Shen et al.",
+    "title": "HOLI-1-to-3: Transient-enhanced holistic image-to-3D generation",
+    "venue": "TPAMI",
+    "year": 2025
+  },
+  "ren2025": {
+    "authors": "Ren et al.",
+    "title": "GEN3C: 3D-informed world-consistent video generation with precise camera control",
+    "venue": "CVPR",
+    "year": 2025
+  },
+  "shen2026": {
+    "authors": "Shen et al.",
+    "title": "Lyra 2.0: Explorable generative 3D worlds",
+    "venue": "arXiv",
     "year": 2026
   }
 }

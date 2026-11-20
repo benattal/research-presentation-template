@@ -7,15 +7,16 @@
     "our contribution"
   ],
   "credits": [
-    {
-      "source": "lindell2019",
-      "what": "data"
-    }
+    "lindell2019",
+    "liu2020",
+    "shen2025",
+    "ren2025",
+    "shen2026"
   ],
   "video": {
     "src": "/slides/related-work/methods.mp4",
     "poster": "/slides/related-work/methods.poster.jpg",
-    "alt": "Five clips from a moving camera. The maximum-intensity projection of the f-k migration volume of a captured bicycle. The maximum-intensity projection of the fast RSD volume of a simulated living room. Novel views by HOLI-1-to-3* of the captured scene with a hidden lamp, incoherent behind the book. Novel views by GEN3C* of the same scene, with a vase in place of the lamp. Novel views by Lyra 2 of a simulated room, without the furniture behind the wall",
+    "alt": "Five clips from a moving camera. The maximum-intensity projection of the f-k migration volume of a captured bicycle. The maximum-intensity projection of the fast RSD volume of a captured office, with a shelf and a chair. HOLI-1-to-3 turning its reconstruction of a toy figure, from its paper's video. Novel views by GEN3C of a wall of televisions, from one image. Novel views by Lyra 2 of a medieval town square, from one image",
     "tileSize": 300,
     "tileLefts": [
       0,
@@ -55,18 +56,8 @@
           "name": "Generative NLOS",
           "tiles": [
             {
-              "method": "HOLI-1-to-3*",
+              "method": "HOLI-1-to-3",
               "frame": 2,
-              "boxes": [
-                {
-                  "x": 0.33,
-                  "y": 0.27,
-                  "width": 0.4,
-                  "height": 0.7,
-                  "from": 1.9,
-                  "to": 3.95
-                }
-              ],
               "citation": "Shen et al. 2025"
             }
           ],
@@ -86,18 +77,8 @@
         {
           "tiles": [
             {
-              "method": "GEN3C*",
+              "method": "GEN3C",
               "frame": 3,
-              "boxes": [
-                {
-                  "x": 0.33,
-                  "y": 0.27,
-                  "width": 0.4,
-                  "height": 0.7,
-                  "from": 1.9,
-                  "to": 3.95
-                }
-              ],
               "citation": "Ren et al. 2025"
             },
             {
@@ -116,6 +97,5 @@
       ]
     }
   ],
-  "note": "* our reimplementation",
   "contribution": "Ours: generative view synthesis from propagating light"
 }
