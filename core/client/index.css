@@ -768,3 +768,8 @@ kbd {
   color: var(--text-muted);
   z-index: 2;
 }
+
+/* One credit of the line, kept whole: the line wraps only between credits. */
+.slide-credit {
+  white-space: nowrap;
+}

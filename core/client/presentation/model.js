@@ -9,6 +9,9 @@
 
 import { mathProblems } from '../stage/math.js';
 
+/** Between the entries of a slide's credit line; the credit line breaks only here. */
+export const CREDIT_SEPARATOR = ' · ';
+
 /** Thrown when a presentation's files do not form a valid presentation. */
 export class PresentationError extends Error {
   constructor(problems) {
@@ -118,7 +121,7 @@ export function buildPresentation({ id, manifest, slideContents, layouts, baseUr
       }
       slides.push({
         ...prefixAssetPaths(structuredClone(content), baseUrl),
-        ...(credits.length > 0 ? { creditLine: credits.map((credit) => formatCredit(sources[credit.source], credit.what)).join(' · ') } : {}),
+        ...(credits.length > 0 ? { creditLine: credits.map((credit) => formatCredit(sources[credit.source], credit.what)).join(CREDIT_SEPARATOR) } : {}),
         id: slideId,
         index: slides.length,
         sectionId: section.id,
