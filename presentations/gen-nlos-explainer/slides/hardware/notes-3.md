@@ -1,1 +1,1 @@
-We also capture a steady-state RGB image from the same viewpoint.
+A beam splitter separates the returning light from the outgoing pulse.

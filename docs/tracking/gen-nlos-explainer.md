@@ -19,6 +19,28 @@ slide rules are in [slide style](../style/slides.md) and
 
 2026-11-19, night (collaborator, second Mac):
 
+- Of slide 8 (hardware prototype): "这几个线可以稍微斜着一点吗现在有点丑
+  还需要标记一个beam splitter 然后在一个动画应该是把这些标志收起来
+  然后展示propagating light video，和RGB 现在只展示了RGB". Done: labels
+  take `labelY`, so each line runs at a slant from its label to its part;
+  "Beam splitter" marks the cage cube between the detector's lens and the
+  laser (x 0.6, y 0.36; to confirm), shown with the detector at step 3;
+  at step 4 the labels fade, the photo moves left, and the insets (now
+  `insets.items`) show the light video (`light-video`'s, copied to
+  `public/slides/hardware/`, not yet in the bucket) and the steady-state
+  image side by side. Step 4's note still names only the RGB image.
+- Then: "那个文字可以离图片上那个点再近一些 尤其beams 和mirrors 还有laser
+  稍微近一些 然后是一个一个的出 从laser 到mirror 到SPAD 然后出那个video和RGB的时候
+  这两个能不能再大一点". Done: labels take `labelX`, so each sits just
+  beside its part; one label per step (laser, mirrors, detector, beam
+  splitter: five steps now, a hold added in `recording.json`); the
+  insets are 340 px with the photo shrunk to 0.7 (`photoScale`); then
+  "左边这个硬件图缩的有点太小了 可以再大点": photo at 0.85, insets 330 px,
+  overlapping the photo's black margin by 30 px (`insets.gap`). The RGB
+  note moved to `notes-4.md`; `notes-3.md` is a draft for the beam
+  splitter ("A beam splitter separates the returning light from the
+  outgoing pulse."), to confirm.
+
 - Of slide 7 (lidar capture), step 3: the relay wall keeps the three
   points and the plot keeps the three curves, so "上面那个video那边也应该把三个点都保留一下",
   then "只是说可能过去的会灰度一些 就像左下角的曲线一样". Done: the

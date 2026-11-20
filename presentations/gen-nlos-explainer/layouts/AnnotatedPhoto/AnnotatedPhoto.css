@@ -17,18 +17,25 @@
 .annotated-photo-figure {
   position: relative;
   flex: none;
+  transition: transform 700ms ease-in-out;
 }
 
 .annotated-photo-image {
   position: absolute;
   top: 0;
   display: block;
+  transform-origin: left center;
+  transition: transform 700ms ease-in-out;
 }
 
 .annotated-photo-label-layer,
 .annotated-photo-lines {
   position: absolute;
   inset: 0;
+}
+
+.annotated-photo-label-layer {
+  transition: opacity 400ms ease;
 }
 
 .annotated-photo-lines line {
@@ -53,14 +60,20 @@
   text-align: right;
 }
 
+/* Insets sit at the photo's middle height, and fade in as the photo moves aside. */
 .annotated-photo-inset {
   position: absolute;
-  bottom: 0;
+  top: 50%;
   margin: 0;
+  transform: translateY(-50%);
+  transition: opacity 500ms ease 300ms;
 }
 
-.annotated-photo-inset img {
+.annotated-photo-inset-media {
   display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
 }
 
 .annotated-photo-inset figcaption {
