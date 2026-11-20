@@ -2,9 +2,9 @@
    their citations, strengths and limitations), the contribution panel under
    them. Tiles are canvases drawn from one video kept under the panels. */
 .slide--related-work {
-  --related-work-tile: 160px;
-  --related-work-gap: 14px;       /* between tiles, and between list lines */
-  --related-work-column-gap: 28px;
+  --related-work-tile: 180px;
+  --related-work-gap: 16px;       /* between tiles, and between list lines */
+  --related-work-column-gap: 32px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -158,6 +158,14 @@
 .related-work-con::before {
   content: '\2212  ';
 }
+
+/* Both wordings occupy one cell; the group fades behind the contribution. */
+.related-work-con-text { display: inline-grid; }
+.related-work-con-was, .related-work-con-now { grid-area: 1 / 1; transition: opacity 400ms ease; }
+.related-work-con-now, .related-work-con--solved .related-work-con-was { opacity: 0; }
+.related-work-con--solved .related-work-con-now { opacity: 1; }
+.related-work-con--solved { color: var(--accent); }
+.related-work-con--solved::before { content: '\2713  '; }
 
 /* The contribution sits over the faded groups without shifting them. */
 .related-work-contribution {

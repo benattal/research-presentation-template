@@ -35,9 +35,10 @@ figures folder (read-only).
 
 Every clip is 29 frames at 15 fps and plays as the results slides' clips do
 (results.sh): forward, 2 s on the last view, back, 0.5 s on the first view, a
-6.27 s loop; HOLI-1-to-3's turn spans the same loop. One file holds the five tiles, so they stay in step: 300 px squares
-(200 stage pixels at 1.5x) at the offsets of TILE_LEFT, the gaps black, as the
-layout RelatedWork places its windows.
+6.27 s loop; HOLI-1-to-3's turn spans the same loop. One file holds the five
+tiles, so they stay in step: 300 px squares (the layout shows them at 180 stage
+pixels) at the offsets of TILE_LEFT, the gaps black; the layout RelatedWork
+draws each square onto its tile's canvas.
 
 Run from the presentation directory:  python media/related-work.py
 Needs numpy, numba, and ffmpeg.

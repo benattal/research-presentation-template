@@ -6,13 +6,6 @@
     "generative view synthesis",
     "our contribution"
   ],
-  "credits": [
-    "lindell2019",
-    "liu2020",
-    "shen2025",
-    "ren2025",
-    "shen2026"
-  ],
   "video": {
     "src": "/slides/related-work/methods.mp4",
     "poster": "/slides/related-work/methods.poster.jpg",
@@ -48,8 +41,14 @@
             "Accurate hidden geometry"
           ],
           "cons": [
-            "Not photorealistic",
-            "Mostly planar relays"
+            {
+              "text": "Not photorealistic",
+              "solved": "Photorealistic"
+            },
+            {
+              "text": "Mostly planar relays",
+              "solved": "Nonplanar relays"
+            }
           ]
         },
         {
@@ -65,8 +64,14 @@
             "Photorealistic"
           ],
           "cons": [
-            "Per-scene optimization",
-            "Single object"
+            {
+              "text": "Per-scene optimization",
+              "solved": "No per-scene optimization"
+            },
+            {
+              "text": "Single object",
+              "solved": "Complex scenes"
+            }
           ]
         }
       ]
@@ -91,7 +96,10 @@
             "Photorealistic novel views"
           ],
           "cons": [
-            "Hidden content is hallucinated"
+            {
+              "text": "Hidden content is hallucinated",
+              "solved": "Grounded in measured light"
+            }
           ]
         }
       ]

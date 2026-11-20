@@ -37,7 +37,8 @@ const CONTEXT = 0.05;
  *                                the panels layout's ({ x, y, width, height }
  *                                in fractions of the tile, with optional
  *                                { from, to } in seconds of the video);
- *                    pros, cons  short phrases.
+ *                    pros        short phrases;
+ *                    cons        each { text, solved } for a limitation and its corresponding contribution.
  *   contribution   the line shown, in its panel, on the last step.
  *   contributionPros  strengths listed in green beneath the contribution.
  *   note           optional: a short line under the panels, at their left
@@ -54,7 +55,12 @@ export default function RelatedWork({ slide, buildStep }) {
   if (stepCount(slide) !== groups.length + 1) {
     throw new Error(`Slide "${slide.id}": the relatedWork layout needs ${groups.length + 1} build steps, one per group and one for the contribution`);
   }
+  const unsolved = groups.flatMap((group) => group.columns.flatMap((column) => column.cons)).filter((con) => !con?.text || !con?.solved);
+  if (unsolved.length > 0) {
+    throw new Error(`Slide "${slide.id}": every limitation needs text and solved descriptions`);
+  }
   useTileFrames(videoHolder, canvases, video);
+  const solved = buildStep >= groups.length;
   const spotlight = (index) => {
     if (buildStep >= groups.length) return CONTEXT;
     return buildStep === index ? 1 : DIMMED;
@@ -102,7 +108,14 @@ export default function RelatedWork({ slide, buildStep }) {
                         </div>
                         <ul className="related-work-traits">
                           {column.pros.map((pro) => <li key={pro} className="related-work-pro"><Text>{pro}</Text></li>)}
-                          {column.cons.map((con) => <li key={con} className="related-work-con"><Text>{con}</Text></li>)}
+                          {column.cons.map((con) => (
+                            <li key={con.text} className={`related-work-con${solved ? ' related-work-con--solved' : ''}`}>
+                              <span className="related-work-con-text">
+                                <span className="related-work-con-was"><Text>{con.text}</Text></span>
+                                <span className="related-work-con-now"><Text>{con.solved}</Text></span>
+                              </span>
+                            </li>
+                          ))}
                         </ul>
                       </div>
                     ))}
