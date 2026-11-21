@@ -3,12 +3,13 @@
  * presentation in either hosting mode, a browser, and error collection.
  *
  * The browser is Playwright's Chromium unless UI_TEST_BROWSER names an
- * installed channel (`msedge`, `chrome`).
+ * installed channel (`msedge`, `chrome`) or `webkit`, Playwright's build of
+ * Safari's engine.
  */
 import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { chromium } from 'playwright';
+import { chromium, devices, webkit } from 'playwright';
 import { createServer } from 'vite';
 import { createGateway } from '../../core/server/gateway.js';
 import { REPO_ROOT } from '../../core/tooling/presentations.js';
@@ -49,9 +50,6 @@ export function longDeck(count) {
 /** Local mode: a Vite development server for one presentation, on a free port. */
 export async function startLocal(presentation) {
   const config = createViteConfig({ presentation, base: '/', live: false, server: { port: 0, host: '127.0.0.1' } });
-  // The configuration serves files from the repository only; a generated
-  // presentation (`longDeck`) lives in a temporary directory outside it.
-  config.server.fs.allow.push(presentation.dir);
   const server = await createServer({ ...config, logLevel: 'error' });
   await server.listen();
   return { url: server.resolvedUrls.local[0], close: () => server.close() };
@@ -85,17 +83,31 @@ export async function startLive(presentations, settings = { votingOpen: true, pr
 }
 
 export async function launchBrowser() {
-  const channel = process.env.UI_TEST_BROWSER;
+  const choice = process.env.UI_TEST_BROWSER;
   try {
-    return await chromium.launch(channel ? { channel } : {});
+    if (choice === 'webkit') return await webkit.launch();
+    return await chromium.launch(choice ? { channel: choice } : {});
   } catch (error) {
     throw new Error(
-      `Could not start the test browser (${channel ?? 'Playwright Chromium'}). Run `
-      + '"npx playwright install chromium", or set UI_TEST_BROWSER=msedge or chrome.\n'
+      `Could not start the test browser (${choice ?? 'Playwright Chromium'}). Run `
+      + `"npx playwright install ${choice === 'webkit' ? 'webkit' : 'chromium'}", or set UI_TEST_BROWSER=msedge or chrome.\n`
       + error.message,
     );
   }
 }
+
+/**
+ * A tablet and a phone, as Playwright describes them (screen size, pixel
+ * ratio, touch, a pointer that cannot hover), each held both ways. The
+ * `defaultBrowserType` of a descriptor is left out: the browser is the one
+ * `launchBrowser` started.
+ */
+export const TOUCH_DEVICES = Object.fromEntries(
+  ['iPad (gen 7)', 'iPad (gen 7) landscape', 'iPhone 13', 'iPhone 13 landscape'].map((name) => {
+    const { defaultBrowserType, ...descriptor } = devices[name];
+    return [name, descriptor];
+  }),
+);
 
 /** A 1280×720 page whose uncaught exceptions and console errors land in `page.errors`. */
 export async function newPage(context) {

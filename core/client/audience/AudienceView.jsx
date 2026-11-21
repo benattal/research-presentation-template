@@ -33,9 +33,13 @@ function openPresenterWindow() {
  *
  * `?bars=hidden` in the URL leaves out both bars, so the stage fills the
  * window; every input below still works. `npm run record` films this.
+ * `?review` adds the current slide's id and build step to the navigation
+ * bar, so that a screenshot of the page says which slide and step it shows.
  *
  * Input comes from the keyboard (see `useKeyboardNavigation` for the keys),
- * swipes, the navigation bar, and the presenter window. While the live
+ * swipes, the navigation bar, and the presenter window. Every key's action
+ * can also be done by touch: the bar's arrows and dots, the slide number
+ * (it opens the overview), and the toolbar. While the live
  * server's follow-the-presenter mode is on, a non-presenter browser ignores
  * its own input and moves with the presenter instead.
  */
@@ -50,7 +54,9 @@ export default function AudienceView({ presentation }) {
   });
   const { isFullscreen, toggleFullscreen } = useFullscreen();
   const [showOverview, setShowOverview] = useState(false);
-  const barsHidden = new URLSearchParams(window.location.search).get('bars') === 'hidden';
+  const query = new URLSearchParams(window.location.search);
+  const barsHidden = query.get('bars') === 'hidden';
+  const review = query.has('review');
 
   // The slides after the one the view opened on first, then the ones before it.
   const openedAt = useState(navigation.position.index)[0];
@@ -72,7 +78,8 @@ export default function AudienceView({ presentation }) {
   useAudienceChannel({ position: navigation.position, onCommand: onPresenterCommand });
 
   const keyActions = useMemo(() => {
-    const actions = { toggleFullscreen, openPresenterWindow };
+    const actions = { openPresenterWindow };
+    if (toggleFullscreen) actions.toggleFullscreen = toggleFullscreen;
     if (!following) {
       Object.assign(actions, {
         next: navigation.next,
@@ -117,19 +124,23 @@ export default function AudienceView({ presentation }) {
           next={navigation.next}
           previous={navigation.previous}
           goTo={navigation.goTo}
+          openOverview={following ? undefined : () => setShowOverview(true)}
           disabled={following}
+          review={review}
           toolbar={(
             <div className="toolbar-buttons">
               {presentation.backLink && (
                 <a className="toolbar-btn" href={presentation.backLink} title="Back">&#8592;</a>
               )}
-              <button
-                className="toolbar-btn"
-                onClick={toggleFullscreen}
-                title={isFullscreen ? 'Exit fullscreen (F)' : 'Fullscreen (F)'}
-              >
-                &#x26F6;
-              </button>
+              {toggleFullscreen && (
+                <button
+                  className="toolbar-btn"
+                  onClick={toggleFullscreen}
+                  title={isFullscreen ? 'Exit fullscreen (F)' : 'Fullscreen (F)'}
+                >
+                  &#x26F6;
+                </button>
+              )}
               <button className="toolbar-btn" onClick={openPresenterWindow} title="Open presenter notes (P)">
                 &#x1F4CB;
               </button>

@@ -7,7 +7,9 @@
  *   npm run dev [-- <id>] [--port 5173] [--host]
  *
  * The id may be left out when the repository has one presentation.
- * `--host` listens on the network as well as on this machine.
+ * `--host` listens on the network as well as on this machine, to review
+ * the deck on a tablet or phone: every device on the network can then read
+ * the slides and their notes, so use it on a network you trust.
  */
 import { parseArgs } from 'node:util';
 import { createServer } from 'vite';
@@ -33,4 +35,8 @@ await server.listen();
 
 console.log(`\n  ${presentation.manifest.title} (presentations/${presentation.id})`);
 server.printUrls();
-console.log('  Presenter window: press P, or add ?mode=presenter to the URL.\n');
+console.log('  Presenter window: press P, or add ?mode=presenter to the URL.');
+for (const url of server.resolvedUrls.network) {
+  console.log(`  Review on a tablet or phone, each slide's id and step in the bar: ${url}?review`);
+}
+console.log('');
