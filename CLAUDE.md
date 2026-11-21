@@ -40,6 +40,13 @@ conclusions belong in `docs/tracking/`; intended work belongs in
   commit as the slides it describes. Do not serve a skeleton of
   placeholder slides, and do not start narration, recording, or other
   later stages before the slides exist.
+- Offer the review skills. When work on a presentation starts or resumes,
+  ask the user once whether they want to watch the deck while it is edited
+  (`live-feedback`) and send marked-up screenshots from a tablet or phone
+  (`feedback-inbox`). [README.md](README.md) lists every skill, and
+  [reviewing on a tablet](docs/workflows/reviewing-on-a-tablet.md) is the
+  procedure. `--host` puts a deck's slides and notes on the network: use it
+  on a network the user trusts.
 
 ## Instruction currency
 
@@ -236,7 +243,8 @@ content to silence a warning.
   each lecture are available in that lecture folder". `npm run new` writes
   it; `npm test` fails without it.
 - Never print, commit, or upload credentials.
-- `data/captures/`, `dist/`, `.live-state/`, and `.env` are ignored.
+- `data/captures/`, `data/feedback/` (the screenshots a user sends as
+  feedback), `dist/`, `.live-state/`, and `.env` are ignored.
 - Plans describe intended work. Trackers record changing state, newest entry
   first. Implementation and style documents contain only durable facts.
 

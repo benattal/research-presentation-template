@@ -46,6 +46,75 @@ drive the slides.
 | P | presenter window |
 | C | reset the current slide's poll (live mode, presenter only) |
 
+## Reviewing on an iPad or iPhone
+
+A deck can be read on a tablet or phone on the same network while it is
+edited on the computer, and marked-up screenshots sent back to the agent
+that edits it. [Reviewing on a tablet or phone](docs/workflows/reviewing-on-a-tablet.md)
+is the full procedure.
+
+**Serve it.**
+
+```bash
+npm run dev -- <id> --host
+```
+
+Open the address it prints for review (the "Network" address with
+`?review`) in Safari on the device. Both are on the same Wi-Fi; on Windows,
+allow Node through the firewall when asked. Every device on that network
+can read the slides and their notes, so use a network you trust. The page
+on the device reloads by itself when a slide is saved.
+
+**Move through it.** Everything works by touch:
+
+| Touch | Action |
+|---|---|
+| swipe left or right, or the bar's arrows | next or previous build step or slide |
+| a dot in the bar | that slide |
+| the slide counter (`12 / 40`) | slide overview; × or a card closes it |
+| the toolbar, bottom left | fullscreen (not on an iPhone), presenter window |
+
+With `?review`, the bar also names the slide's id and build step, so a
+screenshot says what it shows. Add the page to the Home Screen to open it
+without Safari's bars. The two-window presenter view needs a computer.
+
+**Send feedback.** Claude Code's Remote Control connects the Claude app on
+the device to a session on the computer (a claude.ai login on a paid plan,
+the same account on both):
+
+1. In a second terminal, in the checkout, start a small-model session for
+   the device and ask it to run the feedback inbox:
+
+   ```bash
+   claude --model haiku --remote-control
+   ```
+
+2. Open that session in the Claude app. Take a screenshot of a slide with
+   the bar showing, mark it up, save it to Files, attach it, and send.
+3. The inbox works out which slide and step the screenshot shows and hands
+   it, whole, to the session editing that slide, which makes the change
+   and says what to look at.
+
+With a single session, start that session with `/remote-control` and send
+the screenshots straight to it. Screenshots are kept in `data/feedback/`,
+which git ignores.
+
+## Skills for agents
+
+`.claude/skills/` holds the procedures an agent follows here; Claude Code
+loads them by name (`/<name>`) or when the task matches. An agent starting
+work on a presentation asks the user whether they want the two review
+skills.
+
+| Skill | Use it to |
+|---|---|
+| `start-presentation` | start a deck or a new section: its type, a plan with a storyboard, then slides |
+| `validate-slides` | screenshot every slide and build step and review the frames |
+| `sync-assets` | pull a presentation's media from the bucket, or push new media |
+| `narrated-video` | record a run-through, with or without a synthesized voiceover |
+| `live-feedback` | edit a deck while the user watches it on another screen: serve it, take each remark at a safe point, keep the page loading |
+| `feedback-inbox` | receive marked-up screenshots from a tablet or phone, place each on its slide, and pass it to the session editing that slide |
+
 ## A presentation
 
 ```text
@@ -69,9 +138,9 @@ and [docs/implementation/layouts.md](docs/implementation/layouts.md).
 
 | Command | What it does |
 |---|---|
-| `npm run dev -- <id>` | local mode: one presentation on a Vite dev server, no backend |
+| `npm run dev -- <id>` | local mode: one presentation on a Vite dev server, no backend; `--host` also serves it to the network, for a tablet or phone |
 | `npm run build -- <id>` | static build in `dist/<id>/`, openable from any static host |
-| `npm run preview -- <id>` | serve that build on this machine |
+| `npm run preview -- <id>` | serve that build on this machine; `--host` as for `dev` |
 | `npm run serve` | live mode for development: every presentation at `/<id>/` with presenter login, polls, follow-the-presenter |
 | `npm run build:live` then `npm start` | live mode for production |
 | `npm run new -- <id>` | start a presentation |

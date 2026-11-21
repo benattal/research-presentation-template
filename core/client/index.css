@@ -298,10 +298,11 @@ html {
   margin-left: 4px;
 }
 
-/* Where a finger points, a dot's slot is as tall as the buttons beside it. */
+/* Where a finger points, a dot's slot is as tall as the buttons beside it
+   (48px with the row's padding), so the bar keeps its height. */
 @media (pointer: coarse) {
   .nav-dot {
-    height: 44px;
+    height: 40px;
   }
 }
 

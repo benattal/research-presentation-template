@@ -2,9 +2,12 @@
 
 [Plan](../plans/ipad-review.md)
 
-Current state: the plan is written and nothing is built. The explainer is
-being served on the network for the user's first pass on an iPad. Resume
-from the newest entry below.
+Current state: everything that needs no device is built and tested: the
+touch fixes, the narrower file serving, the browser tests, the two skills,
+and the documentation. Open: the user's pass on an iPad and an iPhone, the
+control tests of the feedback path, the two skills' gates, and merging
+`main` into `guest-lecture` and `vision-workshop`. Resume from the newest
+entry below.
 
 ## Standing directions
 
@@ -35,6 +38,85 @@ Every direction the user gives about this work, quoted and dated.
   be able access it, take screenshots of slides, annotate (locally on the
   iPad), and upload screenshots to provide comments? No development yet,
   just scoping this feature out"
+
+## 2026-11-21 18:40 — built: touch fixes, file serving, tests, skills, documentation
+
+User direction (2026-11-21): "Please implement docs\plans\ipad-review.md",
+and, while that was under way, "Please also note these skills that you
+create in the README so that they can readily be used by agents. An agent
+might ask the user if they want to use these skills when working on a
+presentation".
+
+The plan made each behavior change the user's decision. The direction to
+implement the plan was taken as the yes for the changes the plan
+recommended; that reading is the agent's, and each change is listed in the
+plan under "Behavior changes" so that any of them can be turned down.
+
+- Done, on the branch `ipad-review` from `main`, in a worktree beside the
+  checkout (`../rpt-ipad-review`, removed after the merge):
+  - touch fixes and behavior changes in `core/client/` (the plan's "Design
+    as built" lists each with its file);
+  - `servedFiles` in `core/tooling/viteConfig.js`; `--host` for
+    `npm run preview`; the review address printed by `npm run dev --host`;
+  - tests in `tests/ui/audience.test.mjs` and
+    `tests/ui/errorsAndHosting.test.mjs`; `TOUCH_DEVICES` and
+    `UI_TEST_BROWSER=webkit` in `tests/ui/harness.mjs`;
+  - the skills `.claude/skills/feedback-inbox/` and
+    `.claude/skills/live-feedback/`; `/data/feedback/` in `.gitignore`;
+  - `README.md` (reviewing on an iPad or iPhone; skills for agents),
+    `docs/workflows/reviewing-on-a-tablet.md`, hosting, testing,
+    architecture, presentation format, `making-a-presentation`, the
+    `start-presentation` skill, and a rule in `CLAUDE.md` and `AGENTS.md`
+    to offer the review skills.
+- Looked at: screenshots of the fixture deck in Chromium's emulation of an
+  iPhone 13 and an iPad, both ways, with `?review`: the toolbar shows at
+  rest, the counter and the review label sit at the right of the bar, the
+  overview has its close button. One thing seen and not changed: an
+  overview card shows a title's math as its source (`$x_k$`).
+- Probed: Playwright's `hasTouch` makes `(hover: none)` and
+  `(pointer: coarse)` match in Chromium, so the touch contexts of the
+  tests exercise the two media queries.
+- Audit of drags, on every branch (`git grep` for a canvas or SVG with
+  pointer, mouse, or touch handlers): all but two already sit in a box
+  marked `data-no-swipe`. The two are in the plan under "On merging into a
+  project branch" (`EmbeddingScatterPlot` on `vision-workshop`;
+  `RoomView` on `guest-lecture`, whose dragging callers are marked).
+- Audit of hover and mouse:
+  - core layouts: every `:hover` is a highlight on something that also
+    works by tap (`colab-button`, `discussion-prompt`, `np-submit`,
+    `poll-option`, `links-card`); no `onMouse*` handler. Touch works.
+  - core, presenter view: the message of a formula KaTeX cannot render is
+    a `title`, seen only on hover. Open; the presenter view is for a
+    computer.
+  - `gen-nlos-explainer` layouts: no hover rule and no pointer, mouse,
+    touch, or click handler. Every slide only shows, so a swipe may start
+    anywhere on it.
+  - `light-transport-and-neural-rendering` layouts: `OperatorExplorer`
+    shows `.operator-controls` on `.operator-render:hover`, and
+    `AdjointViews` tracks `onMouseMove` for a cursor. Open, on
+    `guest-lecture`.
+  - `vision-workshop` layouts: eight files with `:hover` highlights; no
+    hover-revealed control and no mouse-only handler.
+- Checked that no presentation on this checkout imports a file outside
+  its own directory, `@core`, and installed packages (so `servedFiles`
+  covers what a deck loads).
+- Control test 3, in part: `ListAgents` on this machine (Claude Code
+  2.1.330, native Windows) lists the other sessions by name. A path sent
+  and opened is not yet observed.
+- The user's report (2026-11-21): "The heavily cluttered room video seems
+  to be broken." "On the ipad". Found: the summary slide's image
+  `public/slides/summary/robot-outlook-busy-room.png` (alt text: "a mobile
+  robot with lidar facing a heavily cluttered bedroom") is not on this
+  machine; the server answers the request with the page (745 bytes,
+  `text/html`). It is one of the three files `npm run check` reports
+  missing, named by the commit ee7064a. Not a touch or iPad defect; the
+  fix is pulling the media, which needs the rclone remote. Every video of
+  the explainer is at most 1752×780, H.264 level 4.0 or lower.
+- Checked: see the results below.
+- Next: the user's device pass (plan todo 1) and the control tests
+  (todo 2).
+
+RESULTS_PLACEHOLDER
 
 ## 2026-11-21 17:05 — plan written; the explainer is served on the network
 

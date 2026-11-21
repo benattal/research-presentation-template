@@ -32,10 +32,33 @@ watching):
 ```bash
 npm run build -- <id>        # dist/<id>/, built with a relative base
 npm run preview -- <id>      # http://localhost:4173/
+npm run preview -- <id> --host   # the build, on the network as well
 ```
 
 `dist/<id>/` uses relative paths, so it can also be copied to any static
 host or opened under any URL prefix.
+
+### On the network
+
+`--host` makes either server reachable from a tablet or phone on the same
+network, to read a deck there while it is edited
+([reviewing on a tablet](../workflows/reviewing-on-a-tablet.md)). The
+development server then prints its network address, and that address with
+`?review`, which names each slide's id and build step in the navigation
+bar.
+
+Every device on the network can read what the server hands out, so use
+`--host` on a network you trust. The development server reads three places
+from disk: the client (`core/client/`), the presentation's directory, and
+`node_modules/`. It refuses the rest of the checkout and the
+presentation's `assets/` (`servedFiles` in `core/tooling/viteConfig.js`).
+A deck's slides, presenter notes, and media are the deck, and are served.
+The static build serves `dist/<id>/` only. Saving notes from the presenter
+window stays limited to this machine (`core/tooling/notesWriter.js`).
+
+The audience view works by touch: swipes, the bar's arrows, the slide
+counter for the overview, and a toolbar that shows without hover. The
+two-window presenter view needs a computer.
 
 ## Live mode
 

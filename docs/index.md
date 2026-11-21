@@ -37,6 +37,9 @@ and checks.
   narration, recording, in gates
 - [Working together](workflows/working-together.md): several people and
   sessions on one branch
+- [Reviewing on a tablet or phone](workflows/reviewing-on-a-tablet.md):
+  the deck on an iPad or iPhone while it is edited, and marked-up
+  screenshots sent back through Remote Control
 
 ## Environments
 

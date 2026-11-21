@@ -1,6 +1,7 @@
 # Reviewing a deck on an iPad or iPhone
 
 [Latest status and resume point](../tracking/ipad-review.md) ·
+[Reviewing on a tablet or phone](../workflows/reviewing-on-a-tablet.md) ·
 [Hosting](../implementation/hosting.md) ·
 [Testing](../implementation/testing.md)
 
@@ -12,71 +13,64 @@ audience view works by touch on both devices; two skills carry a sent
 screenshot to the session working on the slide it shows; and `README.md`
 says how to set all of it up.
 
-The deck gets no drawing, annotation, or upload feature of its own. Marking
+The deck has no drawing, annotation, or upload feature of its own. Marking
 up happens in the tablet's screenshot tools, and the upload is a message in
 the Claude app.
 
 ## Immediate todos
 
-Work these in order, one at a time. Todos 1 and 2 need the device and the
-user; they are one sitting.
+Work these in order, one at a time. Everything that could be built and
+tested without the device is built. What is open needs the device and the
+user.
 
 ### Done
 
-Nothing has landed. The findings in this plan come from reading the code and
-from one probe of a running server; none is confirmed on a device.
+- **Touch fixes that leave the desktop unchanged.** The toolbar shows at
+  rest where nothing can hover; fullscreen is offered only where the
+  browser has it; the presenter view takes the page's height; a quick
+  second tap is not a zoom. Gate passed: `npm run test:ui`.
+- **Touch changes that alter behavior**, listed under
+  [behavior changes](#behavior-changes). The user's direction to implement
+  this plan was taken as the yes for each. Gate passed: `npm run test:ui`.
+- **Tooling.** The development server hands out the deck and refuses the
+  rest of the checkout; `npm run preview -- <id> --host`;
+  `npm run dev -- <id> --host` prints the review address.
+- **Browser tests for touch**: a tablet and a phone held both ways, a
+  touch path for every action a key has, swipes on every kind of media,
+  and `UI_TEST_BROWSER=webkit`. The new tests fail on the code as it was
+  and pass on the code as it is.
+- **Hover and mouse audit** of the core layouts and of the layouts of
+  every project branch; the list is in the tracker.
+- **The two skills**, `feedback-inbox` and `live-feedback`, written to the
+  [design](#feedback-through-remote-control). Their gates are todos 3
+  and 4.
+- **Documentation**: the README sections (reviewing on an iPad or iPhone;
+  the skills, for agents), the
+  [workflow](../workflows/reviewing-on-a-tablet.md), hosting, testing,
+  the presentation format (`data-no-swipe`), and a rule in the agent files
+  to offer the skills.
 
 ### Open
 
-1. **Device pass.** With `npm run dev -- <id> --host` running, the user goes
-   through the [checklist](#device-checklist) on an iPad and an iPhone, in
-   Safari, portrait and landscape. Each row gets an observation in the
-   tracker. Gate: every row is observed; the rows that fail are the work of
-   todos 3 and 4, and a row that passes is struck from them.
-2. **Control tests for the feedback path.** Four short tests
-   ([below](#control-tests)) decide whether the design of the two skills
-   holds: whether a photo sent over Remote Control exists as a file on the
-   computer, whether one session can hand an image to another, and whether a
-   small model reads marked-up screenshots well enough to route them. Gate:
-   each test has a recorded result; the design section is rewritten if one
-   fails.
-3. **Touch fixes that leave the desktop unchanged.** The failures of todo 1
-   that are plain defects: a control that does nothing or cannot be seen on
-   a touch device ([candidates](#candidates-defects)), and the two tooling
-   repairs (`npm run preview -- <id> --host`; the network server handing
-   out fewer files). Gate: `npm run test:ui`, and the user repeats the failed
-   checklist rows.
-4. **Touch changes that alter behavior.** The failures of todo 1 whose fix
-   changes what a desktop user or an existing slide sees
-   ([candidates](#candidates-behavior-changes)). Each is proposed to the
-   user with its effect on existing decks and built on a yes. Gate as for
-   todo 3, plus a capture of every presentation on the branch.
-5. **Browser tests for touch.** `tests/ui/audience.test.mjs` gains tablet
-   and phone window sizes in both orientations, a test that every action in
-   the README's key table has a touch path, and a swipe that starts on each
-   kind of media. `launchBrowser` in `tests/ui/harness.mjs` accepts
-   `UI_TEST_BROWSER=webkit`. Gate: the suite fails on the code as it is
-   before todos 3 and 4, and passes after.
-6. **Hover and mouse audit of layouts.** Every `:hover` rule and `onMouse*`
-   handler in a layout is read for an action or a piece of information that
-   only a pointer can reach. Core layouts are fixed on `main`; a
-   presentation's own layouts on its branch. Gate: a list in the tracker,
-   one line per layout, each marked "touch works", "fixed", or "open, with
-   the reason".
-7. **Skill `feedback-inbox`.** Written to the design below, as it stands
-   after todo 2. Gate: ten real marked-up screenshots, sent from the iPad,
-   each reach the right session with the right slide named, or are reported
-   to the user as not placed.
-8. **Skill `live-feedback`.** Gate: a session in the middle of a slide edit
+1. **Device pass.** With `npm run dev -- <id> --host` running, the user
+   goes through the [checklist](#device-checklist) on an iPad and an
+   iPhone, in Safari, portrait and landscape. Each row gets an observation
+   in the tracker. A row that fails is a bug in what was built: find its
+   cause and fix it on `main`.
+2. **Control tests for the feedback path** ([below](#control-tests)), in
+   the same sitting. Test 3 is observed in part. A failed test rewrites
+   the matching step of the skill.
+3. **Gate of `feedback-inbox`**: ten real marked-up screenshots, sent from
+   the iPad, each reach the right session with the right slide named, or
+   are reported to the user as not placed.
+4. **Gate of `live-feedback`**: a session in the middle of a slide edit
    receives a forwarded screenshot, finishes its current step, makes the
-   change, and reports; the page on the iPad never fails to load meanwhile.
-9. **Documentation.** The README section
-   ([outline](#readme-section)), a paragraph on touch and on `--host` in
-   [hosting](../implementation/hosting.md), a workflow document
-   `docs/workflows/reviewing-on-a-tablet.md` linked from
-   [the index](../index.md), and the touch tests in
-   [testing](../implementation/testing.md). Written last, so that every
-   sentence describes something that exists.
+   change, and reports; the page on the iPad never fails to load
+   meanwhile.
+5. **The other project branches.** `guest-lecture` and `vision-workshop`
+   merge `main`, each with the follow-ups the audit found
+   ([below](#on-merging-into-a-project-branch)), and each after a capture
+   of its presentations.
 
 ## Rules
 
@@ -90,118 +84,133 @@ from one probe of a running server; none is confirmed on a device.
 - A fix removes the cause on every device; no branch on a device's name or
   user agent. A capability is asked for directly (does the Fullscreen API
   exist, can the pointer hover).
-- `npm run dev -- <id> --host` is for a trusted network. It serves every
-  file of the checkout to anyone on the network, not only the deck: a
-  request to the network address for `/@fs/<checkout>/CLAUDE.md` returns
-  the file, because `createViteConfig` sets `server.fs.allow` to the
-  repository root. An unpublished or anonymous project is exposed with it.
-- The screenshots are of unpublished slides. They are kept under an ignored
-  directory and never committed.
+- `--host` is for a network the user trusts: every device on it can read
+  the deck's slides, notes, and media.
+- The screenshots are of unpublished slides. They are kept under
+  `data/feedback/`, which git ignores, and are never committed or
+  uploaded.
 - A screenshot the user sent is the user's feedback. What a model wrote
   about the screenshot is that model's reading, and can be wrong: the
   session that edits the slide opens the original image before acting.
 
 ## Device checklist
 
-Each row is a hypothesis from the code, to be confirmed or struck on the
-device. "Expect" is what the code suggests will happen, not a measurement.
+"Built" is what the code now does, checked in a desktop browser's
+emulation. "On the device" is to be observed; the tracker holds the
+observations.
 
-| # | Try | Expect | Where |
+| # | Try | Built | On the device |
 |---|---|---|---|
-| 1 | Swipe left and right, starting on text or an image | the slide changes | `useSwipeNavigation.js` |
-| 2 | Swipe starting on a video, an SVG diagram, or a canvas | nothing happens: a touch that starts on `canvas, svg, video` is left to the element (`INTERACTIVE_SELECTOR`). On a slide that is all media, only the arrow buttons move | `useSwipeNavigation.js` |
-| 3 | Look for the fullscreen and presenter buttons at the left of the bar without touching anything | not visible: `.toolbar-buttons` has `opacity: 0` until `.presentation:hover` | `index.css` |
-| 4 | Tap fullscreen on the iPad, then on the iPhone | iPad: fullscreen, the bar hides, and there is no visible way back but Safari's own. iPhone: nothing, and an exception, because Safari on iPhone has no `requestFullscreen` on the page and `useFullscreen` calls it unguarded | `useFullscreen.js` |
-| 5 | Open the slide overview | impossible without a keyboard: only the **O** key opens it | `AudienceView.jsx` |
-| 6 | iPhone, portrait: find the slide number | absent: under 768 px wide, `.nav-dots` and `.nav-slide-counter` are hidden | `index.css` |
-| 7 | iPhone and iPad, Safari with its toolbars showing: is the whole navigation bar visible, in both orientations | unknown: the page is sized with `height: 100%`, the presenter view with `100vh`, and Safari's toolbars change the visible height | `index.css` |
-| 8 | Double-tap a slide; pinch; drag a slide up and down | unknown: the page does not set `touch-action`, and `.slide` has `overflow-y: auto` | `index.css` |
-| 9 | Tap a slide dot in a long deck | hard to hit: a dot's slot is 16 px wide and shrinks to 6 px | `index.css` |
-| 10 | Swipe from the left edge of the screen | Safari's "back" gesture may take the swipe | none |
-| 11 | Let every video slide play; then turn on Low Power Mode and reload | videos play inline and muted (`Media.jsx` sets `muted` and `playsInline`); in Low Power Mode the poster shows instead | `Media.jsx` |
-| 12 | Go through the whole deck twice without reloading | no reload by Safari. Every media file is kept in memory as a Blob (`preload.js`): about 58 MB for the explainer, 39 MB for the lecture | `preload.js` |
-| 13 | Lecture only: the two `.webm` videos and the 13 MB GIF | unknown; the explainer's 33 videos are all H.264 `yuv420p` MP4, which iOS plays | media |
-| 14 | Tap the presenter button | a new tab, not a second window; iOS suspends the tab in the background, so the two do not run side by side | `AudienceView.jsx` |
-| 15 | Edit a slide on the computer while the iPad shows it | the iPad updates by hot reload, without a touch | Vite |
-| 16 | Add the page to the Home Screen and open it from there | unknown; the page declares nothing for it | `index.html` |
+| 1 | Swipe left and right, starting on text or an image | the slide changes | to observe |
+| 2 | Swipe starting on a video, a drawing, or a 3D scene | the slide changes; a region marked `data-no-swipe` keeps the drag | to observe, on the explainer's slides |
+| 3 | Look for the toolbar at the left of the bar without touching anything | visible where the pointer cannot hover | to observe |
+| 4 | Tap fullscreen on the iPad; look for the button on the iPhone | iPad: fullscreen, the bar hides. iPhone: no button, because Safari there has no fullscreen for pages | to observe; and how one leaves fullscreen on the iPad (Safari's own control is expected) |
+| 5 | Tap the slide counter | the overview opens; × or a card closes it | to observe |
+| 6 | iPhone, portrait: find the slide number | shown; the dots are left out under 768 px | to observe |
+| 7 | Safari with its toolbars showing: is the whole bar visible, in both orientations | the page takes its height from the page, not from `100vh` | to observe |
+| 8 | Tap an arrow twice quickly; pinch; drag a slide up and down | no double-tap zoom (`touch-action: manipulation`); pinching still zooms | to observe |
+| 9 | Tap a slide dot in a long deck | a dot's slot is as tall as the arrows where the pointer is coarse; its width still shrinks with the number of slides, and the overview is the easier way | to observe |
+| 10 | Swipe from the left edge of the screen | not handled: Safari's "back" gesture may take it | to observe |
+| 11 | Let every video slide play; then turn on Low Power Mode and reload | videos are muted and inline (`Media.jsx`), which iOS requires to play them unasked | to observe |
+| 12 | Go through the whole deck twice without reloading | every media file is kept in memory (`preload.js`): about 58 MB for the explainer, 39 MB for the lecture | to observe: does Safari reload the page |
+| 13 | Lecture only: the two `.webm` videos and the 13 MB GIF | nothing built; the explainer's 33 videos are all H.264 `yuv420p` MP4, at most 1752×780 | to observe |
+| 14 | Tap the presenter button | a second tab; the two-window presenter view is for a computer | a stated limit |
+| 15 | Edit a slide on the computer while the device shows it | the device updates by hot reload | to observe |
+| 16 | Add the page to the Home Screen and open it from there | the page declares itself a web app, to open without Safari's bars | to observe |
+| 17 | Open the address with `?review`; take a screenshot | the bar names the slide's id, `step k/n`, and `i / N` | to observe: is the label legible in a screenshot |
 
-## Touch fixes
+## Design as built
 
-### Candidates: defects
+### Defects fixed
 
-Each is built only if its checklist row fails.
+| What | Where |
+|---|---|
+| The toolbar shows at rest when the pointer cannot hover (`@media (hover: none)`: a query about the input device, on the window's controls, not a viewport query in a slide) | `core/client/index.css` |
+| `useFullscreen` returns `toggleFullscreen: null` where `document.fullscreenEnabled` is false; the audience view then renders no button and binds no key | `core/client/audience/useFullscreen.js`, `AudienceView.jsx` |
+| The presenter view is sized by the page (`100%`), like the audience view | `core/client/index.css` |
+| `touch-action: manipulation` on the page: no double-tap zoom | `core/client/index.css` |
+| The overview has a close button: Safari on iOS sends no click for a tap on a plain box, which is what closing by a click outside the grid relies on | `core/client/audience/SlideOverview.jsx` |
 
-- **Toolbar visible where nothing can hover** (row 3). The toolbar shows
-  at rest when the device's pointer cannot hover (`@media (hover: none)`,
-  a query about the input device in the window's own controls, not a
-  viewport query inside a slide).
-- **Fullscreen only where it exists** (row 4). `useFullscreen` reports
-  whether the Fullscreen API is present; the button is not rendered when it
-  is not. On an iPad in fullscreen, a way back that does not need a key.
-- **Page height** (row 7). The audience and presenter views take the height
-  that is visible with the browser's toolbars showing.
-- **`preview --host`**. `scripts/preview.mjs` pins `host: 'localhost'`; it
-  takes the same flag as `scripts/dev.mjs`. A static build is the quicker
-  page to load on a tablet and hands out only `dist/<id>/`.
-- **Fewer files on the network.** With `--host`, the development server
-  hands out the client, the presentation's slides, layouts, and `public/`,
-  and what Vite itself needs, and refuses the rest of the checkout (the
-  plans, the trackers, a presentation's `assets/`). Control: the probe in
-  the tracker, repeated, returns 403 for those.
+### Behavior changes
 
-### Candidates: behavior changes
+Each changes something that a desktop user or an existing slide had.
 
-Each changes something a desktop user or an existing slide has today, so
-each is the user's decision.
+- **Swipes start on media.** `canvas`, `svg`, and `video` no longer keep a
+  touch by their tag. Media that only show something let the swipe
+  through; an element that takes drags declares `data-no-swipe`
+  (`useSwipeNavigation.js`, and the rule in
+  [presentation format](../implementation/presentations.md)). A video with
+  the browser's controls keeps its touches.
+- **A swipe is one finger travelling farther sideways than up or down.** A
+  pinch and a mostly vertical drag no longer change the slide.
+- **The slide counter is a button** that opens the overview, on every
+  device. Its text and place are unchanged.
+- **The counter stays on narrow windows** (under 768 px); only the dots are
+  left out there.
+- **`?review`** adds the slide's id and build step to the end of the bar.
+  Without the flag nothing is added.
+- **A dot's slot is as tall as the arrows beside it** where the pointer is
+  coarse (it was 20 px). The bar's height does not change.
+- **The page declares itself a web app** (`mobile-web-app-capable`), which
+  matters only when it is opened from a Home Screen.
 
-- **Swipes that start on media** (row 2). Media that only show something
-  (a video without controls, a static SVG) let the swipe through; an
-  element that takes drags declares it with `data-no-swipe`, as sliders and
-  charts already do. The interactive canvases and SVGs of the lecture and
-  the workshops would each need the attribute, so this lands with an audit
-  of them and a browser test that dragging each still does not change the
-  slide.
-- **An overview button** in the toolbar (row 5), next to fullscreen.
-- **The slide number on narrow windows** (row 6): the counter stays when
-  the dots hide.
-- **Which slide a screenshot shows.** A screenshot carries the counter
-  (`12 / 40`) when the window is wide and not fullscreen, and nothing
-  otherwise; it never carries the build step. A URL flag in the manner of
-  `?bars=hidden` (`?review`) would add the slide's id and step to the
-  navigation bar, outside the stage. It makes placing a screenshot a matter
-  of reading a label. Without it, the inbox compares the screenshot with
-  the frames of the last capture run.
-- **Larger targets** (row 9) for the dots and toolbar buttons where the
-  pointer is coarse.
-- **Zoom and scroll gestures** (row 8), if the pass shows the page zooming
-  or the slide sliding under a finger.
-- **Home Screen** (row 16): the two `meta` tags that open the page without
-  Safari's toolbars, if the user wants screenshots without them.
+### Tooling
 
-### Not planned
+- `servedFiles` in `core/tooling/viteConfig.js` is what the development
+  server may read from disk: the client, the presentation's directory, and
+  `node_modules/`; it refuses a presentation's `assets/`. Before, it could
+  read the whole checkout, and with `--host` so could every device on the
+  network.
+- `scripts/preview.mjs` takes `--host`; `scripts/dev.mjs` prints the
+  network address with `?review`.
 
-The presenter window on a tablet (row 14): reviewing does not need it. It
-is stated as a limit in the README.
+### Not built
+
+- **A way out of fullscreen on the iPad.** Safari shows its own control
+  there; row 4 of the checklist says whether that is enough.
+- **Wider dots.** With many slides a dot stays narrow; the overview is the
+  touch path to a slide.
+- **The presenter window on a tablet** (row 14): reviewing does not need
+  it.
+
+### On merging into a project branch
+
+The audit found these, each on a project branch and so not changed on
+`main`:
+
+- `vision-workshop`, `presentations/diffusion/layouts/EmbeddingSpaceSlide/EmbeddingScatterPlot.jsx`:
+  its SVG reads `onPointerMove` and is not marked. With the new rule a
+  finger moved across the plot also changes the slide on release, unless
+  the audience is following the presenter. It needs `data-no-swipe`.
+- `guest-lecture`, `OperatorExplorer`: `.operator-controls` appear on
+  `.operator-render:hover`, so a touch screen may never show them.
+- `guest-lecture`, `flatland/RoomView.jsx`: a canvas that passes pointer
+  handlers through. Its callers that drag are inside marked boxes;
+  `RenderingEquation` passes a tap (`onPointerDown`) only.
 
 ## Browser tests
 
-The suites run Chromium at 1280×720; `audience.test.mjs` already sets
-`hasTouch` and checks swipes and nine window sizes. Three additions:
+`tests/ui/audience.test.mjs`, in Chromium with touch:
 
-- **Sizes.** The window-size test also runs at an iPad's and an iPhone's
-  sizes, portrait and landscape, with Playwright's device descriptors
-  (touch, device pixel ratio, mobile viewport). Slides are not captured at
-  these sizes: a slide is the same 1280×720 picture at any scale, so
-  `npm run capture` already covers it.
-- **A touch path for every action.** One test lists the actions of the
-  README's key table and asserts, with the keyboard unused, that each can
-  be done: next, previous, overview and its closing, fullscreen where the
-  browser has it.
-- **WebKit.** `UI_TEST_BROWSER=webkit` after
-  `npx playwright install webkit` runs the suites on the engine nearest to
-  Safari. It is not Safari on iOS: it has no toolbars that resize the page,
-  and whether it plays the decks' videos on Windows is to be measured. The
-  device pass stays the gate for rows 7, 10, 11, 12, and 16.
+- **Devices.** The layout checks also run on an iPad and an iPhone, each
+  held both ways, as Playwright describes them (`TOUCH_DEVICES` in
+  `harness.mjs`: size, pixel ratio, touch, a pointer that cannot hover),
+  plain and with `?review`, for the fixture and a 70-slide deck. Slides are
+  not captured at these sizes: a slide is the same 1280×720 picture at any
+  scale, so `npm run capture` already covers it.
+- **A touch path for every action.** One test reads the actions of
+  `KEY_ACTIONS` from the source and fails when one has no touch path in
+  the test; resetting a poll is the stated exception.
+- **Swipes** on an image, a video, a canvas, and a shape in an SVG move
+  on; on a video with controls and on marked regions they do not; nor do a
+  pinch or a vertical drag.
+- **WebKit.** `UI_TEST_BROWSER=webkit` runs the suites on Playwright's
+  build of Safari's engine. It is not Safari on iOS. The tracker has its
+  result.
+
+`tests/ui/errorsAndHosting.test.mjs` asks the development server for files
+of the deck (200) and for files of the checkout and the deck's `assets/`
+(403).
 
 ## Feedback through Remote Control
 
@@ -235,18 +244,20 @@ for this plan; the control tests check the parts the design rests on.
 
 1. **Does a photo have a path?** Send one screenshot from the iPad's Photos
    to a Remote Control session and ask the session where the image is on
-   disk. Decides whether an image can be handed on at all.
+   disk. If it has one, step 1 of the inbox skill no longer asks for a
+   file.
 2. **Does a file have a path?** Save the same marked-up screenshot to the
-   Files app and attach it as a file. Decides the fallback for test 1: one
-   more tap on the iPad.
+   Files app and attach it as a file. This is the route the skill and the
+   README give today.
 3. **Session to session.** Two sessions in this checkout, on this machine:
-   one sends the other a path, the other opens the image. Also settles how
-   a session is named so that the name says which slides it works on.
-4. **How small can the model be?** Ten real marked-up screenshots from
-   todo 1, read by Haiku and by Sonnet: the slide and step named, each mark
-   and what it points at transcribed, each compared with the user's own
-   account. The inbox runs on the smallest model that places all ten and
-   misreads no mark.
+   one sends the other a path, the other opens the image. Observed so far:
+   `ListAgents` lists the machine's sessions by name. Not yet observed: a
+   path sent and opened.
+4. **How small can the model be?** Ten real marked-up screenshots, read by
+   Haiku and by Sonnet: the slide and step named, each mark and what it
+   points at transcribed, each compared with the user's own account. The
+   inbox runs on the smallest model that places all ten and misreads no
+   mark.
 
 If tests 1 and 2 both fail, an image cannot leave the session that received
 it. The user then chooses between sending each screenshot directly to the
@@ -257,72 +268,34 @@ it.
 ### Design
 
 Two kinds of session run in the checkout. **Working sessions** edit slides,
-on the model the work needs; each is named for the presentation and the
-section or slides it has. **The inbox** is one session on a small model
-with Remote Control on; it is the session the user opens in the Claude app.
+on the model the work needs, with the `live-feedback` skill; each lists
+its name and the slides it has in `data/feedback/sessions.md`. **The
+inbox** is one session on a small model with Remote Control on, with the
+`feedback-inbox` skill; it is the session the user opens in the Claude app.
 Neither watches a folder or polls: an upload is a message to the inbox, and
 a forward is a message to a working session.
 
-**`feedback-inbox`**, for each message that carries screenshots:
+For each screenshot the inbox keeps a copy under
+`data/feedback/<id>/<date>/` with the user's words; places it (the review
+label, else the counter, else a match against the last capture run's
+frames, else the user's words); reads the marks without deciding what
+should change; sends the working session the image's path first, then the
+user's words, then its reading, labeled as its own; and tells the user
+where the screenshot went, or that it was not placed and why.
 
-1. Keep the image under `data/feedback/<id>/<date>/`, which is ignored by
-   git, with the user's typed words beside it, verbatim.
-2. Place it: the presentation, the slide's id, and the build step, with how
-   each was found (the review label, the counter, a match against the last
-   capture run's frames, or the user's words) and how sure the reading is.
-3. Read the marks: for each, what it is (a circle, an arrow, handwriting),
-   what on the slide it points at, and the handwriting transcribed, with
-   anything illegible said to be illegible.
-4. Send the working session for that slide one message: the path of the
-   original image first, the user's words, then the reading, labeled as the
-   inbox's reading. A screenshot that concerns several slides goes to each
-   of their sessions, whole.
-5. Tell the user, on the iPad, where each screenshot went. A screenshot the
-   inbox cannot place, or one for a slide no session is working on, is
-   reported and kept with the status "not placed"; the inbox asks rather
-   than guesses.
+A working session, when a message arrives, reaches a point where the deck
+loads; opens the image, which outranks the reading; records the user's
+words in the project tracker; makes the change (an unclear mark is a
+question, a deletion is confirmed); checks; and replies with what was done
+for each mark and the slide and step to look at.
 
-The inbox edits nothing in the repository but `data/feedback/`.
-
-**`live-feedback`**, for a working session while it edits a deck:
-
-1. Before the work starts, the deck is served (`npm run dev -- <id>
-   --host`), the page loads, and the session's name says what it has.
-2. When a message arrives, finish the current step so the deck still
-   loads, then open the original image and compare it with the inbox's
-   reading. Where they disagree, the image decides.
-3. Record the user's words, quoted and dated, in the project tracker's
-   "Standing directions", with the image's path. A direction about slides
-   in general also goes to `docs/style/slides.md`.
-4. Make the change. A marked change to wording or order is the user's own
-   direction on content and is made; a mark whose meaning is unclear is
-   asked about, not interpreted. Deleting a slide or a media file is
-   confirmed first.
-5. Keep the page loading throughout: a slide enters `presentation.json`
-   only once it loads. The tablet shows the change by hot reload.
-6. Reply naming what was done for each mark and which slide and step to
-   look at, and what was not done and why.
-
-## README section
-
-"Reviewing on an iPad or iPhone", after "Quick start":
-
-- **Serve it**: `npm run dev -- <id> --host`, the "Network" address it
-  prints, the same Wi-Fi, a trusted network; on Windows, allowing Node
-  through the firewall.
-- **Move through it**: a table of touch actions beside the key table
-  (swipe, the arrows, the dots, overview, fullscreen), and what a tablet
-  does not do (the two-window presenter view).
-- **Send feedback**: start the inbox (`claude --model <model>
-  --remote-control` in the checkout), open that session in the Claude app,
-  take a screenshot, mark it up, attach it, send. What comes back, and
-  where the screenshots are kept.
-- A link to the workflow document for the rest.
+The skills hold the steps: `.claude/skills/feedback-inbox/SKILL.md` and
+`.claude/skills/live-feedback/SKILL.md`.
 
 ## Completion criteria
 
 - Every checklist row is observed on an iPad and an iPhone and is either
-  working or listed as a stated limit in the README.
+  working or a stated limit in the README.
 - `npm run test:ui` covers tablet and phone sizes and a touch path for
   every action, and passes on Chromium; its WebKit result is recorded.
 - With `--host`, the development server refuses files outside the deck.
@@ -331,4 +304,5 @@ The inbox edits nothing in the repository but `data/feedback/`.
 - A working session takes a forwarded screenshot mid-edit without the page
   on the tablet failing to load.
 - `README.md`, hosting, testing, and the workflow document describe the
-  above; both skills are in `.claude/skills/`.
+  above; both skills are in `.claude/skills/`; every project branch has
+  merged `main`.

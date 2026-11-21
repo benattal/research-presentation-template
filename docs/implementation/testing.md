@@ -19,7 +19,14 @@ Three layers, each run by Node's built-in test runner or a script:
 npx playwright install chromium   # once
 npm run test:ui
 UI_TEST_BROWSER=msedge npm run test:ui    # or use an installed Edge or Chrome
+npx playwright install webkit     # once, for the next line
+UI_TEST_BROWSER=webkit npm run test:ui    # Playwright's build of Safari's engine
 ```
+
+WebKit is the engine nearest to Safari on an iPad or iPhone, and is not
+that browser: it has none of Safari's toolbars and gestures. What only a
+device shows is checked on a device
+([reviewing on a tablet](../workflows/reviewing-on-a-tablet.md)).
 
 The suites in `tests/ui/` start their own servers on free ports (a Vite
 development server for local mode, the gateway for live mode) and run one
@@ -28,10 +35,10 @@ file at a time:
 | File | Covers |
 |---|---|
 | `layouts.test.mjs` | every core layout at every build step: its content, loaded media, and no errors or overflow; fails when a core layout is added without a fixture slide; and the overflow report on slides that do not fit |
-| `audience.test.mjs` | keys, buttons, dots, overview, swipes (and drags on controls that are not swipes), focus handling, position persistence, toolbar, progress bar, the stage alone with `?bars=hidden`; the stage and each slide heading holding still across every slide and build step, and every `SlideTitle` header alike (math in a title included); at nine window sizes, for the fixture and a generated 70-slide deck (`longDeck` in `harness.mjs`), the navigator is centered and the stage stays clear of the navigation bar, toolbar, and progress bar |
+| `audience.test.mjs` | keys, buttons, dots, overview, swipes (on media that only show something, and not on controls, on regions marked `data-no-swipe`, with two fingers, or mostly up and down), a touch path for every action a key has (it fails when a key is added without one), the toolbar at rest where nothing can hover, no fullscreen button where the browser has none, the `?review` label, focus handling, position persistence, toolbar, progress bar, the stage alone with `?bars=hidden`; the stage and each slide heading holding still across every slide and build step, and every `SlideTitle` header alike (math in a title included); at nine window sizes, and on a tablet and a phone held both ways as Playwright describes them (`TOUCH_DEVICES` in `harness.mjs`), for the fixture and a generated 70-slide deck (`longDeck`), the navigator is centered, the counter shows, and the stage stays clear of the navigation bar, toolbar, and progress bar |
 | `presenter.test.mjs` | the presenter window following and driving the audience window, per-step notes, the preview, the timer, and saving edited notes without reloading the audience |
 | `live.test.mjs` | presenter login and logout, votes across browsers, changing a vote, live results, reset with C, numeric polls, closed voting, follow-the-presenter |
-| `errorsAndHosting.test.mjs` | the load-error screen, unknown modes, and a static build served under a URL prefix |
+| `errorsAndHosting.test.mjs` | the load-error screen, unknown modes, the development server serving the deck from disk and refusing the rest of the checkout, and a static build served under a URL prefix |
 
 `tests/ui/harness.mjs` holds the shared setup. The fixture
 `tests/fixtures/ui-showcase/` uses every core layout once, with SVG media
