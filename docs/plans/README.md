@@ -70,3 +70,5 @@ The measurable gates that close the plan.
   [its tracker](../tracking/template-restructure.md).
 - [Framework consolidation](framework-consolidation.md), tracked in
   [its tracker](../tracking/framework-consolidation.md).
+- [Reviewing a deck on an iPad or iPhone](ipad-review.md), tracked in
+  [its tracker](../tracking/ipad-review.md).
