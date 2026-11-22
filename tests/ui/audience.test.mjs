@@ -235,6 +235,10 @@ describe('audience view', { timeout: 180000 }, () => {
       next: async () => {
         await page.tap('.nav-btn[aria-label="Next slide"]');
         assert.equal(await counter(page), counterText(SECOND));
+        // A tap leaves :hover set; the pressed arrow must not stay lit.
+        await page.waitForTimeout(400);
+        const colors = await page.$$eval('.nav-btn', (arrows) => arrows.map((arrow) => getComputedStyle(arrow).backgroundColor));
+        assert.equal(colors[1], colors[0], 'the tapped arrow looks like the other one');
       },
       previous: async () => {
         await page.tap('.nav-btn[aria-label="Previous slide"]');
