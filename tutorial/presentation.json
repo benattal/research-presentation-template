@@ -1,0 +1,56 @@
+{
+  "title": "Learn the template by editing this deck",
+  "defaultTransition": "fade",
+  "sections": [
+    {
+      "id": "start",
+      "title": "Start here",
+      "slides": [
+        "welcome",
+        "how-it-works"
+      ]
+    },
+    {
+      "id": "edit",
+      "title": "Edit a slide",
+      "slides": [
+        "outline-edit",
+        "task-title",
+        "task-bullets",
+        "task-math",
+        "task-notes"
+      ]
+    },
+    {
+      "id": "build",
+      "title": "Steps, pictures, slides",
+      "slides": [
+        "outline-build",
+        "steps-demo",
+        "task-steps",
+        "task-picture",
+        "task-new-slide"
+      ]
+    },
+    {
+      "id": "style",
+      "title": "Make it yours",
+      "slides": [
+        "outline-style",
+        "task-theme",
+        "a-layout"
+      ]
+    },
+    {
+      "id": "present",
+      "title": "Check and present",
+      "slides": [
+        "outline-present",
+        "check-it",
+        "present-it",
+        "ask-an-agent",
+        "closing"
+      ]
+    }
+  ]
+}

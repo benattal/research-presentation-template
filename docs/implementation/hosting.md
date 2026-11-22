@@ -19,7 +19,11 @@ else switches modes.
 ```bash
 npm run dev -- <id>          # http://localhost:5173/, hot reload
 npm run dev -- <id> --host   # also reachable from other devices on the network
+npm run tutorial             # the tutorial deck: npm run dev -- ./tutorial
 ```
+
+A presentation outside `presentations/` is named by its directory, with a
+leading `./`, in every command of this page.
 
 The presenter opens the presenter window with **P** (or `?mode=presenter`)
 and drags it to the laptop screen; the audience window goes on the projector
@@ -32,10 +36,33 @@ watching):
 ```bash
 npm run build -- <id>        # dist/<id>/, built with a relative base
 npm run preview -- <id>      # http://localhost:4173/
+npm run preview -- <id> --host   # the build, on the network as well
 ```
 
 `dist/<id>/` uses relative paths, so it can also be copied to any static
 host or opened under any URL prefix.
+
+### On the network
+
+`--host` makes either server reachable from a tablet or phone on the same
+network, to read a deck there while it is edited
+([reviewing on a tablet](../guides/reviewing-on-a-tablet.md)). The
+development server then prints its network address, and that address with
+`?review`, which names each slide's id and build step in the navigation
+bar.
+
+Every device on the network can read what the server hands out, so use
+`--host` on a network you trust. The development server reads three places
+from disk: the client (`core/client/`), the presentation's directory, and
+`node_modules/`. It refuses the rest of the checkout and the
+presentation's `assets/` (`servedFiles` in `core/tooling/viteConfig.js`).
+A deck's slides, presenter notes, and media are the deck, and are served.
+The static build serves `dist/<id>/` only. Saving notes from the presenter
+window stays limited to this machine (`core/tooling/notesWriter.js`).
+
+The audience view works by touch: swipes, the bar's arrows, the slide
+counter for the overview, and a toolbar that shows without hover. The
+two-window presenter view needs a computer.
 
 ## Live mode
 
@@ -62,7 +89,9 @@ The gateway serves each presentation at `/<id>/` and its API at
 the presentation whose manifest sets `"servedAtRoot": true`; a branch with
 several presentations uses a small landing presentation with a
 `presentationLinks` slide for this. Without one, `/` lists the
-presentations.
+presentations. `/<id>` redirects to `/<id>/`, and `/health` answers
+`{ "status": "ok", "presentations": [...] }` for a hosting service's health
+check.
 
 The presenter logs in once in the presenter window; the token is shared by
 every window of that browser, so the audience view on the projector also acts

@@ -1,0 +1,23 @@
+{
+  "layout": "progressiveBuild",
+  "sectionLabel": "Start here",
+  "title": "This deck is a folder of text files",
+  "buildSteps": [
+    {
+      "label": "The deck",
+      "description": "You are looking at the folder tutorial/. Its presentation.json lists the slides, in sections."
+    },
+    {
+      "label": "A slide",
+      "description": "Each slide is a folder inside the deck's slides folder. Its content.json says which layout the slide uses, and holds its text."
+    },
+    {
+      "label": "A task",
+      "description": "Some slides ask you to edit a file. Save it: this page reloads by itself, and the task marks itself done. The file also holds the check that the slide runs on itself."
+    },
+    {
+      "label": "Or ask",
+      "description": "Every task also shows what to say to a coding agent, which then makes the edit for you."
+    }
+  ]
+}

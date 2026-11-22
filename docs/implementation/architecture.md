@@ -23,8 +23,13 @@ core/client/layouts/index.js ─────────┘                     
    root, points the alias `@presentation` at `presentations/<id>/`, uses
    `presentations/<id>/public/` as the public directory, and defines two
    constants: `__PRESENTATION_ID__` and `__LIVE_SERVER__`.
-2. `core/client/presentation/load.js` is the only client module that reads
-   a presentation's files. It globs `slides/*/content.json`, imports the
+2. `core/client/presentation/load.js` is the client module that reads a
+   presentation's manifest, slides, sources, and theme (`notes.js` reads the
+   presenter notes, for the presenter window alone). It takes the JSON
+   files as text and parses them itself, so that a file with a typing
+   mistake is named on the load-error screen with the line and column;
+   imported as JSON, such a file fails as a module and the page stays
+   blank. It globs `slides/*/content.json`, imports the
    manifest and the layout registry, and calls `buildPresentation`.
 3. `buildPresentation` (`core/client/presentation/model.js`, pure) validates
    everything, resolves asset paths, and returns the flat slide list every
@@ -71,7 +76,18 @@ core/client/layouts/index.js ─────────┘                     
 The audience view also reads `?bars=hidden`, which leaves out its progress
 bar and navigation bar so the stage fills the window, with keys and
 preloading unchanged. `scripts/record.mjs` films that page
-([recording](recording.md)).
+([recording](recording.md)). With `?review`, the navigation bar names the
+current slide's id and build step beside the counter, so that a screenshot
+of the page says what it shows
+([reviewing on a tablet](../guides/reviewing-on-a-tablet.md)).
+
+Every action of a key in the audience view, except resetting a poll
+(**C**), also has a touch path: swipes,
+the bar's arrows and dots, the slide counter (it opens the overview), and
+the toolbar, which shows at rest where the pointer cannot hover. A browser
+without fullscreen for pages (Safari on an iPhone) gets neither the button
+nor the key; `useFullscreen` decides. In fullscreen the bar is hidden and
+swipes remain.
 
 The audience and presenter windows talk over a `BroadcastChannel` named after
 the presentation id. The audience window owns the position; the presenter
@@ -101,6 +117,8 @@ in `dist/live/<id>/` in production) and `/<id>/api/` its live API. Each
 presentation has its own poll state, saved to `.live-state/<id>.json`, so poll
 ids never collide across presentations. `/` redirects to the presentation
 whose manifest sets `"servedAtRoot": true`, or lists every presentation.
+`/<id>` redirects to `/<id>/`, and `/health` answers
+`{ status, presentations }` for a hosting service's health check.
 
 ## Tests
 

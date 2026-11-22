@@ -107,7 +107,7 @@ Each segment starts at the time the page handled its step's key press
 measured loudness (`lufs_i`, which `narration/narrate.py` writes), each
 segment gets the gain that brings it to −16 LUFS, with a limiter that
 keeps its true peak under −1.5 dBTP, so every step sounds as loud as the
-next; on the explainer's narration that brought segments from a spread
+next; on one deck's narration that brought segments from a spread
 of 4.8 dB to 0.3 dB. Without the measurements the summed narration is
 normalized as a whole, which sets the average and keeps the differences
 (`narrationMixFilter`). The video is encoded once, without sound, as
@@ -147,8 +147,9 @@ The capture is in real time. The page animates at its own speed while the
 command films it, so the video is faithful only while the machine keeps
 up, and two runs do not produce the same frames. It is not frame exact. A
 record view that advances the page's clock one frame at a time, so that
-every frame is rendered and none can be late, is unfinished on the branch
-`recorder-wip`.
+every frame is rendered and none can be late, is not built
+([framework consolidation](../plans/framework-consolidation.md) has it as
+an open todo).
 
 Three behaviors of the screencast shape what a recording can get wrong:
 

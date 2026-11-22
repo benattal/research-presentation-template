@@ -111,6 +111,12 @@ slide per core layout and convention. It is the target of the template's
 checks, captures, and browser tests, and is not presented. A project branch
 deletes it.
 
+The tutorial, `tutorial/`, is a second deck of this type, made hands-on:
+its reader drives it alone, with the development server running, and
+completes it by editing it ([its plan](../plans/tutorial.md)). It is
+outside `presentations/`, stays on every branch, and is served with
+`npm run tutorial`.
+
 ## Choosing, and mixing
 
 A deck has one type. A lecture that will also be published as a video is

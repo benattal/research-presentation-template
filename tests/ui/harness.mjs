@@ -3,12 +3,13 @@
  * presentation in either hosting mode, a browser, and error collection.
  *
  * The browser is Playwright's Chromium unless UI_TEST_BROWSER names an
- * installed channel (`msedge`, `chrome`).
+ * installed channel (`msedge`, `chrome`) or `webkit`, Playwright's build of
+ * Safari's engine.
  */
 import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { chromium } from 'playwright';
+import { chromium, devices, webkit } from 'playwright';
 import { createServer } from 'vite';
 import { createGateway } from '../../core/server/gateway.js';
 import { REPO_ROOT } from '../../core/tooling/presentations.js';
@@ -46,15 +47,42 @@ export function longDeck(count) {
   return { id: 'long-deck', dir, manifest };
 }
 
-/** Local mode: a Vite development server for one presentation, on a free port. */
+/**
+ * Request a presentation's page and every module it imports, once, and
+ * return when all have been answered.
+ *
+ * A development server that has never served a presentation bundles its
+ * dependencies on the first request, which takes seconds on a fast machine
+ * and more than a test's 30-second page load on a slow one or in a fresh
+ * clone. Asked for here, during a suite's setup, that one-time cost is
+ * paid before any test's navigation starts its clock.
+ */
+async function warm(pageUrl) {
+  const origin = new URL(pageUrl).origin;
+  const html = await (await fetch(pageUrl)).text();
+  const seen = new Set();
+  const queue = [...html.matchAll(/<script[^>]+src="([^"]+)"/g)].map(([, src]) => new URL(src, pageUrl).pathname);
+  while (queue.length > 0) {
+    const batch = queue.splice(0).filter((path) => !seen.has(path));
+    batch.forEach((path) => seen.add(path));
+    const sources = await Promise.all(batch.map(async (path) => {
+      const response = await fetch(origin + path);
+      return response.ok ? response.text() : '';
+    }));
+    for (const source of sources) {
+      for (const [, path] of source.matchAll(/(?:from|import)\s*\(?\s*"(\/[^"]+)"/g)) queue.push(path);
+    }
+  }
+}
+
+/** Local mode: a Vite development server for one presentation, on a free port, already warm. */
 export async function startLocal(presentation) {
   const config = createViteConfig({ presentation, base: '/', live: false, server: { port: 0, host: '127.0.0.1' } });
-  // The configuration serves files from the repository only; a generated
-  // presentation (`longDeck`) lives in a temporary directory outside it.
-  config.server.fs.allow.push(presentation.dir);
   const server = await createServer({ ...config, logLevel: 'error' });
   await server.listen();
-  return { url: server.resolvedUrls.local[0], close: () => server.close() };
+  const url = server.resolvedUrls.local[0];
+  await warm(url);
+  return { url, close: () => server.close() };
 }
 
 /**
@@ -73,8 +101,10 @@ export async function startLive(presentations, settings = { votingOpen: true, pr
   const server = await new Promise((resolve) => {
     const listening = app.listen(0, '127.0.0.1', () => resolve(listening));
   });
+  const url = `http://127.0.0.1:${server.address().port}`;
+  for (const presentation of presentations) await warm(`${url}/${presentation.id}/`);
   return {
-    url: `http://127.0.0.1:${server.address().port}`,
+    url,
     settings,
     close: async () => {
       await close();
@@ -85,17 +115,31 @@ export async function startLive(presentations, settings = { votingOpen: true, pr
 }
 
 export async function launchBrowser() {
-  const channel = process.env.UI_TEST_BROWSER;
+  const choice = process.env.UI_TEST_BROWSER;
   try {
-    return await chromium.launch(channel ? { channel } : {});
+    if (choice === 'webkit') return await webkit.launch();
+    return await chromium.launch(choice ? { channel: choice } : {});
   } catch (error) {
     throw new Error(
-      `Could not start the test browser (${channel ?? 'Playwright Chromium'}). Run `
-      + '"npx playwright install chromium", or set UI_TEST_BROWSER=msedge or chrome.\n'
+      `Could not start the test browser (${choice ?? 'Playwright Chromium'}). Run `
+      + `"npx playwright install ${choice === 'webkit' ? 'webkit' : 'chromium'}", or set UI_TEST_BROWSER=msedge or chrome.\n`
       + error.message,
     );
   }
 }
+
+/**
+ * A tablet and a phone, as Playwright describes them (screen size, pixel
+ * ratio, touch, a pointer that cannot hover), each held both ways. The
+ * `defaultBrowserType` of a descriptor is left out: the browser is the one
+ * `launchBrowser` started.
+ */
+export const TOUCH_DEVICES = Object.fromEntries(
+  ['iPad (gen 7)', 'iPad (gen 7) landscape', 'iPhone 13', 'iPhone 13 landscape'].map((name) => {
+    const { defaultBrowserType, ...descriptor } = devices[name];
+    return [name, descriptor];
+  }),
+);
 
 /** A 1280×720 page whose uncaught exceptions and console errors land in `page.errors`. */
 export async function newPage(context) {

@@ -76,6 +76,89 @@ describe('documentation', () => {
     }
     assert.deepEqual(dead, []);
   });
+
+  it('has no link to a heading that does not exist', () => {
+    // The anchor GitHub gives a heading: lowercase, punctuation dropped, spaces to hyphens.
+    const anchors = (path) => new Set([...prose(path).matchAll(/^#{1,6} +(.+)$/gm)].map(([, heading]) => (
+      heading.trim().toLowerCase().replace(/[^\p{L}\p{N} _-]/gu, '').replaceAll(' ', '-')
+    )));
+    const markdown = [
+      ...filesUnder('docs', /\.md$/),
+      ...filesUnder('.claude/skills', /\.md$/),
+      ...['README.md', 'CLAUDE.md', 'AGENTS.md', 'DATA.md'].map((name) => join(ROOT, name)),
+    ];
+    const dead = [];
+    for (const path of markdown) {
+      for (const [, target, anchor] of prose(path).matchAll(/\]\(((?!https?:)[^)#\s]*)#([^)\s]+)\)/g)) {
+        const linked = target ? join(dirname(path), target) : path;
+        if (linked.endsWith('.md') && existsSync(linked) && !anchors(linked).has(anchor)) {
+          dead.push(`${relative(ROOT, path)} → ${target}#${anchor}`);
+        }
+      }
+    }
+    assert.deepEqual(dead, []);
+  });
+
+  // The README, the guides, the workflows, and the skills tell people and
+  // agents what to type. A command or option that no longer exists there is
+  // the first thing a newcomer trips on.
+  it('names only npm scripts and options that exist', () => {
+    const scripts = JSON.parse(read('package.json')).scripts;
+    const source = (name) => {
+      const file = /node (\S+\.mjs)/.exec(scripts[name])?.[1];
+      return file ? read(file) : null;
+    };
+    const documents = [
+      ...filesUnder('docs', /\.md$/).filter((path) => !/[\\/](plans|tracking|archive)[\\/]/.test(path)),
+      ...filesUnder('.claude/skills', /\.md$/),
+      ...filesUnder('presentations', /README\.md$/),
+      ...['README.md', 'CLAUDE.md', 'AGENTS.md', 'DATA.md', 'tutorial/README.md'].map((name) => join(ROOT, name)),
+    ];
+    const unknown = [];
+    for (const path of documents) {
+      for (const [, name, rest] of readFileSync(path, 'utf-8').matchAll(/npm run ([a-z][a-z:-]*[a-z])([^#\n|&;`]*)/g)) {
+        const where = relative(ROOT, path);
+        if (!scripts[name]) {
+          unknown.push(`${where}: npm run ${name}`);
+          continue;
+        }
+        const code = source(name);
+        for (const [, option] of rest.matchAll(/ --([a-z][a-z-]*)/g)) {
+          if (!code || !new RegExp(`(^|[\\s{,])'?${option}'?: \\{`, 'm').test(code)) unknown.push(`${where}: npm run ${name} --${option}`);
+        }
+      }
+    }
+    assert.deepEqual(unknown, []);
+  });
+});
+
+describe('skills', () => {
+  const skills = readdirSync(join(ROOT, '.claude/skills'), { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name);
+
+  it('are each named for their directory and say when to use them', () => {
+    for (const name of skills) {
+      const frontmatter = /^---\n([\s\S]*?)\n---\n/.exec(read(`.claude/skills/${name}/SKILL.md`))?.[1] ?? '';
+      assert.match(frontmatter, new RegExp(`^name: ${name}$`, 'm'), `.claude/skills/${name}/SKILL.md: name`);
+      assert.match(frontmatter, /^description: .*\bUse \w+/m, `.claude/skills/${name}/SKILL.md: a description that says when to use it`);
+    }
+  });
+
+  // A skill nobody knows about is not used: the README's table is where a
+  // person finds it, the guide is where it is explained, and the worked
+  // examples are where it is shown in use.
+  it('are each listed in the README, explained in the skills guide, and shown in a worked example', () => {
+    const readme = read('README.md');
+    const guide = read('docs/guides/skills.md');
+    const examples = read('docs/guides/worked-examples.md');
+    for (const name of skills) {
+      assert.ok(readme.includes(`[\`${name}\`](docs/guides/skills.md#${name})`), `README.md does not list the skill ${name}`);
+      assert.match(guide, new RegExp(`^## ${name}$`, 'm'), `docs/guides/skills.md has no section "${name}"`);
+      assert.match(examples, new RegExp(`^## ${name}: `, 'm'), `docs/guides/worked-examples.md has no example for "${name}"`);
+      assert.ok(guide.includes(`(worked-examples.md#${name}-`), `docs/guides/skills.md does not link the worked example of "${name}"`);
+    }
+  });
 });
 
 describe('presentations', () => {

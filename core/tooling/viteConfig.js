@@ -1,6 +1,6 @@
 import { join } from 'node:path';
 import react from '@vitejs/plugin-react';
-import { CLIENT_DIR, REPO_ROOT } from './presentations.js';
+import { CLIENT_DIR, REPO_ROOT, commandNameOf } from './presentations.js';
 import { notesWriter } from './notesWriter.js';
 
 function escapeHtml(text) {
@@ -16,6 +16,21 @@ function presentationTitle(presentation) {
 }
 
 /**
+ * What the development server may read from disk for `presentation`
+ * (Vite's `server.fs`): the client, the presentation's own directory, and
+ * the installed packages. Vite's default refusals are repeated because
+ * setting `deny` replaces them; the last entry adds a presentation's
+ * `assets/`, the source material its slides were made from, which no slide
+ * loads.
+ */
+function servedFiles(presentation) {
+  return {
+    allow: [CLIENT_DIR, presentation.dir, join(REPO_ROOT, 'node_modules')],
+    deny: ['.env', '.env.*', '*.{crt,pem}', '**/.git/**', '**/presentations/*/assets/**'],
+  };
+}
+
+/**
  * The Vite configuration for one presentation. Every script that runs Vite
  * (dev, build, the gateway, capture, check) builds its configuration here.
  *
@@ -23,6 +38,11 @@ function presentationTitle(presentation) {
  * `@presentation` points at `presentations/<id>/` and `@core` at the
  * client, so a presentation's own layouts import the framework as
  * `@core/...`. `public/` of the presentation is Vite's public directory.
+ *
+ * The development server hands out only what a deck is made of
+ * (`servedFiles`): with `--host` it is reachable by every device on the
+ * network, and the rest of the checkout (plans, trackers, another
+ * presentation, a presentation's source material) is not the deck.
  *
  * @param {object} args
  * @param {{ id: string, dir: string, manifest: object }} args.presentation
@@ -50,10 +70,11 @@ export function createViteConfig({ presentation, base, live, outDir, server = {}
     define: {
       __LIVE_SERVER__: JSON.stringify(live),
       __PRESENTATION_ID__: JSON.stringify(presentation.id),
+      __PRESENTATION_COMMAND_NAME__: JSON.stringify(commandNameOf(presentation)),
     },
     server: {
       ...server,
-      fs: { allow: [REPO_ROOT] },
+      fs: servedFiles(presentation),
     },
     build: {
       outDir,

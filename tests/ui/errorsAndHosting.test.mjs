@@ -1,15 +1,17 @@
 /**
  * What a presenter sees when something is wrong, and the static build:
  * a presentation with errors lists every problem, an unknown mode says so,
- * and a static build works from any URL prefix.
+ * the development server hands out only the deck, and a static build works
+ * from any URL prefix.
  */
 import assert from 'node:assert/strict';
-import { mkdtempSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { after, before, describe, it } from 'node:test';
 import express from 'express';
 import { build } from 'vite';
+import { REPO_ROOT } from '../../core/tooling/presentations.js';
 import { createViteConfig } from '../../core/tooling/viteConfig.js';
 import { SHOWCASE_SLIDES, fixture, launchBrowser, newContext, newPage, startLocal } from './harness.mjs';
 
@@ -36,7 +38,38 @@ describe('errors and hosting', { timeout: 240000 }, () => {
     assert.equal(problems.length, 2);
     assert.match(problems.join('\n'), /"noSuchLayout"/);
     assert.match(problems.join('\n'), /"missing"/);
-    assert.match(await page.locator('.load-error').innerText(), /npm run check/);
+    // The command it names is the one for this deck, which is not under presentations/.
+    assert.match(await page.locator('.load-error').innerText(), /npm run check -- \.\/tests\/fixtures\/broken\b/);
+  });
+
+  // A missing comma is the commonest slip of someone editing a slide by
+  // hand. Imported as JSON, the file failed as a module and the page stayed
+  // blank; the error screen must name the file and the place instead.
+  it('names every file that is not valid JSON, with where the mistake is', async () => {
+    const dir = join(mkdtempSync(join(tmpdir(), 'ui-invalid-json-')), 'presentations', 'deck');
+    mkdirSync(join(dir, 'slides', 'first'), { recursive: true });
+    mkdirSync(join(dir, 'slides', 'second'), { recursive: true });
+    mkdirSync(join(dir, 'layouts'));
+    const manifest = { title: 'Deck', sections: [{ id: 'all', title: 'All', slides: ['first', 'second'] }] };
+    writeFileSync(join(dir, 'presentation.json'), JSON.stringify(manifest));
+    writeFileSync(join(dir, 'slides', 'first', 'content.json'), '{\n  "layout": "content"\n  "title": "A missing comma"\n}\n');
+    writeFileSync(join(dir, 'slides', 'second', 'content.json'), '{ "layout": "content", "title": "An open quote }\n');
+    writeFileSync(join(dir, 'layouts', 'index.js'), 'export default {};\n');
+    const server = await startLocal({ id: 'deck', dir, manifest });
+    closers.push(server.close);
+
+    const page = await newPage(await newContext(browser));
+    await page.goto(server.url);
+    await page.waitForSelector('[data-load-error]');
+    const problems = await page.locator('.load-error li').allInnerTexts();
+    assert.equal(problems.length, 2);
+    assert.match(problems[0], /^slides\/first\/content\.json is not valid JSON: .*line 3/);
+    assert.match(problems[1], /^slides\/second\/content\.json is not valid JSON: /);
+
+    // Mending the files brings the deck back without restarting anything.
+    writeFileSync(join(dir, 'slides', 'first', 'content.json'), '{ "layout": "content", "title": "Mended" }\n');
+    writeFileSync(join(dir, 'slides', 'second', 'content.json'), '{ "layout": "content", "title": "Also mended" }\n');
+    await page.waitForSelector('.slide[data-slide-id="first"]');
   });
 
   it('names the valid modes for an unknown one', async () => {
@@ -45,6 +78,33 @@ describe('errors and hosting', { timeout: 240000 }, () => {
     const page = await newPage(await newContext(browser));
     await page.goto(`${server.url}?mode=bogus`);
     assert.match(await page.locator('.load-error').innerText(), /Unknown mode .bogus.[\s\S]*audience, presenter, preview, capture/);
+  });
+
+  // With `--host` the development server is on the network. It hands out
+  // the deck, and nothing else of the checkout.
+  it('serves the deck from disk and refuses the rest of the checkout', async () => {
+    const dir = join(mkdtempSync(join(tmpdir(), 'ui-served-files-')), 'presentations', 'deck');
+    mkdirSync(join(dir, 'slides', 'only'), { recursive: true });
+    mkdirSync(join(dir, 'layouts'));
+    mkdirSync(join(dir, 'assets'));
+    const manifest = { title: 'Deck', sections: [{ id: 'all', title: 'All', slides: ['only'] }] };
+    writeFileSync(join(dir, 'presentation.json'), JSON.stringify(manifest));
+    writeFileSync(join(dir, 'slides', 'only', 'content.json'), JSON.stringify({ layout: 'content', title: 'Only', bullets: ['A point'] }));
+    writeFileSync(join(dir, 'layouts', 'index.js'), 'export default {};\n');
+    writeFileSync(join(dir, 'assets', 'source.txt'), 'the material the slides were made from\n');
+    const server = await startLocal({ id: 'deck', dir, manifest });
+    closers.push(server.close);
+
+    const page = await newPage(await newContext(browser));
+    await page.goto(server.url);
+    await page.waitForSelector('.slide[data-slide-id="only"]');
+
+    const status = async (path) => (await fetch(`${server.url}@fs/${path.replaceAll('\\', '/')}`)).status;
+    assert.equal(await status(join(dir, 'slides', 'only', 'content.json')), 200, 'a file of the deck');
+    for (const outside of ['CLAUDE.md', 'package.json', 'docs/index.md', 'tests/fixtures/ui-showcase/presentation.json']) {
+      assert.equal(await status(join(REPO_ROOT, outside)), 403, outside);
+    }
+    assert.equal(await status(join(dir, 'assets', 'source.txt')), 403, "the deck's source material");
   });
 
   it('serves a static build under any URL prefix, with its media', async () => {

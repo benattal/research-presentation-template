@@ -13,7 +13,8 @@ that keep their work from colliding.
 - Framework changes (`core/`, `scripts/`, `tests/`, shared docs) are made
   on a short-lived branch from `main`, reach `main` after the browser
   tests pass, and are then merged into project branches.
-- The remote holds `main` and one branch per presentation. A helper
+- The remote holds `main` and one branch per project (a project's
+  presentations share its branch). A helper
   branch (framework work, a builder's task, work in progress) is pushed
   only while its work is in flight and deleted from the remote when it is
   merged; before deleting one, confirm that a kept branch has every commit

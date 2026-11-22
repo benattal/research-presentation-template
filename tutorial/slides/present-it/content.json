@@ -1,0 +1,14 @@
+{
+  "layout": "task",
+  "sectionLabel": "Check and present",
+  "title": "Present it",
+  "subtitle": "The same page is the audience's view, the presenter's window, and the tablet's",
+  "bullets": [
+    "F is fullscreen; P opens the presenter window with notes, a timer, and the next slide",
+    "A build is the deck as plain files, for any web host, with nothing watching your edits",
+    "Polls from the audience's phones need the live server: see docs/implementation/hosting.md"
+  ],
+  "task": "Build this deck, then serve the build and open the address it prints. With `--host` at the end of the second line, a tablet on your network can open it too. This task cannot tick itself.",
+  "snippet": "npm run build -- ./tutorial\nnpm run preview -- ./tutorial",
+  "ask": "Build the tutorial deck and serve the build so that I can look at it."
+}

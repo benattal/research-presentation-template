@@ -6,6 +6,9 @@ node_modules/
 /data/captures/
 /data/recordings/
 
+# Screenshots the user sends as feedback, and who is listening for them
+/data/feedback/
+
 # Live server state (poll votes)
 /.live-state/
 
@@ -39,3 +42,7 @@ Thumbs.db
 .gradio/
 
 # Python bytecode (narration/)
+
+# The tutorial deck: the picture a reader adds to it is theirs
+/tutorial/public/
+/tutorial/assets/

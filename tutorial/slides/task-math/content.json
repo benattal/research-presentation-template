@@ -1,0 +1,19 @@
+{
+  "layout": "task",
+  "sectionLabel": "Edit a slide",
+  "title": "Math goes between dollar signs",
+  "subtitle": "Put a formula here",
+  "bullets": [
+    "Text between two dollar signs is typeset as math",
+    "In JSON a backslash is typed twice"
+  ],
+  "task": "Replace the line that starts with `\"subtitle\"` with one that has a formula in it, such as the line below, and save.",
+  "file": "content.json",
+  "snippet": "\"subtitle\": \"Euler: $e^{i\\\\pi} + 1 = 0$\",",
+  "ask": "In the tutorial deck, give the slide task-math a subtitle with Euler's identity typeset as math.",
+  "check": {
+    "field": "subtitle",
+    "contains": "$"
+  },
+  "whenDone": "Titles, subtitles, and bullets all render math this way."
+}

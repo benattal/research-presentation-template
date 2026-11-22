@@ -1,0 +1,19 @@
+{
+  "layout": "task",
+  "sectionLabel": "Edit a slide",
+  "title": "Change this title",
+  "subtitle": "A slide's words live in its content.json",
+  "bullets": [
+    "The title above is one line of a text file",
+    "Change the line, save, and the slide changes"
+  ],
+  "task": "Open the file below, change the words after `\"title\"`, and save. Watch this window.",
+  "file": "content.json",
+  "snippet": "\"title\": \"Change this title\",",
+  "ask": "In the tutorial deck, change the title of the slide task-title to \"My first edit\".",
+  "check": {
+    "field": "title",
+    "differs": "Change this title"
+  },
+  "whenDone": "That is an edit: the page reloaded by itself and stayed on this slide."
+}

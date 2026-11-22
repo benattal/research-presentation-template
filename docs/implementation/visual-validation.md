@@ -14,7 +14,15 @@ npm run capture -- <id> --slides intro,method # only these slide ids
 npm run capture -- <id> --scale 2             # 2560×1440 screenshots
 npm run capture -- <id> --strict              # exit 1 on any error or warning
 npm run capture -- <id> --channel msedge      # use an installed browser
+npm run capture -- <id> --compare data/captures/<id>/<run>   # compare with that run
+npm run capture -- <id> --no-compare          # compare with nothing
 ```
+
+A run compares its frames with the newest earlier run of the same
+presentation, whatever slides that run covered. After iterating with
+`--slides`, compare the final full run with the run made before the change
+(`--compare`); otherwise the frames the partial runs left out have nothing
+to be compared with and are never reported as changed.
 
 The first run needs a browser: `npx playwright install chromium` once, or
 `--channel msedge` / `--channel chrome` to use one already installed. Assets
@@ -52,6 +60,7 @@ a changed frame can be toggled between now, before, and the difference.
 | `clipped` | warning | the box that lays out a text cuts it off (`overflow: hidden`, ellipsis) |
 | `text-past-box` | warning | a line of text (a formula, a long word, `nowrap`) is wider than the box that lays it out and spills over its neighbors or the stage edge; the box itself still fits, so only the text shows it |
 | `outside-stage` | warning | visible content extends past the stage edge |
+| `title-wraps` | warning | a slide title runs onto a second line |
 | changed | information | more than 0.1% of pixels differ from the previous run |
 
 Content a layout clips on purpose, inside its own `overflow: hidden` box, is

@@ -2,12 +2,13 @@
 
 Layouts every presentation can use, registered in
 `core/client/layouts/index.js`. Each takes the common slide fields
-(`sectionLabel`, `footnote`, `transition`, `buildSteps`) from
+(`sectionLabel`, `footnote`, `credits`, `transition`, `buildSteps`) from
 [the presentation format](presentations.md) as well as the fields below. A
 media item is `{ type: "image" | "gif" | "video", src, alt?, poster? }`; a
 video's `poster` image shows until the video has a frame. Text fields
 render math written as `$…$` and `$$…$$`, and color terms with
-`\htmlClass` ([math in text](presentations.md#math-in-text)).
+`\htmlClass`; [math in text](presentations.md#math-in-text) names the few
+fields that show as plain text.
 
 A slide appears through its slide transition, and what it shows on arrival
 comes with it: headings, lists, and media do not fade in again on their
@@ -24,7 +25,7 @@ poll's bars as votes arrive.
 | `progressiveBuild` | `title`, `buildSteps`: `[{ label, description?, media? }]`, `className`? | step k shows the first k + 1 entries |
 | `diagram` | `title`, `description`?, `media`? (each with `caption`?), `example`? `{ positive, negative }` | an explanation beside figures |
 | `media` | `title`, `media` (up to four) | 2×2 grid; videos get controls |
-| `illustratedPoints` | `title`, `points`: `[{ text, visual }]`, `buildSteps` | each point appears with an illustration; `visual.type` is `imageCompare` (`fakeImg`, `realImg`), `chatCompare` (`bad`, `good`, each `{ messages }`), `chatConversation` (`messages`), or `image` (`src`); `**bold**` works in `text` |
+| `illustratedPoints` | `title`, `points`: `[{ text, visual? }]`, `buildSteps` | each point appears with an illustration; `visual.type` is `imageCompare` (`fakeImg`, `realImg`), `chatCompare` (`bad`, `good`, each `{ messages }`), `chatConversation` (`messages`), or `image` (`src`); `**bold**` works in `text` |
 | `discussion` | `title`, `prompts` | numbered discussion prompts |
 | `colabLink` | `title`, `description`, `colabUrl`?, `steps`? `[{ text, url? }]`, `imageSrc`?, `note`? | button and QR code for a notebook; without `colabUrl` the button reads "Link Coming Soon" |
 | `credits` | `title`, `subtitle`? | every source the presentation cites (`credits` on its slides, text from `sources.json`), in order of first use, in three columns |
@@ -66,7 +67,7 @@ module's docstring gives its fields; this table says what to reach for.
 | `EquationStack.jsx` | `EquationStack` (default) | equations revealed one per build step, earlier ones dimmed; a line can ask before its right side (`rhs`), show a one-step justification under it, or grow term by term (`parts`) |
 | `Controls.jsx` | `Slider`, `Readout` | a range input for exploring with the mouse that gives the arrow keys back to the slides; named values side by side |
 | `Chart.jsx` | `Chart` (default) | a plot with thin axes and lines, dots, bars, or areas, colored by class names; optionally a scrubber |
-| `playback.js` | `useStepClock`, `SETTLED_MS` | an animation that runs over time on a build step (`draw(ms)` from the step's start, on every frame until the time the layout says it ends at); one still frame in the capture view; a virtual clock for recording |
+| `playback.js` | `useStepClock`, `SETTLED_MS` | an animation that runs over time on a build step (`draw(ms)` from the step's start, on every frame until the time the layout says it ends at); one still frame in the capture view. Its `startVirtualClock`, a clock a recorder could step frame by frame, has no caller yet |
 
 A layout restyles a widget from its own stylesheet, scoped under its own
 class (`.my-layout .slider input`); the widgets' colors are core tokens.

@@ -66,6 +66,10 @@ The measurable gates that close the plan.
 
 ## Active plans
 
+The plans listed on `main` are the framework's own. A project branch adds
+the plans of its presentations. An agent works the plan of the task it
+was given, in order; a plan it was not asked about is not an instruction.
+
 - [Template restructure](template-restructure.md), tracked in
   [its tracker](../tracking/template-restructure.md).
 - [Light transport and neural rendering](light-transport-and-neural-rendering.md),
@@ -74,3 +78,9 @@ The measurable gates that close the plan.
   [its tracker](../tracking/gen-nlos-explainer.md).
 - [Framework consolidation](framework-consolidation.md), tracked in
   [its tracker](../tracking/framework-consolidation.md).
+- [Reviewing a deck on an iPad or iPhone](ipad-review.md), tracked in
+  [its tracker](../tracking/ipad-review.md).
+- [The tutorial: a deck you learn by editing](tutorial.md), tracked in
+  [its tracker](../tracking/tutorial.md).
+- [The second tutorial: building a deck with an agent](tutorial-agents.md),
+  tracked in [its tracker](../tracking/tutorial-agents.md).

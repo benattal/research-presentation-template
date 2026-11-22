@@ -4,7 +4,7 @@
  *
  * Nothing here touches Vite, the DOM, or storage, so the Node test runner
  * and the build tooling import this module directly. `load.js` supplies the
- * files through Vite's `import.meta.glob`.
+ * files through Vite's `import.meta.glob`, as text that `parseJsonFile` reads.
  */
 
 import { mathProblems } from '../stage/math.js';
@@ -15,6 +15,22 @@ export class PresentationError extends Error {
     super(`Presentation is invalid:\n- ${problems.join('\n- ')}`);
     this.name = 'PresentationError';
     this.problems = problems;
+  }
+}
+
+/**
+ * One JSON file of a presentation, given as its text. Returns the parsed
+ * value, or `undefined` after adding to `problems` that `name` is not valid
+ * JSON, with the parser's message (which gives the line and column of the
+ * mistake). A missing comma in a slide's file is the commonest way for a
+ * presentation not to load, and it must be named like any other problem.
+ */
+export function parseJsonFile(name, text, problems) {
+  try {
+    return JSON.parse(text);
+  } catch (error) {
+    problems.push(`${name} is not valid JSON: ${error.message}`);
+    return undefined;
   }
 }
 
