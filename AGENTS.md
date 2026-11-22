@@ -263,8 +263,9 @@ content to silence a warning.
 - Slide media and source decks are assets: they live in the asset store
   described in [DATA.md](DATA.md) (named by `ASSETS_REMOTE`; by default
   this repository's own bucket, which needs its access tokens), and in
-  ignored `public/` and `assets/` directories locally. Never commit them; never force-add an
-  ignored file. A clean checkout without assets is expected.
+  ignored `public/` and `assets/` directories locally. Never commit them;
+  never force-add an ignored file. A clean checkout without assets is
+  expected.
 - Every presentation's directory has a `README.md` that says how to pull
   its assets (`npm run assets -- pull <id>`) and push new ones, and which
   store it uses. `npm run new` writes it; `npm test` fails without it.
@@ -314,8 +315,8 @@ Use evidence proportional to risk:
 Framework behavior belongs in `docs/implementation/`; conventions belong in
 `docs/style/`; the procedures agents follow belong in `docs/workflows/`;
 what a person using the template reads (walkthroughs, the skills explained)
-belongs in `docs/guides/`; setup belongs in `docs/environments/`; changing state belongs only in `docs/tracking/`.
-Before starting a presentation, read
+belongs in `docs/guides/`; setup belongs in `docs/environments/`; changing
+state belongs only in `docs/tracking/`. Before starting a presentation, read
 [presentation types](docs/style/presentation-types.md) and
 [making a presentation](docs/workflows/making-a-presentation.md); when
 others work on the branch, [working together](docs/workflows/working-together.md). Every document is reachable from
