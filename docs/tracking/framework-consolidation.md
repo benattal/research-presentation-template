@@ -11,6 +11,29 @@ only `main` and those three. Resume from the newest entry below.
 
 Every direction the user gives about this work, quoted and dated.
 
+2026-11-22:
+
+- "It seems like docs/workflows may actually be for agents. I think a clear
+  separation between what is for the agent and what is for the user can be
+  helpful (specifically, some walkthroughs for the user)"
+- The session's goal: "-> Make sure the code, docs, and skills are up to
+  date -> Make sure the README provides enough information for a user to
+  get started with a new presentation, and each skill * There should be
+  more specific documentation for each skill in docs * There should be
+  more specific examples of use cases/walkthroughs for users"
+- "Looks like some of this exists in docs/workflows -- if this could be
+  expanded and linked to from the README that would be good"
+- "The main readme also does not list gen-nlos as a branch"
+- "I think I would also like you to add a markdown file (somewhere in docs)
+  doing a walkthrough of creating a new presentation using some of these
+  skills/workflows"
+- "Also some instructions in the README for setting up a store for larger
+  assets (cloudflare or dropbox) would be good. Cloudflare needs to make
+  clear that access tokens are required"
+- "Can you make sure that the skill, docs, code are all up to date? I would
+  like to share this repository with a collaborator so that they can use
+  it"
+
 2026-11-19:
 
 - "If you could actually spend some time on organizing the code a bit,
@@ -34,6 +57,73 @@ Every direction the user gives about this work, quoted and dated.
   `nlos-comparison-polish-wip`, each holding one unfinished commit that
   no other branch has).
 - "Yeah don't use simlinks like that" (of junctions between checkouts).
+
+## 2026-11-22 15:30 — audited for a collaborator: guides, an asset store of one's own, 67 corrections
+
+User direction (2026-11-22): "Can you make sure that the skill, docs, code
+are all up to date? I would like to share this repository with a
+collaborator so that they can use it", with the further directions quoted
+above.
+
+- Method: a script checked that every path, `npm run` script, flag, and
+  code identifier named in 31 documents exists (they did); three read-only
+  reviewers compared what the documents say with what the code does, one
+  group of documents each; and a fresh clone of `main` in a temporary
+  folder was walked through as a newcomer would (install, check, tests, a
+  new presentation, a project branch without the example, capture, build,
+  and an asset store that is a plain folder).
+- Found by the walk, and fixed in code:
+  - `npm run assets -- pull <id>` failed for a presentation with no
+    `assets/` in a store of real directories (a folder, Dropbox): rclone
+    reports a missing directory there (exit 3), where R2 lists nothing.
+    `pull` now copies the asset directories the store has and says when it
+    has none.
+  - `pull --all` with nothing in the store for the branch pulled every
+    presentation (an empty id list meant "all"). It now says the store
+    holds nothing.
+  - With no store configured the command printed rclone's own error. It
+    now says that rclone has no remote of that name and where the README
+    explains the setup.
+  - The store's logic moved from `scripts/assets.mjs` to
+    `core/tooling/assetStore.js`, with tests against a folder store
+    (`tests/assetStore.test.mjs`; skipped, saying so, without rclone).
+  - `npm run new` wrote the owner's bucket path into each new
+    presentation's README; it now names "the asset store" and asks the
+    author to say which.
+  - `package.json` allowed Node 22.0; Vite 8 needs 22.12.
+- Found by the reviewers and corrected in the documents (67 exact
+  replacements in 19 files, each checked against the code first): which
+  text fields render math; `title-wraps`, `--compare`, and `--no-compare`
+  in the capture documents and the `validate-slides` skill (a full run
+  after partial runs was compared with the last partial run); the
+  gateway's `/health` and its redirect to `/<id>/`; notes files counted
+  from 0; a recording is not an asset until it is copied into `assets/`;
+  "push often" against "push only when asked" (now: push git and media
+  together, once the user has said the work is pushed); a quoted user in
+  the agent files, against their own rule; the structure and command
+  blocks of the agent files; a static build "opened from disk", which a
+  browser refuses (measured: a `file://` page loads no module script).
+- Written: `docs/guides/` for people (`getting-started.md`,
+  `walkthroughs.md`, `skills.md`, `reviewing-on-a-tablet.md`), with
+  `docs/workflows/` kept for agents and `docs/index.md` saying which is
+  which; the README (starting a presentation, large assets with R2's
+  access tokens and Dropbox, the skills with what to say, the branch table
+  with `gen-nlos-explainer`); `DATA.md` for any store, with the owner's
+  bucket as one section; the `sync-assets`, `live-feedback`, and
+  `feedback-inbox` skills.
+- R2 and Dropbox setup steps are from rclone's and Cloudflare's own pages,
+  read on 2026-11-22 (rclone.org/s3 "Cloudflare R2", rclone.org/dropbox,
+  developers.cloudflare.com/r2/api/tokens). Tried here: a folder store,
+  end to end, and the owner's R2 bucket in dry-run. Not tried here:
+  creating an R2 token, and rclone's Dropbox sign-in.
+- Left alone, for the owner: `docs/plans/template-restructure.md` still
+  lists its last two todos as open (assets to R2; branches and fresh
+  history), and the second looks done; `slide-review.md` asks for white
+  slides while the default theme is dark (a review rule, not a claim about
+  the framework); `guest-lecture` and `vision-workshop` have not merged
+  `main`.
+- Checked: in the worktree on `docs-audit` (framework as on `main`): `npm test`, 88 of 88; `npm run check`, ok; `npm run test:ui`, 44 of 44 in 75 s. Two earlier runs each failed one test, a different one each time, on `page.goto: Timeout 30000ms` at a test server's first page load, while the machine was throttled (an install that takes 5 s took 3 min); recorded as load. A fresh clone of the final commit in a temporary folder: `npm ci` in 11 s; the README's steps (a branch, `npm run new -- my-talk`, the example deleted) give `npm run check` ok and `npm test` 88 of 88; with no store the asset command names the missing remote and the README section; with a folder as `ASSETS_REMOTE`, push, delete, pull returns the file; `npm run capture -- my-talk`, 5 frames, no errors or warnings.
+- Next: the open todos of the plan, unchanged.
 
 ## 2026-11-19 21:45 — `vision-workshop` pushed; the remote has four branches
 

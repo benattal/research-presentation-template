@@ -106,8 +106,10 @@ Fields every slide may use, whatever its layout:
 Media paths start with `/slides/<slide-id>/` and name a file in
 `public/slides/<slide-id>/`. They are resolved against the deployment's base
 URL when the presentation loads, so they work at `/`, under `/<id>/`, and in
-a static build opened from disk. A media item is
-`{ "type": "image" | "gif" | "video", "src": "...", "alt"?: "..." }`.
+a static build served under any path. (A build needs a web server: a browser
+does not load its scripts from a `file://` address.) A media item is
+`{ "type": "image" | "gif" | "video", "src": "...", "alt"?: "...", "poster"?: "..." }`;
+a video's `poster` image shows until the video has a frame.
 
 ## Math in text
 
@@ -122,9 +124,13 @@ formula with a newline, along with every formula KaTeX cannot render.
 `core/client/stage/math.js` owns the parsing and the KaTeX options, so the
 browser and `npm run check` render alike. `core/client/stage/Text.jsx`
 renders one string with its math; the core layouts pass their titles,
-subtitles, bullets, descriptions, captions, prompts, questions, and the
-outline's section titles through it, and the slide frame passes the
-footnote. `sectionLabel` is shown as plain text.
+subtitles, bullets, descriptions, captions, discussion prompts, the
+question of `pollResults`, and the outline's section titles through it, and
+the slide frame passes the footnote and the credit line. Shown as plain
+text: `sectionLabel`, a `poll`'s question and options, the `text` of
+`illustratedPoints` (which renders `**bold**` only), the `example` of
+`diagram`, the steps and note of `colabLink`, and the cards of
+`presentationLinks`.
 
 When a presentation loads, every string in each listed slide's
 `content.json`, and every section title, is typeset once. A formula that
@@ -195,8 +201,9 @@ spelling.
 
 ## Custom layouts
 
-A layout is a React component that receives `{ slide, buildStep, sections }`
-and renders inside the 1280×720 stage:
+A layout is a React component that receives
+`{ slide, buildStep, sections, citations }` and renders inside the 1280×720
+stage:
 
 ```jsx
 // presentations/<id>/layouts/BigNumberSlide/BigNumberSlide.jsx
@@ -218,8 +225,8 @@ export default { bigNumber: BigNumberSlide };
 ```
 
 A presentation's layout may not reuse a core layout's name; wrap the core
-layout under a new name instead (the diffusion workshop's `diffusionTitle`
-wraps `title`). Layouts import the framework as `@core/...`; for example
+layout under a new name instead (a `workshopTitle` that renders the core
+`TitleSlide` with its own background, for example). Layouts import the framework as `@core/...`; for example
 `@core/stage/Media.jsx` for a media item, `@core/live/polls.js` for a live
 poll, and `@core/presentation/assetUrl.js` to resolve an asset path built in
 code.

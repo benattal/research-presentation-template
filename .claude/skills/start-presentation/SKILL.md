@@ -18,16 +18,22 @@ order of the first steps, which is where a deck goes wrong.
 2. **Read what the user gave** (reference decks, papers, result folders,
    websites). `npm run extract-pptx -- <deck.pptx>` turns a PowerPoint deck
    into text, media, and notes. Write in the plan what each source is for.
-3. **Work on the project's own branch, in the main checkout.** Create the
-   branch from the current one if the project needs what is there. No side
-   folders; no junctions or symlinks.
+3. **Work on the project's own branch, in the main checkout.** Create it
+   from `main` (`git switch -c <project> main`), or from the current branch
+   when the project needs what is there. No side folders; no junctions or
+   symlinks.
 4. **Create the presentation, its plan, and its tracker:**
 
    ```bash
    npm run new -- <id>
    ```
 
-   then `docs/plans/<id>.md` and `docs/tracking/<id>.md`, linked to each
+   It writes a five-slide starter (a title, two outlines, one content
+   slide, a closing). That is scaffolding to replace from the storyboard,
+   not a draft to show: remove from `presentation.json` whatever the
+   storyboard does not have.
+
+   Then `docs/plans/<id>.md` and `docs/tracking/<id>.md`, linked to each
    other and listed in the two `README.md` indexes. Quote every direction
    the user gives, dated, under "Standing directions" at the top of the
    tracker, when it is given.
@@ -54,7 +60,8 @@ order of the first steps, which is where a deck goes wrong.
 Three or four times: a pass; a capture; the animations vetted frame by
 frame; reviewers who did not build the deck, each with one question
 (content, layout, motion), using `docs/style/slide-review.md`; findings
-consolidated against the user's directions; commit and push.
+consolidated against the user's directions; commit, and push git and media
+together when the user has asked for pushes.
 
 ## Report
 
@@ -66,4 +73,4 @@ plainly what was not verified.
 Ask once whether the user wants to watch the deck while it is built and
 send marked-up screenshots from a tablet or phone: the `live-feedback`
 skill for this session, and `feedback-inbox` for the session they open on
-the device (`docs/workflows/reviewing-on-a-tablet.md`).
+the device (`docs/guides/reviewing-on-a-tablet.md` is what to show them).

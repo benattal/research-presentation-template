@@ -16,6 +16,13 @@ newest entry below.
 
 Every direction the user gives about this work, quoted and dated.
 
+2026-11-22:
+
+- "The distinction between live feedback and feedback inbox is a little
+  unclear."
+- "I'm also a little unclear on how the second session (e.g. the haiku
+  agent) sends feedback to other claude sessions/agents"
+
 2026-11-21:
 
 - "Sorry, but why can't you? I told you where rclone.conf is. It is in
@@ -53,6 +60,46 @@ Every direction the user gives about this work, quoted and dated.
   be able access it, take screenshots of slides, annotate (locally on the
   iPad), and upload screenshots to provide comments? No development yet,
   just scoping this feature out"
+
+## 2026-11-22 15:30 — a session hands a screenshot to another; each skill says whose it is
+
+User direction (2026-11-22): "I'm also a little unclear on how the second
+session (e.g. the haiku agent) sends feedback to other claude
+sessions/agents" and "The distinction between live feedback and feedback
+inbox is a little unclear."
+
+- Control test 3, observed: `claude --model haiku -p "<send this session a
+  message naming the screenshot's path>" --allowedTools
+  "ListAgents,SendMessage"`, run in the checkout, answered "SENT". The
+  message arrived in this session between two tool calls, marked as coming
+  from another session and carrying the path
+  `~/.claude/uploads/<session id>/1b0ef513-image.jpg`; this session opened
+  that file and saw the user's marked-up screenshot of the summary slide.
+  The sender's name was the one `ListAgents` gives a session by default
+  (the checkout's folder name and a number). The plan's control test 3 now
+  says so. Still not observed: the inbox skill run through a review from an
+  interactive session under Remote Control, and control test 4 (which
+  model reads the marks well enough).
+- Done: both skills open with which session they are for and a table of
+  the two side by side. `live-feedback` is for the session that edits and
+  is needed whenever the user reviews while slides change; `feedback-inbox`
+  is for a second session that never edits and is needed only when several
+  sessions edit. The inbox skill has a section on how a screenshot gets
+  from it to the editing session (names from `ListAgents`, text by
+  `SendMessage`, the image as a path, the registry in
+  `data/feedback/sessions.md`). With one editing session there is no
+  inbox, and both skills say so.
+- Done: the person's side moved to a guide,
+  `docs/guides/reviewing-on-a-tablet.md` (the usual case, one session,
+  first; the inbox as the addition for several sessions; what to do when a
+  screenshot arrives without a file). `docs/workflows/reviewing-on-a-tablet.md`
+  is now the agents' procedure: the two roles, serving, how sessions find
+  and message each other, a screenshot's path, placing it on a slide.
+- Done: the inbox keeps a screenshot under its own extension (the observed
+  upload was a JPEG), not `.png`.
+- Checked: in the worktree on `docs-audit` (framework as on `main`): `npm test`, 88 of 88; `npm run check`, ok; `npm run test:ui`, 44 of 44 in 75 s. Two earlier runs each failed one test, a different one each time, on `page.goto: Timeout 30000ms` at a test server's first page load, while the machine was throttled (an install that takes 5 s took 3 min); recorded as load. A fresh clone of the final commit in a temporary folder: `npm ci` in 11 s; the README's steps (a branch, `npm run new -- my-talk`, the example deleted) give `npm run check` ok and `npm test` 88 of 88; with no store the asset command names the missing remote and the README section; with a folder as `ASSETS_REMOTE`, push, delete, pull returns the file; `npm run capture -- my-talk`, 5 frames, no errors or warnings.
+- Next: unchanged: the device checklist, control test 4, and the two
+  skills' gates.
 
 ## 2026-11-21 19:25 — on `main` and `gen-nlos-explainer`; first observations from the iPad
 

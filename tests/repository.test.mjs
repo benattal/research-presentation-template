@@ -76,6 +76,53 @@ describe('documentation', () => {
     }
     assert.deepEqual(dead, []);
   });
+
+  it('has no link to a heading that does not exist', () => {
+    // The anchor GitHub gives a heading: lowercase, punctuation dropped, spaces to hyphens.
+    const anchors = (path) => new Set([...prose(path).matchAll(/^#{1,6} +(.+)$/gm)].map(([, heading]) => (
+      heading.trim().toLowerCase().replace(/[^\p{L}\p{N} _-]/gu, '').replaceAll(' ', '-')
+    )));
+    const markdown = [
+      ...filesUnder('docs', /\.md$/),
+      ...filesUnder('.claude/skills', /\.md$/),
+      ...['README.md', 'CLAUDE.md', 'AGENTS.md', 'DATA.md'].map((name) => join(ROOT, name)),
+    ];
+    const dead = [];
+    for (const path of markdown) {
+      for (const [, target, anchor] of prose(path).matchAll(/\]\(((?!https?:)[^)#\s]*)#([^)\s]+)\)/g)) {
+        const linked = target ? join(dirname(path), target) : path;
+        if (linked.endsWith('.md') && existsSync(linked) && !anchors(linked).has(anchor)) {
+          dead.push(`${relative(ROOT, path)} → ${target}#${anchor}`);
+        }
+      }
+    }
+    assert.deepEqual(dead, []);
+  });
+});
+
+describe('skills', () => {
+  const skills = readdirSync(join(ROOT, '.claude/skills'), { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name);
+
+  it('are each named for their directory and say when to use them', () => {
+    for (const name of skills) {
+      const frontmatter = /^---\n([\s\S]*?)\n---\n/.exec(read(`.claude/skills/${name}/SKILL.md`))?.[1] ?? '';
+      assert.match(frontmatter, new RegExp(`^name: ${name}$`, 'm'), `.claude/skills/${name}/SKILL.md: name`);
+      assert.match(frontmatter, /^description: .*\bUse \w+/m, `.claude/skills/${name}/SKILL.md: a description that says when to use it`);
+    }
+  });
+
+  // A skill nobody knows about is not used: the README's table is where a
+  // person finds it, and the guide is where it is explained.
+  it('are each listed in the README and explained in the skills guide', () => {
+    const readme = read('README.md');
+    const guide = read('docs/guides/skills.md');
+    for (const name of skills) {
+      assert.ok(readme.includes(`[\`${name}\`](docs/guides/skills.md#${name})`), `README.md does not list the skill ${name}`);
+      assert.match(guide, new RegExp(`^## ${name}$`, 'm'), `docs/guides/skills.md has no section "${name}"`);
+    }
+  });
 });
 
 describe('presentations', () => {

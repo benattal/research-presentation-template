@@ -42,7 +42,7 @@ host or opened under any URL prefix.
 
 `--host` makes either server reachable from a tablet or phone on the same
 network, to read a deck there while it is edited
-([reviewing on a tablet](../workflows/reviewing-on-a-tablet.md)). The
+([reviewing on a tablet](../guides/reviewing-on-a-tablet.md)). The
 development server then prints its network address, and that address with
 `?review`, which names each slide's id and build step in the navigation
 bar.
@@ -85,7 +85,9 @@ The gateway serves each presentation at `/<id>/` and its API at
 the presentation whose manifest sets `"servedAtRoot": true`; a branch with
 several presentations uses a small landing presentation with a
 `presentationLinks` slide for this. Without one, `/` lists the
-presentations.
+presentations. `/<id>` redirects to `/<id>/`, and `/health` answers
+`{ "status": "ok", "presentations": [...] }` for a hosting service's health
+check.
 
 The presenter logs in once in the presenter window; the token is shared by
 every window of that browser, so the audience view on the projector also acts

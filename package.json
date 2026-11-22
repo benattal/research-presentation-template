@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Interactive slide decks for research talks and workshops: one shared framework, one directory per presentation",
   "engines": {
-    "node": ">=22"
+    "node": ">=22.12"
   },
   "scripts": {
     "dev": "node scripts/dev.mjs",

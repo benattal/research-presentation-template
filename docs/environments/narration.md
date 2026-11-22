@@ -42,7 +42,8 @@ bash narration/setup.sh                                     # venvs kokoro and e
 bash narration/setup.sh qwen chatterbox                     # the other backends, when wanted
 ```
 
-`setup.sh` pins the version of every package it names (torch 2.8.0,
+`setup.sh` pins the version of every package it names (torch 2.8.0, or
+2.6.0 in the `chatterbox` environment, whose package requires it;
 kokoro 0.9.4, faster-whisper 1.2.1, ctranslate2 4.9.0, and the audio
 libraries); the packages those depend on resolve at install time. A venv
 that exists is left as it is; remove its directory to rebuild it. `uv` is
@@ -77,7 +78,8 @@ client's usage reporting.
 
 ## GPU
 
-`setup.sh` installs torch built for CUDA 12.8. For another CUDA version,
+`setup.sh` installs torch built for CUDA 12.8 (CUDA 12.4 in the
+`chatterbox` environment). For another CUDA version,
 or a machine without an NVIDIA GPU, name the wheel index:
 
 ```bash

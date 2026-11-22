@@ -39,7 +39,9 @@ served deck is never a skeleton.
   ([presentation format](../implementation/presentations.md)).
 - After each section: `npm run check`, `npm run capture -- <id>`, and every
   frame read against its storyboard row. Update the row in the same commit.
-- Commit and push often; push media to the bucket with them.
+- Commit often. Once the user has said that this work is pushed, push git
+  and the media together (`npm run assets -- push <id>`): a pushed slide
+  whose media stayed on one machine shows a gap everywhere else.
 
 Refinement waits until the whole deck is drafted, unless the user says
 otherwise: a polished first section beside missing ones cannot be judged
@@ -64,7 +66,8 @@ Three or four times:
    directions (a direction outranks a reviewer), fix causes, and record in
    the tracker what was fixed, what was declined and why, and what is the
    user's to decide.
-6. **Publish.** Commit, push, push media.
+6. **Publish.** Commit; push git and media together, when the user has
+   asked for pushes.
 
 A cycle ends when its reviewers report nothing above cosmetic.
 
@@ -96,5 +99,5 @@ decisions visible; do not pick one silently.
 
 When work on a deck starts or resumes, ask once whether the user wants to
 watch it while it is edited and send marked-up screenshots from a tablet
-or phone ([reviewing on a tablet](reviewing-on-a-tablet.md); the
-`live-feedback` and `feedback-inbox` skills).
+or phone ([reviewing a deck while it is edited](reviewing-on-a-tablet.md);
+the `live-feedback` and `feedback-inbox` skills).
