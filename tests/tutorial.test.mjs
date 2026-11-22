@@ -8,7 +8,8 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, it } from 'node:test';
-import { REPO_ROOT, selectPresentations } from '../core/tooling/presentations.js';
+import { tmpdir } from 'node:os';
+import { REPO_ROOT, commandNameOf, selectPresentations } from '../core/tooling/presentations.js';
 import { TASK_STATES, taskState } from '../tutorial/layouts/TaskSlide/taskChecks.js';
 
 const TUTORIAL = join(REPO_ROOT, 'tutorial');
@@ -66,14 +67,27 @@ describe('the tutorial deck', () => {
     assert.throws(() => selectPresentations(['./docs']), /not a presentation/);
   });
 
-  it('has task slides, each with a file to open, an edit to make, and what to say to an agent', () => {
+  it('is named in messages by what a command takes: an id under presentations/, a directory elsewhere', () => {
+    const [tutorial] = selectPresentations(['./tutorial']);
+    assert.equal(commandNameOf(tutorial), './tutorial');
+    for (const presentation of selectPresentations([])) assert.equal(commandNameOf(presentation), presentation.id);
+    const outside = join(tmpdir(), 'decks', 'talk');
+    assert.equal(commandNameOf({ id: 'talk', dir: outside }), outside.replaceAll('\\', '/'));
+  });
+
+  it('has task slides, each with what to do, what to open or run, and what to say to an agent', () => {
     assert.ok(taskSlides.length >= 6, `${taskSlides.length} task slides`);
     for (const slide of taskSlides) {
-      for (const field of ['title', 'task', 'file', 'ask']) {
-        assert.equal(typeof slide[field], 'string', `tutorial/slides/${slide.id}: "${field}"`);
+      const where = `tutorial/slides/${slide.id}`;
+      for (const field of ['title', 'task', 'ask']) {
+        assert.equal(typeof slide[field], 'string', `${where}: "${field}"`);
       }
-      assert.ok(existsSync(join(TUTORIAL, slide.file)) || existsSync(join(TUTORIAL, 'slides', slide.id, slide.file)),
-        `tutorial/slides/${slide.id}: the file "${slide.file}" it asks the reader to open exists`);
+      const edits = slide.files ?? [{ file: slide.file, snippet: slide.snippet }];
+      assert.ok(edits.every((edit) => edit.file || edit.snippet), `${where}: a file to open or a text to use`);
+      // A file a task tells the reader to open is there, unless making it is the task.
+      for (const { file } of edits.filter((edit) => edit.file && !slide.files)) {
+        assert.ok(existsSync(join(TUTORIAL, file)) || existsSync(join(TUTORIAL, 'slides', slide.id, file)), `${where}: "${file}" exists`);
+      }
     }
   });
 

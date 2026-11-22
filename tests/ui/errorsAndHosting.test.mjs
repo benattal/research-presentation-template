@@ -38,7 +38,8 @@ describe('errors and hosting', { timeout: 240000 }, () => {
     assert.equal(problems.length, 2);
     assert.match(problems.join('\n'), /"noSuchLayout"/);
     assert.match(problems.join('\n'), /"missing"/);
-    assert.match(await page.locator('.load-error').innerText(), /npm run check/);
+    // The command it names is the one for this deck, which is not under presentations/.
+    assert.match(await page.locator('.load-error').innerText(), /npm run check -- \.\/tests\/fixtures\/broken\b/);
   });
 
   // A missing comma is the commonest slip of someone editing a slide by

@@ -90,15 +90,15 @@ checking and presenting; where to go next.
 | 9 | Build steps reveal a slide one click at a time | (1), (2), (3): three steps, the third with its own note | `progressiveBuild` layout | drafted |
 | 10 | Give this slide a second step | the task; ticks when `buildSteps` has two entries; (2) a line that only the second step shows | `task` layout, check on `buildSteps` | drafted |
 | 11 | Add a picture | the task: a file into `public/`, a `media` entry; shows the picture; ticks when the picture loads | `task` layout, check on `media` | drafted |
-| 12 | Add a slide of your own | the task: a new `content.json`, then its id in `presentation.json`; ticks when a section lists `my-slide` | `task` layout, check on the sections | drafted |
+| 12 | Add a slide of your own | the task, with each text under the file it goes in: a new `content.json`, then its id in `presentation.json`; ticks when a section lists `my-slide` | `task` layout (`files`), check on the sections | drafted |
 |   | **Make it yours** | | | |
 | 13 | (outline) | the sections | `outline` layout | drafted |
 | 14 | Change the colors | the task: uncomment a line of `theme.css`; the whole deck changes color; cannot tick itself | `task` layout, no check | drafted |
 | 15 | A layout is a small React component | (1) what a layout is, with this panel as the example; (2) where it is registered | `content` layout | drafted |
 |   | **Check and present** | | | |
 | 16 | (outline) | the sections | `outline` layout | drafted |
-| 17 | Check the deck before you show it | (1) `npm run check`; (2) `npm run capture`; (3) what a finding looks like | `progressiveBuild` layout | drafted |
-| 18 | Present it | the keys, the presenter window, a build, a tablet | `content` layout | drafted |
+| 17 | Check the deck before you show it | what the two commands look at; the task: run `npm run check -- ./tutorial` and `npm run capture -- ./tutorial`; cannot tick itself | `task` layout, no check | drafted |
+| 18 | Present it | the keys, the presenter window, a build; the task: build this deck and serve the build, with `--host` for a tablet; cannot tick itself | `task` layout, no check | drafted |
 | 19 | Ask an agent for the rest | the six skills, each with what to say | `content` layout | drafted |
 | 20 | Now make your own | the three commands that start a project | `title` layout | drafted |
 

@@ -7,7 +7,7 @@
     "This slide starts with one step"
   ],
   "secondStep": "This line belongs to the second step. You made it appear with a key press.",
-  "task": "Add the line below to this slide's file, save, then press the right arrow once.",
+  "task": "Add the line below to this slide's file, right after the line that starts with `\"layout\"`. Save, then press the right arrow once.",
   "file": "content.json",
   "snippet": "\"buildSteps\": [\"the slide\", \"the extra line\"],",
   "ask": "In the tutorial deck, give the slide task-steps two build steps.",

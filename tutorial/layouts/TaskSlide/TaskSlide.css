@@ -150,9 +150,17 @@
 }
 
 /* A file's or a field's name inside a line of text. */
+/* Kept on one line: a name such as --accent must not break at its hyphens. */
 .task-code {
   font-family: var(--font-mono);
   font-size: 0.88em;
   color: var(--accent-secondary);
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+}
+
+/* A file to open with the text that goes in it. */
+.task-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }

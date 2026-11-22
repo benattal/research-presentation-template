@@ -10,7 +10,7 @@
  * gateway, and a command without arguments leave out.
  */
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
-import { basename, dirname, join, resolve } from 'node:path';
+import { basename, dirname, isAbsolute, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
@@ -62,6 +62,21 @@ function presentationAt(path) {
   const id = basename(dir);
   if (!ID_PATTERN.test(id)) throw new Error(`${path}: a presentation's directory name uses lowercase letters, digits, and hyphens.`);
   return { id, dir, manifest: readManifest(dir) };
+}
+
+/**
+ * What a command is given to mean `presentation`: its id when it is under
+ * `presentations/`, otherwise its directory, from the repository's root
+ * when it is inside the repository (`./tutorial`) and in full when it is
+ * not. The inverse of `selectPresentations`, for messages that tell
+ * someone what to type at the repository's root.
+ */
+export function commandNameOf(presentation) {
+  const dir = resolve(presentation.dir);
+  if (dir === join(PRESENTATIONS_DIR, presentation.id)) return presentation.id;
+  const fromRoot = relative(REPO_ROOT, dir);
+  const inside = !fromRoot.startsWith('..') && !isAbsolute(fromRoot);
+  return (inside ? `./${fromRoot}` : dir).replaceAll('\\', '/');
 }
 
 /**
