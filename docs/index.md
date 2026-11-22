@@ -19,6 +19,8 @@ its rules. The rest is reference for both.
   narrated video, two people on one branch, taking the framework's updates
 - [The skills](guides/skills.md): what each agent skill is for, how to ask
   for it, what it does, and what comes back
+- [Worked examples](guides/worked-examples.md): each of the six skills
+  followed through a real use, with the commands' output
 - [Reviewing on a tablet or phone](guides/reviewing-on-a-tablet.md): the
   deck on an iPad or iPhone while it is edited, and marked-up screenshots
   sent back

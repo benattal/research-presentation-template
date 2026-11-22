@@ -68,7 +68,8 @@ Then:
 [Getting started](docs/guides/getting-started.md) goes through each step,
 with and without an agent. [Walkthroughs](docs/guides/walkthroughs.md)
 covers joining someone's project, starting from a PowerPoint deck,
-recording a video, and more.
+recording a video, and more; [worked examples](docs/guides/worked-examples.md)
+shows each skill in use.
 
 ## A presentation
 
@@ -193,6 +194,8 @@ you want the two review skills.
 
 [The skills](docs/guides/skills.md) describes each one: what you give it,
 what it does, what comes back, and what it will not do without asking.
+[Worked examples](docs/guides/worked-examples.md) follows each skill through
+a real use, with the output of every command.
 
 ## Reviewing on an iPad or iPhone
 

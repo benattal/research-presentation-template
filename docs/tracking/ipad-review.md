@@ -61,6 +61,53 @@ Every direction the user gives about this work, quoted and dated.
   iPad), and upload screenshots to provide comments? No development yet,
   just scoping this feature out"
 
+## 2026-11-22 16:20 — the inbox skill run on Haiku, end to end; one defect found and fixed
+
+No new direction. The session's goal (2026-11-22) asks for documentation
+of each skill and worked examples; running the skill is how its example
+was checked.
+
+- Run: this session registered itself in `data/feedback/sessions.md` (all
+  slides of `gen-nlos-explainer`), as `live-feedback` says. A second
+  session was started in the checkout with
+  `claude --model haiku -p "Use the feedback-inbox skill. … The attached
+  image is also saved at <path>. The user wrote: …" --allowedTools
+  "Skill,Read,Write,Glob,Grep,ListAgents,SendMessage,Bash(cp:*),Bash(mkdir:*),Bash(date:*),Bash(ls:*)"`,
+  with the user's marked-up screenshot of the summary slide (the one from
+  the iPad, 2026-11-21 19:10).
+- First run, a defect: the session named the slide and step and described
+  the mark, then stopped without forwarding. Copying the image out of
+  `~/.claude/uploads/` was refused to it, and the skill made the copy a
+  precondition. Fixed in the skill: when the copy is refused, the saved
+  attachment's own path is forwarded and the note says `copy: not kept`.
+- Second run, through: the note
+  `data/feedback/gen-nlos-explainer/2026-11-22/1515-summary-step2.md` holds
+  the user's words, the placement, and the mark; this session received the
+  message in the skill's format, with the attachment's path, between two
+  tool calls.
+- What Haiku got right on this one screenshot: the slide (`summary`, from
+  the counter `22 / 23` against `presentation.json`, there being no
+  `?review` label), the step (2 of 2, from the Outlook text and the capture
+  frames), the mark (one red curved arrow, no handwriting), and that the
+  box shows a missing image with its alt text under the legend. It also
+  offered a "likely reading" of what the arrow meant, labeled as its own;
+  the skill asks it to describe and not decide, and the label keeps that
+  honest. One screenshot is not the gate of ten.
+- An interactive inbox would be asked for the permission to copy and could
+  be given it; the headless run could not. Both paths now end in a
+  forwarded screenshot.
+- Also done: `related-work/methods.mp4` and its poster on this machine
+  were the 2026-11-19 versions and the bucket's are from 2026-11-20
+  (2053740 and 89739 bytes); the bucket's are copied here, the older pair
+  kept in the session's temporary folder. `npm run check` still names the
+  one picture that is in neither bucket.
+- Also checked: the R2 settings the README and DATA.md give (`acl =
+  private`, `no_check_bucket = true`), laid over the existing remote
+  through `RCLONE_CONFIG_TCIG_*` variables, list and read the bucket; an
+  upload was run as a dry run only, so that nothing was written.
+- Checked: in the worktree on `guides` (framework as on `main`): `npm test`, 89 of 89; `npm run test:ui`, 44 of 44 in 124 s; `npm run check`, ok.
+- Next: unchanged.
+
 ## 2026-11-22 15:30 — a session hands a screenshot to another; each skill says whose it is
 
 User direction (2026-11-22): "I'm also a little unclear on how the second

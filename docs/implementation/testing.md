@@ -12,8 +12,11 @@ Three layers, each run by Node's built-in test runner or a script:
 `tests/fixtures/`, so they pass on every branch whatever its presentations.
 `npm test` also checks the structure of each presentation on the branch (a
 README that says how to pull its assets, no build files of its own, no
-viewport media queries, imports through `@core`) and that the README and
-the skills guide name every skill. The asset store's tests copy files with
+viewport media queries, imports through `@core`); that every skill is
+listed in the README, explained in the skills guide, and shown in a worked
+example; that no link names a heading that does not exist; and that every
+`npm run` script and option the documents and skills mention exists. The
+asset store's tests copy files with
 rclone, and are skipped, saying so, on a machine without it. `check` and
 `capture` test the branch's own presentations
 ([visual validation](visual-validation.md)).

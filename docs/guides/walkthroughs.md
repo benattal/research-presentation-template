@@ -4,6 +4,8 @@ For the person using this template. Each is one situation, start to finish:
 what to type, what to say to an agent if you work with one, and what you
 should see. [Getting started](getting-started.md) is the longest one, a new
 presentation from an empty clone; the ones here are shorter.
+[Worked examples](worked-examples.md) follows each of the six skills
+through a real use.
 
 - [Join a project someone else started](#join-a-project-someone-else-started)
 - [Start from a PowerPoint deck](#start-from-a-powerpoint-deck)
