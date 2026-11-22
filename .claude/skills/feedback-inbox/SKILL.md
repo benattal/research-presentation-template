@@ -68,6 +68,10 @@ Work through the images one at a time, in order.
    - The message says where the attachment was saved on this computer
      (a line naming a file under `~/.claude/uploads/<session id>/`): copy
      that file. Use the path the message gives; do not search for it.
+   - If the copy is refused or fails (reading under `~/.claude/` can need a
+     permission this session does not have), do not stop. The saved
+     attachment is itself a file: write `copy: not kept` in the `.md`, and
+     in step 4 pass on the attachment's own path.
    - An image with no such line has no path (seen for an image sent while
      the session was in the middle of a turn). Ask the user to send that
      one again, as a message of its own once this session has answered, or
@@ -78,7 +82,8 @@ Work through the images one at a time, in order.
    and say how each was found:
    - the review label in the bar (`<slide-id>`, `step k/n`, `i / N`): read it;
    - the counter alone (`i / N`): the `i`-th slide in `presentation.json`,
-     counting through its sections in order; the step is then unknown;
+     counting through its sections in order; the step is then unknown,
+     unless that slide's capture frames settle it;
    - neither: compare with the frames of the newest capture run,
      `data/captures/<id>/<time>/<NN>-<slide-id>-<step>.png`; `index.html`
      there shows them all;
@@ -95,7 +100,7 @@ Work through the images one at a time, in order.
 
    ```text
    Feedback from the user, sent from their tablet at <time>.
-   Image: <absolute path of the copy>   (open it; it is the feedback)
+   Image: <absolute path of the copy, or of the saved attachment>   (open it; it is the feedback)
    The user wrote: "<their words, verbatim>"
    Shows: <presentation>, slide <slide-id>, step <k> of <n> (<how found>, <how sure>)
    The inbox's reading of the marks, which may be wrong:
