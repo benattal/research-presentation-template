@@ -70,7 +70,10 @@ user.
 5. **The other project branches.** `guest-lecture` and `vision-workshop`
    merge `main`, each with the follow-ups the audit found
    ([below](#on-merging-into-a-project-branch)), and each after a capture
-   of its presentations.
+   of its presentations. `gen-nlos-explainer` has merged it.
+6. **WebKit, the rest.** `UI_TEST_BROWSER=webkit` has run the audience
+   tests only, and one older test fails there for a reason the tracker
+   gives. Run the other four files, and settle that test.
 
 ## Rules
 
@@ -118,6 +121,7 @@ observations.
 | 15 | Edit a slide on the computer while the device shows it | the device updates by hot reload | to observe |
 | 16 | Add the page to the Home Screen and open it from there | the page declares itself a web app, to open without Safari's bars | to observe |
 | 17 | Open the address with `?review`; take a screenshot | the bar names the slide's id, `step k/n`, and `i / N` | to observe: is the label legible in a screenshot |
+| 18 | Tap an arrow and look at it afterwards | it is not left highlighted | to observe |
 
 ## Design as built
 
@@ -129,6 +133,7 @@ observations.
 | `useFullscreen` returns `toggleFullscreen: null` where `document.fullscreenEnabled` is false; the audience view then renders no button and binds no key | `core/client/audience/useFullscreen.js`, `AudienceView.jsx` |
 | The presenter view is sized by the page (`100%`), like the audience view | `core/client/index.css` |
 | `touch-action: manipulation` on the page: no double-tap zoom | `core/client/index.css` |
+| The hover highlights of the bar, the toolbar, and the overview apply only where the pointer hovers (`@media (hover: hover)`): on a touch screen a tap leaves `:hover` set, and the pressed arrow stayed lit | `core/client/index.css` |
 | The overview has a close button: Safari on iOS sends no click for a tap on a plain box, which is what closing by a click outside the grid relies on | `core/client/audience/SlideOverview.jsx` |
 
 ### Behavior changes

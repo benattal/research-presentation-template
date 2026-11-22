@@ -234,10 +234,15 @@ html {
   transition: all var(--transition);
 }
 
-.nav-btn:hover:not(:disabled) {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: white;
+/* Hover highlights are for a pointer that hovers. On a touch screen a tap
+   leaves :hover set, and a button would stay lit after it was pressed; the
+   same condition wraps the other highlights of the window's controls. */
+@media (hover: hover) {
+  .nav-btn:hover:not(:disabled) {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
 }
 
 .nav-btn:disabled {
@@ -334,8 +339,10 @@ button.nav-end {
   transition: color var(--transition);
 }
 
-button.nav-end:hover {
-  color: var(--text-primary);
+@media (hover: hover) {
+  button.nav-end:hover {
+    color: var(--text-primary);
+  }
 }
 
 .nav-position {
@@ -391,10 +398,12 @@ button.nav-end:hover {
   transition: all var(--transition);
 }
 
-.overview-close:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: white;
+@media (hover: hover) {
+  .overview-close:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
 }
 
 .overview-grid {
@@ -419,9 +428,11 @@ button.nav-end:hover {
   overflow: hidden;
 }
 
-.overview-card:hover {
-  border-color: var(--accent);
-  transform: scale(1.03);
+@media (hover: hover) {
+  .overview-card:hover {
+    border-color: var(--accent);
+    transform: scale(1.03);
+  }
 }
 
 .overview-card--active {
@@ -493,10 +504,12 @@ kbd {
   transition: all var(--transition);
 }
 
-.toolbar-btn:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: white;
+@media (hover: hover) {
+  .toolbar-btn:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
 }
 
 /* ─── Presenter View ─────────────────────────────────────────── */
