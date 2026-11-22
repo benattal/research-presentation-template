@@ -1,7 +1,11 @@
+/* global __PRESENTATION_COMMAND_NAME__ */
 /**
  * Shown instead of the presentation when its files do not load: every
- * problem `buildPresentation` found, so all of them can be fixed in one
- * pass. The capture pipeline looks for `data-load-error`.
+ * file that is not valid JSON, or every problem `buildPresentation` found,
+ * so all of them can be fixed in one pass. It names the command that
+ * prints the same list for this presentation, which for a deck outside
+ * `presentations/` takes its directory. The capture pipeline looks for
+ * `data-load-error`.
  */
 export default function LoadErrorScreen({ error }) {
   const problems = error.problems ?? [String(error.stack ?? error)];
@@ -11,7 +15,7 @@ export default function LoadErrorScreen({ error }) {
       <ul>
         {problems.map((problem) => <li key={problem}>{problem}</li>)}
       </ul>
-      <p>Run <code>npm run check</code> for the same list from the command line.</p>
+      <p>Run <code>npm run check -- {__PRESENTATION_COMMAND_NAME__}</code> for the same list from the command line.</p>
     </div>
   );
 }

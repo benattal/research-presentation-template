@@ -107,7 +107,11 @@ describe('presenter window', { timeout: 180000 }, () => {
     await presenter.click('.presenter-edit-btn >> text=Edit');
     assert.match(await presenter.locator('.presenter-notes-editor').inputValue(), /Notes for the \*\*title\*\* slide/);
     await presenter.fill('.presenter-notes-editor', 'Edited by the UI test.');
+    // The editor closes when the save has reached the file. Its text is in
+    // the notes box from the moment it is typed, so waiting for the text
+    // alone would read the file before it is written.
     await presenter.click('text=Save');
+    await presenter.waitForSelector('.presenter-notes-editor', { state: 'detached' });
     await presenter.waitForSelector('.presenter-notes-content >> text=Edited by the UI test.');
     assert.equal(readFileSync(NOTES_FILES[0], 'utf-8'), 'Edited by the UI test.');
 
@@ -123,6 +127,7 @@ describe('presenter window', { timeout: 180000 }, () => {
     await presenter.click('.presenter-edit-btn >> text=Edit');
     await presenter.fill('.presenter-notes-editor', 'Step two, edited.');
     await presenter.click('text=Save');
+    await presenter.waitForSelector('.presenter-notes-editor', { state: 'detached' });
     await presenter.waitForSelector('.presenter-notes-content >> text=Step two, edited.');
     assert.equal(readFileSync(NOTES_FILES[1], 'utf-8'), 'Step two, edited.');
 

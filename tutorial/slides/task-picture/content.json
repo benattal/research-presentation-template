@@ -7,7 +7,7 @@
     "Pictures and videos are not kept in git: a deck's media folder is copied to and from an asset store",
     "A slide names a media file by a path that starts at the media folder"
   ],
-  "task": "Copy any picture into `@public` (make the folders) and call it `picture.png`. Then add the line below to this slide's file.",
+  "task": "Copy any picture into `@public` (make the folders) and call it `picture.png`. Then add the line below to this slide's file, right after the line that starts with `\"layout\"`.",
   "file": "content.json",
   "snippet": "\"media\": [{ \"type\": \"image\", \"src\": \"@media/picture.png\" }],",
   "ask": "In the tutorial deck, add a picture to the slide task-picture: make a simple PNG, put it where that slide's media go, and name it in the slide.",

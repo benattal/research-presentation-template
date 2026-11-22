@@ -61,6 +61,8 @@ npm install
 npm run tutorial             # open the address it prints, with an editor beside the browser
 ```
 
+If the port is taken, choose another: `npm run tutorial -- --port 5200`.
+
 **Show it to someone on your network** (their browser, your computer; add
 `?review` to the address on a tablet):
 

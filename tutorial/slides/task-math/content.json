@@ -7,7 +7,7 @@
     "Text between two dollar signs is typeset as math",
     "In JSON a backslash is typed twice"
   ],
-  "task": "Replace the subtitle with one that has a formula in it, and save.",
+  "task": "Replace the line that starts with `\"subtitle\"` with one that has a formula in it, such as the line below, and save.",
   "file": "content.json",
   "snippet": "\"subtitle\": \"Euler: $e^{i\\\\pi} + 1 = 0$\",",
   "ask": "In the tutorial deck, give the slide task-math a subtitle with Euler's identity typeset as math.",

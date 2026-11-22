@@ -49,3 +49,5 @@ User direction (YYYY-MM-DD): "<quoted direction>".
   [its plan](../plans/ipad-review.md).
 - [The tutorial: a deck you learn by editing](tutorial.md), for
   [its plan](../plans/tutorial.md).
+- [The second tutorial: building a deck with an agent](tutorial-agents.md),
+  for [its plan](../plans/tutorial-agents.md).

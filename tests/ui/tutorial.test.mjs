@@ -47,7 +47,10 @@ describe('the tutorial deck', { timeout: 240000 }, () => {
         const panel = page.locator('.task-panel');
         assert.equal(await panel.count(), 1, `${slideId}: one task panel`);
         assert.match(await panel.getAttribute('class'), /task-panel--(manual|todo|done)/, `${slideId}: a state`);
-        assert.match(await page.locator('.task-file').innerText(), /^tutorial\//, `${slideId}: the file to open`);
+        for (const file of await page.locator('.task-file').allInnerTexts()) {
+          assert.match(file, /^tutorial\//, `${slideId}: a file to open, from the repository's top folder`);
+        }
+        assert.ok(await page.locator('.task-file, .task-snippet').count() > 0, `${slideId}: something to open or to run`);
         assert.ok((await page.locator('.task-instruction').innerText()).length > 20, `${slideId}: the task`);
       }
     }

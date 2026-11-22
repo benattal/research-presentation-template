@@ -13,7 +13,7 @@
     },
     {
       "label": "A task",
-      "description": "Some slides ask you to edit a file. Save it: this page reloads by itself, and the task marks itself done."
+      "description": "Some slides ask you to edit a file. Save it: this page reloads by itself, and the task marks itself done. The file also holds the check that the slide runs on itself."
     },
     {
       "label": "Or ask",

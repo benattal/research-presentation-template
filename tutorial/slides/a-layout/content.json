@@ -9,7 +9,7 @@
     },
     {
       "label": "Your own",
-      "description": "The task panel of the last slides is this deck's own layout, in tutorial/layouts/TaskSlide/: about a hundred lines that read a slide's fields and draw them."
+      "description": "The task panel of the last slides is this deck's own layout, in tutorial/layouts/TaskSlide/: about 150 lines that read a slide's fields and draw them."
     },
     {
       "label": "Registered by name",

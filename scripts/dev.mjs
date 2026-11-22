@@ -13,10 +13,9 @@
  * the deck on a tablet or phone: every device on the network can then read
  * the slides and their notes, so use it on a network you trust.
  */
-import { relative } from 'node:path';
 import { parseArgs } from 'node:util';
 import { createServer } from 'vite';
-import { REPO_ROOT, selectOnePresentation } from '../core/tooling/presentations.js';
+import { commandNameOf, selectOnePresentation } from '../core/tooling/presentations.js';
 import { createViteConfig } from '../core/tooling/viteConfig.js';
 
 const { values, positionals } = parseArgs({
@@ -36,7 +35,7 @@ const server = await createServer(createViteConfig({
 }));
 await server.listen();
 
-console.log(`\n  ${presentation.manifest.title} (${relative(REPO_ROOT, presentation.dir).replaceAll('\\', '/')})`);
+console.log(`\n  ${presentation.manifest.title} (${commandNameOf(presentation)})`);
 server.printUrls();
 console.log('  Presenter window: press P, or add ?mode=presenter to the URL.');
 for (const url of server.resolvedUrls.network) {

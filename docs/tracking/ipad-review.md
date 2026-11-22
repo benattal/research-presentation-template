@@ -18,6 +18,10 @@ Every direction the user gives about this work, quoted and dated.
 
 2026-11-22:
 
+- "You can sync other branches, but don't change the decks that are
+  live/being edited"
+- "I am not asking you to change victor's presentation/the gen-nlos
+  presentation. don't do that"
 - "The distinction between live feedback and feedback inbox is a little
   unclear."
 - "I'm also a little unclear on how the second session (e.g. the haiku
@@ -60,6 +64,29 @@ Every direction the user gives about this work, quoted and dated.
   be able access it, take screenshots of slides, annotate (locally on the
   iPad), and upload screenshots to provide comments? No development yet,
   just scoping this feature out"
+
+## 2026-11-22 18:30 — the explainer's media put back; what this work may touch
+
+User direction (2026-11-22): "I am not asking you to change victor's
+presentation/the gen-nlos presentation. don't do that", then "You can sync
+other branches, but don't change the decks that are live/being edited".
+
+- Undone: the entry below copied the bucket's newer
+  `related-work/methods.mp4` and its poster over this machine's copies,
+  unasked. The older pair (1342574 and 59914 bytes, 2026-11-19) is back,
+  from the copies kept at the time. The bucket's newer pair is still
+  there for whoever pulls.
+- Kept: `hardware/propagating-light.mp4` and its poster, which were
+  missing here and were fetched while looking for the summary slide's
+  picture at the user's request.
+- For the record, no commit of this work touches
+  `presentations/gen-nlos-explainer/`. On that branch it merged `main` and
+  added one entry to the explainer's tracker.
+- Decided from the second direction: `guest-lecture` may merge `main`.
+  `vision-workshop` is left alone: its sync needs `data-no-swipe` on one
+  layout of a live deck (plan, "On merging into a project branch"), which
+  is a change to that deck, and a push there redeploys.
+- Next: unchanged.
 
 ## 2026-11-22 16:20 — the inbox skill run on Haiku, end to end; one defect found and fixed
 

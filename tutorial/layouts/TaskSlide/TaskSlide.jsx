@@ -77,10 +77,13 @@ function usePictureLoads(src) {
  * `subtitle`, its `bullets`, its `media`, and the `secondStep` line that
  * only a second build step shows. On the right is the task: `task` (what
  * to do), `file` (the file to open: `content.json` or `notes.md` of this
- * slide, or a file of the deck such as `presentation.json`), `snippet`
- * (the text to find or paste), `ask` (what to say to a coding agent that
- * does the task instead), and `whenDone` (shown once the task is done).
- * `task`, `snippet`, and `whenDone` may use the places of `placesOf`.
+ * slide, or a file of the deck by its path in the deck, such as
+ * `presentation.json`), `snippet` (the text to find, paste, or run; a
+ * task of commands has a snippet and no file), `ask` (what to say to a
+ * coding agent that does the task instead), and `whenDone` (shown once the
+ * task is done). A task that takes two files gives `files`, a list of
+ * `{ file, snippet }`, in place of `file` and `snippet`. `task`, snippets,
+ * and `whenDone` may use the places of `placesOf`.
  *
  * The state comes from `check` (see `taskChecks.js`) and so from the
  * slide's own data: saving the edit reloads the page, and the slide reads
@@ -94,7 +97,10 @@ export default function TaskSlide({ slide, buildStep, sections }) {
   const dataState = taskState(slide, sections);
   const state = dataState === 'done' && pictureLoads === false ? 'todo' : dataState;
   const stepCount = slide.buildSteps?.length ?? 1;
-  const file = slide.file && (SLIDE_FILES.includes(slide.file) ? `${places['@folder']}/${slide.file}` : `${DECK}/${slide.file}`);
+  // What to open and what to put there: one pair, or `files` when a task
+  // takes two files, so that each text sits under the file it belongs in.
+  const edits = slide.files ?? [{ file: slide.file, snippet: slide.snippet }];
+  const pathOf = (file) => (SLIDE_FILES.includes(file) ? `${places['@folder']}/${file}` : `${DECK}/${file}`);
 
   return (
     <div className="slide--task">
@@ -127,8 +133,12 @@ export default function TaskSlide({ slide, buildStep, sections }) {
         <aside className={`task-panel task-panel--${state}`}>
           <div className="task-state">{STATE_LABELS[state]}</div>
           <p className="task-instruction"><Inline>{withPlaces(slide.task, places)}</Inline></p>
-          {file && <code className="task-file">{file}</code>}
-          {slide.snippet && <pre className="task-snippet">{withPlaces(slide.snippet, places)}</pre>}
+          {edits.map((edit, index) => (
+            <div key={index} className="task-edit">
+              {edit.file && <code className="task-file">{pathOf(edit.file)}</code>}
+              {edit.snippet && <pre className="task-snippet">{withPlaces(edit.snippet, places)}</pre>}
+            </div>
+          ))}
           {slide.ask && state !== 'done' && (
             <p className="task-ask"><span className="task-ask-label">Or ask an agent:</span> “{slide.ask}”</p>
           )}
