@@ -21,9 +21,14 @@ knows how to check, present, and ask an agent for the rest.
   `./tutorial` as well as an id, so every command works on a deck outside
   `presentations/`; `npm run tutorial` serves this one.
 - **The deck**, built to the storyboard, with the `task` layout.
-- **Checks**: unit tests of the task checks; a browser test that every
-  slide and step loads and that each task starts undone and is marked done
-  by its edit.
+- **Checks**: unit tests of the task checks, and that the edit each task
+  asks for is the edit its check sees; a browser test that every slide and
+  step loads and every task shows its panel. The deck was also taken for
+  real, each edit made on disk with the page open (the tracker has the
+  run), and one task was done by an agent from the sentence on its slide.
+- **A typing mistake names itself.** A slide file with a missing comma
+  left the page blank; the client now parses the files itself and the
+  error page names the file, the line, and the column.
 - **Documentation**: the README's quick start and "Hosting the tutorial",
   getting started, the presentation types, the structure blocks.
 

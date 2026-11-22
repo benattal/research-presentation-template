@@ -8,6 +8,12 @@ with paths shortened and names changed; what the agent says is given in
 substance, not word for word. Each example ends with what to check before
 you believe the result.
 
+Each example starts from **one thing you say**. The commands that follow
+are what the agent runs; you do not type them. Where an example shows a
+step "by hand", it is the same step without an agent. The agent stops only
+for what it cannot know: your approval of a storyboard, your wording,
+which asset store you use, where your rclone configuration is.
+
 - [start-presentation: from an idea to a storyboard](#start-presentation-from-an-idea-to-a-storyboard)
 - [validate-slides: catching a title that wraps](#validate-slides-catching-a-title-that-wraps)
 - [sync-assets: a fresh clone with gaps](#sync-assets-a-fresh-clone-with-gaps)
@@ -20,7 +26,17 @@ you believe the result.
 **The situation.** You have a paper, four result videos, and a 20-minute
 slot at a workshop. Nothing exists yet.
 
-**1. Make the presentation and put your material in it.**
+**1. Ask.** One message, with where your material is:
+
+> Use the start-presentation skill. A 20-minute research talk for a
+> rendering workshop on our radiance caching paper. The paper is at
+> `~/papers/radiance-caching.pdf` and the result videos are in
+> `~/results/videos`. Make a branch and a presentation called cache-talk,
+> copy that material into it, and show me the storyboard before building
+> anything. The audience knows path tracing.
+
+**2. What the agent does first.** It makes the branch and the
+presentation and brings your material in:
 
 ```bash
 git switch -c cache-talk main
@@ -30,17 +46,8 @@ cp ~/papers/radiance-caching.pdf presentations/cache-talk/assets/
 cp -r ~/results/videos presentations/cache-talk/assets/results
 ```
 
-`assets/` is where source material goes; git ignores it. (Or skip this and
-tell the agent where the files are: it runs `npm run new` itself, which
-refuses a directory that already exists.)
-
-**2. Ask.**
-
-> Use the start-presentation skill. A 20-minute research talk for a
-> rendering workshop on our radiance caching paper
-> (`presentations/cache-talk/assets/radiance-caching.pdf`). The result
-> videos are in `assets/results/`. The audience knows path tracing. Plan it
-> and show me the storyboard before building anything.
+`assets/` is where source material goes; git ignores it. By hand, these
+five lines are the whole step.
 
 **3. What it does, and says.** It names the type first, because the type
 fixes the rest: "A research talk: you drive it live, about a slide a
@@ -90,7 +97,8 @@ five-slide starter that `npm run new` wrote is gone from
 **The situation.** You changed a title and want to know the deck still
 looks right.
 
-**1. A baseline, before the change.** Ask "capture the deck", or:
+**1. A baseline, before the change.** Say "capture the deck" before you
+start editing. The agent runs (as you can, by hand):
 
 ```bash
 npm run capture -- example

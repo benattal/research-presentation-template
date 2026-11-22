@@ -4,7 +4,7 @@ Three layers, each run by Node's built-in test runner or a script:
 
 | Command | What it checks | Needs |
 |---|---|---|
-| `npm test` | pure modules (presentation model, slide math, slide positions, poll state, live API, narration export, recording plans, the asset store) and repository structure | Node |
+| `npm test` | pure modules (presentation model, slide math, slide positions, poll state, live API, narration export, recording plans, the asset store, the tutorial's task checks) and repository structure | Node |
 | `npm run test:ui` | every view, core layout, and live feature, driven in a real browser | a browser |
 | `npm run check` and `npm run capture -- <id>` | the presentations of the branch: loading, assets, rendering | assets; a browser for capture |
 
@@ -46,7 +46,8 @@ file at a time:
 | `audience.test.mjs` | keys, buttons, dots, overview, swipes (on media that only show something, and not on controls, on regions marked `data-no-swipe`, with two fingers, or mostly up and down), a touch path for every action a key has (it fails when a key is added without one), the toolbar at rest where nothing can hover, no fullscreen button where the browser has none, the `?review` label, focus handling, position persistence, toolbar, progress bar, the stage alone with `?bars=hidden`; the stage and each slide heading holding still across every slide and build step, and every `SlideTitle` header alike (math in a title included); at nine window sizes, and on a tablet and a phone held both ways as Playwright describes them (`TOUCH_DEVICES` in `harness.mjs`), for the fixture and a generated 70-slide deck (`longDeck`), the navigator is centered, the counter shows, and the stage stays clear of the navigation bar, toolbar, and progress bar |
 | `presenter.test.mjs` | the presenter window following and driving the audience window, per-step notes, the preview, the timer, and saving edited notes without reloading the audience |
 | `live.test.mjs` | presenter login and logout, votes across browsers, changing a vote, live results, reset with C, numeric polls, closed voting, follow-the-presenter, the gateway's listing at `/` and its redirect from `/<id>` to `/<id>/` |
-| `errorsAndHosting.test.mjs` | the load-error screen, unknown modes, the development server serving the deck from disk and refusing the rest of the checkout, and a static build served under a URL prefix |
+| `errorsAndHosting.test.mjs` | the load-error screen (problems of the presentation; files that are not valid JSON, named with where the mistake is, and the deck coming back when they are mended), unknown modes, the development server serving the deck from disk and refusing the rest of the checkout, and a static build served under a URL prefix |
+| `tutorial.test.mjs` | the tutorial deck (`tutorial/`): every slide and build step loads without an error, and every task slide shows its task, the file to open, and a state |
 
 `tests/ui/harness.mjs` holds the shared setup. The fixture
 `tests/fixtures/ui-showcase/` uses every core layout at least once, with SVG media

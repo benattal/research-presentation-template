@@ -31,5 +31,5 @@ ignores. A project's presentation fetches its media with
 
 ```bash
 git restore tutorial          # your edits
-git clean -fd tutorial        # the slide and the picture you added
+git clean -fdx tutorial        # the slide and the picture you added
 ```

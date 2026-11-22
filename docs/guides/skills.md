@@ -11,6 +11,13 @@ Claude Code picks the skill whose description matches; typing `/<name>`
 (for example `/validate-slides`) asks for it explicitly. An agent starting
 work on a presentation should also offer the two review skills.
 
+You also do not have to run the commands these pages show. They are what
+the agent runs when you ask, and they are written out so that you can see
+what happened and do it by hand when you want to. The setup around a skill
+can be asked for too: "start a presentation called my-talk on its own
+branch and copy my PDFs into its assets" needs no skill and no command
+from you.
+
 | You want to | Skill | Say something like |
 |---|---|---|
 | start a deck, or a new section of one | [`start-presentation`](#start-presentation) | "Plan a 20-minute talk on X from these papers" |

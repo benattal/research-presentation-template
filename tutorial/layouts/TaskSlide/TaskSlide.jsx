@@ -112,7 +112,8 @@ export default function TaskSlide({ slide, buildStep, sections }) {
           {picture && pictureLoads !== false && <Media item={picture} className="task-picture" />}
           {picture && pictureLoads === false && (
             <p className="task-missing">
-              The slide names a picture, and no file is there yet. It goes in <code>{places['@public']}</code>.
+              The slide names a picture, and no file is there yet. Put it in <code>{places['@public']}</code>,
+              then reload this page.
             </p>
           )}
           {slide.secondStep && stepCount > 1 && (

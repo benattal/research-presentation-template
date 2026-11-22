@@ -12,6 +12,8 @@ its rules. The rest is reference for both.
 
 ## Guides (for people)
 
+- [The tutorial](../tutorial/README.md): a deck that teaches the template
+  by having you edit it (`npm run tutorial`); start here
 - [Getting started](guides/getting-started.md): a new presentation, from
   an empty clone to a deck you can present
 - [Walkthroughs](guides/walkthroughs.md): joining a project, starting from

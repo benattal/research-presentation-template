@@ -5,7 +5,11 @@ what to type, what to say to an agent if you work with one, and what you
 should see. [Getting started](getting-started.md) is the longest one, a new
 presentation from an empty clone; the ones here are shorter.
 [Worked examples](worked-examples.md) follows each of the six skills
-through a real use.
+through a real use. The tutorial (`npm run tutorial`) is the place to
+start if you have never edited a deck here.
+
+In each walkthrough the commands can be typed or asked for: the **With an
+agent** line gives the sentence that has an agent run them.
 
 - [Join a project someone else started](#join-a-project-someone-else-started)
 - [Start from a PowerPoint deck](#start-from-a-powerpoint-deck)
