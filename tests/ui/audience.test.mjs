@@ -67,17 +67,16 @@ function assertSameBox(actual, expected, message) {
 
 /**
  * Dispatch a drag of `fingers` fingers starting on `selector`, travelling
- * `dx` pixels sideways and `dy` down.
+ * `dx` pixels sideways and `dy` down. The events carry plain touch lists:
+ * WebKit outside iOS does not let a page construct a `Touch`.
  */
 function swipe(page, selector, dx, { dy = 0, fingers = 1 } = {}) {
   return page.evaluate(({ selector: target, dx: travelX, dy: travelY, fingers: count }) => {
     const element = document.querySelector(target);
-    const touch = (identifier, x, y) => new Touch({ identifier, target: element, clientX: x, clientY: y });
-    const down = Array.from({ length: count }, (_, finger) => touch(finger, 640 + 40 * finger, 300));
-    element.dispatchEvent(new TouchEvent('touchstart', { bubbles: true, touches: down, changedTouches: down }));
-    element.dispatchEvent(new TouchEvent('touchend', {
-      bubbles: true, touches: [], changedTouches: [touch(0, 640 + travelX, 300 + travelY)],
-    }));
+    const touchEvent = (type, touches, changedTouches) => Object.assign(new Event(type, { bubbles: true }), { touches, changedTouches });
+    const down = Array.from({ length: count }, (_, finger) => ({ identifier: finger, clientX: 640 + 40 * finger, clientY: 300 }));
+    element.dispatchEvent(touchEvent('touchstart', down, down));
+    element.dispatchEvent(touchEvent('touchend', [], [{ identifier: 0, clientX: 640 + travelX, clientY: 300 + travelY }]));
   }, { selector, dx, dy, fingers });
 }
 
@@ -286,16 +285,19 @@ describe('audience view', { timeout: 180000 }, () => {
   });
 
   it('offers no fullscreen where the browser has none', async () => {
-    await context.addInitScript(() => {
+    const without = await newContext(browser, { hasTouch: true });
+    await without.addInitScript(() => {
       Object.defineProperty(Document.prototype, 'fullscreenEnabled', { get: () => false });
     });
-    await page.reload();
-    await page.waitForSelector('.slide');
-    assert.equal(await page.locator('.toolbar-btn[title*="ullscreen"]').count(), 0);
-    assert.equal(await page.locator('.toolbar-btn[title^="Open presenter"]').count(), 1, 'the rest of the toolbar is there');
-    await page.keyboard.press('f');
-    assert.equal(await page.evaluate(() => document.fullscreenElement), null);
-    assert.deepEqual(page.errors, []);
+    const bare = await newPage(without);
+    await bare.goto(server.url);
+    await bare.waitForSelector('.slide');
+    assert.equal(await bare.locator('.toolbar-btn[title*="ullscreen"]').count(), 0);
+    assert.equal(await bare.locator('.toolbar-btn[title^="Open presenter"]').count(), 1, 'the rest of the toolbar is there');
+    await bare.keyboard.press('f');
+    assert.equal(await bare.evaluate(() => document.fullscreenElement), null);
+    assert.deepEqual(bare.errors, []);
+    await without.close();
   });
 
   it('names the slide and build step in the bar with ?review, and not without', async () => {

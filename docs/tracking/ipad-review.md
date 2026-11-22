@@ -112,11 +112,37 @@ plan under "Behavior changes" so that any of them can be turned down.
   missing, named by the commit ee7064a. Not a touch or iPad defect; the
   fix is pulling the media, which needs the rclone remote. Every video of
   the explainer is at most 1752×780, H.264 level 4.0 or lower.
-- Checked: see the results below.
+- Checked, in the worktree on `ipad-review` (framework as on `main`, the
+  example presentation):
+  - `npm test`: 79 of 79.
+  - `npm run test:ui`, Chromium: 44 of 44 in 12 minutes (the machine was
+    throttling). After the
+    last test changes, `tests/ui/audience.test.mjs` again: 23 of 23.
+  - Fail first: with `core/` and `scripts/` as before this work and the
+    new tests, all 8 new tests fail (swipes on media, touch paths, toolbar
+    at rest, no fullscreen, `?review`, the two device layouts, served
+    files); with the new code they pass.
+  - `UI_TEST_BROWSER=webkit`, `tests/ui/audience.test.mjs` only: 22 of 23.
+    The one failure is a test from before this work, "shows the stage
+    alone with ?bars=hidden": it navigates while the first page is still
+    preloading media, and WebKit reports the interrupted request as an
+    error (`... panel-2.svg due to access control checks`). A finding to
+    verify on Safari: reloading a deck while it preloads may log the same.
+    The other four test files have not been run on WebKit.
+  - `npm run check`: ok. `npm run build`: built. `npm run capture`: 13
+    frames, 0 errors, 0 warnings
+    (`data/captures/example/20261121-235916/`).
+  - By use: `node scripts/dev.mjs example --port 5190 --host` prints the
+    review address; over the network address, `/@fs/<checkout>/CLAUDE.md`,
+    this tracker, and `package.json` answer 403, the example's
+    `presentation.json` and a slide's `content.json` answer 200;
+    `node scripts/preview.mjs example --port 4190 --host` answers on the
+    network address. Both stopped by process id.
+  - A first run in the fresh worktree failed one older test on a timeout
+    (the load-error screen, 37 s): the dependency cache was cold. The same
+    test passes in 0.7 s warm. Recorded as cold start, not as a defect.
 - Next: the user's device pass (plan todo 1) and the control tests
   (todo 2).
-
-RESULTS_PLACEHOLDER
 
 ## 2026-11-21 17:05 — plan written; the explainer is served on the network
 
