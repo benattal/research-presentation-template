@@ -116,11 +116,12 @@ be reached.
 
 1. Take a screenshot with the bar showing (on an iPad with a Pencil, swipe
    up from a bottom corner), and mark it up.
-2. Tap Done and save it to Files. Attach it in the Claude app from Files,
-   add a few words if the marks need them, and send. A screenshot attached
-   from Photos is seen by the inbox but may not exist as a file on the
-   computer, and only a file can be handed to another session; the inbox
-   says so when it happens.
+2. Attach it in the Claude app, add a few words if the marks need them,
+   and send. The session is told where the attachment was saved on the
+   computer (a file under `~/.claude/uploads/<session id>/`), and that
+   path is what the inbox hands on: a message between sessions carries
+   text only. If an image arrives without a path, the inbox says so and
+   asks for it again as a file (Done, "Save to Files", attach from Files).
 3. The inbox answers on the device with where the screenshot went. The
    working session makes the change and replies with the slide and step to
    look at; the page on the device has already reloaded.

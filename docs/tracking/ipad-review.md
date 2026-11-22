@@ -2,12 +2,15 @@
 
 [Plan](../plans/ipad-review.md)
 
-Current state: everything that needs no device is built and tested: the
-touch fixes, the narrower file serving, the browser tests, the two skills,
-and the documentation. Open: the user's pass on an iPad and an iPhone, the
-control tests of the feedback path, the two skills' gates, and merging
-`main` into `guest-lecture` and `vision-workshop`. Resume from the newest
-entry below.
+Current state: everything that needs no device is built and tested, on
+`main` and merged into `gen-nlos-explainer`, not pushed: the touch fixes,
+the narrower file serving, the browser tests, the two skills, and the
+documentation. Open: the rest of the user's pass on an iPad and an iPhone,
+the rest of the control tests of the feedback path, the two skills' gates,
+merging `main` into `guest-lecture` and `vision-workshop`, and one
+picture of the explainer (the summary slide's) that exists only on a
+collaborator's machine. Resume from the
+newest entry below.
 
 ## Standing directions
 
@@ -15,6 +18,18 @@ Every direction the user gives about this work, quoted and dated.
 
 2026-11-21:
 
+- "Sorry, but why can't you? I told you where rclone.conf is. It is in
+  ~/Downloads/tokens"
+- "Please look for it in R2 to see if it's available It might be in my
+  presentations bucket"
+- "If you can reverse image search it, it's here. It may also be AI
+  generated in which case, re-generate a placeholder?" (with the picture)
+- "This is what I still see on the browser" (with a marked-up screenshot
+  of the summary slide on the iPad)
+- "It's on the summary slide" (of the report below).
+- "By the way the cluttered room video is still not served correctly on
+  the ipad"
+- "The heavily cluttered room video seems to be broken." "On the ipad"
 - "Please also note these skills that you create in the README so that
   they can readily be used by agents. An agent might ask the user if they
   want to use these skills when working on a presentation"
@@ -38,6 +53,107 @@ Every direction the user gives about this work, quoted and dated.
   be able access it, take screenshots of slides, annotate (locally on the
   iPad), and upload screenshots to provide comments? No development yet,
   just scoping this feature out"
+
+## 2026-11-21 19:25 — on `main` and `gen-nlos-explainer`; first observations from the iPad
+
+User direction (2026-11-21): "By the way the cluttered room video is still
+not served correctly on the ipad", "It's on the summary slide", and, with
+a marked-up screenshot of the summary slide taken on the iPad at 19:10,
+"This is what I still see on the browser".
+
+- Done: `main` is at the branch `ipad-review` (fast-forward), and `main`
+  is merged into `gen-nlos-explainer` in the main checkout. Nothing is
+  pushed. The explainer's server was restarted after the merge, so that
+  `servedFiles` applies: `npm run dev -- gen-nlos-explainer --port 5174
+  --host`, process id 39420.
+- Done after the first merge: the hover highlights of the bar, the
+  toolbar, and the overview apply only where the pointer hovers. Seen in a
+  screenshot of the explainer in Chromium's iPad emulation: the tapped
+  arrow stayed lit. The test of the touch paths now asserts that it does
+  not, and fails without the fix.
+- The summary slide. The screenshot shows Safari's missing-image mark and
+  the alt text of `outlookImage`. Control: the same slide and step in
+  desktop Chromium on this machine shows the same; the image's
+  `naturalWidth` is 0, the server answers
+  `/slides/summary/robot-outlook-busy-room.png` with the page
+  (`text/html`), and `public/slides/summary/` holds only `ours-vase.mp4`
+  and its poster. Cause: the file is not on this machine.
+- Observed on the iPad, from that screenshot (Safari, landscape, without
+  `?review`): the toolbar is visible at rest (checklist row 3); the whole
+  navigation bar, with its dots and counter, is visible under Safari's
+  bars (row 7, landscape).
+- Control test 1, observed once: the marked-up screenshot reached this
+  session with a line naming the file it was saved as,
+  `~/.claude/uploads/<session id>/1b0ef513-image.jpg`, and the file is
+  there (199751 bytes). A second picture, sent a few minutes later while
+  the session was in the middle of a turn, came with no such line, and no
+  second file appeared in that folder. So a path is not guaranteed: of two
+  images, the one that opened a turn had a file and the one sent mid-turn
+  did not (one case each; the cause is a guess). Whether a screenshot is
+  attached from Photos or Files, and whether the same holds for a session
+  started with `--remote-control` on a small model, is not yet observed.
+  The `feedback-inbox` skill, the workflow, and the README take the path
+  from the message and keep "send it again" as the fallback.
+- The user asked (2026-11-21): "If you can reverse image search it, it's
+  here. It may also be AI generated in which case, re-generate a
+  placeholder?" and "Please look for it in R2 to see if it's available It
+  might be in my presentations bucket", then "Sorry, but why can't you? I
+  told you where rclone.conf is. It is in ~/Downloads/tokens". Until that
+  path was given, nothing on this machine reached R2 (`rclone listremotes`
+  empty, no default configuration, the tracker's older location
+  `~/Downloads/rclone.conf` gone), and a search of the user's folders for
+  the file was refused by the permission system. With
+  `RCLONE_CONFIG=~/Downloads/tokens/rclone.conf`:
+  - the `presentations` bucket answered some list and head requests with
+    HTTP 500 and others normally; `--retries 3 --low-level-retries 5` got
+    through;
+  - `hardware/propagating-light.mp4` (3658810 bytes) and its poster (13325
+    bytes) were in the bucket and are copied here, one file each with
+    `rclone copyto`, so that no local media that differ from the bucket
+    were overwritten;
+  - the robot picture is in neither bucket: no file whose name contains
+    `robot`, `outlook`, or `busy` in `presentations`, none named
+    `robot-outlook*` or `busy-room*` under
+    `tcig-projects/research-presentation-template`, and the bucket's
+    `gen-nlos-explainer/public/slides/summary/` holds only `ours-vase.mp4`
+    and its poster. The explainer's tracker says the same of it: "Its
+    asset remains local in `public/`; no bucket upload has been
+    requested." It is on the machine of the collaborator who made it;
+  - `npm run check -- gen-nlos-explainer` now reports that one file
+    missing, and nothing else.
+  Not done: a reverse image search and a regenerated placeholder (this
+  session has neither tool), and the picture the user sent could not be
+  put in place because it has no file on disk.
+- Checked, on `main` (the worktree):
+  - `npm run test:ui`, Chromium, on the final code: 44 of 44 in 2 minutes.
+  - `npm test`: 79 of 79.
+- Checked, on `gen-nlos-explainer` after the merge:
+  - `npm test`: 79 of 79.
+  - `npm run check`: the lecture passes; the explainer fails on the same
+    three missing media files as before the merge
+    (`hardware/propagating-light.mp4`, its poster,
+    `summary/robot-outlook-busy-room.png`).
+  - The explainer loaded from the restarted server in Chromium at an
+    iPad's size with `?review`: every slide ready, no response of 400 or
+    more, no error; the bar reads `title step 1/1 1 / 23`, and after two
+    taps `single-image step 1/3 3 / 23`.
+  - Over the network address: `CLAUDE.md`, the explainer's tracker, the
+    lecture's `presentation.json`, and a file of the explainer's `assets/`
+    answer 403; the explainer's `presentation.json` answers 200.
+  - `npm run capture -- gen-nlos-explainer`
+    (`data/captures/gen-nlos-explainer/20261122-001052/`): 46 frames. The
+    6 with errors are the two slides with missing media (`hardware`, five
+    steps; `summary`, step 2). The 5 warnings are `outside-stage` on the
+    `hardware` frames. Three frames changed since the run of 2026-11-19
+    (`single-image`), a slide the commit ee7064a edited. No frame points
+    at this work; the capture view has no navigation bar.
+  - `npm run capture -- light-transport-and-neural-rendering`
+    (`data/captures/light-transport-and-neural-rendering/20261122-001312/`):
+    212 frames, 0 errors, 0 warnings, 0 changed since the run of
+    2026-11-18.
+- Next: the robot picture from the collaborator (a push of the explainer's
+  media, or the file); the rest of the device checklist (plan todo 1);
+  control tests 3 and 4 (todo 2).
 
 ## 2026-11-21 18:40 — built: touch fixes, file serving, tests, skills, documentation
 
