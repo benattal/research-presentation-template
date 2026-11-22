@@ -106,11 +106,11 @@ observations.
 |---|---|---|---|
 | 1 | Swipe left and right, starting on text or an image | the slide changes | to observe |
 | 2 | Swipe starting on a video, a drawing, or a 3D scene | the slide changes; a region marked `data-no-swipe` keeps the drag | to observe, on the explainer's slides |
-| 3 | Look for the toolbar at the left of the bar without touching anything | visible where the pointer cannot hover | to observe |
+| 3 | Look for the toolbar at the left of the bar without touching anything | visible where the pointer cannot hover | iPad: visible (the user's screenshot). iPhone: to observe |
 | 4 | Tap fullscreen on the iPad; look for the button on the iPhone | iPad: fullscreen, the bar hides. iPhone: no button, because Safari there has no fullscreen for pages | to observe; and how one leaves fullscreen on the iPad (Safari's own control is expected) |
 | 5 | Tap the slide counter | the overview opens; × or a card closes it | to observe |
 | 6 | iPhone, portrait: find the slide number | shown; the dots are left out under 768 px | to observe |
-| 7 | Safari with its toolbars showing: is the whole bar visible, in both orientations | the page takes its height from the page, not from `100vh` | to observe |
+| 7 | Safari with its toolbars showing: is the whole bar visible, in both orientations | the page takes its height from the page, not from `100vh` | iPad, landscape: the whole bar is visible under Safari's bars (the user's screenshot). Portrait and iPhone: to observe |
 | 8 | Tap an arrow twice quickly; pinch; drag a slide up and down | no double-tap zoom (`touch-action: manipulation`); pinching still zooms | to observe |
 | 9 | Tap a slide dot in a long deck | a dot's slot is as tall as the arrows where the pointer is coarse; its width still shrinks with the number of slides, and the overview is the easier way | to observe |
 | 10 | Swipe from the left edge of the screen | not handled: Safari's "back" gesture may take it | to observe |
@@ -247,13 +247,17 @@ for this plan; the control tests check the parts the design rests on.
 
 ### Control tests
 
-1. **Does a photo have a path?** Send one screenshot from the iPad's Photos
-   to a Remote Control session and ask the session where the image is on
-   disk. If it has one, step 1 of the inbox skill no longer asks for a
-   file.
-2. **Does a file have a path?** Save the same marked-up screenshot to the
-   Files app and attach it as a file. This is the route the skill and the
-   README give today.
+1. **Does a screenshot have a path?** Observed once: a marked-up iPad
+   screenshot attached to a message reached the session with a line naming
+   the file it was saved as, under `~/.claude/uploads/<session id>/`, and
+   the file was there. The skill copies from that path. A second image,
+   sent while the session was in the middle of a turn, came with no path
+   and no file. Still to observe: when a path is given and when not (a
+   message that opens a turn against one sent mid-turn; Photos against
+   Files; a session started with `--remote-control` on a small model).
+2. **The fallback.** If an image arrives with no path, the skill asks for
+   it again. To observe: that sending it again, as its own message or from
+   the Files app, gives it a path.
 3. **Session to session.** Two sessions in this checkout, on this machine:
    one sends the other a path, the other opens the image. Observed so far:
    `ListAgents` lists the machine's sessions by name. Not yet observed: a

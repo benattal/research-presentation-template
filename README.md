@@ -90,7 +90,7 @@ the same account on both):
    ```
 
 2. Open that session in the Claude app. Take a screenshot of a slide with
-   the bar showing, mark it up, save it to Files, attach it, and send.
+   the bar showing, mark it up, attach it, and send.
 3. The inbox works out which slide and step the screenshot shows and hands
    it, whole, to the session editing that slide, which makes the change
    and says what to look at.

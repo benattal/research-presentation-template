@@ -42,12 +42,16 @@ Work through the images one at a time, in order.
    `data/feedback/<id>/<YYYY-MM-DD>/<HHMM>-<slide-id>-step<k>.png` (git
    ignores `data/feedback/`), with a `.md` of the same name holding the
    user's typed words, verbatim, and what steps 2 and 3 find.
-   - An attachment that arrived as a file has a path: copy the file.
-   - A photo that arrived only inside the message has no path, and a
-     message to another session carries text only. Ask the user to send
-     that one again as a file (in the screenshot editor: Done, then "Save
-     to Files", then attach it from Files). Meanwhile do steps 2 to 5 with
-     the note "image not on disk" in place of the path.
+   - The message says where the attachment was saved on this computer
+     (a line naming a file under `~/.claude/uploads/<session id>/`): copy
+     that file. Use the path the message gives; do not search for it.
+   - An image with no such line has no path (seen for an image sent while
+     the session was in the middle of a turn), and a message to another
+     session carries text only. Ask the user to send that one again, as a
+     message of its own once this session has answered, or as a file (in
+     the screenshot editor: Done, then "Save to Files", then attach it
+     from Files). Meanwhile do steps 2 to 5 with the note "image not on
+     disk" in place of the path.
 2. **Place it.** Name the presentation, the slide's id, and the build step,
    and say how each was found:
    - the review label in the bar (`<slide-id>`, `step k/n`, `i / N`): read it;
