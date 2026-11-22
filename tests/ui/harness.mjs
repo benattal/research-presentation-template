@@ -47,12 +47,42 @@ export function longDeck(count) {
   return { id: 'long-deck', dir, manifest };
 }
 
-/** Local mode: a Vite development server for one presentation, on a free port. */
+/**
+ * Request a presentation's page and every module it imports, once, and
+ * return when all have been answered.
+ *
+ * A development server that has never served a presentation bundles its
+ * dependencies on the first request, which takes seconds on a fast machine
+ * and more than a test's 30-second page load on a slow one or in a fresh
+ * clone. Asked for here, during a suite's setup, that one-time cost is
+ * paid before any test's navigation starts its clock.
+ */
+async function warm(pageUrl) {
+  const origin = new URL(pageUrl).origin;
+  const html = await (await fetch(pageUrl)).text();
+  const seen = new Set();
+  const queue = [...html.matchAll(/<script[^>]+src="([^"]+)"/g)].map(([, src]) => new URL(src, pageUrl).pathname);
+  while (queue.length > 0) {
+    const batch = queue.splice(0).filter((path) => !seen.has(path));
+    batch.forEach((path) => seen.add(path));
+    const sources = await Promise.all(batch.map(async (path) => {
+      const response = await fetch(origin + path);
+      return response.ok ? response.text() : '';
+    }));
+    for (const source of sources) {
+      for (const [, path] of source.matchAll(/(?:from|import)\s*\(?\s*"(\/[^"]+)"/g)) queue.push(path);
+    }
+  }
+}
+
+/** Local mode: a Vite development server for one presentation, on a free port, already warm. */
 export async function startLocal(presentation) {
   const config = createViteConfig({ presentation, base: '/', live: false, server: { port: 0, host: '127.0.0.1' } });
   const server = await createServer({ ...config, logLevel: 'error' });
   await server.listen();
-  return { url: server.resolvedUrls.local[0], close: () => server.close() };
+  const url = server.resolvedUrls.local[0];
+  await warm(url);
+  return { url, close: () => server.close() };
 }
 
 /**
@@ -71,8 +101,10 @@ export async function startLive(presentations, settings = { votingOpen: true, pr
   const server = await new Promise((resolve) => {
     const listening = app.listen(0, '127.0.0.1', () => resolve(listening));
   });
+  const url = `http://127.0.0.1:${server.address().port}`;
+  for (const presentation of presentations) await warm(`${url}/${presentation.id}/`);
   return {
-    url: `http://127.0.0.1:${server.address().port}`,
+    url,
     settings,
     close: async () => {
       await close();
