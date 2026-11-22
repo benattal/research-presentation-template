@@ -71,7 +71,16 @@ core/client/layouts/index.js ─────────┘                     
 The audience view also reads `?bars=hidden`, which leaves out its progress
 bar and navigation bar so the stage fills the window, with keys and
 preloading unchanged. `scripts/record.mjs` films that page
-([recording](recording.md)).
+([recording](recording.md)). With `?review`, the navigation bar names the
+current slide's id and build step beside the counter, so that a screenshot
+of the page says what it shows
+([reviewing on a tablet](../workflows/reviewing-on-a-tablet.md)).
+
+Every action of a key in the audience view also has a touch path: swipes,
+the bar's arrows and dots, the slide counter (it opens the overview), and
+the toolbar, which shows at rest where the pointer cannot hover. A browser
+without fullscreen for pages (Safari on an iPhone) gets neither the button
+nor the key; `useFullscreen` decides.
 
 The audience and presenter windows talk over a `BroadcastChannel` named after
 the presentation id. The audience window owns the position; the presenter

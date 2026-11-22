@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef } from 'react';
+import { stepCount } from '../presentation/model.js';
 
 /**
  * Keep the current slide's dot in view. The dots shrink to share the space
@@ -30,11 +31,20 @@ function useActiveDotInView(rowRef, activeIndex) {
  * (`--nav-side-width` in index.css) and the dots shrink, then scroll, to fit
  * between them. With `disabled` (the audience follows the presenter) only
  * the indicators show; with a single slide, only the toolbar.
+ *
+ * The end of the bar is a button when `openOverview` is given: a touch
+ * screen has no **O** key, and the slide number is where one looks for the
+ * other slides. With `review`, it also names the slide's id and build step,
+ * so that a screenshot of the page says what it shows.
  */
-export default function Navigation({ slides, position, isFirst, isLast, next, previous, goTo, disabled, toolbar }) {
+export default function Navigation({
+  slides, position, isFirst, isLast, next, previous, goTo, openOverview, disabled, review, toolbar,
+}) {
   const dotsRef = useRef(null);
   useActiveDotInView(dotsRef, position.index);
   const navigable = slides.length > 1;
+  const slide = slides[position.index];
+  const End = navigable && openOverview ? 'button' : 'div';
 
   return (
     <nav className="navigation" aria-label="Slides">
@@ -72,11 +82,20 @@ export default function Navigation({ slides, position, isFirst, isLast, next, pr
         </div>
       )}
 
-      {navigable && (
-        <div className="nav-slide-counter">
-          {position.index + 1} / {slides.length}
-        </div>
-      )}
+      <End
+        className="nav-end"
+        {...(End === 'button' && {
+          onClick: openOverview,
+          title: 'Slide overview (O)',
+          'aria-label': `Slide ${position.index + 1} of ${slides.length}; open the slide overview`,
+        })}
+      >
+        {review && <span className="nav-review-id">{slide.id}</span>}
+        <span className="nav-position">
+          {review && <span className="nav-review-step">step {position.step + 1}/{stepCount(slide)}</span>}
+          {navigable && <span className="nav-slide-counter">{position.index + 1} / {slides.length}</span>}
+        </span>
+      </End>
     </nav>
   );
 }

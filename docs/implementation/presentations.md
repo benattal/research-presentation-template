@@ -259,8 +259,14 @@ Conventions for layouts:
   page instead of creating one per visit: compiling its shaders again is
   what makes arriving slow.
 - Mark a deliberately full-bleed or overflowing decoration with
-  `data-overflow-ok`, and a draggable region with `data-no-swipe` so touch
-  drags do not change slides.
+  `data-overflow-ok`.
+- Mark every region that takes drags (a point to move on a canvas, a plot
+  to scrub, a handle in an SVG) with `data-no-swipe`, on the element or on
+  a box around it. On a touch screen a sideways drag anywhere else on the
+  slide is a swipe and changes the slide, including on a canvas, an SVG,
+  or a video without controls: media that only show something let the
+  swipe through. Form controls, links, and videos with controls keep their
+  touches without the attribute (`useSwipeNavigation.js`).
 
 ## Themes
 

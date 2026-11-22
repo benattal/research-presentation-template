@@ -6,6 +6,9 @@ node_modules/
 /data/captures/
 /data/recordings/
 
+# Screenshots the user sends as feedback, and who is listening for them
+/data/feedback/
+
 # Live server state (poll votes)
 /.live-state/
 

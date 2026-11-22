@@ -93,3 +93,8 @@ Report at every decision point: what was found, what changed, what is
 next. Say plainly what was not verified. When a collaborator's change
 conflicts with something the user asked for, say so and leave both
 decisions visible; do not pick one silently.
+
+When work on a deck starts or resumes, ask once whether the user wants to
+watch it while it is edited and send marked-up screenshots from a tablet
+or phone ([reviewing on a tablet](reviewing-on-a-tablet.md); the
+`live-feedback` and `feedback-inbox` skills).

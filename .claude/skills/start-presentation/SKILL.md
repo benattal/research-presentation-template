@@ -62,3 +62,8 @@ Tell the user the type you assumed, where the plan and storyboard are, and
 what you need from them before building. Afterwards, report at each
 decision point what was found, what changed, and what is next, and say
 plainly what was not verified.
+
+Ask once whether the user wants to watch the deck while it is built and
+send marked-up screenshots from a tablet or phone: the `live-feedback`
+skill for this session, and `feedback-inbox` for the session they open on
+the device (`docs/workflows/reviewing-on-a-tablet.md`).

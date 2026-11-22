@@ -45,3 +45,5 @@ User direction (YYYY-MM-DD): "<quoted direction>".
   [its plan](../plans/gen-nlos-explainer.md).
 - [Framework consolidation](framework-consolidation.md), for
   [its plan](../plans/framework-consolidation.md).
+- [Reviewing a deck on an iPad or iPhone](ipad-review.md), for
+  [its plan](../plans/ipad-review.md).
