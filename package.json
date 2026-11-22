@@ -14,6 +14,7 @@
     "serve": "node scripts/serve.mjs",
     "build:live": "node scripts/build.mjs --live",
     "start": "node scripts/serve.mjs --production",
+    "tutorial": "node scripts/dev.mjs ./tutorial",
     "new": "node scripts/new-presentation.mjs",
     "check": "node scripts/check.mjs",
     "capture": "node scripts/capture.mjs",

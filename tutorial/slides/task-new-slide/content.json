@@ -1,0 +1,19 @@
+{
+  "layout": "task",
+  "sectionLabel": "Steps, pictures, slides",
+  "title": "Add a slide of your own",
+  "subtitle": "A new folder, then one line in presentation.json",
+  "bullets": [
+    "First make the folder `my-slide` beside this slide's folder, with a `content.json` holding the text on the right",
+    "Then add `\"my-slide\"` to a section's `slides` list in the file below",
+    "List a slide only once its file exists: a deck that names a missing slide shows an error page that says so"
+  ],
+  "task": "Create the slide's file first, then list it. It appears in the deck where you listed it.",
+  "file": "presentation.json",
+  "snippet": "{\n  \"layout\": \"content\",\n  \"title\": \"My slide\",\n  \"bullets\": [\"Made by me\"]\n}",
+  "ask": "In the tutorial deck, add a new content slide with the id my-slide, right after task-new-slide.",
+  "check": {
+    "slideListed": "my-slide"
+  },
+  "whenDone": "Press O to see it among the others."
+}

@@ -1,0 +1,19 @@
+{
+  "layout": "task",
+  "sectionLabel": "Edit a slide",
+  "title": "Add a point of your own",
+  "subtitle": "A list in the file is a list on the slide",
+  "bullets": [
+    "Each entry of `bullets` is one point",
+    "The order in the file is the order on the slide"
+  ],
+  "task": "Add a third entry to `bullets`: a comma after the second one, then your text in double quotes.",
+  "file": "content.json",
+  "snippet": "\"bullets\": [\n  \"Each entry of `bullets` is one point\",\n  \"The order in the file is the order on the slide\",\n  \"Mine\"\n],",
+  "ask": "In the tutorial deck, add a third bullet to the slide task-bullets.",
+  "check": {
+    "field": "bullets",
+    "longerThan": 2
+  },
+  "whenDone": "If a comma or a quote goes missing, the page names the file: fix it and save again."
+}
