@@ -24,6 +24,34 @@ Every direction the user gives about this work, quoted and dated.
   interactive in the sense that the users *need to go through* the worked
   example to edit it."
 
+## 2026-11-22 18:30 — the browser suite in one clean run; two faults in the tests themselves
+
+The session's goal check (2026-11-22) asked for a clean full run of the
+browser suite, which the entry below did not have.
+
+- Found: the suite's failures were of three kinds, none in the deck.
+  - A server's first page load after a cold start. In a fresh worktree
+    with empty dependency caches, the presenter suite failed in its setup
+    (`page.goto` over 30 s) and every test in it was cancelled. Fixed in
+    `tests/ui/harness.mjs`: `startLocal` and `startLive` request the page
+    and every module it imports once before returning, so the bundling of
+    dependencies happens in a suite's setup.
+  - A race in `tests/ui/presenter.test.mjs`: after "Save" it waited for
+    the edited text inside the notes box and then read the notes file. The
+    editor sits inside that box and holds the text from the moment it is
+    typed, so the wait returned at once and the file was read before the
+    server wrote it. It now waits for the editor to close. The failed run
+    left `tests/fixtures/ui-showcase/slides/title/notes.md` edited in the
+    main checkout; it was restored with git.
+  - Stalls of the machine of ten seconds and more (measured in the entry
+    below), which neither fix removes.
+- Checked: `npm run test:ui` in a worktree of `main` with
+  `node_modules/.vite` deleted first (a fresh clone's state): 47 of 47 in
+  180 s, in one run. The presenter suite alone from cleared caches: 5 of 5
+  in 8.5 s.
+- Next: a newcomer's run of the tutorial from a fresh clone, by an agent
+  given only the README; then plan todos 1 and 2.
+
 ## 2026-11-22 17:30 — built, taken for real, tested
 
 User direction (2026-11-22): the goal's third item, quoted above. The

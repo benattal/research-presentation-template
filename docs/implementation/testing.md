@@ -49,7 +49,15 @@ file at a time:
 | `errorsAndHosting.test.mjs` | the load-error screen (problems of the presentation; files that are not valid JSON, named with where the mistake is, and the deck coming back when they are mended), unknown modes, the development server serving the deck from disk and refusing the rest of the checkout, and a static build served under a URL prefix |
 | `tutorial.test.mjs` | the tutorial deck (`tutorial/`): every slide and build step loads without an error, and every task slide shows its task, the file to open, and a state |
 
-`tests/ui/harness.mjs` holds the shared setup. The fixture
+`tests/ui/harness.mjs` holds the shared setup. `startLocal` and `startLive`
+return a server that is already warm: they request the page and every
+module it imports once, so that the server bundles its dependencies during
+a suite's setup. On a first run in a fresh clone that bundling takes longer
+than a test's 30-second page load on a slow machine, and would fail
+whichever test came first. A suite that is stopped part-way can leave a
+fixture's notes file edited (the presenter test writes one and puts it
+back at its end): `git status` shows it, and `git restore tests/fixtures`
+undoes it. The fixture
 `tests/fixtures/ui-showcase/` uses every core layout at least once, with SVG media
 (text files, so they live in git) and one presentation-specific layout;
 `tests/fixtures/broken/` has the errors the load-error test expects, and

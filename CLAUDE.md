@@ -97,6 +97,11 @@ example with the project's presentations.
   that no listing, check, or gateway includes, named in commands by its
   directory (`npm run capture -- ./tutorial`). Point a newcomer at
   `npm run tutorial` before anything else.
+- Do not change a deck that is live or that someone else is editing: its
+  slides, notes, layouts, media scripts, or local media. Merging `main`
+  into its branch is fine. When a framework change needs a matching edit
+  inside such a deck, report the edit and leave it to the deck's owner,
+  and do not push a branch whose push redeploys a live site unless asked.
 - A project branch records what is specific to it in the "This branch"
   section below, in both agent files.
 
