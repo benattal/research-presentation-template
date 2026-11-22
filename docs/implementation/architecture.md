@@ -25,7 +25,11 @@ core/client/layouts/index.js ─────────┘                     
    constants: `__PRESENTATION_ID__` and `__LIVE_SERVER__`.
 2. `core/client/presentation/load.js` is the client module that reads a
    presentation's manifest, slides, sources, and theme (`notes.js` reads the
-   presenter notes, for the presenter window alone). It globs `slides/*/content.json`, imports the
+   presenter notes, for the presenter window alone). It takes the JSON
+   files as text and parses them itself, so that a file with a typing
+   mistake is named on the load-error screen with the line and column;
+   imported as JSON, such a file fails as a module and the page stays
+   blank. It globs `slides/*/content.json`, imports the
    manifest and the layout registry, and calls `buildPresentation`.
 3. `buildPresentation` (`core/client/presentation/model.js`, pure) validates
    everything, resolves asset paths, and returns the flat slide list every

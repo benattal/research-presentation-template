@@ -7,11 +7,30 @@ import {
   indexNotes,
   mergeLayouts,
   notesFileName,
+  parseJsonFile,
   prefixAssetPaths,
   slideIdFromPath,
   stepCount,
 } from '../core/client/presentation/model.js';
 import { notesFormulas, notesMathProblems } from '../core/client/presentation/notesMath.js';
+
+describe('parseJsonFile', () => {
+  it('returns the value of a valid file and adds no problem', () => {
+    const problems = [];
+    assert.deepEqual(parseJsonFile('slides/a/content.json', '{ "layout": "title" }', problems), { layout: 'title' });
+    assert.deepEqual(problems, []);
+  });
+
+  it('names a file that is not valid JSON, with where the mistake is', () => {
+    const problems = [];
+    const missingComma = '{\n  "layout": "content"\n  "title": "A"\n}';
+    assert.equal(parseJsonFile('slides/a/content.json', missingComma, problems), undefined);
+    assert.equal(parseJsonFile('presentation.json', '', problems), undefined);
+    assert.equal(problems.length, 2);
+    assert.match(problems[0], /^slides\/a\/content\.json is not valid JSON: .*line 3/);
+    assert.match(problems[1], /^presentation\.json is not valid JSON: /);
+  });
+});
 
 const Layout = () => null;
 const layouts = { title: Layout, content: Layout };

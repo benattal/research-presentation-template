@@ -1,0 +1,12 @@
+{
+  "layout": "content",
+  "sectionLabel": "Check and present",
+  "title": "Present it",
+  "subtitle": "The same page is the audience's view, the presenter's window, and the tablet's",
+  "bullets": [
+    "F is fullscreen; P opens the presenter window with notes, a timer, and the next slide",
+    "npm run build, then npm run preview, serve a finished deck with no file watching; the built folder goes on any web host",
+    "Adding --host to npm run dev puts the deck on your network: open it on a tablet and swipe",
+    "Polls from the audience's phones need the live server: see docs/implementation/hosting.md"
+  ]
+}

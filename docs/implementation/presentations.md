@@ -6,6 +6,17 @@ the presentation's id: its URL segment behind the live gateway
 bucket. Ids use lowercase letters, digits, and hyphens.
 `npm run new -- <id>` creates a working skeleton.
 
+A directory anywhere else with the same contents is a presentation too,
+and every command takes it by its path, with a leading `./`
+(`npm run dev -- ./tutorial`); its id is the directory's name. Such a
+deck is left out of what lists presentations: `npm run check` without
+arguments, the live gateway, and `pull --all`. The template's tutorial,
+`tutorial/`, is one, so that no project branch has to delete it.
+
+A file that is not valid JSON does not stop the page blank: the load-error
+screen, and `npm run check`, name the file and the line and column of the
+mistake (`parseJsonFile` in `core/client/presentation/model.js`).
+
 ```text
 presentations/<id>/
   README.md                           what it is; how to pull and push its assets

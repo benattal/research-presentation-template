@@ -6,11 +6,11 @@ you work with a coding agent, what to say to it. Agents follow the stricter
 version of the same procedure in
 [making a presentation](../workflows/making-a-presentation.md).
 
-Everything here can be done by hand. The parts marked **With an agent** are
-what changes when Claude Code (or another agent that reads `AGENTS.md`) does
-the work with you.
+Everything here can be done by hand, and nearly everything can be asked
+for instead: the parts marked **With an agent** give the sentence that has
+Claude Code (or another agent that reads `AGENTS.md`) do the step for you.
 
-## 1. Install and look at the example
+## 1. Install, and take the tutorial
 
 You need git and Node.js 22.12 or newer.
 
@@ -18,12 +18,20 @@ You need git and Node.js 22.12 or newer.
 git clone <this repository's address>
 cd research-presentation-template
 npm install
-npm run dev
+npm run tutorial
 ```
 
-Open http://localhost:5173/. That is the example presentation: one slide
-per core layout. Arrow keys move through it, **O** shows every slide, **P**
-opens the presenter window with the notes, **F** is fullscreen.
+Open the address it prints (http://localhost:5173/), with an editor beside
+the browser. The tutorial is a deck about the template that you complete
+by editing it: it asks you to change a title, add a bullet, a build step,
+a picture, and a slide of your own, and each slide marks its task done
+when you save. Twenty minutes with it covers everything this page assumes
+you know. `git restore tutorial` puts it back afterwards.
+
+Arrow keys move through any deck, **O** shows every slide, **P** opens the
+presenter window with the notes, **F** is fullscreen. `npm run dev` on
+`main` opens the other deck that comes with the template, the example: one
+slide per core layout.
 
 A presentation is a folder of small text files:
 

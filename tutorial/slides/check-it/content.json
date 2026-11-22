@@ -1,0 +1,23 @@
+{
+  "layout": "progressiveBuild",
+  "sectionLabel": "Check and present",
+  "title": "Check the deck before you show it",
+  "buildSteps": [
+    {
+      "label": "Check",
+      "description": "npm run check -- ./tutorial loads the deck without a browser: every slide's file, every layout name, every picture and video the slides name."
+    },
+    {
+      "label": "Capture",
+      "description": "npm run capture -- ./tutorial opens every slide and step in a hidden browser, takes a screenshot of each, and lists text that overflows, a title that wraps, media that did not load."
+    },
+    {
+      "label": "Look",
+      "description": "It prints the path of a contact sheet. Open it: a clean report does not show a slide that is legible but wrong."
+    },
+    {
+      "label": "Or ask",
+      "description": "“Validate the slides of the tutorial.” An agent runs both, reads the frames, and brings you what it found."
+    }
+  ]
+}

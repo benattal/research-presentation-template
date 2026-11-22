@@ -1,0 +1,19 @@
+{
+  "layout": "progressiveBuild",
+  "sectionLabel": "Steps, pictures, slides",
+  "title": "Build steps reveal a slide one click at a time",
+  "buildSteps": [
+    {
+      "label": "One",
+      "description": "A slide with a buildSteps list takes one key press per entry."
+    },
+    {
+      "label": "Two",
+      "description": "Going back from the next slide lands on the last step."
+    },
+    {
+      "label": "Three",
+      "description": "A step can have a note of its own: notes-2.md is the note of this third step, counted from 0."
+    }
+  ]
+}

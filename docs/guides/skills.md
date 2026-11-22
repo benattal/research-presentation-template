@@ -11,6 +11,13 @@ Claude Code picks the skill whose description matches; typing `/<name>`
 (for example `/validate-slides`) asks for it explicitly. An agent starting
 work on a presentation should also offer the two review skills.
 
+You also do not have to run the commands these pages show. They are what
+the agent runs when you ask, and they are written out so that you can see
+what happened and do it by hand when you want to. The setup around a skill
+can be asked for too: "start a presentation called my-talk on its own
+branch and copy my PDFs into its assets" needs no skill and no command
+from you.
+
 | You want to | Skill | Say something like |
 |---|---|---|
 | start a deck, or a new section of one | [`start-presentation`](#start-presentation) | "Plan a 20-minute talk on X from these papers" |
@@ -22,6 +29,8 @@ work on a presentation should also offer the two review skills.
 
 Each section below says what the skill is for, what you give it, what it
 does, what you get back, and what it will not do without asking.
+[Worked examples](worked-examples.md) follows each skill through a real
+use, with the commands' output.
 
 ## start-presentation
 
@@ -58,6 +67,8 @@ recording before the slides exist.
 > `assets/old-lecture.pptx`; follow their structure. Draft the plan and
 > storyboard only.
 
+A worked example:
+[from an idea to a storyboard](worked-examples.md#start-presentation-from-an-idea-to-a-storyboard).
 More: [getting started](getting-started.md#4-plan-before-slides), and the
 agent's procedure in
 [making a presentation](../workflows/making-a-presentation.md).
@@ -88,7 +99,9 @@ question comes back to you as a proposal.
 > Validate the slides of my-talk and show me anything that overflows.
 
 Needs a browser once (`npx playwright install chromium`) and the deck's
-media. More: [visual validation](../implementation/visual-validation.md).
+media. A worked example:
+[catching a title that wraps](worked-examples.md#validate-slides-catching-a-title-that-wraps).
+More: [visual validation](../implementation/visual-validation.md).
 
 ## sync-assets
 
@@ -119,6 +132,8 @@ ever run `rclone sync` (which deletes).
 > The summary slide shows a broken image. Pull the media for my-talk;
 > rclone's configuration is at `~/keys/rclone.conf`.
 
+A worked example:
+[a fresh clone with gaps](worked-examples.md#sync-assets-a-fresh-clone-with-gaps).
 More: [DATA.md](../../DATA.md), and the README's
 [Large assets](../../README.md#large-assets) for setting up a store.
 
@@ -153,6 +168,9 @@ media file without confirming, or commit your screenshots.
 
 > I'll review on my iPad while you fix the results section. Use
 > live-feedback.
+
+A worked example:
+[a screenshot from the iPad](worked-examples.md#live-feedback-a-screenshot-from-the-ipad).
 
 ## feedback-inbox
 
@@ -198,6 +216,8 @@ send the screenshots anywhere outside your computer.
 | You need it | whenever you review while slides change | only with several editing sessions, or to keep a cheap receiver |
 | Does with a screenshot | makes the change | finds the slide and forwards the screenshot |
 
+A worked example:
+[the same screenshot, routed](worked-examples.md#feedback-inbox-the-same-screenshot-routed).
 More, with the steps on the device:
 [reviewing on a tablet](reviewing-on-a-tablet.md).
 
@@ -231,5 +251,7 @@ voices run locally), or record a deck whose slides are still changing.
 
 Needs ffmpeg and an installed Edge or Chrome; narration also needs the
 Python environments of [narration setup](../environments/narration.md).
+A worked example:
+[a run-through, then a voice](worked-examples.md#narrated-video-a-run-through-then-a-voice).
 More: the agent's procedure in
 [making a narrated video](../workflows/narrated-video.md).

@@ -65,7 +65,11 @@ user.
    the matching step of the skill.
 3. **Gate of `feedback-inbox`**: ten real marked-up screenshots, sent from
    the iPad, each reach the right session with the right slide named, or
-   are reported to the user as not placed.
+   are reported to the user as not placed. One has: a Haiku session given
+   the skill and the user's screenshot of the summary slide named the
+   slide and step, described the mark, and forwarded it to the registered
+   editing session. Nine to go, and from the Claude app rather than from a
+   command line.
 4. **Gate of `live-feedback`**: a session in the middle of a slide edit
    receives a forwarded screenshot, finishes its current step, makes the
    change, and reports; the page on the iPad never fails to load
@@ -272,7 +276,9 @@ for this plan; the control tests check the parts the design rests on.
    Haiku and by Sonnet: the slide and step named, each mark and what it
    points at transcribed, each compared with the user's own account. The
    inbox runs on the smallest model that places all ten and misreads no
-   mark.
+   mark. One read so far, by Haiku: slide and step right (from the counter
+   and the capture frames, the screenshot having no review label), the
+   one mark described correctly, no handwriting to transcribe.
 
 If tests 1 and 2 both fail, an image cannot leave the session that received
 it. The user then chooses between sending each screenshot directly to the

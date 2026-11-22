@@ -132,8 +132,12 @@ Browser tests cover the touch controls at a tablet's and a phone's sizes.
 On a real iPad, the toolbar and the whole bar have been seen to show under
 Safari's own bars, a marked-up screenshot sent from the iPad has arrived
 in a session as a file, and a Haiku session has passed a screenshot's path
-to another session, which opened it. The inbox skill has not yet been run
-through a whole review, and an iPhone has not been tried:
+to another session, which opened it. The inbox skill has been run once on
+Haiku with a real marked-up screenshot: it named the slide and step,
+described the mark, and forwarded it to the editing session
+([worked example](worked-examples.md#feedback-inbox-the-same-screenshot-routed)).
+A whole review through the inbox from the Claude app, and an iPhone, have
+not been tried:
 [the plan](../plans/ipad-review.md) lists what is still to observe. If
 something does not behave as this page says, that is a bug worth
 reporting.

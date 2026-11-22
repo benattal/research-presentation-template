@@ -1,0 +1,13 @@
+{
+  "layout": "content",
+  "sectionLabel": "Check and present",
+  "title": "Ask an agent for the rest",
+  "subtitle": "The repository carries six skills: say what you want in your own words",
+  "bullets": [
+    "“Plan a 20-minute talk on X from these papers” starts a deck with a storyboard you approve",
+    "“Check the slides” captures every slide and reviews the frames",
+    "“Pull the media” and “push the media” move pictures and videos to and from the asset store",
+    "“I'll watch on my iPad” serves the deck and takes your marked-up screenshots while it edits",
+    "“Record a run-through” films the deck, with a synthesized voice if you want one"
+  ]
+}

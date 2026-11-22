@@ -93,6 +93,10 @@ example with the project's presentations.
 - Presentation changes stay on their project's branch.
 - A project branch deletes `presentations/example/`. When merging `main`,
   resolve a modify/delete conflict on it by keeping it deleted.
+- `tutorial/` stays on every branch: it is a deck outside `presentations/`
+  that no listing, check, or gateway includes, named in commands by its
+  directory (`npm run capture -- ./tutorial`). Point a newcomer at
+  `npm run tutorial` before anything else.
 - A project branch records what is specific to it in the "This branch"
   section below, in both agent files.
 
@@ -153,6 +157,8 @@ core/
                    live features, core layouts (the Vite root)
   server/          live gateway: Express app, live API, presenter auth, polls
   tooling/         presentation discovery, Vite configuration, notes writer
+tutorial/          the hands-on tour: a presentation outside presentations/,
+                   on every branch, that a newcomer completes by editing it
 presentations/
   <id>/            presentation.json, slides/, layouts/, media/ (the scripts
                    that build its media), public/ and assets/ (both from
@@ -182,6 +188,7 @@ There is no generic `common`, `helpers`, `utils`, or `misc` catch-all.
 
 ```bash
 npm install                           # once; Node 22.12 or newer
+npm run tutorial                      # the tutorial deck (npm run dev -- ./tutorial)
 npm run dev -- <id>                   # local mode: one presentation, no server
 npm run dev -- <id> --host            # the same, also on the network (a tablet)
 npm run build -- <id>                 # static build in dist/<id>/

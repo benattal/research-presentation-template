@@ -1,0 +1,13 @@
+{
+  "layout": "task",
+  "sectionLabel": "Edit a slide",
+  "title": "Notes are what you say",
+  "subtitle": "They show in the presenter window, never to the audience",
+  "bullets": [
+    "Press P: a second window opens with the notes, a timer, and the next slide",
+    "`notes.md` beside `content.json` holds them"
+  ],
+  "task": "Press P. In the file below, write a sentence and save: the presenter window shows it. This task cannot tick itself, because notes are not part of the slide.",
+  "file": "notes.md",
+  "ask": "In the tutorial deck, write a one-sentence presenter note for the slide task-notes."
+}

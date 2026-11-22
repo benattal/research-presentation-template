@@ -6,14 +6,17 @@
  *
  *   npm run dev [-- <id>] [--port 5173] [--host]
  *
- * The id may be left out when the repository has one presentation.
+ * The id may be left out when the repository has one presentation. A
+ * presentation outside `presentations/` is named by its directory:
+ * `npm run tutorial` is `npm run dev -- ./tutorial`.
  * `--host` listens on the network as well as on this machine, to review
  * the deck on a tablet or phone: every device on the network can then read
  * the slides and their notes, so use it on a network you trust.
  */
+import { relative } from 'node:path';
 import { parseArgs } from 'node:util';
 import { createServer } from 'vite';
-import { selectOnePresentation } from '../core/tooling/presentations.js';
+import { REPO_ROOT, selectOnePresentation } from '../core/tooling/presentations.js';
 import { createViteConfig } from '../core/tooling/viteConfig.js';
 
 const { values, positionals } = parseArgs({
@@ -33,7 +36,7 @@ const server = await createServer(createViteConfig({
 }));
 await server.listen();
 
-console.log(`\n  ${presentation.manifest.title} (presentations/${presentation.id})`);
+console.log(`\n  ${presentation.manifest.title} (${relative(REPO_ROOT, presentation.dir).replaceAll('\\', '/')})`);
 server.printUrls();
 console.log('  Presenter window: press P, or add ?mode=presenter to the URL.');
 for (const url of server.resolvedUrls.network) {

@@ -12,6 +12,8 @@ its rules. The rest is reference for both.
 
 ## Guides (for people)
 
+- [The tutorial](../tutorial/README.md): a deck that teaches the template
+  by having you edit it (`npm run tutorial`); start here
 - [Getting started](guides/getting-started.md): a new presentation, from
   an empty clone to a deck you can present
 - [Walkthroughs](guides/walkthroughs.md): joining a project, starting from
@@ -19,6 +21,8 @@ its rules. The rest is reference for both.
   narrated video, two people on one branch, taking the framework's updates
 - [The skills](guides/skills.md): what each agent skill is for, how to ask
   for it, what it does, and what comes back
+- [Worked examples](guides/worked-examples.md): each of the six skills
+  followed through a real use, with the commands' output
 - [Reviewing on a tablet or phone](guides/reviewing-on-a-tablet.md): the
   deck on an iPad or iPhone while it is edited, and marked-up screenshots
   sent back

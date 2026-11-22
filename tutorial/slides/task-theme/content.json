@@ -1,0 +1,14 @@
+{
+  "layout": "task",
+  "sectionLabel": "Make it yours",
+  "title": "Change the colors",
+  "subtitle": "A deck's theme.css overrides the template's colors and fonts",
+  "bullets": [
+    "The template's look is a set of named values: `--accent`, `--bg-slide`, `--font`, and more",
+    "A presentation gives them new values in its own `theme.css`"
+  ],
+  "task": "In the file below, remove the comment marks around the lines that set `--accent`, and save. The whole deck changes color. This task cannot tick itself.",
+  "file": "theme.css",
+  "snippet": ":root {\n  --accent: #ff7a59;\n  --accent-secondary: #ffd166;\n}",
+  "ask": "In the tutorial deck, switch on the alternative accent colors in theme.css."
+}

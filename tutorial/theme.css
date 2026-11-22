@@ -1,0 +1,20 @@
+/*
+ * The tutorial's theme. A presentation restyles the framework here, by
+ * giving new values to the custom properties of core/client/index.css.
+ *
+ * The task on the slide "Change the colors": remove the two comment marks
+ * around the three lines below, and save.
+ */
+
+/*
+:root {
+  --accent: #ff7a59;
+  --accent-secondary: #ffd166;
+}
+*/
+
+/* The deck's type scale: besides titles, this deck's own layout uses these two sizes. */
+:root {
+  --type-text: 1.25rem;
+  --type-small: 0.9rem;
+}

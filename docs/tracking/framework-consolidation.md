@@ -58,6 +58,32 @@ Every direction the user gives about this work, quoted and dated.
   no other branch has).
 - "Yeah don't use simlinks like that" (of junctions between checkouts).
 
+## 2026-11-22 16:20 — a worked example for each skill, from real runs
+
+The session's goal (2026-11-22): "There should be more specific
+documentation for each skill in docs" and "There should be more specific
+examples of use cases/walkthroughs for users".
+
+- Written: `docs/guides/worked-examples.md`, one example per skill at the
+  same depth: the situation, what the person types, what the agent runs,
+  the output, what comes back, and what to check before believing it. The
+  skills guide, the walkthroughs, the README, and the index link to it.
+- The output in it is from runs made for it, on the example presentation
+  in a worktree of `main`: `npm run capture` before and after a
+  deliberately long title (`title-wraps`, "changed 2.9%"), then against the
+  baseline with `--compare` (0 changed); `npm run narration -- example` (13
+  steps, 5 narrated, 74 words); `npm run record -- example` (36 s, with the
+  late-frame warnings of a busy machine); `npm run extract-pptx` on a
+  two-slide deck made for the test; the asset command with no store and
+  with a folder store; and the Haiku inbox run in the review tracker.
+- Tests added to `tests/repository.test.mjs`: every `npm run` script and
+  option that the README, the guides, the workflows, the skills, and the
+  presentation READMEs mention exists (checked against each script's
+  options; confirmed to fail on a made-up option and script); every skill
+  has a worked example, and the skills guide links it.
+- Checked: in the worktree on `guides` (framework as on `main`): `npm test`, 89 of 89; `npm run test:ui`, 44 of 44 in 124 s; `npm run check`, ok.
+- Next: the open todos of the plan, unchanged.
+
 ## 2026-11-22 15:30 — audited for a collaborator: guides, an asset store of one's own, 67 corrections
 
 User direction (2026-11-22): "Can you make sure that the skill, docs, code

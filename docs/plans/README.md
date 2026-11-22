@@ -80,3 +80,5 @@ was given, in order; a plan it was not asked about is not an instruction.
   [its tracker](../tracking/framework-consolidation.md).
 - [Reviewing a deck on an iPad or iPhone](ipad-review.md), tracked in
   [its tracker](../tracking/ipad-review.md).
+- [The tutorial: a deck you learn by editing](tutorial.md), tracked in
+  [its tracker](../tracking/tutorial.md).

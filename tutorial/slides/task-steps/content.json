@@ -1,0 +1,19 @@
+{
+  "layout": "task",
+  "sectionLabel": "Steps, pictures, slides",
+  "title": "Give this slide a second step",
+  "subtitle": "The number of entries in buildSteps is the number of key presses",
+  "bullets": [
+    "This slide starts with one step"
+  ],
+  "secondStep": "This line belongs to the second step. You made it appear with a key press.",
+  "task": "Add the line below to this slide's file, save, then press the right arrow once.",
+  "file": "content.json",
+  "snippet": "\"buildSteps\": [\"the slide\", \"the extra line\"],",
+  "ask": "In the tutorial deck, give the slide task-steps two build steps.",
+  "check": {
+    "field": "buildSteps",
+    "longerThan": 1
+  },
+  "whenDone": "The layout decides what each step shows; the file decides how many there are."
+}

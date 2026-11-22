@@ -12,8 +12,10 @@ reads `AGENTS.md`): the repository carries the agent's instructions and six
 skills, so the agent plans a deck with you, builds it, checks every slide,
 and takes your feedback while you watch. Everything also works by hand.
 
-- New here: [getting started](docs/guides/getting-started.md) walks from a
-  clone to a deck you can present.
+- New here: take the tutorial (`npm install`, then `npm run tutorial`): a
+  deck that teaches the template by having you edit it.
+  [Getting started](docs/guides/getting-started.md) then walks from a clone
+  to a deck of your own.
 - Working with an agent: [the skills](docs/guides/skills.md) says what to
   ask for.
 - Everything else: [docs/index.md](docs/index.md).
@@ -24,12 +26,14 @@ and takes your feedback while you watch. Everything also works by hand.
 git clone <this repository's address>
 cd research-presentation-template
 npm install                  # Node 22.12 or newer
+npm run tutorial             # the hands-on tour: start here
 npm run dev                  # the only presentation, or: npm run dev -- <id>
 ```
 
-Open http://localhost:5173/: the example presentation, one slide per core
-layout. Press **P** for the presenter window (notes, timer, preview of the
-current and next slide); arrow keys in either window drive the slides.
+Each prints an address; open it (http://localhost:5173/). `npm run dev` on
+`main` shows the example presentation, one slide per core layout. Press
+**P** for the presenter window (notes, timer, preview of the current and
+next slide); arrow keys in either window drive the slides.
 
 | Key | Action |
 |---|---|
@@ -39,6 +43,46 @@ current and next slide); arrow keys in either window drive the slides.
 | F | fullscreen |
 | P | presenter window |
 | C | reset the current slide's poll (live mode, presenter only) |
+
+## The tutorial
+
+`tutorial/` is a deck that introduces the template through a worked
+example that you complete yourself. Each task slide names a file and an
+edit (change a title, add a bullet, a build step, a picture, a slide of
+your own, the colors); when you save, the page reloads and the slide marks
+its task done. Each task also shows what to say to a coding agent that
+makes the edit for you. It takes about twenty minutes, needs no media and
+no asset store, and is on every branch.
+
+**Take it** (this is the way that lets you edit):
+
+```bash
+npm install
+npm run tutorial             # open the address it prints, with an editor beside the browser
+```
+
+**Show it to someone on your network** (their browser, your computer; add
+`?review` to the address on a tablet):
+
+```bash
+npm run tutorial -- --host
+```
+
+**Host it for people who only want to look**: a static build has the
+slides, without the editing, and goes on any web host (GitHub Pages,
+Netlify, a university web folder):
+
+```bash
+npm run build -- ./tutorial            # writes dist/tutorial/
+npm run preview -- ./tutorial          # check it at http://localhost:4173/
+```
+
+then copy the contents of `dist/tutorial/` to the host. It works under any
+address or sub-folder, and needs a web server: opening `index.html` from
+the disk does not work.
+
+**Start over:** `git restore tutorial`, and `git clean -fdx tutorial` to
+remove the slide and the picture you added.
 
 ## Start a new presentation
 
@@ -68,7 +112,8 @@ Then:
 [Getting started](docs/guides/getting-started.md) goes through each step,
 with and without an agent. [Walkthroughs](docs/guides/walkthroughs.md)
 covers joining someone's project, starting from a PowerPoint deck,
-recording a video, and more.
+recording a video, and more; [worked examples](docs/guides/worked-examples.md)
+shows each skill in use.
 
 ## A presentation
 
@@ -182,6 +227,23 @@ loads when a task calls for one. Ask in your own words, or name a skill
 (`/validate-slides`). An agent starting work on a presentation asks whether
 you want the two review skills.
 
+**You can ask for almost everything in this README instead of doing it.**
+The commands are shown so that you know what happened and can do it by
+hand; an agent runs them for you from one sentence:
+
+| Instead of | Say |
+|---|---|
+| the five commands of "Start a new presentation", and copying your material in | "Start a presentation called my-talk on its own branch, delete the example, and copy the PDFs from ~/papers/cache into its assets." |
+| writing a storyboard and slides | "Use the start-presentation skill: a 20-minute talk on X from that material. Show me the storyboard first." |
+| `npm run check`, `npm run capture`, and reading every frame | "Validate the slides." |
+| `npm run assets -- pull` and `push` | "Get the media for my-talk." / "Push the media." |
+| serving the deck and opening it on a tablet | "I'll watch on my iPad." |
+| the tutorial's tasks | the sentence each task slide shows |
+
+The agent stops for what only you can give: a yes to the storyboard, your
+wording, which asset store to use, and the path of your rclone
+configuration (it does not look for access tokens).
+
 | Skill | What it is for | Say something like |
 |---|---|---|
 | [`start-presentation`](docs/guides/skills.md#start-presentation) | a new deck or section: its type, a plan with a storyboard you approve, then slides | "Plan a 20-minute talk on X from these papers" |
@@ -193,6 +255,8 @@ you want the two review skills.
 
 [The skills](docs/guides/skills.md) describes each one: what you give it,
 what it does, what comes back, and what it will not do without asking.
+[Worked examples](docs/guides/worked-examples.md) follows each skill through
+a real use, with the output of every command.
 
 ## Reviewing on an iPad or iPhone
 
@@ -238,6 +302,7 @@ of `CLAUDE.md` and `AGENTS.md`.
 
 | Command | What it does |
 |---|---|
+| `npm run tutorial` | serve the tutorial deck (`tutorial/`); the same as `npm run dev -- ./tutorial` |
 | `npm run dev -- <id>` | local mode: one presentation on a Vite dev server, no backend; `--host` also serves it to the network, for a tablet or phone |
 | `npm run build -- <id>` | static build in `dist/<id>/`, for any web host |
 | `npm run preview -- <id>` | serve that build on this machine; `--host` as for `dev` |
@@ -253,6 +318,10 @@ of `CLAUDE.md` and `AGENTS.md`.
 | `npm test` | unit and repository tests |
 | `npm run test:ui` | browser tests of every view, core layout, and live feature |
 
+A presentation under `presentations/` is named by its id. Any other
+directory with a `presentation.json` is named by its path, with a leading
+`./` (`npm run capture -- ./tutorial`).
+
 Live mode needs `PRESENTER_PASSWORD` in `.env` (see `.env.example`).
 [Hosting](docs/implementation/hosting.md) covers both modes and deployment.
 
@@ -263,6 +332,7 @@ core/client/      React framework (the Vite root)
 core/server/      live gateway
 core/tooling/     presentation discovery, Vite configuration, the asset store
 presentations/    one directory per presentation
+tutorial/         the hands-on tour: a deck you learn the template by editing
 scripts/          command-line entry points
 narration/        Python tools for a synthesized voiceover
 tests/            node:test suites
