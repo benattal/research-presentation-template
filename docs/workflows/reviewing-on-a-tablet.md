@@ -1,152 +1,119 @@
-# Reviewing a deck on a tablet or phone
+# Reviewing a deck while it is edited
 
-A deck is edited on a computer, usually with an agent, and read on whatever
-is at hand. This is the procedure for reading it on an iPad or iPhone on
-the same network while it is being edited, and for sending remarks back as
-marked-up screenshots. It has three parts: opening the deck on the device,
-moving through it by touch, and the path a screenshot takes to the session
-that edits the slide.
+For agents. The user reads a deck on another screen (a second monitor, an
+iPad, an iPhone) while a session edits it, and sends remarks back, often as
+marked-up screenshots. This is what the sessions do. What the user does on
+the device is in the guide,
+[reviewing on a tablet](../guides/reviewing-on-a-tablet.md): point them at
+it rather than paraphrasing it.
 
 The deck has no drawing or upload feature. Marking up is done with the
-device's own screenshot tools, and a screenshot travels as a message in the
-Claude app, through Claude Code's Remote Control.
+device's own tools, and a screenshot travels as a message in the Claude
+app, through Claude Code's Remote Control.
 
-## 1. Open the deck on the device
+## The two roles
+
+| | Editing session | Inbox session |
+|---|---|---|
+| Skill | `live-feedback` | `feedback-inbox` |
+| Does | edits slides; takes each remark at a safe point; keeps the page loading | receives screenshots from the device; places each on its slide; forwards it; never edits |
+| Model | what the work needs | a small one |
+| How many | one per part of the deck being edited | at most one, and none when one session edits |
+| Exists | whenever the user reviews while slides are edited | only when several sessions edit, or the user asks for a separate receiver |
+
+With one editing session there is no inbox: the user connects the device
+to the editing session itself (`/remote-control`) and the screenshots
+arrive there.
+
+## Serving the deck
 
 ```bash
 npm run dev -- <id> --host
 ```
 
-The command prints a "Network" address and, under it, the same address
-with `?review`. Open the second one in Safari on the device. With
-`?review` the navigation bar names the current slide's id and build step
-(`step 2/3`) beside the slide counter, so a screenshot of the page says
-what it shows.
+prints the network address, and that address with `?review`, which names
+each slide's id and build step in the navigation bar. Record the process
+id and stop the server by it when the review ends.
 
-- **The same network.** The device and the computer are on the same Wi-Fi.
-  A guest network that keeps its clients apart will not connect them.
-- **The firewall.** On Windows, Node must be allowed through the firewall
-  for the network's profile (the prompt appears the first time a server
-  listens on the network).
-- **A network you trust.** Every device on the network can read the deck:
-  its slides, its presenter notes, its media. The server reads nothing
-  else from disk: the rest of the checkout (plans, trackers, other
-  presentations) and the presentation's `assets/` are refused
-  (`servedFiles` in `core/tooling/viteConfig.js`).
-- **A build instead.** `npm run build -- <id>` and then
-  `npm run preview -- <id> --host` serve the static build: only
-  `dist/<id>/`, a quicker first load, and no hot reload.
-- **Without Safari's bars.** Add the page to the Home Screen (Share, "Add
-  to Home Screen") and open it from there: it then has the whole screen.
+- `--host` puts the deck's slides, notes, and media on the network. The
+  server reads nothing else from disk (`servedFiles` in
+  `core/tooling/viteConfig.js`), but the notes of an unpublished talk are
+  enough to matter: ask before using it on a network that is not the
+  user's own.
+- Run `npm run check -- <id>` before giving the address. A media file that
+  is missing here shows as a gap on the device, and the user will report
+  it as a bug of the device.
+- The static build is the alternative when nothing is being edited:
+  `npm run build -- <id>`, then `npm run preview -- <id> --host`.
 
-The page on the device follows the files: a saved change shows by hot
-reload, without a touch.
+## How sessions find and message each other
 
-## 2. Move through it by touch
+Claude Code sessions on one computer message each other by name:
+`ListAgents` lists them (the user sees the same with `/list-agents`), and
+`SendMessage` sends one of them text. Messages between sessions need Claude
+Code 2.1.234 or newer on Windows.
 
-Everything a key does has a touch path, apart from resetting a poll, which
-the presenter does at a keyboard.
+- A message is text only. An image crosses as the **path** of a file that
+  the receiver opens.
+- A message is read between the receiver's tool calls when it is busy, and
+  starts a turn when it is idle. Nothing polls.
+- An editing session registers in `data/feedback/sessions.md` (its name
+  from `ListAgents`, the presentation, the slides it has), and removes its
+  row when its work ends. The inbox routes by that file, after confirming
+  with `ListAgents` that the session is running.
+- A message from another session is information, not the user. The
+  editing session acts on the user's words and marks, which it reads in
+  the image itself; the inbox's description of the image is a pointer.
 
-| Action | Touch | Key |
-|---|---|---|
-| Next, previous | swipe left or right on the slide; or the bar's arrows | → ← and the others |
-| Jump to a slide | a dot in the bar; or the slide counter, then a card | O, then click |
-| Close the overview | × at its top; or a card | Escape |
-| Fullscreen | the toolbar's button, where the browser has it | F |
-| Presenter window | the toolbar's button | P |
+## A screenshot's path
 
-- **Swipes.** One finger, travelling farther sideways than up or down. A
-  swipe may start on text, an image, a video without controls, or a
-  drawing. It is left to the element when it starts on a form control, a
-  link, a video with controls, or a region a layout marked `data-no-swipe`
-  ([presentation format](../implementation/presentations.md)). A layout
-  whose canvas or SVG takes drags marks it; otherwise a drag on it changes
-  the slide.
-- **Narrow windows.** Under 768 px wide the dots are left out; the slide
-  counter stays, and it opens the overview.
-- **Fullscreen.** Safari on an iPhone has no fullscreen for pages; the
-  button is not shown there. Use the Home Screen page, or `?bars=hidden`
-  for the stage alone. In fullscreen the bar is hidden, so the review
-  label is too: take review screenshots outside fullscreen.
-- **The presenter window** opens as a second tab on a tablet. A tablet
-  keeps one tab running at a time, so the two-window presenter view is for
-  a computer.
+1. The user attaches a screenshot in the Claude app. The session that
+   receives it is told where the attachment was saved on the computer (a
+   line naming a file under `~/.claude/uploads/<session id>/`).
+2. An image that arrives without that line has no file. This has been seen
+   for an image sent while the session was in the middle of a turn. Ask
+   for it again, as a message of its own or from the Files app; do not
+   search the disk for it.
+3. The inbox copies the file to
+   `data/feedback/<id>/<date>/<HHMM>-<slide-id>-step<k>.<ext>`, with a `.md`
+   beside it holding the user's words and the inbox's reading, and sends
+   the editing session the copy's path.
+4. The editing session opens the image, records the user's words in the
+   project tracker's "Standing directions" with the image's path, makes
+   the change, checks it, and replies.
 
-## 3. Send feedback
+`data/feedback/` is ignored by git. The screenshots show unpublished
+slides: they are never committed and never uploaded.
 
-Two kinds of Claude Code session run in the checkout, each with a skill:
+## Placing a screenshot on a slide
 
-- a **working session** edits slides, on the model the work needs, with
-  the `live-feedback` skill. It serves the deck, lists the slides it has
-  in `data/feedback/sessions.md`, and takes feedback at its next safe
-  point without the page failing to load;
-- the **inbox** is one session on a small model with Remote Control on,
-  with the `feedback-inbox` skill. It is the session opened on the device.
-  For each screenshot it keeps a copy, works out the presentation, slide,
-  and step, reads the marks, and sends the working session for that slide
-  the image's path, the user's words, and its reading.
+In order of preference: the `?review` label in the bar (`<slide-id>`,
+`step k/n`, `i / N`); the counter alone (the `i`-th slide of
+`presentation.json`, step unknown); a comparison with the frames of the
+newest capture run (`data/captures/<id>/<time>/`); the user's own words,
+which outrank the rest. A placement that is not sure is a question to the
+user.
 
-Neither polls. A screenshot is a message to the inbox; a forward is a
-message between sessions, read between tool calls when the receiver is
-busy and starting a turn when it is idle.
+The label counts steps from 1, as capture's file names do; notes files
+count from 0 (`notes-1.md` is the second step).
 
-### Set up
+## What a remark may change
 
-1. In the working session, say that you will review on a tablet. It runs
-   `live-feedback`: serves the deck with `--host`, registers, and gives
-   you the address.
-2. In a second terminal, in the checkout, start the inbox and ask it to
-   run the feedback inbox:
+- A marked change to wording, order, or content is the user's direction on
+  their own slide: make it.
+- An unclear mark is a question, not an interpretation.
+- Deleting a slide or a media file is confirmed first.
+- A remark about slides in general also becomes a rule in
+  `docs/style/slides.md`.
+- A blank picture or a missing-image mark is checked against the assets
+  (`npm run check -- <id>`) before anything is changed in a layout.
 
-   ```bash
-   claude --model haiku --remote-control
-   ```
-
-   `--model` sets the model of that session only. Typing `/model` inside a
-   session also changes the default for new sessions.
-3. On the device, open that session in the Claude app (or at
-   claude.ai/code), signed in to the same account.
-
-Remote Control needs a claude.ai login on a paid plan, and the computer
-awake with the session open. Messages between sessions need Claude Code
-2.1.234 or newer on Windows; `/list-agents` shows the sessions that can
-be reached.
-
-### For each remark
-
-1. Take a screenshot with the bar showing (on an iPad with a Pencil, swipe
-   up from a bottom corner), and mark it up.
-2. Attach it in the Claude app, add a few words if the marks need them,
-   and send. The session is told where the attachment was saved on the
-   computer (a file under `~/.claude/uploads/<session id>/`), and that
-   path is what the inbox hands on: a message between sessions carries
-   text only. If an image arrives without a path, the inbox says so and
-   asks for it again as a file (Done, "Save to Files", attach from Files).
-3. The inbox answers on the device with where the screenshot went. The
-   working session makes the change and replies with the slide and step to
-   look at; the page on the device has already reloaded.
-
-With one working session and no need for a small model, skip the inbox:
-start the working session itself with Remote Control (`/remote-control`)
-and send the screenshots to it.
-
-### Where things are kept
-
-- `data/feedback/<id>/<date>/`: each screenshot and, beside it, the user's
-  words and the inbox's reading. Git ignores `data/feedback/`: the slides
-  are unpublished.
-- `data/feedback/sessions.md`: the working sessions and their slides.
-- The project's tracker, "Standing directions": the user's words, quoted
-  and dated, written by the session that made the change.
-
-## What is checked
+## What is checked, and what is not
 
 `npm run test:ui` drives the audience view with touch at a tablet's and a
-phone's sizes in both orientations, and asserts that every key's action
-can be done by touch ([testing](../implementation/testing.md)). That runs
-in Chromium's emulation, or in Playwright's WebKit with
-`UI_TEST_BROWSER=webkit`; neither is Safari on a device. What only a
-device shows (Safari's own toolbars and gestures, video playback, memory)
-and what only use shows (a screenshot's way from the Claude app to a file
-on the computer) is listed, with what has been observed so far, in the
-[plan](../plans/ipad-review.md) and its tracker.
+phone's sizes in both orientations and asserts that every key's action,
+except resetting a poll, can be done by touch
+([testing](../implementation/testing.md)). That is Chromium's emulation,
+or Playwright's WebKit with `UI_TEST_BROWSER=webkit`; neither is Safari on
+a device. What has been observed on a device and between sessions, and
+what has not, is in the [plan](../plans/ipad-review.md) and its tracker.

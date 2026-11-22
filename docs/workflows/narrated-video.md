@@ -21,13 +21,16 @@ what its type adds:
   reproduces them; a slide holds one video element, with clips shown
   together stitched into one file.
 - Nothing interactive: nobody is there to use a control.
-- Decide the length (minutes, and words at about 150 words per minute),
+- Decide the length (minutes, and words: a synthesized voice reads about
+  150 a minute; `npm run narration` estimates at 160 unless given
+  `--wpm 150`),
   whether the video is anonymous, and whether the script is confidential.
 
 ## Gate 2: the script
 
-The script is the deck's notes: `notes.md` for a slide's first step and
-`notes-<k>.md` for step `k`.
+The script is the deck's notes: `notes.md` for a slide, and `notes-<k>.md`
+for one build step, counted from 0 (the third step's note is `notes-2.md`;
+a step without a file of its own is read from `notes.md`).
 
 1. Write each step's note as one or more complete sentences, in the
    source's wording, plain and literal ([writing style](../style/writing.md)).
@@ -94,8 +97,11 @@ step, or a shorter sentence.
 
 ## Delivery
 
-- The final video, its timeline, and the narration directory go to the
-  bucket with the deck's assets.
+- `npm run record` writes to `data/recordings/<id>/<time>/`, which is not
+  an asset directory. Copy the final video and its timeline into the
+  presentation's `assets/` (or record there with `--out`), beside the
+  narration directory; they then go to the asset store with the deck's
+  assets (`npm run assets -- push <id>`), when the user asks for the upload.
 - An anonymous video is audited once more: frames, narration, captions,
   file metadata, and the names of files inside the deliverable.
 - The tracker records the final numbers (length, size, loudness, words) and

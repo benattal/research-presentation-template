@@ -66,6 +66,10 @@ The measurable gates that close the plan.
 
 ## Active plans
 
+The plans listed on `main` are the framework's own. A project branch adds
+the plans of its presentations. An agent works the plan of the task it
+was given, in order; a plan it was not asked about is not an instruction.
+
 - [Template restructure](template-restructure.md), tracked in
   [its tracker](../tracking/template-restructure.md).
 - [Framework consolidation](framework-consolidation.md), tracked in

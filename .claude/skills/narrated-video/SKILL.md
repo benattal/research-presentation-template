@@ -65,5 +65,6 @@ default hold gets an entry in `presentations/<id>/recording.json`.
 Give the video's path, its length, the narration's word error rate, and
 the capture's late and recovered frames. Say what was not checked. For an
 anonymous video, say whether frames, audio, and file metadata were
-audited. Recordings are ignored by git; push a deliverable to the bucket
-with the `sync-assets` skill only when the user asks for it.
+audited. Recordings are ignored by git and are not assets: to keep one,
+copy it into `presentations/<id>/assets/` (or record there with `--out`)
+and push it with the `sync-assets` skill, only when the user asks for it.

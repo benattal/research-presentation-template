@@ -2,9 +2,10 @@
 
 ## Requirements
 
-- Node.js 22 or newer (`node --version`), with npm.
-- rclone with access to the asset bucket, for anything that shows media
-  ([DATA.md](../../DATA.md)).
+- Node.js 22.12 or newer (`node --version`), with npm.
+- rclone with access to the asset store, for a presentation that has
+  media ([DATA.md](../../DATA.md) says how to get access or set up a store
+  of your own). The example presentation has none.
 - For visual validation, a Chromium browser for Playwright:
   `npx playwright install chromium` once, or an installed Edge or Chrome
   used with `npm run capture -- <id> --channel msedge`.
@@ -15,10 +16,10 @@
 
 ```bash
 npm install
-npm run assets -- pull --all    # media for every presentation on the branch
+npm run assets -- pull --all    # media of the branch's presentations; needs the store
 npm run check                   # every presentation loads and has its assets
 npm test
-npm run test:ui                 # needs the browser below
+npm run test:ui                 # needs Playwright's Chromium, or UI_TEST_BROWSER=msedge
 ```
 
 One `npm install` at the repository root installs everything; presentations

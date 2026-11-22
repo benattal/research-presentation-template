@@ -226,7 +226,8 @@ space is not used effectively in these slides".
   `theme.css` (for example `--type-statement`, `--type-label`,
   `--type-small`). A layout's stylesheet takes its sizes from those
   properties and never writes a literal size, so a new layout cannot
-  add a fourth. The same kind of text (a panel label, an axis tick, a
+  add a fourth. (The core layouts were written before this rule and still
+  use literal sizes; a deck's own layouts follow it.) The same kind of text (a panel label, an axis tick, a
   caption) has the same size on every slide.
 - Define a necessary technical term and spell out an abbreviation at first
   use, on the slide or in the notes.

@@ -44,7 +44,7 @@ conclusions belong in `docs/tracking/`; intended work belongs in
   ask the user once whether they want to watch the deck while it is edited
   (`live-feedback`) and send marked-up screenshots from a tablet or phone
   (`feedback-inbox`). [README.md](README.md) lists every skill, and
-  [reviewing on a tablet](docs/workflows/reviewing-on-a-tablet.md) is the
+  [the review workflow](docs/workflows/reviewing-on-a-tablet.md) is the
   procedure. `--host` puts a deck's slides and notes on the network: use it
   on a network the user trusts.
 
@@ -142,13 +142,15 @@ tests/             node:test suites; tests/ui/ drives the browser
 docs/
   implementation/  how the framework works
   style/           code, writing, and slide conventions; presentation types
-  workflows/       procedures: making a deck, a narrated video, working
-                   together
+  guides/          for people: getting started, walkthroughs, the skills
+  workflows/       for agents: the procedures behind the skills (making a
+                   deck, a narrated video, reviewing, working together)
   environments/    setup
   plans/           intended multi-phase work
   tracking/        live status of active plans
   archive/         retired plans and trackers
-data/captures/     ignored: visual validation runs
+.claude/skills/    the skills an agent loads (README.md lists them)
+data/              ignored: captures/, recordings/, feedback/
 dist/              ignored: builds
 ```
 
@@ -157,20 +159,23 @@ There is no generic `common`, `helpers`, `utils`, or `misc` catch-all.
 ## Development commands
 
 ```bash
-npm install                           # once; Node 22 or newer
+npm install                           # once; Node 22.12 or newer
 npm run dev -- <id>                   # local mode: one presentation, no server
+npm run dev -- <id> --host            # the same, also on the network (a tablet)
 npm run build -- <id>                 # static build in dist/<id>/
 npm run preview -- <id>               # serve that build locally
 npm run serve                         # live mode, development (needs .env)
 npm run build:live && npm start       # live mode, production
 npm run new -- <id>                   # start a presentation
 npm run assets -- pull <id>           # fetch public/ and assets/ (DATA.md)
+npm run assets -- push <id>           # copy new media to the store, then verify
 npm run check                         # static checks of every presentation
 npm test                              # unit and repository tests
 npm run test:ui                       # browser tests of every view and core layout
 npm run capture -- <id>               # screenshot and check every slide
 npm run narration -- <id>             # notes as a script for narration/narrate.py
 npm run record -- <id>                # record a run-through video (needs ffmpeg)
+npm run extract-pptx -- <deck.pptx>   # text, media, and notes of a PowerPoint deck
 ```
 
 ## Architecture and code aesthetics
@@ -233,18 +238,17 @@ content to silence a warning.
 
 ## Data, assets, and provenance
 
-- Slide media and source decks are assets: they live in the `tcig-projects`
-  bucket described in [DATA.md](DATA.md), and in ignored `public/` and
-  `assets/` directories locally. Never commit them; never force-add an
+- Slide media and source decks are assets: they live in the asset store
+  described in [DATA.md](DATA.md) (named by `ASSETS_REMOTE`; by default
+  this repository's own bucket, which needs its access tokens), and in
+  ignored `public/` and `assets/` directories locally. Never commit them; never force-add an
   ignored file. A clean checkout without assets is expected.
 - Every presentation's directory has a `README.md` that says how to pull
-  its assets (`npm run assets -- pull <id>`) and push new ones. The user
-  (2026-11-17): "Also make sure instructions for installing the assets for
-  each lecture are available in that lecture folder". `npm run new` writes
-  it; `npm test` fails without it.
+  its assets (`npm run assets -- pull <id>`) and push new ones, and which
+  store it uses. `npm run new` writes it; `npm test` fails without it.
 - Never print, commit, or upload credentials.
-- `data/captures/`, `data/feedback/` (the screenshots a user sends as
-  feedback), `dist/`, `.live-state/`, and `.env` are ignored.
+- `data/captures/`, `data/recordings/`, `data/feedback/` (the screenshots a
+  user sends as feedback), `dist/`, `.live-state/`, and `.env` are ignored.
 - Plans describe intended work. Trackers record changing state, newest entry
   first. Implementation and style documents contain only durable facts.
 
@@ -286,8 +290,9 @@ Use evidence proportional to risk:
 ## Documentation
 
 Framework behavior belongs in `docs/implementation/`; conventions belong in
-`docs/style/`; procedures belong in `docs/workflows/`; setup belongs in
-`docs/environments/`; changing state belongs only in `docs/tracking/`.
+`docs/style/`; the procedures agents follow belong in `docs/workflows/`;
+what a person using the template reads (walkthroughs, the skills explained)
+belongs in `docs/guides/`; setup belongs in `docs/environments/`; changing state belongs only in `docs/tracking/`.
 Before starting a presentation, read
 [presentation types](docs/style/presentation-types.md) and
 [making a presentation](docs/workflows/making-a-presentation.md); when
