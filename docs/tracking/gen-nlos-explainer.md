@@ -789,6 +789,36 @@ verified runtime and quantitative sources before adding numbers.
 None open. Resolved: "my presentations bucket" is the R2 bucket
 `presentations` (the user, 2026-11-18).
 
+## 2026-11-21 19:30 — on the Windows machine: one picture missing; the touch changes merged
+
+User direction (2026-11-21): "The heavily cluttered room video seems to be
+broken." "On the ipad", "It's on the summary slide", and "Please look for
+it in R2 to see if it's available It might be in my presentations bucket".
+
+- Found: the summary slide's `outlookImage`,
+  `public/slides/summary/robot-outlook-busy-room.png`, is not on this
+  machine and is in neither bucket (searched by name in `presentations`
+  and in `tcig-projects/research-presentation-template`; the bucket's
+  `summary/` holds only `ours-vase.mp4` and its poster). It is on the
+  machine it was made on. Until it is pushed
+  (`ASSETS_REMOTE=tcig: npm run assets -- push gen-nlos-explainer`, from
+  that machine) or sent, step 2 of the summary slide shows a
+  missing-image mark here. `npm run check -- gen-nlos-explainer` reports
+  that one file and nothing else.
+- Done: `hardware/propagating-light.mp4` and its poster, which were in the
+  bucket, are copied here (`rclone copyto`, one file each).
+- On this machine rclone's configuration is
+  `~/Downloads/tokens/rclone.conf` (`RCLONE_CONFIG`), not the location in
+  the 2026-11-18 entry below.
+- Merged from `main`: the audience view's touch changes, the file serving
+  for `--host`, and the two review skills
+  ([their plan](../plans/ipad-review.md) and
+  [tracker](ipad-review.md)). Capture after the merge
+  (`data/captures/gen-nlos-explainer/20261122-001052/`, taken before the
+  two hardware files arrived): 46 frames; errors only on `hardware` (the
+  video, since copied) and `summary` step 2 (the picture).
+- Not pushed: git, and nothing to the bucket.
+
 ## 2026-11-19 21:45 — the two work-in-progress branches left the remote
 
 User direction (2026-11-19): "Yes push please and delete those remote
