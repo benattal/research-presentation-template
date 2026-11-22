@@ -1,7 +1,8 @@
 # Reviewing a deck on an iPad or iPhone
 
 [Latest status and resume point](../tracking/ipad-review.md) ·
-[Reviewing on a tablet or phone](../workflows/reviewing-on-a-tablet.md) ·
+[The guide, for people](../guides/reviewing-on-a-tablet.md) ·
+[The workflow, for agents](../workflows/reviewing-on-a-tablet.md) ·
 [Hosting](../implementation/hosting.md) ·
 [Testing](../implementation/testing.md)
 
@@ -46,7 +47,9 @@ user.
   and 4.
 - **Documentation**: the README sections (reviewing on an iPad or iPhone;
   the skills, for agents), the
-  [workflow](../workflows/reviewing-on-a-tablet.md), hosting, testing,
+  [guide](../guides/reviewing-on-a-tablet.md) for people and the
+  [workflow](../workflows/reviewing-on-a-tablet.md) for agents, hosting,
+  testing,
   the presentation format (`data-no-swipe`), and a rule in the agent files
   to offer the skills.
 
@@ -258,10 +261,13 @@ for this plan; the control tests check the parts the design rests on.
 2. **The fallback.** If an image arrives with no path, the skill asks for
    it again. To observe: that sending it again, as its own message or from
    the Files app, gives it a path.
-3. **Session to session.** Two sessions in this checkout, on this machine:
-   one sends the other a path, the other opens the image. Observed so far:
-   `ListAgents` lists the machine's sessions by name. Not yet observed: a
-   path sent and opened.
+3. **Session to session.** Observed: a one-shot Haiku session started in
+   this checkout (`claude --model haiku -p …`, allowed `ListAgents` and
+   `SendMessage`) listed the machine's sessions, sent a working session a
+   message naming a screenshot's path, and that session received it
+   between tool calls and opened the image. A session's name is the one
+   `ListAgents` reports for it. Not yet observed: the same from an
+   interactive session under Remote Control running the inbox skill.
 4. **How small can the model be?** Ten real marked-up screenshots, read by
    Haiku and by Sonnet: the slide and step named, each mark and what it
    points at transcribed, each compared with the user's own account. The

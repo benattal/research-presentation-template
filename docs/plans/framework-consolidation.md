@@ -29,6 +29,13 @@ next presentation starts with them.
   merge.
 - **Skills.** `start-presentation` and `narrated-video`, pointing at the
   workflows.
+- **A repository someone else can pick up.** Guides for people in
+  `docs/guides/` (getting started, walkthroughs, the skills, reviewing on
+  a tablet), apart from the workflows for agents; a README that starts a
+  new presentation and sets up an asset store; an asset store that is any
+  rclone remote or folder (`core/tooling/assetStore.js`), with the owner's
+  bucket as the default only; tests that fail when a skill is missing from
+  the README or the guide, or a link names a heading that does not exist.
 - **Player features** that the explainer needed and every deck gets:
   the step clock, media preloading kept in memory, video posters,
   `prepare` for slow layouts, `progressBar: false`.
