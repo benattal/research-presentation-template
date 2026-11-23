@@ -1,0 +1,19 @@
+{
+  "layout": "task",
+  "sectionLabel": "Something new, by prompt",
+  "title": "Ask for a WebGL scene",
+  "subtitle": "A new layout and a slide that uses it, from one request",
+  "bullets": [
+    "The agent writes the layout in this deck's layouts folder and registers it",
+    "It adds the slide, captures it, and looks at the frame",
+    "Give it a minute or two, and watch the files appear"
+  ],
+  "task": "Say this. The slide ticks when the deck has a slide `webgl` that uses the new layout.",
+  "prompt": "In the deck tutorial-agents, add a layout named spinningShape that draws a lit, slowly rotating torus knot with three.js, and a slide with the id webgl that uses it, placed right after the slide task-webgl. Follow the repository's rules for layouts, then capture the slide and look at the frame.",
+  "check": {
+    "slide": "webgl",
+    "field": "layout",
+    "is": "spinningShape"
+  },
+  "whenDone": "It is the next slide: press the right arrow."
+}

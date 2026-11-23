@@ -1,0 +1,23 @@
+{
+  "layout": "progressiveBuild",
+  "sectionLabel": "Review, media, video",
+  "title": "Pictures and videos are not in git",
+  "buildSteps": [
+    {
+      "label": "Why",
+      "description": "Media are large and change often. Git holds the slides. A store holds the media: a cloud bucket, a Dropbox folder, or a folder on a shared disk."
+    },
+    {
+      "label": "In a deck",
+      "description": "A deck's media sit in its public folder, which git ignores. A slide names a file, and npm run check says which files are missing."
+    },
+    {
+      "label": "Ask",
+      "description": "\"Use the folder ~/deck-media as the asset store, and push the media of the deck tutorial-agents.\" On another machine: \"Pull the media of this deck.\""
+    },
+    {
+      "label": "What it will not do",
+      "description": "Look for your access tokens, print them, or commit them. For a cloud bucket you create the token, and tell the agent where its configuration file is."
+    }
+  ]
+}

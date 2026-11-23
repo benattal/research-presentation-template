@@ -1,0 +1,18 @@
+{
+  "layout": "task",
+  "sectionLabel": "The skills, on this deck",
+  "title": "This title is far too long to fit on one line of a slide, and the capture will say so",
+  "subtitle": "The capture reports what a person in the audience would notice",
+  "bullets": [
+    "The capture opens every slide in a hidden browser and takes a screenshot of every key press",
+    "Text that overflows, a title that wraps, a picture that did not load: each is reported with its slide and step",
+    "The agent then looks at the frames itself"
+  ],
+  "task": "The title above wraps, on purpose. Say this: the slide ticks when the title has been shortened.",
+  "prompt": "Validate the slides of the deck tutorial-agents and fix what the capture reports. You may shorten a title that wraps.",
+  "check": {
+    "field": "title",
+    "differs": "This title is far too long to fit on one line of a slide, and the capture will say so"
+  },
+  "whenDone": "The title fits. The next slide says what else the agent brought back."
+}

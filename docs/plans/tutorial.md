@@ -18,8 +18,10 @@ knows how to check, present, and ask an agent for the rest.
 
 - **Type, storyboard.** Below.
 - **A presentation named by its directory.** `selectPresentations` takes
-  `./tutorial` as well as an id, so every command works on a deck outside
-  `presentations/`; `npm run tutorial` serves this one.
+  a directory as well as an id, so every command works on a deck outside
+  `presentations/` (the test fixtures). The tutorial used this until it
+  moved to `presentations/tutorial/`, at the user's direction of
+  2026-11-22; `npm run tutorial` serves it by its id.
 - **The deck**, built to the storyboard, with the `task` layout.
 - **Checks**: unit tests of the task checks, and that the edit each task
   asks for is the edit its check sees; a browser test that every slide and
@@ -43,14 +45,13 @@ knows how to check, present, and ask an agent for the rest.
 
 ## Rules
 
-- The tutorial lives in `tutorial/`, not under `presentations/`: it is not
-  a project's deck, a project branch does not delete it, the live gateway
-  does not serve it, and `npm run check` without arguments does not
-  include it. It is available on every branch.
+- The tutorial lives in `presentations/tutorial/` and is on every branch:
+  a project branch deletes the example and keeps the tutorials. The
+  listing commands and the live gateway include it like any deck.
 - It needs no asset store and no media in git. The one picture it shows is
   the one the reader adds.
-- A reader's edits are theirs to throw away: `git restore tutorial`
-  returns it to the start. Nothing in the deck asks for a commit.
+- A reader's edits are theirs to throw away: `git restore
+  presentations/tutorial` returns it to the start. Nothing in the deck asks for a commit.
 - Every task can be checked from the slide's own data, or says plainly
   that it cannot tick itself. A task never claims to be done by a timer.
 - The deck teaches the commands and files of this repository as they are;
@@ -97,7 +98,7 @@ checking and presenting; where to go next.
 | 15 | A layout is a small React component | (1) what a layout is, with this panel as the example; (2) where it is registered | `content` layout | drafted |
 |   | **Check and present** | | | |
 | 16 | (outline) | the sections | `outline` layout | drafted |
-| 17 | Check the deck before you show it | what the two commands look at; the task: run `npm run check -- ./tutorial` and `npm run capture -- ./tutorial`; cannot tick itself | `task` layout, no check | drafted |
+| 17 | Check the deck before you show it | what the two commands look at; the task: run `npm run check -- tutorial` and `npm run capture -- tutorial`; cannot tick itself | `task` layout, no check | drafted |
 | 18 | Present it | the keys, the presenter window, a build; the task: build this deck and serve the build, with `--host` for a tablet; cannot tick itself | `task` layout, no check | drafted |
 | 19 | Ask an agent for the rest | the six skills, each with what to say | `content` layout | drafted |
 | 20 | Now make your own | the three commands that start a project | `title` layout | drafted |
@@ -106,10 +107,10 @@ checking and presenting; where to go next.
 
 - **A deck by its directory** (`core/tooling/presentations.js`): an
   argument with a path separator or a leading dot names a directory with a
-  `presentation.json`; its id is the directory's name. `npm run tutorial`
-  is `node scripts/dev.mjs ./tutorial`; the other commands take
-  `./tutorial` the same way (`npm run capture -- ./tutorial`).
-- **The `task` layout** (`tutorial/layouts/TaskSlide/`): the slide's own
+  `presentation.json`; its id is the directory's name. The test fixtures
+  are named this way (`npm run capture -- ./tests/fixtures/ui-showcase`).
+- **The `task` layout** (`core/client/layouts/TaskSlide/`, a core layout
+  since the second tutorial uses it too): the slide's own
   content on the left (title, bullets, media, the line a second step
   shows), and on the right a panel with the task, the file to open, the
   text to look for or paste, and its state. `taskChecks.js` decides the

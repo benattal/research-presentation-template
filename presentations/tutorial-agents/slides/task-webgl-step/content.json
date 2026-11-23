@@ -1,0 +1,18 @@
+{
+  "layout": "task",
+  "sectionLabel": "Something new, by prompt",
+  "title": "Change it with one more sentence",
+  "subtitle": "Name the slide by its id, and say what each key press shows",
+  "bullets": [
+    "A build step is one key press. A layout is told which step the slide is on",
+    "You do not say how. You say what the audience sees"
+  ],
+  "task": "Say this. The slide ticks when the slide `webgl` has two build steps.",
+  "prompt": "On the slide webgl of the deck tutorial-agents, add a second build step: on the second key press the shape stops rotating and a short label appears under it.",
+  "check": {
+    "slide": "webgl",
+    "field": "buildSteps",
+    "longerThan": 1
+  },
+  "whenDone": "Go back one slide and press the right arrow twice."
+}

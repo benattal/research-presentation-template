@@ -1,0 +1,23 @@
+{
+  "layout": "progressiveBuild",
+  "sectionLabel": "Two windows",
+  "title": "An agent reads the same files you edited",
+  "buildSteps": [
+    {
+      "label": "This deck",
+      "description": "You are looking at the folder presentations/tutorial-agents. It is text files, like the first tutorial's deck, and an agent edits them the way you did."
+    },
+    {
+      "label": "Its instructions",
+      "description": "CLAUDE.md and AGENTS.md, at the top of the repository, tell an agent the rules here: a storyboard before slides, a check after every change, no media in git. The skills in .claude/skills are its procedures."
+    },
+    {
+      "label": "The loop",
+      "description": "You say what you want. The agent edits files. This page reloads by itself, and a task slide looks at the deck and marks itself done."
+    },
+    {
+      "label": "Two windows",
+      "description": "Keep this page beside the agent's session. Open the session at the top folder of the repository, so that it finds its instructions."
+    }
+  ]
+}

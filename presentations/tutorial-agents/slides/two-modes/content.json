@@ -1,0 +1,23 @@
+{
+  "layout": "progressiveBuild",
+  "sectionLabel": "One deck, many browsers",
+  "title": "Local mode, and the live server",
+  "buildSteps": [
+    {
+      "label": "Local mode",
+      "description": "What you are using now: one deck, in your browser, with no server to look after. It is enough to write a deck and to present it from your laptop."
+    },
+    {
+      "label": "What it cannot do",
+      "description": "Count votes from the audience's phones, keep every screen on the presenter's slide, or ask for a password before showing the presenter's notes."
+    },
+    {
+      "label": "The live server",
+      "description": "npm run serve starts a gateway that serves every deck under presentations, each at its own address, with a presenter login, and keeps the votes."
+    },
+    {
+      "label": "Its settings",
+      "description": "A file named .env at the top of the repository: the presenter's password, and two switches that the next slides use."
+    }
+  ]
+}

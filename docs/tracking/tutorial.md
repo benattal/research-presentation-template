@@ -13,6 +13,8 @@ Every direction the user gives about this work, quoted and dated.
 
 2026-11-22:
 
+- "Yes a planted flaw sounds good. You can put the tutorial presentations
+  under presentations/ as well"
 - "This is mostly for things in worked examples like "make the
   presentation and put your material in it""
 - "I also do want to make sure that much of this (e.g. in the worked
@@ -23,6 +25,32 @@ Every direction the user gives about this work, quoted and dated.
   it, so that they can look at it. This presentation might also be
   interactive in the sense that the users *need to go through* the worked
   example to edit it."
+
+## 2026-11-22 19:35 — moved to presentations/tutorial/; its layout is a core layout
+
+User direction (2026-11-22): "You can put the tutorial presentations under
+presentations/ as well".
+
+- Moved: `tutorial/` to `presentations/tutorial/`. `npm run tutorial` is
+  `npm run dev -- tutorial`, and the other commands take the id. The deck
+  is now in what lists presentations: `npm run check` without arguments,
+  the gateway, `pull --all`. A project branch deletes the example and
+  keeps the tutorials (both agent files).
+- The `task` layout moved to `core/client/layouts/TaskSlide/`, because
+  the second tutorial uses it too ([its tracker](tutorial-agents.md)).
+- Changed in the deck: the commands on "Check the deck" and "Present it"
+  (`-- tutorial`), the folder named on "This deck is a folder of text
+  files", where the layout is on "A layout is a component", and the notes
+  that named paths.
+- Found by the capture: with the longer directory, the line naming the
+  picture's folder ran 67 px past its box, since code in a task's text did
+  not wrap. A path may now break after a slash; a name still does not
+  break at its hyphens.
+- Kept: commands still take a deck by its directory; the test fixtures use
+  it, and the error page names such a deck by its path.
+- Checked: capture of the deck, 27 frames, 0 errors, 0 warnings;
+  `npm test`, 107; `npm run test:ui`, 50 of 50.
+- Next: unchanged (a person takes it; the user's read of its storyboard).
 
 ## 2026-11-22 19:30 — taken by a newcomer (an agent with only the README); what it tripped on, fixed
 

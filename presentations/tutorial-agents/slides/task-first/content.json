@@ -1,0 +1,13 @@
+{
+  "layout": "task",
+  "sectionLabel": "Two windows",
+  "title": "Say this first",
+  "subtitle": "A session that knows the repository asks fewer questions",
+  "bullets": [
+    "A good answer names local and live hosting, the storyboard that comes before slides, and the six skills",
+    "A vague answer usually means the session was opened in another folder",
+    "From here on, every task is words to say. The `Copy` button copies them"
+  ],
+  "task": "Open your agent's session at the top folder of the repository and say this. This task cannot tick itself.",
+  "prompt": "What is this repository for, and which skills does it give you? Answer in a few lines."
+}

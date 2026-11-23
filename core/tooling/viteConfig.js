@@ -1,6 +1,6 @@
 import { join } from 'node:path';
 import react from '@vitejs/plugin-react';
-import { CLIENT_DIR, REPO_ROOT, commandNameOf } from './presentations.js';
+import { CLIENT_DIR, REPO_ROOT, commandNameOf, directoryOf } from './presentations.js';
 import { notesWriter } from './notesWriter.js';
 
 function escapeHtml(text) {
@@ -71,6 +71,7 @@ export function createViteConfig({ presentation, base, live, outDir, server = {}
       __LIVE_SERVER__: JSON.stringify(live),
       __PRESENTATION_ID__: JSON.stringify(presentation.id),
       __PRESENTATION_COMMAND_NAME__: JSON.stringify(commandNameOf(presentation)),
+      __PRESENTATION_DIR__: JSON.stringify(directoryOf(presentation)),
     },
     server: {
       ...server,

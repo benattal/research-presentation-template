@@ -1,0 +1,12 @@
+{
+  "layout": "content",
+  "sectionLabel": "One deck, many browsers",
+  "title": "What the server keeps",
+  "subtitle": "One vote for each browser, counted in one place",
+  "bullets": [
+    "Choosing another option changes your vote. Reloading the page cannot add one",
+    "The results slide updates on every screen as votes arrive",
+    "Votes are saved in the folder .live-state and survive a restart of the server",
+    "As presenter, the key C clears the poll on the slide you are on"
+  ]
+}

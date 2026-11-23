@@ -1,0 +1,12 @@
+{
+  "layout": "content",
+  "sectionLabel": "One deck, many browsers",
+  "title": "Putting it on the internet",
+  "subtitle": "The live server is one service: a build command, a start command, a password",
+  "bullets": [
+    "Build: install, pull the media, npm run build:live. Start: npm start",
+    "The password is set in the hosting service, never in git",
+    "Votes survive a redeploy only if the service has a persistent disk",
+    "An agent can prepare all of this and tell you what to set. Publishing is your decision, and your click"
+  ]
+}

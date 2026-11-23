@@ -1,0 +1,13 @@
+{
+  "layout": "task",
+  "sectionLabel": "The skills, on this deck",
+  "title": "A plan before slides",
+  "subtitle": "Ask for a section and you get a storyboard to read first",
+  "bullets": [
+    "The agent does not write slides yet. It writes a storyboard: one row per slide, with what each key press shows",
+    "It puts the storyboard in this deck's plan, under docs/plans, and shows it to you",
+    "Change the topic in the prompt to one you know well"
+  ],
+  "task": "Say this, with your own topic. Nothing in the deck changes yet, so this task cannot tick itself.",
+  "prompt": "In the deck tutorial-agents, I want a new section with the id mine: three slides on how to brew good coffee. Write the storyboard first and show it to me before you build anything."
+}

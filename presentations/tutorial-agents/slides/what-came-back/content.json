@@ -1,0 +1,23 @@
+{
+  "layout": "progressiveBuild",
+  "sectionLabel": "The skills, on this deck",
+  "title": "What the agent brought back",
+  "buildSteps": [
+    {
+      "label": "The frames",
+      "description": "Each run has a folder under data/captures/tutorial-agents: a screenshot of every step, a report, and a contact sheet that opens in a browser."
+    },
+    {
+      "label": "What it fixed",
+      "description": "Layout and code, without asking: overflow, a file that is missing, an error in the console."
+    },
+    {
+      "label": "What it asked",
+      "description": "Wording. It shortened the title because you said it may. Otherwise it proposes, and waits for you."
+    },
+    {
+      "label": "Your part",
+      "description": "Open the contact sheet. A clean report does not show a slide that is legible but wrong."
+    }
+  ]
+}

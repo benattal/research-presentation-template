@@ -30,6 +30,7 @@ poll's bars as votes arrive.
 | `colabLink` | `title`, `description`, `colabUrl`?, `steps`? `[{ text, url? }]`, `imageSrc`?, `note`? | button and QR code for a notebook; without `colabUrl` the button reads "Link Coming Soon" |
 | `credits` | `title`, `subtitle`? | every source the presentation cites (`credits` on its slides, text from `sources.json`), in order of first use, in three columns |
 | `presentationLinks` | `title`, `subtitle`?, `qrCode`? `{ url, label? }`, `links`: `[{ href, title, description?, icon? }]` | a menu of other presentations, for a landing presentation served at the gateway root; `href` is relative (`"../filtering/"`) |
+| `task` | `title`, `subtitle`?, `bullets`?, `media`?, `task`, then what to use: `file`? and `snippet`?, or `files`? `[{ file, snippet }]`, or `prompt`?; `ask`?, `check`?, `whenDone`?, `secondStep`? | a hands-on slide, as in the two tutorials: the slide being changed on the left, and on the right what to do, the file to open or the words to say to a coding agent (with a button that copies them), and a badge that reads "To do" or "Done" from the deck's own data (`check`, see `TaskSlide/taskChecks.js`), or "Try it" without a check; text between backticks shows as code |
 
 ## Live audience
 

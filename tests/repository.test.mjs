@@ -112,7 +112,7 @@ describe('documentation', () => {
       ...filesUnder('docs', /\.md$/).filter((path) => !/[\\/](plans|tracking|archive)[\\/]/.test(path)),
       ...filesUnder('.claude/skills', /\.md$/),
       ...filesUnder('presentations', /README\.md$/),
-      ...['README.md', 'CLAUDE.md', 'AGENTS.md', 'DATA.md', 'tutorial/README.md'].map((name) => join(ROOT, name)),
+      ...['README.md', 'CLAUDE.md', 'AGENTS.md', 'DATA.md'].map((name) => join(ROOT, name)),
     ];
     const unknown = [];
     for (const path of documents) {

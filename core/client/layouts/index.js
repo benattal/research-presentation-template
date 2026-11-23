@@ -17,6 +17,7 @@ import PollResultsSlide from './PollResultsSlide/PollResultsSlide.jsx';
 import PollSlide from './PollSlide/PollSlide.jsx';
 import PresentationLinksSlide from './PresentationLinksSlide/PresentationLinksSlide.jsx';
 import ProgressiveBuildSlide from './ProgressiveBuildSlide/ProgressiveBuildSlide.jsx';
+import TaskSlide from './TaskSlide/TaskSlide.jsx';
 import TitleSlide from './TitleSlide/TitleSlide.jsx';
 
 export default {
@@ -34,4 +35,5 @@ export default {
   pollResults: PollResultsSlide,
   numericPoll: NumericPollSlide,
   presentationLinks: PresentationLinksSlide,
+  task: TaskSlide,
 };

@@ -1,0 +1,18 @@
+{
+  "layout": "task",
+  "sectionLabel": "The skills, on this deck",
+  "title": "Read the storyboard, then say yes",
+  "subtitle": "What the slides say is yours to decide; the agent proposes",
+  "bullets": [
+    "Read each row: the title, what each key press shows, where a picture would come from",
+    "Correct it in words first: \"make the second slide a comparison\", \"drop the last one\"",
+    "Then let it build"
+  ],
+  "task": "When the storyboard reads right, say this in the same session.",
+  "prompt": "The storyboard is good. Build the three slides in the deck tutorial-agents, in a new section with the id mine placed right after the section with the id skills, then check and capture the deck.",
+  "check": {
+    "section": "mine",
+    "longerThan": 2
+  },
+  "whenDone": "Your section comes after this one. Press O to see its slides among the others."
+}

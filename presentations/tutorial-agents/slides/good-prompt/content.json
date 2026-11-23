@@ -1,0 +1,13 @@
+{
+  "layout": "content",
+  "sectionLabel": "Prompts that work",
+  "title": "What a good prompt names",
+  "subtitle": "The agent can read every file. It cannot read your mind",
+  "bullets": [
+    "The deck and the slide, by id: \"on the slide webgl of the deck tutorial-agents\"",
+    "What each key press shows, in order",
+    "What must not change: \"keep the wording\", \"leave the other sections alone\"",
+    "The check you want: \"capture it and look at the frame\"",
+    "What done looks like: \"both slides listed after task-poll\""
+  ]
+}

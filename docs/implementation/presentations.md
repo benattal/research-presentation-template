@@ -8,10 +8,10 @@ bucket. Ids use lowercase letters, digits, and hyphens.
 
 A directory anywhere else with the same contents is a presentation too,
 and every command takes it by its path, with a leading `./`
-(`npm run dev -- ./tutorial`); its id is the directory's name. Such a
-deck is left out of what lists presentations: `npm run check` without
-arguments, the live gateway, and `pull --all`. The template's tutorial,
-`tutorial/`, is one, so that no project branch has to delete it.
+(`npm run dev -- ./tests/fixtures/ui-showcase`); its id is the
+directory's name. Such a deck is left out of what lists presentations:
+`npm run check` without arguments, the live gateway, and `pull --all`.
+The test fixtures are such decks.
 
 A file that is not valid JSON does not stop the page blank: the load-error
 screen, and `npm run check`, name the file and the line and column of the
@@ -213,7 +213,7 @@ spelling.
 ## Custom layouts
 
 A layout is a React component that receives
-`{ slide, buildStep, sections, citations }` and renders inside the 1280×720
+`{ slide, buildStep, sections, slides, citations }` and renders inside the 1280×720
 stage:
 
 ```jsx

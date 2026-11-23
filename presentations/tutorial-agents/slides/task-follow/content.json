@@ -1,0 +1,13 @@
+{
+  "layout": "task",
+  "sectionLabel": "One deck, many browsers",
+  "title": "Everyone on your slide",
+  "subtitle": "A switch that makes every other browser follow the presenter's",
+  "bullets": [
+    "The presenter logs in once: press P, and type the password in the window that opens",
+    "Every browser that is not the presenter's then shows the presenter's slide",
+    "Their arrow keys stop working: the audience cannot run ahead"
+  ],
+  "task": "Say this. Then press P in one live window, log in, and move. The other window follows. This task cannot tick itself.",
+  "prompt": "In .env, set PRESENTER_CONTROLLED to true, then restart the live server."
+}

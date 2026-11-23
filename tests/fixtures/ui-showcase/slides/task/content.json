@@ -1,0 +1,19 @@
+{
+  "layout": "task",
+  "title": "A task that was done",
+  "subtitle": "The slide reads the deck to know",
+  "bullets": [
+    "A `file.json` named in a line",
+    "A second line"
+  ],
+  "task": "Change the title in the file below. The folder is `@folder`.",
+  "file": "content.json",
+  "snippet": "\"title\": \"A task that was done\"",
+  "prompt": "Change the title of the slide task.",
+  "ask": "Shown until the task is done.",
+  "check": {
+    "field": "title",
+    "differs": "Change this title"
+  },
+  "whenDone": "Done, and the slide says so."
+}
