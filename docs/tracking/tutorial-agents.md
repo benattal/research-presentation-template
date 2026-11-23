@@ -78,6 +78,18 @@ the user to look at, and both tutorials live under `presentations/`.
   of both tutorials: the first clean, this one with its one planted
   warning; the frames of thirteen slides read.
 - Served for the user at port 5175 with `--host`.
+- Broken by the merge, and mended: merging `main` into `gen-nlos-explainer`
+  in the main checkout left the explainer's page blank for about three
+  minutes. Its development server, started before the merge, did not have
+  the new build constant `__PRESENTATION_DIR__`, which the task layout
+  reads when the layouts load. Found by opening the page in a headless
+  browser after the merge ("__PRESENTATION_DIR__ is not defined");
+  restarting the server on the same port fixed it, and the page was
+  opened again to confirm. The hosting document and the agent files now
+  say to restart a running server after merging framework changes. The
+  same merge had one conflict, in the comment of
+  `core/client/stage/SlideFrame.jsx`, which that branch had changed for
+  its credit lines; both sides' sentences were kept.
 - Not done: a second model for the prompts (the plan's gate asks for two);
   the three live tasks and the tablet and video tasks, which need a person
   at two browser windows or a device; a person taking the deck.

@@ -25,6 +25,13 @@ npm run tutorial             # the first tutorial: npm run dev -- tutorial
 A presentation outside `presentations/` is named by its directory, with a
 leading `./`, in every command of this page.
 
+The development server reloads the page for a change to a slide, a
+layout, or the client. It keeps the configuration it started with
+(`core/tooling/viteConfig.js`: the build constants, the files it may
+serve). After a pull or a merge that changes the framework, restart it:
+a client that reads a build constant the running server was not started
+with fails with "... is not defined" and shows nothing.
+
 The presenter opens the presenter window with **P** (or `?mode=presenter`)
 and drags it to the laptop screen; the audience window goes on the projector
 in fullscreen (**F**). The two windows are in the same browser and talk over
