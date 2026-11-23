@@ -1,0 +1,19 @@
+{
+  "layout": "progressiveBuild",
+  "sectionLabel": "Prompts that work",
+  "title": "What the agent keeps for you",
+  "buildSteps": [
+    {
+      "label": "Your directions",
+      "description": "Each thing you ask for is written down, quoted and dated, in the deck's tracker under docs/tracking. A later session reads it before it acts."
+    },
+    {
+      "label": "The storyboard",
+      "description": "The plan under docs/plans lists every slide with its status, and changes together with the slides it describes."
+    },
+    {
+      "label": "A new session",
+      "description": "Say \"continue the deck tutorial-agents\". It reads the plan and the tracker, and picks up where the last one stopped."
+    }
+  ]
+}

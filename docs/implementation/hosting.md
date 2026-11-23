@@ -19,7 +19,7 @@ else switches modes.
 ```bash
 npm run dev -- <id>          # http://localhost:5173/, hot reload
 npm run dev -- <id> --host   # also reachable from other devices on the network
-npm run tutorial             # the tutorial deck: npm run dev -- ./tutorial
+npm run tutorial             # the first tutorial: npm run dev -- tutorial
 ```
 
 A presentation outside `presentations/` is named by its directory, with a

@@ -1,0 +1,8 @@
+/*
+ * The second tutorial's theme: other accent colors than the first
+ * tutorial's, so that the two decks are told apart at a glance.
+ */
+:root {
+  --accent: #2fd6a3;
+  --accent-secondary: #ffc857;
+}

@@ -1,0 +1,213 @@
+/* The task layout: the slide being edited on the left, the task on the right. */
+.slide--task {
+  /* The layout's two text sizes; a presentation's theme may set them. */
+  --task-text: var(--type-text, 1.25rem);
+  --task-small: var(--type-small, 0.9rem);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.task-columns {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 500px;
+  gap: 40px;
+  align-items: start;
+}
+
+.task-result {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.task-bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding-left: 1.4rem;
+  font-size: var(--task-text);
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.task-bullets li::marker {
+  color: var(--accent);
+}
+
+.task-picture {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: var(--radius-sm);
+  object-fit: contain;
+  align-self: flex-start;
+}
+
+.task-missing {
+  font-size: var(--task-small);
+  line-height: 1.5;
+  color: var(--warning);
+}
+
+.task-second-step {
+  padding: 0.9rem 1.2rem;
+  border-left: 3px solid var(--accent-secondary);
+  background: var(--bg-elevated);
+  font-size: var(--task-text);
+  line-height: 1.5;
+  color: var(--text-primary);
+  transition: opacity 0.4s ease;
+}
+
+.task-step-count {
+  font-size: var(--task-small);
+  color: var(--text-muted);
+}
+
+/* The panel: a card whose edge and badge take the color of its state. */
+.task-panel {
+  --task-color: var(--accent);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1.4rem 1.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-light);
+  border-top: 4px solid var(--task-color);
+  background: var(--bg-card);
+}
+
+.task-panel--done {
+  --task-color: var(--success);
+}
+
+.task-panel--manual {
+  --task-color: var(--accent-secondary);
+}
+
+.task-state {
+  align-self: flex-start;
+  padding: 0.15rem 0.7rem;
+  border-radius: 999px;
+  background: var(--task-color);
+  color: #0a0a0f;
+  font-size: var(--task-small);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.task-instruction {
+  font-size: var(--task-text);
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+.task-file,
+.task-snippet {
+  font-family: var(--font-mono);
+  font-size: var(--task-small);
+  line-height: 1.5;
+}
+
+.task-file {
+  color: var(--accent-secondary);
+  overflow-wrap: anywhere;
+}
+
+.task-snippet {
+  margin: 0;
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius-sm);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.task-when-done {
+  font-size: var(--task-text);
+  line-height: 1.5;
+  color: var(--success);
+}
+
+.task-missing code {
+  font-family: var(--font-mono);
+}
+
+/* What to say to an agent that does the task: set apart from the by-hand steps above it. */
+.task-ask {
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--border);
+  font-size: var(--task-small);
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.task-ask-label {
+  color: var(--accent-secondary);
+  font-weight: 600;
+}
+
+/* A file's or a field's name inside a line of text. */
+/* Kept on one line, so that a name such as --accent does not break at its hyphens; a path breaks after a slash (Path). */
+.task-code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  color: var(--accent-secondary);
+  white-space: nowrap;
+}
+
+/* What to say to an agent, when asking is the task: the words whole, and a button that copies them. */
+.task-prompt {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem 1rem;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--task-color);
+  background: var(--bg-primary);
+}
+
+.task-prompt-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-prompt-label {
+  font-size: var(--task-small);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.task-prompt-copy {
+  padding: 0.15rem 0.7rem;
+  border: 1px solid var(--border-light);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: var(--task-small);
+  cursor: pointer;
+}
+
+/* The words to say are what the slide is for: between the two sizes. */
+.task-prompt-text {
+  font-size: calc((var(--task-text) + var(--task-small)) / 2);
+  line-height: 1.55;
+  color: var(--text-primary);
+  user-select: text;
+}
+
+/* A file to open with the text that goes in it. */
+.task-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}

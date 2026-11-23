@@ -1,0 +1,12 @@
+{
+  "layout": "content",
+  "sectionLabel": "Something new, by prompt",
+  "title": "What to say when it is not right",
+  "subtitle": "Describe what you see, name the slide, say what should be there instead",
+  "bullets": [
+    "It moves in the capture: \"The slide webgl must show one still frame in the capture view.\"",
+    "It keeps running after you leave: \"Stop the animation and free the renderer when the slide is left.\"",
+    "It is blurry on a large screen: \"Draw the canvas at the pixel ratio of the screen.\"",
+    "It is simply wrong: send a screenshot with the wrong part circled. The agent reads the marks"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "layout": "task",
+  "sectionLabel": "Check and present",
+  "title": "Check the deck before you show it",
+  "subtitle": "Two commands, then your own eyes",
+  "bullets": [
+    "The first loads the deck without a browser: every slide's file, every layout name, every picture and video the slides name",
+    "The second opens every slide and step in a hidden browser, takes a screenshot of each, and lists text that overflows, a title that wraps, media that did not load",
+    "It prints the path of a contact sheet. Open it: a clean report does not show a slide that is legible but wrong"
+  ],
+  "task": "Run these two commands in a terminal, at the top folder of the repository. A deck is named by its id, the name of its folder in `presentations`. This task cannot tick itself.",
+  "snippet": "npm run check -- tutorial\nnpm run capture -- tutorial",
+  "ask": "Validate the slides of the tutorial deck."
+}

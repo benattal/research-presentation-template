@@ -1,0 +1,69 @@
+{
+  "title": "Build a deck by asking an agent",
+  "defaultTransition": "fade",
+  "sections": [
+    {
+      "id": "start",
+      "title": "Two windows",
+      "slides": [
+        "welcome",
+        "how-it-works",
+        "task-first"
+      ]
+    },
+    {
+      "id": "skills",
+      "title": "The skills, on this deck",
+      "slides": [
+        "outline-skills",
+        "task-plan",
+        "task-build",
+        "task-validate",
+        "what-came-back"
+      ]
+    },
+    {
+      "id": "new",
+      "title": "Something new, by prompt",
+      "slides": [
+        "outline-new",
+        "a-layout",
+        "task-webgl",
+        "task-webgl-step",
+        "when-wrong"
+      ]
+    },
+    {
+      "id": "live",
+      "title": "One deck, many browsers",
+      "slides": [
+        "outline-live",
+        "two-modes",
+        "task-serve",
+        "task-poll",
+        "votes",
+        "task-follow",
+        "deploy"
+      ]
+    },
+    {
+      "id": "review",
+      "title": "Review, media, video",
+      "slides": [
+        "outline-review",
+        "task-tablet",
+        "media",
+        "task-video"
+      ]
+    },
+    {
+      "id": "prompts",
+      "title": "Prompts that work",
+      "slides": [
+        "good-prompt",
+        "what-it-keeps",
+        "closing"
+      ]
+    }
+  ]
+}

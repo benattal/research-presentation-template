@@ -6,7 +6,7 @@
  * the gateway, and its prefix in the asset store.
  *
  * A command can also be given a presentation by its directory
- * (`./tutorial`): a deck that is not a project's, which the listing, the
+ * (`./decks/talk`): a deck that is not a project's, which the listing, the
  * gateway, and a command without arguments leave out.
  */
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
@@ -48,7 +48,7 @@ export function listPresentations() {
     .sort((a, b) => a.id.localeCompare(b.id));
 }
 
-/** Whether a command-line argument names a directory (`./tutorial`, `C:\decks\talk`) and not an id. */
+/** Whether a command-line argument names a directory (`./decks/talk`, `C:\decks\talk`) and not an id. */
 function isDirectoryArgument(argument) {
   return argument.startsWith('.') || /[\\/]/.test(argument);
 }
@@ -65,18 +65,28 @@ function presentationAt(path) {
 }
 
 /**
+ * A presentation's directory as a person at the repository's root writes
+ * it (`presentations/example`, with forward slashes), or in full when it
+ * is outside the repository.
+ */
+export function directoryOf(presentation) {
+  const dir = resolve(presentation.dir);
+  const fromRoot = relative(REPO_ROOT, dir);
+  const inside = !fromRoot.startsWith('..') && !isAbsolute(fromRoot);
+  return (inside ? fromRoot : dir).replaceAll('\\', '/');
+}
+
+/**
  * What a command is given to mean `presentation`: its id when it is under
  * `presentations/`, otherwise its directory, from the repository's root
- * when it is inside the repository (`./tutorial`) and in full when it is
+ * when it is inside the repository (`./decks/talk`) and in full when it is
  * not. The inverse of `selectPresentations`, for messages that tell
  * someone what to type at the repository's root.
  */
 export function commandNameOf(presentation) {
-  const dir = resolve(presentation.dir);
-  if (dir === join(PRESENTATIONS_DIR, presentation.id)) return presentation.id;
-  const fromRoot = relative(REPO_ROOT, dir);
-  const inside = !fromRoot.startsWith('..') && !isAbsolute(fromRoot);
-  return (inside ? `./${fromRoot}` : dir).replaceAll('\\', '/');
+  if (resolve(presentation.dir) === join(PRESENTATIONS_DIR, presentation.id)) return presentation.id;
+  const directory = directoryOf(presentation);
+  return isAbsolute(directory) ? directory : `./${directory}`;
 }
 
 /**

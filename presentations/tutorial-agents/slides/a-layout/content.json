@@ -1,0 +1,23 @@
+{
+  "layout": "progressiveBuild",
+  "sectionLabel": "Something new, by prompt",
+  "title": "A layout the template does not have",
+  "buildSteps": [
+    {
+      "label": "A layout",
+      "description": "A layout is a React component that is given a slide's fields. The deck's layouts folder registers it under the name that slides use."
+    },
+    {
+      "label": "What it can draw",
+      "description": "Anything a browser can: a canvas, SVG, a chart, and WebGL through three.js, which is already installed."
+    },
+    {
+      "label": "The rules",
+      "description": "The stage is 1280 by 720 and is scaled, never reflowed. A layout stops what it starts when the slide is left, and shows one still frame when the deck is captured."
+    },
+    {
+      "label": "So you ask",
+      "description": "Say what the slide shows and what each key press changes. The agent writes the component, registers it, adds the slide, and captures it to look at its own work."
+    }
+  ]
+}

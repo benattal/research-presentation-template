@@ -1,0 +1,14 @@
+{
+  "layout": "task",
+  "sectionLabel": "Review, media, video",
+  "title": "Watch it change on a tablet",
+  "subtitle": "Read the deck where you read best, and point at what is wrong",
+  "bullets": [
+    "The agent serves the deck on your network and gives you an address for the tablet",
+    "With ?review in the address, the bar names each slide and step, so a screenshot says where it was taken",
+    "Circle what is wrong on a screenshot and send it to the session: the agent reads the marks",
+    "Every device on the network can read the slides and notes. Use a network you trust"
+  ],
+  "task": "Say this, and open the address it gives you on a tablet or a phone. This task cannot tick itself.",
+  "prompt": "I'll watch the deck tutorial-agents on my iPad while you edit it."
+}

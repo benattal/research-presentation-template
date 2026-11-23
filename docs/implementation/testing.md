@@ -4,7 +4,7 @@ Three layers, each run by Node's built-in test runner or a script:
 
 | Command | What it checks | Needs |
 |---|---|---|
-| `npm test` | pure modules (presentation model, slide math, slide positions, poll state, live API, narration export, recording plans, the asset store, the tutorial's task checks) and repository structure | Node |
+| `npm test` | pure modules (presentation model, slide math, slide positions, poll state, live API, narration export, recording plans, the asset store, the task layout's checks, the two tutorials' task slides) and repository structure | Node |
 | `npm run test:ui` | every view, core layout, and live feature, driven in a real browser | a browser |
 | `npm run check` and `npm run capture -- <id>` | the presentations of the branch: loading, assets, rendering | assets; a browser for capture |
 
@@ -47,7 +47,7 @@ file at a time:
 | `presenter.test.mjs` | the presenter window following and driving the audience window, per-step notes, the preview, the timer, and saving edited notes without reloading the audience |
 | `live.test.mjs` | presenter login and logout, votes across browsers, changing a vote, live results, reset with C, numeric polls, closed voting, follow-the-presenter, the gateway's listing at `/` and its redirect from `/<id>` to `/<id>/` |
 | `errorsAndHosting.test.mjs` | the load-error screen (problems of the presentation; files that are not valid JSON, named with where the mistake is, and the deck coming back when they are mended), unknown modes, the development server serving the deck from disk and refusing the rest of the checkout, and a static build served under a URL prefix |
-| `tutorial.test.mjs` | the tutorial deck (`tutorial/`): every slide and build step loads without an error, and every task slide shows its task, the file to open, and a state |
+| `tutorial.test.mjs` | the two tutorial decks (`presentations/tutorial/`, `presentations/tutorial-agents/`): every slide and build step loads without an error, every task slide shows its task, a state, and a file to open, a text to use, or a prompt to say; and the second is served by the live gateway |
 
 `tests/ui/harness.mjs` holds the shared setup. `startLocal` and `startLive`
 return a server that is already warm: they request the page and every

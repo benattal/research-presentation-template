@@ -1,0 +1,20 @@
+{
+  "layout": "task",
+  "sectionLabel": "One deck, many browsers",
+  "title": "Add a poll to this deck",
+  "subtitle": "Two slides that share one question: where people vote, and what they chose",
+  "bullets": [
+    "A poll slide shows the options; each browser votes once and may change its vote",
+    "A results slide draws the count, live",
+    "The two share an id and the list of options"
+  ],
+  "task": "Say this. The slide ticks when both slides are in the deck.",
+  "prompt": "In the deck tutorial-agents, add a poll slide with the id my-poll that asks which editor the audience writes in, with four options, and a results slide with the id my-poll-results for the same poll. Put both right after the slide task-poll.",
+  "check": {
+    "slideListed": [
+      "my-poll",
+      "my-poll-results"
+    ]
+  },
+  "whenDone": "Go to the next slide in both live windows, vote in each, then look at the results slide."
+}

@@ -111,11 +111,13 @@ slide per core layout and convention. It is the target of the template's
 checks, captures, and browser tests, and is not presented. A project branch
 deletes it.
 
-The tutorial, `tutorial/`, is a second deck of this type, made hands-on:
-its reader drives it alone, with the development server running, and
-completes it by editing it ([its plan](../plans/tutorial.md)). It is
-outside `presentations/`, stays on every branch, and is served with
-`npm run tutorial`.
+The two tutorials, `presentations/tutorial/` and
+`presentations/tutorial-agents/`, are decks of this type made hands-on:
+the reader drives each alone, with the development server running, and
+completes the first by editing it ([its plan](../plans/tutorial.md)) and
+the second by asking a coding agent
+([its plan](../plans/tutorial-agents.md)). They stay on every branch and
+are served with `npm run tutorial` and `npm run tutorial:agents`.
 
 ## Choosing, and mixing
 

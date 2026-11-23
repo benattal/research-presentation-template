@@ -26,12 +26,17 @@ the browser. The tutorial is a deck about the template that you complete
 by editing it: it asks you to change a title, add a bullet, a build step,
 a picture, and a slide of your own, and each slide marks its task done
 when you save. Twenty minutes with it covers everything this page assumes
-you know. `git restore tutorial` puts it back afterwards.
+you know. `git restore presentations/tutorial` puts it back afterwards.
+
+A second tutorial, `npm run tutorial:agents`, does the same for working
+with a coding agent: each of its slides gives you words to say, and the
+agent changes the deck. Take it once you have an agent's session open in
+the repository.
 
 Arrow keys move through any deck, **O** shows every slide, **P** opens the
-presenter window with the notes, **F** is fullscreen. `npm run dev` on
-`main` opens the other deck that comes with the template, the example: one
-slide per core layout.
+presenter window with the notes, **F** is fullscreen. `npm run dev --
+example` opens the other deck that comes with the template, the example:
+one slide per core layout.
 
 A presentation is a folder of small text files:
 
@@ -59,8 +64,8 @@ npm test
 
 `npm run new` writes a five-slide starter (a title, two outlines, one
 content slide, a closing) and a `README.md` for the presentation. The
-example is deleted because a project branch holds only its own
-presentations. `npm test` should pass.
+example is deleted because a project branch holds its own presentations
+(the two tutorials stay, for whoever joins the project). `npm test` should pass.
 
 Then say what the branch is, in the "This branch" section of `CLAUDE.md`
 and `AGENTS.md` (the same text in both; a test checks that they match): one
@@ -68,7 +73,7 @@ or two sentences on what the presentation is, for whom, and how it is
 hosted.
 
 ```bash
-npm run dev            # with one presentation on the branch, no id is needed
+npm run dev -- my-talk
 ```
 
 **With an agent:** "Start a new presentation with id `my-talk` on a new
