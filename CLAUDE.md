@@ -88,7 +88,9 @@ example with the project's presentations.
 
 - Framework changes (anything under `core/`, `scripts/`, `tests/`, and the
   shared documentation) land on `main` first, then merge into the project
-  branches. A framework fix made on a project branch is cherry-picked to
+  branches. After merging `main` into a checkout that has a development
+  server running, restart that server and load its page: it keeps the
+  configuration it started with. A framework fix made on a project branch is cherry-picked to
   `main` in the same session.
 - Presentation changes stay on their project's branch.
 - A project branch deletes `presentations/example/`. When merging `main`,
