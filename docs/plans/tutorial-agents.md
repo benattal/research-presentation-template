@@ -4,61 +4,67 @@
 [The first tutorial's plan](tutorial.md) ·
 [The skills](../guides/skills.md)
 
-A second hands-on deck, for the reader who has taken the first tutorial and
-now wants to work the way the template is meant to be used: by asking a
-coding agent. Each task slide gives a prompt; the reader says it to an
-agent working in the repository; the agent changes this deck; the page
-reloads and the slide marks its task done from the deck's own data. Done
-means: a reader finishes it having used the skills, had an agent write a
-WebGL layout, added a poll and seen two browsers stay in step through the
-live server, and knowing what a good prompt for this repository contains.
-
-Nothing is built. The storyboard below is for the user to read first.
+A second hands-on deck, `presentations/tutorial-agents/`, for the reader
+who has taken the first tutorial and now wants to work the way the
+template is meant to be used: by asking a coding agent. Each task slide
+gives a prompt; the reader says it to an agent working in the repository;
+the agent changes this deck; the page reloads and the slide marks its task
+done from the deck's own data. Done means: a reader finishes it having
+used the skills, had an agent write a WebGL layout, added a poll and seen
+two browsers stay in step through the live server, and knowing what a good
+prompt for this repository contains.
 
 ## Immediate todos
 
 ### Done
 
-- **Type, storyboard.** Below, awaiting the user's read.
+- **Type, storyboard**, read by the user, who settled its three decisions
+  (below).
+- **The `task` layout in core** (`core/client/layouts/TaskSlide/`): two
+  decks use it. It gained `prompt` (the words to say, with a button that
+  copies them), checks on another slide and on a section, and the deck's
+  directory from a build constant. Layouts are also given `slides`.
+- **Both tutorials under `presentations/`**, at the user's direction; the
+  first moved from `tutorial/`.
+- **The deck**, 27 slides in six sections, built to the storyboard, with
+  notes that hold a hint for each task.
+- **Tests**: unit tests of every kind of check and that each task's check
+  is satisfied by the change it asks for; a browser test that every slide
+  and step of both decks loads, and that the gateway serves this one.
+- **Documentation**: the README's "The tutorials", getting started, the
+  agent files, the layouts and testing documents, each deck's README.
 
 ### Open
 
-1. **The user reads the storyboard** and the three decisions under it.
-   Gate: a yes, or corrections, quoted in the tracker.
-2. **The `task` layout in core.** Two decks will use it, so it moves from
-   `tutorial/layouts/TaskSlide/` to `core/client/layouts/`, with a slide in
-   the test fixture and a row in the layouts document, and gains the two
-   checks this deck needs (a section that is listed; a slide that uses a
-   named layout). Gate: `npm run test:ui`; the first tutorial unchanged in
-   a capture.
-3. **Sections 1 to 3** (how it works, skills, a new layout by prompt), built
-   and taken for real: each prompt given to an agent in a clean clone, the
-   slide's state before and after. Gate: every task of these sections is
-   done by its prompt alone, on two different models.
-4. **Sections 4 to 6** (the live server, reviewing and media, prompts that
-   work), the same way. The live tasks are checked with two browsers.
-5. **Documentation**: the README's tutorial section (two decks, in order),
-   getting started, the skills guide's pointers.
-6. **A person takes it** with nothing but the README and an agent.
+1. **The prompts, tried for real.** Each prompt that changes the deck is
+   given as it stands to a fresh agent session in a clean clone, and the
+   slide's check is run afterwards. Gate: every such prompt ticks its
+   slide on two models. The tracker has the runs so far.
+2. **The live tasks, taken by hand**: the server started by the prompt on
+   the slide, two browser windows, a vote in each, follow-the-presenter.
+3. **A person takes it** with nothing but the README and an agent.
+4. **The user's review** of the slides as built.
 
 ## Rules
 
-- As for the first tutorial: outside `presentations/`, on every branch, no
-  media in git, a reader's changes thrown away with `git restore` and
-  `git clean -fdx`.
+- As for the first tutorial: on every branch, no media in git, a reader's
+  changes thrown away with `git restore` and `git clean -fdx`.
 - A task is a prompt, written out in full on the slide, that works when it
   is pasted as it stands. It names this deck and the slide or section it
   concerns, and says what "done" looks like.
 - A task is checked from the deck's data, or says that it cannot tick
   itself. What an agent *said* is never the check.
-- The deck asks an agent only for changes inside the deck's own directory.
-  It never has an agent push, deploy, upload, or touch another
-  presentation.
+- The deck asks an agent only for changes inside the deck's own directory,
+  and for `.env` in the live section. It never has an agent push, deploy,
+  upload, or touch another presentation.
+- No password is asked of the agent or left to it to choose: the prompt
+  gives a throwaway one, and the notes say to type a real one into `.env`
+  by hand.
 - Every prompt is tried on a clean clone before it is put on a slide, and
   again whenever the skills or the agent files change. A prompt that works
   only for the session that wrote it is not a tutorial.
-- The live-server tasks use the example presentation, which the gateway
-  serves; this deck is not under `presentations/` and is not served by it.
+- The deck ships with one flaw on purpose, the title that wraps on
+  `task-validate`: its capture reports that one warning and no other.
 
 ## Type
 
@@ -73,56 +79,63 @@ The deck goes: how the two windows work together; the skills, used on this
 deck; something the template does not have, asked for in a sentence; a deck
 that several browsers share; review and media; what makes a prompt work.
 
-| # | Slide (title) | Steps: what appears | Source | Status |
+| # | Slide (id: title) | Steps: what appears | Source | Status |
 |---|---|---|---|---|
 |   | **Two windows** | | | |
-| 1 | Build a deck by asking | the title | `title` layout | planned |
-| 2 | An agent reads the same files you edited | (1) this deck's folder; (2) the agent's instructions, `CLAUDE.md`, and what they hold; (3) the loop: you say, it edits, the page reloads, the slide ticks | `progressiveBuild` | planned |
-| 3 | Say this first | task: "What is this repository, and which skills does it give you?"; cannot tick itself; what a good answer contains | `task`, no check | planned |
+| 1 | `welcome`: Build a deck by asking | the title | `title` layout | drafted |
+| 2 | `how-it-works`: An agent reads the same files you edited | (1) this deck's folder; (2) the agent's instructions and skills; (3) the loop: you say, it edits, the page reloads, the slide ticks; (4) the two windows | `progressiveBuild` | drafted |
+| 3 | `task-first`: Say this first | task: "What is this repository for, and which skills does it give you?"; what a good answer contains; cannot tick itself | `task`, no check | drafted |
 |   | **The skills, on this deck** | | | |
-| 4 | (outline) | the sections | `outline` | planned |
-| 5 | A plan before slides | task: the `start-presentation` prompt for a three-slide section on a topic of the reader's; ticks when a section `mine` is listed | `task`, check on the sections | planned |
-| 6 | Read the storyboard, then say yes | (1) where the agent put the plan and what a storyboard row holds; (2) how to correct it in words; task: "build it"; ticks when section `mine` has three slides | `task`, check on the section's length | planned |
-| 7 | This title is far too long to fit on one line of a slide and the capture will say so | task: "Validate the slides of this deck and fix what you find"; the capture reports `title-wraps`; ticks when the title has changed | `task`, check on `title`; a flaw planted on purpose | planned |
-| 8 | What the agent brought back | (1) the run's folder and its contact sheet; (2) which findings it fixed and which it brought to you, and why wording is yours | `progressiveBuild` | planned |
+| 4 | `outline-skills` | the sections | `outline` | drafted |
+| 5 | `task-plan`: A plan before slides | task: ask for a section `mine` of three slides, storyboard first; cannot tick itself, because a storyboard is not in the deck | `task`, no check | drafted |
+| 6 | `task-build`: Read the storyboard, then say yes | task: "build it", placed after this section; ticks when a section `mine` lists three slides | `task`, check on a section's length | drafted |
+| 7 | `task-validate`: This title is far too long... | task: validate and fix, with leave to shorten a title; the capture reports `title-wraps`; ticks when the title has changed | `task`, check on `title`; the planted flaw | drafted |
+| 8 | `what-came-back`: What the agent brought back | (1) the run's folder and contact sheet; (2) what it fixed without asking; (3) what it asked: wording; (4) your part: look | `progressiveBuild` | drafted |
 |   | **Something new, by prompt** | | | |
-| 9 | (outline) | the sections | `outline` | planned |
-| 10 | A layout the template does not have | (1) a layout is a React component; (2) the widgets a layout can use: a canvas at the stage's scale, a step clock, `three` for WebGL; (3) the rules the agent already follows for one (clean up, one still frame for the capture) | `progressiveBuild` | planned |
-| 11 | Ask for a WebGL scene | task: the prompt for a layout `spinningShape` that draws a lit, rotating shape with `three`, on a new slide `webgl`; ticks when a slide `webgl` is listed and uses that layout | `task`, check on a slide's layout | planned |
-| 12 | Make it yours in one more sentence | task: "make the second step stop the rotation and show a label"; ticks when the slide `webgl` has two build steps | `task`, check on another slide's `buildSteps` | planned |
-| 13 | What to ask for when it is wrong | three prompts that fix the usual misses: it animates in the capture; it leaks when you leave the slide; it is blurry on a large screen | `content` | planned |
+| 9 | `outline-new` | the sections | `outline` | drafted |
+| 10 | `a-layout`: A layout the template does not have | (1) a layout is a component; (2) what it can draw, three.js included; (3) the rules; (4) so you ask | `progressiveBuild` | drafted |
+| 11 | `task-webgl`: Ask for a WebGL scene | task: a layout `spinningShape` and a slide `webgl` after this one; ticks when `webgl` uses that layout | `task`, check on another slide's layout | drafted |
+| 12 | `task-webgl-step`: Change it with one more sentence | task: a second build step that stops the rotation and shows a label; ticks when `webgl` has two build steps | `task`, check on another slide's `buildSteps` | drafted |
+| 13 | `when-wrong`: What to say when it is not right | the sentence for each usual miss: moves in the capture, keeps running, blurry, simply wrong (a marked-up screenshot) | `content` | drafted |
 |   | **One deck, many browsers** | | | |
-| 14 | (outline) | the sections | `outline` | planned |
-| 15 | Local mode, and the live server | (1) what local mode cannot do; (2) the gateway: every presentation at its own address, a presenter login, votes kept on the server | `progressiveBuild` | planned |
-| 16 | Start the live server | task: the prompt that has the agent make `.env` from the example with a password it tells you, and start `npm run serve`; then open the example's address in two windows; cannot tick itself | `task`, no check | planned |
-| 17 | Vote in one window, watch the other | the two windows side by side: the poll slide and its results; what the server keeps, and why a reload cannot vote twice | `content`, with a screenshot made for it | planned |
-| 18 | Everyone on your slide | task: the prompt that sets `PRESENTER_CONTROLLED` and restarts; log in as presenter in one window and move; the other follows; cannot tick itself | `task`, no check | planned |
-| 19 | Add a poll to this deck | task: the prompt for a poll slide `my-poll` and its results slide, sharing an id and options; ticks when both are listed | `task`, check on the sections | planned |
-| 20 | Putting it on the internet | what a deployment needs (a build command, a start command, a password, a disk for votes), and the prompt that prepares one; said, not done: a deployment is yours to start | `content` | planned |
+| 14 | `outline-live` | the sections | `outline` | drafted |
+| 15 | `two-modes`: Local mode, and the live server | (1) local mode; (2) what it cannot do; (3) the gateway; (4) `.env` | `progressiveBuild` | drafted |
+| 16 | `task-serve`: Start the live server | task: `.env` from the example with a throwaway password, `npm run serve`, the deck's address in two windows; cannot tick itself | `task`, no check | drafted |
+| 17 | `task-poll`: Add a poll to this deck | task: a poll slide `my-poll` and its results slide after this one; ticks when both are listed; then vote in both windows | `task`, check on two listed slides | drafted |
+| 18 | `votes`: What the server keeps | one vote per browser, live results, saved votes, C to clear | `content` | drafted |
+| 19 | `task-follow`: Everyone on your slide | task: `PRESENTER_CONTROLLED` and a restart; log in as presenter in one window, the other follows; cannot tick itself | `task`, no check | drafted |
+| 20 | `deploy`: Putting it on the internet | what a deployment needs; what an agent prepares; publishing is the reader's | `content` | drafted |
 |   | **Review, media, video** | | | |
-| 21 | (outline) | the sections | `outline` | planned |
-| 22 | Watch it change on a tablet | task: "I'll watch on my iPad"; what the agent does; a marked-up screenshot as feedback; cannot tick itself | `task`, no check | planned |
-| 23 | Media that are not in git | (1) the asset store in one picture; (2) the prompt that sets up a folder store and pushes this deck's picture; (3) what the agent will not do: look for your tokens | `progressiveBuild` | planned |
-| 24 | A video of the deck | task: "Record a run-through of this deck"; where the file is; the narrated version in one line; cannot tick itself | `task`, no check | planned |
+| 21 | `outline-review` | the sections | `outline` | drafted |
+| 22 | `task-tablet`: Watch it change on a tablet | task: "I'll watch on my iPad"; `?review`; a marked-up screenshot; cannot tick itself | `task`, no check | drafted |
+| 23 | `media`: Pictures and videos are not in git | (1) why a store; (2) in a deck; (3) what to ask; (4) what the agent will not do with tokens | `progressiveBuild` | drafted |
+| 24 | `task-video`: A video of the deck | task: a silent run-through; the narrated version in a line; cannot tick itself | `task`, no check | drafted |
 |   | **Prompts that work** | | | |
-| 25 | What a good prompt names | the deck and the slide by id; what each key press shows; what must not change; the check you want run | `content` | planned |
-| 26 | What the agent keeps for you | (1) your directions, quoted and dated, in the tracker; (2) the storyboard, kept in step with the slides; (3) why a new session picks up where the last one stopped | `progressiveBuild` | planned |
-| 27 | Now build your talk | the prompt that starts a real project | `title` | planned |
+| 25 | `good-prompt`: What a good prompt names | the deck and slide by id; each key press; what must not change; the check; what done looks like | `content` | drafted |
+| 26 | `what-it-keeps`: What the agent keeps for you | (1) your directions in the tracker; (2) the storyboard; (3) a new session continues | `progressiveBuild` | drafted |
+| 27 | `closing`: Now build your talk | the sentence that starts a real project | `title` | drafted |
 
-## Decisions for the user
+Changes from the storyboard the user read: the plan task (5) cannot tick
+itself, since a storyboard is not in the deck and the repository forbids a
+placeholder section; the poll is added before the votes are explained, so
+that there is something to vote on (17, 18); the live tasks use this deck
+itself, which the gateway serves now that the deck is under
+`presentations/`.
 
-1. **Where it lives and what it is called.** Proposed: `tutorial-agents/`,
-   opened with `npm run tutorial:agents`, beside `tutorial/`. The
-   alternative is to gather both under `tutorials/` (`tutorials/basics`,
-   `tutorials/agents`), which renames the first deck's folder and command.
-2. **A flaw planted on purpose** (row 7). The deck would ship with a title
-   that wraps, so that the validation task finds something real; its
-   capture then reports one warning by design. The alternative is a task
-   that validates a clean deck and has nothing to find.
-3. **The live server's tasks use the example deck** (rows 16 to 18),
-   because the gateway serves only `presentations/`. That holds on `main`
-   and on any branch that kept the example; on a project branch the reader
-   uses one of the project's own presentations, and the slides say so.
+## Decisions, settled by the user (2026-11-22)
+
+1. **Its name**: `tutorial-agents`, opened with `npm run tutorial:agents`.
+2. **A flaw planted on purpose** (row 7): yes.
+3. **Where the tutorials live**: under `presentations/`, both of them, so
+   that the gateway serves them.
+
+## A reader's section in this plan
+
+The task `task-plan` has an agent write a storyboard for the reader's own
+section. An agent following the repository's rules puts it in this file,
+and an entry in the tracker. That is the exercise working, in the reader's
+checkout: it is thrown away with `git restore docs/plans docs/tracking`,
+and is not committed.
 
 ## Completion criteria
 

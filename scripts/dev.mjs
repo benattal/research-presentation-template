@@ -8,7 +8,7 @@
  *
  * The id may be left out when the repository has one presentation. A
  * presentation outside `presentations/` is named by its directory:
- * `npm run tutorial` is `npm run dev -- ./tutorial`.
+ * `npm run tutorial` is `npm run dev -- tutorial`.
  * `--host` listens on the network as well as on this machine, to review
  * the deck on a tablet or phone: every device on the network can then read
  * the slides and their notes, so use it on a network you trust.

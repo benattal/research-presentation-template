@@ -1,0 +1,13 @@
+{
+  "layout": "task",
+  "sectionLabel": "Review, media, video",
+  "title": "A video of the deck",
+  "subtitle": "Every slide and key press, recorded without you",
+  "bullets": [
+    "The recorder steps through the deck in a hidden browser and writes one video file",
+    "It needs ffmpeg on this machine. The agent says so if it is missing",
+    "With narration: the notes are the script, a voice is made on your machine, and each line lands on its step"
+  ],
+  "task": "Say this. This task cannot tick itself.",
+  "prompt": "Record a silent run-through video of the deck tutorial-agents and tell me where the file is."
+}

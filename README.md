@@ -13,7 +13,8 @@ skills, so the agent plans a deck with you, builds it, checks every slide,
 and takes your feedback while you watch. Everything also works by hand.
 
 - New here: take the tutorial (`npm install`, then `npm run tutorial`): a
-  deck that teaches the template by having you edit it.
+  deck that teaches the template by having you edit it. A second one
+  (`npm run tutorial:agents`) has you build by asking a coding agent.
   [Getting started](docs/guides/getting-started.md) then walks from a clone
   to a deck of your own.
 - Working with an agent: [the skills](docs/guides/skills.md) says what to
@@ -27,11 +28,12 @@ git clone <this repository's address>
 cd research-presentation-template
 npm install                  # Node 22.12 or newer
 npm run tutorial             # the hands-on tour: start here
-npm run dev                  # the only presentation, or: npm run dev -- <id>
+npm run tutorial:agents      # the second tour: build a deck by asking an agent
+npm run dev -- example       # any presentation, by its id
 ```
 
-Each prints an address; open it (http://localhost:5173/). `npm run dev` on
-`main` shows the example presentation, one slide per core layout. Press
+Each prints an address; open it (http://localhost:5173/). `npm run dev --
+example` shows the example presentation, one slide per core layout. Press
 **P** for the presenter window (notes, timer, preview of the current and
 next slide); arrow keys in either window drive the slides.
 
@@ -44,21 +46,26 @@ next slide); arrow keys in either window drive the slides.
 | P | presenter window |
 | C | reset the current slide's poll (live mode, presenter only) |
 
-## The tutorial
+## The tutorials
 
-`tutorial/` is a deck that introduces the template through a worked
-example that you complete yourself. Each task slide names a file and an
-edit (change a title, add a bullet, a build step, a picture, a slide of
-your own, the colors); when you save, the page reloads and the slide marks
-its task done. Each task also shows what to say to a coding agent that
-makes the edit for you. It takes about twenty minutes, needs no media and
-no asset store, and is on every branch.
+Two decks introduce the template through worked examples that you complete
+yourself. Both are on every branch, need no media and no asset store, and
+mark each task done from the deck's own files when the page reloads.
 
-**Take it** (this is the way that lets you edit):
+| | Command | You | About |
+|---|---|---|---|
+| 1. `presentations/tutorial/` | `npm run tutorial` | edit the deck's files: a title, a bullet, a formula, a build step, a picture, a slide of your own, the colors | 20 minutes, with an editor beside the browser |
+| 2. `presentations/tutorial-agents/` | `npm run tutorial:agents` | say each slide's prompt to a coding agent, which changes the deck: a section from a storyboard, a validation, a WebGL layout, a poll, the live server with two browsers in step, review on a tablet, a video | 40 minutes, with an agent's session open at the top of the repository |
+
+Take the first one first: the second assumes you have seen what a slide's
+file looks like. Each task of the first also shows what to say to an agent
+that makes the edit for you.
+
+**Take one** (this is the way that lets the deck change):
 
 ```bash
 npm install
-npm run tutorial             # open the address it prints, with an editor beside the browser
+npm run tutorial             # open the address it prints
 ```
 
 If the port is taken, choose another: `npm run tutorial -- --port 5200`.
@@ -75,27 +82,39 @@ slides, without the editing, and goes on any web host (GitHub Pages,
 Netlify, a university web folder):
 
 ```bash
-npm run build -- ./tutorial            # writes dist/tutorial/
-npm run preview -- ./tutorial          # check it at http://localhost:4173/
+npm run build -- tutorial              # writes dist/tutorial/
+npm run preview -- tutorial            # check it at http://localhost:4173/
 ```
 
 then copy the contents of `dist/tutorial/` to the host. It works under any
 address or sub-folder, and needs a web server: opening `index.html` from
-the disk does not work.
+the disk does not work. The second tutorial is built the same way, by its
+id `tutorial-agents`.
 
-**Start over:** `git restore tutorial`, and `git clean -fdx tutorial` to
-remove the slide and the picture you added.
+**Start over** (the same two commands for either, by its folder):
+
+```bash
+git restore presentations/tutorial        # your edits
+git clean -fdx presentations/tutorial     # the slide and the picture you added
+```
+
+After the second tutorial an agent has also written in `docs/plans/` and
+`docs/tracking/`, and made `.env`: `git status` lists what to restore, and
+`.env` is yours to delete.
+
+The second tutorial's capture reports one warning on purpose, the title
+that wraps on its slide `task-validate`: finding it is one of its tasks.
 
 ## Start a new presentation
 
-`main` holds the framework and the example. Each project lives on its own
-branch.
+`main` holds the framework, the example, and the two tutorials. Each
+project lives on its own branch.
 
 ```bash
 git switch -c my-talk                         # 1. a branch for the project
 npm run new -- my-talk --title "My Talk"      # 2. a five-slide starter
-git rm -r presentations/example               # 3. a project branch holds only its own decks
-npm run dev                                   # 4. edit the files; the page reloads
+git rm -r presentations/example               # 3. a project branch has its own decks and the tutorials
+npm run dev -- my-talk                        # 4. edit the files; the page reloads
 npm run check && npm run capture -- my-talk   # 5. it loads; every slide is screenshot and checked
 ```
 
@@ -240,7 +259,7 @@ hand; an agent runs them for you from one sentence:
 | `npm run check`, `npm run capture`, and reading every frame | "Validate the slides." |
 | `npm run assets -- pull` and `push` | "Get the media for my-talk." / "Push the media." |
 | serving the deck and opening it on a tablet | "I'll watch on my iPad." |
-| the tutorial's tasks | the sentence each task slide shows |
+| the first tutorial's tasks | the sentence each task slide shows |
 
 The agent stops for what only you can give: a yes to the storyboard, your
 wording, which asset store to use, and the path of your rclone
@@ -304,7 +323,8 @@ of `CLAUDE.md` and `AGENTS.md`.
 
 | Command | What it does |
 |---|---|
-| `npm run tutorial` | serve the tutorial deck (`tutorial/`); the same as `npm run dev -- ./tutorial` |
+| `npm run tutorial` | serve the first tutorial (`presentations/tutorial/`); the same as `npm run dev -- tutorial` |
+| `npm run tutorial:agents` | serve the second tutorial (`presentations/tutorial-agents/`) |
 | `npm run dev -- <id>` | local mode: one presentation on a Vite dev server, no backend; `--host` also serves it to the network, for a tablet or phone |
 | `npm run build -- <id>` | static build in `dist/<id>/`, for any web host |
 | `npm run preview -- <id>` | serve that build on this machine; `--host` as for `dev` |
@@ -322,7 +342,7 @@ of `CLAUDE.md` and `AGENTS.md`.
 
 A presentation under `presentations/` is named by its id. Any other
 directory with a `presentation.json` is named by its path, with a leading
-`./` (`npm run capture -- ./tutorial`).
+`./` (`npm run capture -- ./tests/fixtures/ui-showcase`).
 
 Live mode needs `PRESENTER_PASSWORD` in `.env` (see `.env.example`).
 [Hosting](docs/implementation/hosting.md) covers both modes and deployment.
@@ -333,8 +353,7 @@ Live mode needs `PRESENTER_PASSWORD` in `.env` (see `.env.example`).
 core/client/      React framework (the Vite root)
 core/server/      live gateway
 core/tooling/     presentation discovery, Vite configuration, the asset store
-presentations/    one directory per presentation
-tutorial/         the hands-on tour: a deck you learn the template by editing
+presentations/    one directory per presentation; tutorial/ and tutorial-agents/ are the two hands-on tours
 scripts/          command-line entry points
 narration/        Python tools for a synthesized voiceover
 tests/            node:test suites

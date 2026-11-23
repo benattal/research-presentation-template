@@ -97,6 +97,16 @@ const EXPECTATIONS = {
     assert.equal(await count(page, 'input.np-input:disabled'), 1);
     assert.match(await text(page, '.np-status'), /Local mode/);
   },
+  async task(page) {
+    assert.match(await page.locator('.task-panel').getAttribute('class'), /task-panel--done/);
+    assert.equal(await text(page, '.task-state'), 'DONE');
+    assert.equal(await text(page, '.task-file'), 'tests/fixtures/ui-showcase/slides/task/content.json');
+    assert.match(await text(page, '.task-instruction'), /The folder is tests\/fixtures\/ui-showcase\/slides\/task\./);
+    assert.equal(await count(page, '.task-bullets .task-code'), 1);
+    assert.equal(await text(page, '.task-prompt-text'), 'Change the title of the slide task.');
+    assert.equal(await text(page, '.task-when-done'), 'Done, and the slide says so.');
+    assert.equal(await count(page, '.task-ask'), 0, 'what to ask is not shown once the task is done');
+  },
   async credits(page) {
     assert.equal(await count(page, '.credits-item'), 1);
     assert.match(await text(page, '.credits-item'), /^Doe et al\. A borrowed figure\. Conference 2020$/);
@@ -132,7 +142,7 @@ describe('core layouts', { timeout: 180000 }, () => {
   it('the fixture uses every core layout', () => {
     const used = new Set(slides.map((slide) => slide.layout));
     assert.deepEqual(coreLayoutNames().filter((name) => !used.has(name)), []);
-    assert.ok(coreLayoutNames().length >= 13);
+    assert.ok(coreLayoutNames().length >= 14);
   });
 
   it('every slide has an expectation', () => {

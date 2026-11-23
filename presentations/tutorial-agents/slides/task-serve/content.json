@@ -1,0 +1,13 @@
+{
+  "layout": "task",
+  "sectionLabel": "One deck, many browsers",
+  "title": "Start the live server",
+  "subtitle": "The same deck, now served to every browser that opens its address",
+  "bullets": [
+    "The agent makes .env from the example and starts the server. Git ignores .env",
+    "A real password is one you choose and keep out of prompts: type it into .env yourself",
+    "Open the address it gives you in two browser windows, side by side"
+  ],
+  "task": "Say this, then open the address in two windows. This task cannot tick itself.",
+  "prompt": "Set up live mode: create .env from .env.example with the presenter password set to tutorial, start npm run serve in the background, and tell me the address of the deck tutorial-agents."
+}

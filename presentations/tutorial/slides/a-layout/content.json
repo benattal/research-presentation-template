@@ -1,0 +1,19 @@
+{
+  "layout": "progressiveBuild",
+  "sectionLabel": "Make it yours",
+  "title": "A layout is a small React component",
+  "buildSteps": [
+    {
+      "label": "Core layouts",
+      "description": "title, content, progressiveBuild, media, diagram, polls, and more come with the template: docs/implementation/layouts.md lists them and their fields."
+    },
+    {
+      "label": "Your own",
+      "description": "The task panel of the last slides is a layout of the template, in core/client/layouts/TaskSlide: about 200 lines that read a slide's fields and draw them."
+    },
+    {
+      "label": "Registered by name",
+      "description": "core/client/layouts/index.js gives it the name task, which is what those slides write after \"layout\". A deck adds layouts of its own in its layouts folder."
+    }
+  ]
+}

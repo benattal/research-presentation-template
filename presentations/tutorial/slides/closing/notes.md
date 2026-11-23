@@ -1,0 +1,1 @@
+`git restore presentations/tutorial` puts this deck back as it was, and `git clean -fdx presentations/tutorial` removes the slide and the picture you added. `docs/guides/getting-started.md` continues from here.
